@@ -1,0 +1,58 @@
+# Tasks
+
+Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[!]` blocked.
+
+## M1 Research & scope
+- [x] Inspect environment (macOS, Xcode, SDKs, simulators, Node, Python)
+- [x] Verify Replica / REA / Ralph / /goal availability
+- [x] Read replica-skill and morluto/rea instructions
+- [x] Recon (replica/recon.md, features.csv) with evidence labels and gaps
+- [x] Architecture, flows, design principles, 3 themes + contrast check
+- [x] Tracking files
+
+## M4-core (no Xcode needed; pulled forward) — 50 tests green
+- [x] NightCastCore package skeleton + `swift test` green
+- [x] SleepTimer state machine + virtual-time tests (M4.1–M4.7, M4.9)
+- [x] SeekMath + TimeFormat + tests (M3.6)
+- [x] RSSParser + fixtures incl. malformed (M3.3)
+- [x] ITunesDirectory decode + dedupe + tests with stub URLProtocol (M3.1 logic, M3.2)
+- [x] JSONLibraryStore + persistence tests (M3.4/M3.5 logic)
+
+## M2 Visual direction
+- [x] Owner: accept Xcode license
+- [x] Create NightCast.xcodeproj (app + UI tests) linking NightCastCore
+- [x] Theme system + PressableButton + MoonButton + Scrubber
+- [x] Library prototype (grid, empty state, mini-player) with sample artwork from real feeds
+- [x] Now Playing prototype
+- [x] Simulator screenshots × 3 themes × (default, AX text)
+- [x] Accessibility review → request human approval
+
+## M3 Vertical slice
+- [x] Visual approval (owner, 2026-10-15)
+- [x] PlaybackEngine (AVPlayer, session, interruptions, route change)
+- [x] NowPlayingBridge (lock screen, remote ±15) — implemented, unverified on device
+- [x] Search / Show / Library wired to real services
+- [x] Relaunch restores subscriptions + positions (UI tests)
+- [x] Fixture mode `-uitest` + 5 UI tests; opt-in live-network UI test
+- [ ] SearchModel unit tests for debounce/cancel (needs an app unit-test target)
+
+## M4 Sleep in app
+- [x] Fix: R uses feed duration if Sleep is tapped before AVPlayer reports measured duration (observed: feed 31:22 vs stream 37:04 → "9 min" instead of 11). See DECISIONS D11
+- [x] SleepDriver with injectable clock → AVPlayer.volume (AppModel ticker, gated on active playback)
+- [x] Sleep UI states + toast + VoiceOver announcements
+- [x] Sleep UI tests on real player (full fade, cancel, pause freezes)
+
+## M5 Polish & regression
+- [x] UI tests subscribe → play → Sleep
+- [x] Dynamic Type AX5 pass (Library 1-col, Show/Search stacked layouts, capped search field)
+- [ ] VoiceOver live pass (labels verified in code + UI tests only)
+- [x] Exclude TestSupport from Release (EXCLUDED_SOURCE_FILE_NAMES + #if DEBUG)
+- [x] Search: Return key searches immediately
+- [x] Replica parity + brand sweep
+- [x] scripts/test.sh
+- [x] Final handoff docs (README, screenshots, device checklist)
+
+## Owner / device (not automatable)
+- [ ] Device checks D1–D8 (README)
+- [ ] Signing team + bundle ID, TestFlight
+- [ ] Trademark-cleared name, final icon (`/replica-skill:replica-brand`)

@@ -1,0 +1,23 @@
+feature,area,priority,original,clone,notes
+Subscribed shows grid,library,must,yes,yes,2-col grid; 1-col at AX sizes
+Search shows via directory,search,must,yes,yes,iTunes Search API; live UI test passed
+Subscribe / unsubscribe,show,must,yes,yes,persists across relaunch (UI test)
+Episode list with date duration progress,show,must,yes,yes,progress ring + time left
+Stream episode,player,must,yes,yes,real stream verified in simulator
+Scrubber with elapsed/remaining,player,must,yes,yes,accessible adjustable ±15 s
+Skip -15 / +15,player,must,unknown,yes,
+Per-episode resume position,player,must,unknown,yes,UI test across relaunch
+One-tap Sleep with staged fade,player,must,no,yes,original feature (not parity); verified on real AVPlayer volume
+Lock screen + remote commands,player,must,unknown,partial,implemented; not verified on device
+Background playback,player,must,yes,partial,background mode set; not verified on device
+Persist subscriptions,library,must,yes,yes,
+Mini player in Library,library,should,unknown,yes,
+Three themes incl. bedtime,appearance,should,unknown,yes,Paper / Ink / Ember; contrast AA
+Artwork cache,library,should,unknown,yes,memory + disk
+Haptics on primary controls,feel,should,unknown,yes,
+Pull to refresh feeds,show,could,unknown,yes,
+Playback speed,player,skip,yes,skip,brief excludes from main player
+Queue / up next,player,skip,unknown,skip,brief excludes
+Autoplay next,player,skip,unknown,skip,brief forbids
+Accounts / sync,account,skip,unknown,skip,brief excludes
+Downloads,library,could,unknown,no,not in brief; later

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+  <channel>
+    <title>  Messy Feed  </title>
+    <item>
+      <title>No enclosure — skipped</title>
+      <guid>m-0</guid>
+    </item>
+    <item>
+      <title>PDF enclosure — skipped</title>
+      <guid>m-pdf</guid>
+      <enclosure url="https://cdn.example.com/notes.pdf" type="application/pdf"/>
+    </item>
+    <item>
+      <title>No guid, MM:SS duration, odd date</title>
+      <pubDate>Mon, 7 Oct 2024 08:30:00 PDT</pubDate>
+      <itunes:duration>45:30</itunes:duration>
+      <enclosure url="https://cdn.example.com/m-1.mp3"/>
+    </item>
+    <item>
+      <title>Garbage duration and no date</title>
+      <guid>m-2</guid>
+      <itunes:duration>about an hour</itunes:duration>
+      <enclosure url="https://cdn.example.com/m-2.mp3" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Duplicate guid (dropped)</title>
+      <guid>m-2</guid>
+      <enclosure url="https://cdn.example.com/m-2b.mp3" type="audio/mpeg"/>
+    </item>
+    <item>
+      <guid>m-3</guid>
+      <pubDate>Wed, 09 Oct 2024 08:30:00 +0000</pubDate>
+      <enclosure url="ftp://cdn.example.com/m-3.mp3" type="audio/mpeg"/>
+    </item>
+    <item>
+      <guid>m-4</guid>
+      <pubDate>Wed, 09 Oct 2024 08:30:00 +0000</pubDate>
+      <enclosure url="https://cdn.example.com/m-4.mp3" type="audio/mpeg"/>
+    </item>
+  </channel>
+</rss>

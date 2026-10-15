@@ -1,0 +1,7 @@
+{"resultCount":5,"results":[
+ {"wrapperType":"track","kind":"podcast","collectionId":101,"collectionName":"Quiet Hours","artistName":"Fixture Studio","feedUrl":"https://feeds.example.com/quiet/","artworkUrl100":"https://example.com/100.jpg","artworkUrl600":"https://example.com/600.jpg"},
+ {"wrapperType":"track","kind":"podcast","collectionId":101,"collectionName":"Quiet Hours (dup id)","feedUrl":"https://feeds.example.com/other"},
+ {"wrapperType":"track","kind":"podcast","collectionId":102,"collectionName":"Quiet Hours Mirror","feedUrl":"http://FEEDS.example.com/quiet"},
+ {"wrapperType":"track","kind":"podcast","collectionId":103,"collectionName":"No Feed Show"},
+ {"wrapperType":"track","kind":"podcast","collectionId":104,"collectionName":"Moth Radio","artistName":"Someone","feedUrl":"https://moth.example.org/rss","artworkUrl100":"https://example.com/m100.jpg"}
+]}

@@ -1,0 +1,112 @@
+import Foundation
+
+/// Everything NightCast persists. Sleep state is deliberately absent: Sleep
+/// must never resume after a relaunch.
+public struct LibrarySnapshot: Codable, Equatable, Sendable {
+    public var subscriptions: [Show]
+    /// Keyed by `Episode.id`.
+    public var positions: [String: PlaybackPosition]
+    /// Last episode loaded into the player, for the mini-player after relaunch.
+    public var lastEpisode: Episode?
+    public var themeID: String?
+
+    public init(subscriptions: [Show] = [], positions: [String: PlaybackPosition] = [:], lastEpisode: Episode? = nil, themeID: String? = nil) {
+        self.subscriptions = subscriptions
+        self.positions = positions
+        self.lastEpisode = lastEpisode
+        self.themeID = themeID
+    }
+
+    public static let empty = LibrarySnapshot()
+
+    public func isSubscribed(_ show: Show) -> Bool {
+        subscriptions.contains { $0.id == show.id }
+    }
+
+    public mutating func subscribe(_ show: Show) {
+        if let index = subscriptions.firstIndex(where: { $0.id == show.id }) {
+            subscriptions[index] = show
+        } else {
+            subscriptions.append(show)
+        }
+    }
+
+    public mutating func unsubscribe(_ show: Show) {
+        subscriptions.removeAll { $0.id == show.id }
+    }
+}
+
+public protocol LibraryStore: Sendable {
+    func load() -> LibrarySnapshot
+    func save(_ snapshot: LibrarySnapshot) throws
+}
+
+/// Stores the snapshot as one JSON file, written atomically.
+public struct JSONLibraryStore: LibraryStore {
+    public let fileURL: URL
+
+    public init(fileURL: URL) {
+        self.fileURL = fileURL
+    }
+
+    /// `Application Support/NightCast/library.json`.
+    public static func standard() -> JSONLibraryStore {
+        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        return JSONLibraryStore(fileURL: base.appending(path: "NightCast/library.json"))
+    }
+
+    /// Missing file → empty library. Unreadable file → moved aside to
+    /// `library.corrupt.json` so it is not overwritten, then empty library.
+    public func load() -> LibrarySnapshot {
+        guard let data = try? Data(contentsOf: fileURL) else { return .empty }
+        do {
+            return try JSONDecoder.library.decode(LibrarySnapshot.self, from: data)
+        } catch {
+            let aside = fileURL.deletingPathExtension().appendingPathExtension("corrupt.json")
+            try? FileManager.default.removeItem(at: aside)
+            try? FileManager.default.moveItem(at: fileURL, to: aside)
+            return .empty
+        }
+    }
+
+    public func save(_ snapshot: LibrarySnapshot) throws {
+        try FileManager.default.createDirectory(at: fileURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+        let data = try JSONEncoder.library.encode(snapshot)
+        try data.write(to: fileURL, options: [.atomic])
+    }
+}
+
+/// In-memory store for previews and UI tests.
+public final class MemoryLibraryStore: LibraryStore, @unchecked Sendable {
+    private let lock = NSLock()
+    private var snapshot: LibrarySnapshot
+
+    public init(_ snapshot: LibrarySnapshot = .empty) {
+        self.snapshot = snapshot
+    }
+
+    public func load() -> LibrarySnapshot {
+        lock.withLock { snapshot }
+    }
+
+    public func save(_ snapshot: LibrarySnapshot) throws {
+        lock.withLock { self.snapshot = snapshot }
+    }
+}
+
+extension JSONEncoder {
+    static var library: JSONEncoder {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        encoder.outputFormatting = [.sortedKeys]
+        return encoder
+    }
+}
+
+extension JSONDecoder {
+    static var library: JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return decoder
+    }
+}

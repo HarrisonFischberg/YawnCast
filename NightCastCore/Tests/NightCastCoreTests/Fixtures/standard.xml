@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Quiet Hours</title>
+    <itunes:author>Fixture Studio</itunes:author>
+    <description><![CDATA[<p>Slow conversations for <b>late</b> nights &amp; early mornings.</p>]]></description>
+    <itunes:image href="https://example.com/art.jpg"/>
+    <image><url>https://example.com/fallback.jpg</url><title>Quiet Hours</title></image>
+    <item>
+      <title>Episode Two: Tides</title>
+      <guid isPermaLink="false">qh-002</guid>
+      <pubDate>Tue, 08 Oct 2024 21:00:00 +0000</pubDate>
+      <itunes:duration>1:02:03</itunes:duration>
+      <description>About tides.</description>
+      <enclosure url="https://cdn.example.com/qh-002.mp3" length="123" type="audio/mpeg"/>
+    </item>
+    <item>
+      <title>Episode One: Moths</title>
+      <guid>qh-001</guid>
+      <pubDate>Tue, 01 Oct 2024 21:00:00 GMT</pubDate>
+      <itunes:duration>2723</itunes:duration>
+      <itunes:image href="https://example.com/ep1.jpg"/>
+      <enclosure url="https://cdn.example.com/qh-001.m4a" length="123" type="audio/x-m4a"/>
+    </item>
+  </channel>
+</rss>
