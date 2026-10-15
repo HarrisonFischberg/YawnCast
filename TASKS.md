@@ -74,3 +74,11 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] UI tests for bubble and year sections
 - [ ] Device check of v0.3 (owner)
 - [ ] Rare Creatures website (owner LLC; privacy/support pages)
+
+## v0.4 (owner request 2026-10-15)
+- [x] Mini player: always while playing; tap to slide away when paused
+- [x] Sleep bubble tucks into a pill; tap to reopen
+- [x] Midnight night-sky theme (waves + stars), default
+- [x] Library drag-to-reorder; Large / Small / List; Settings sheet
+- [x] Explore: search, Your interests at top, Browse categories + category pages
+- [ ] Device check of v0.4 (owner)

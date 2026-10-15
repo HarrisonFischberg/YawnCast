@@ -22,7 +22,7 @@ struct HomeView: View {
                 .tabViewStyle(.page(indexDisplayMode: .never))
             }
         }
-        .background(theme.bg.ignoresSafeArea())
+        .background { ScreenBackground() }
         .sensoryFeedback(.selection, trigger: model.homePage)
     }
 }
@@ -100,7 +100,6 @@ struct NewEpisodesView: View {
         .scrollIndicators(.hidden)
         .refreshable { await model.refreshLatest(force: true) }
         .task(id: model.library.subscriptions.map(\.id)) { await model.refreshLatest() }
-        .background(theme.bg)
     }
 
     @ViewBuilder
@@ -208,83 +207,5 @@ private struct LatestRow: View {
             parts.append(TimeFormat.duration(duration))
         }
         return parts.joined(separator: " · ")
-    }
-}
-
-// MARK: - Explore
-
-/// Right page: shows that share genres with the Library, from Apple's charts.
-struct ExploreView: View {
-    @Environment(AppModel.self) private var model
-    @Environment(\.theme) private var theme
-    @Environment(\.dynamicTypeSize) private var typeSize
-
-    private var columns: [GridItem] {
-        Array(repeating: GridItem(.flexible(), spacing: Space.xl, alignment: .top), count: typeSize.isAccessibilitySize ? 1 : 2)
-    }
-
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Space.xxl) {
-                PageTitle(title: "Explore", subtitle: "Shows like the ones in your Library")
-                    .padding(.top, Space.s)
-                content
-                Button { model.openSearch() } label: {
-                    Label("Search for something else", systemImage: "magnifyingglass")
-                        .font(Typo.headline)
-                        .padding(.vertical, Space.l)
-                }
-                .buttonStyle(.capsuleKey())
-                .fixedSize(horizontal: false, vertical: true)
-                Text("Suggestions come from the Apple Podcasts genres and titles of your shows, Apple’s public genre charts, and directory search. Nothing about you is stored or sent anywhere else.")
-                    .font(Typo.caption)
-                    .foregroundStyle(theme.textMuted)
-            }
-            .padding(.horizontal, Space.xl)
-            .padding(.bottom, Space.xxxl)
-        }
-        .scrollIndicators(.hidden)
-        .refreshable { await model.loadExplore(force: true) }
-        .task(id: model.library.subscriptions.map(\.id)) { await model.loadExplore() }
-        .background(theme.bg)
-    }
-
-    @ViewBuilder
-    private var content: some View {
-        switch model.explorePhase {
-        case .idle, .loading where model.explore.isEmpty:
-            HStack(spacing: Space.m) {
-                ProgressView().tint(theme.text)
-                Text("Finding shows you might like…").font(Typo.caption).foregroundStyle(theme.textMuted)
-            }
-            .accessibilityElement(children: .combine)
-        case .failed(let message) where model.explore.isEmpty:
-            StateMessage(title: "Explore didn’t load", message: message, systemImage: "wifi.exclamationmark", actionTitle: "Try again") {
-                Task { await model.loadExplore(force: true) }
-            }
-            .padding(.horizontal, -Space.xxl)
-        default:
-            if model.explore.isEmpty {
-                StateMessage(title: "Nothing to suggest yet", message: "Add a few shows from Search and Explore will find similar ones.", systemImage: "sparkle.magnifyingglass")
-                    .padding(.horizontal, -Space.xxl)
-            } else {
-                ForEach(model.explore) { section in
-                    VStack(alignment: .leading, spacing: Space.l) {
-                        Text(section.genre.id == Recommender.topPicksID ? "Top picks for you" : "Because you like \(section.genre.name)")
-                            .font(Typo.title)
-                            .foregroundStyle(theme.text)
-                            .accessibilityAddTraits(.isHeader)
-                        LazyVGrid(columns: columns, alignment: .leading, spacing: Space.xxl) {
-                            ForEach(section.shows) { recommendation in
-                                NavigationLink(value: Route.show(recommendation.result.show)) {
-                                    ShowTile(show: recommendation.result.show)
-                                }
-                                .buttonStyle(TileStyle())
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }

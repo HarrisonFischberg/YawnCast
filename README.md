@@ -4,6 +4,8 @@
 
 A native iPhone podcast app for falling asleep.
 
+**v0.4:** Midnight night-sky theme (default); mini player can be slid away when paused; the ±5 bubble tucks into a small pill; Library drag-to-reorder and Large / Small / List layouts (Settings); Explore has search, *Your interests* at the top, and Browse category cards (Sports, Politics, Tech, AI, Hobbies…).
+
 **v0.3:** show pages list every episode, start to finish, under year headings (Newest/Oldest toggle); Sleep fades 10% a minute, has a ±5 minute bubble, and floating z's.
 
 **v0.2:** Home is three swipeable pages with dots: **New** (latest episodes from your shows), **Library**, and **Explore** (similar shows). The mini player stays on every screen once something is loaded. Show and Now Playing are unchanged.
@@ -94,16 +96,16 @@ Let R be the playable seconds remaining when Moon is tapped.
 
 All three themes pass WCAG AA. Check with Replica's `contrast.py` on `replica/design/tokens.<theme>.json`. Full principles are in [replica/design/principles.md](replica/design/principles.md).
 
-| Role | Paper (day) | Ink (dark) | Ember (bedtime) |
-|---|---|---|---|
-| bg | #F2EDE3 | #111113 | #070504 |
-| surface | #E7E0D2 | #1C1C20 | #110C09 |
-| raised | #FBF8F2 | #26262B | #1A120D |
-| text | #1C1A16 | #F1EEE7 | #B98F6C |
-| text-muted | #5C564B | #A29E95 | #9C7A5C |
-| accent (Moon only) | #2E2A6B | #E9B44C | #C27142 |
-| on-accent | #F7F3EA | #1A1408 | #070504 |
-| Lowest text contrast | 5.54:1 | 6.36:1 | 4.95:1 |
+| Role | Midnight (default) | Paper (day) | Ink (dark) | Ember (bedtime) |
+|---|---|---|---|---|
+| bg | #0A1430 + night sky | #F2EDE3 | #111113 | #070504 |
+| surface | #16244D | #E7E0D2 | #1C1C20 | #110C09 |
+| raised | #1E2F60 | #FBF8F2 | #26262B | #1A120D |
+| text | #EEF2FF | #1C1A16 | #F1EEE7 | #B98F6C |
+| text-muted | #A9B7DD | #5C564B | #A29E95 | #9C7A5C |
+| accent (Moon only) | #F4CF7B | #2E2A6B | #E9B44C | #C27142 |
+| on-accent | #1A1408 | #F7F3EA | #1A1408 | #070504 |
+| Lowest text contrast | 5.87:1 (muted on lightest wave) | 5.54:1 | 6.36:1 | 4.95:1 |
 
 Ember's brightest text has a relative luminance of 0.31, against 0.86 for Ink.
 
@@ -123,13 +125,13 @@ scripts/test.sh --live
 
 `scripts/test.sh` runs core tests, Debug and Release builds, and the fixture UI tests. `--live` also runs the real-network test.
 
-Results from the last full run (2026-10-15, v0.3, iPhone 18 Pro simulator, iOS 27.0):
+Results from the last full run (2026-10-15, v0.4, iPhone 18 Pro simulator, iOS 27.0):
 
 | Check | Result |
 |---|---|
-| `swift test` (NightCastCore) | **83 tests in 14 suites passed**: Sleep timing, gain sequence, pause and buffering freeze, cancel, episode end, seek, provisional duration, RSS fixtures (including malformed), search decoding and dedupe, persistence, seek clamping, genres and charts, recommendations, New-page ordering, 10%-per-minute fade, ±5 adjustments, paged feeds, year grouping |
+| `swift test` (NightCastCore) | **90 tests in 16 suites passed**: Sleep timing, gain sequence, pause and buffering freeze, cancel, episode end, seek, provisional duration, RSS fixtures (including malformed), search decoding and dedupe, persistence, seek clamping, genres and charts, recommendations, New-page ordering, 10%-per-minute fade, ±5 adjustments, paged feeds, year grouping, categories and interests, Library order and layout |
 | Debug and Release builds | **BUILD SUCCEEDED**, no Swift warnings. The Release bundle contains no fixtures and no debug symbols |
-| Fixture UI tests | **13 executed, 0 failures**: empty library; search empty, error and retry; subscription survives relaunch; subscribe → play → Sleep on/off; position survives relaunch (no autoplay); full fade on the real player; cancel mid-fade; pause freezes the countdown; page dots and swipes; mini player on every screen; unsubscribe from Library; ±5 bubble; year sections and order toggle |
+| Fixture UI tests | **17 executed, 0 failures**: empty library; search empty, error and retry; subscription survives relaunch; subscribe → play → Sleep on/off; position survives relaunch (no autoplay); full fade on the real player; cancel mid-fade; pause freezes the countdown; page dots and swipes; mini player on every screen; unsubscribe from Library; ±5 bubble; year sections and order toggle; hiding the mini player; tucking the bubble; drag to reorder and layouts; Explore categories |
 | Live UI test (opt-in) | **Passed** (2026-10-15): real search, real RSS (524 episodes), subscribe, stream played with the position advancing |
 
 The full-fade UI test drives the real `AVPlayer.volume` through every step and checks it never rises, hits each level, then pauses with the volume restored. The sampled sequence for the v0.2 spec is in PROGRESS.md.
@@ -146,6 +148,7 @@ Replica checks:
 | `screenshots/m3/` | Live run: real search, show detail, streaming |
 | `screenshots/m5/` | Show and Search in Paper and Ember; Show, Search and Library at AX5 text |
 | `screenshots/v2/` | New, Library, Explore pages; mini player on Show detail |
+| `screenshots/v4/` | Midnight theme; Library large/small/list; Explore interests and categories; Sports page; Sleep bubble open and tucked |
 | `screenshots/v3/` | Sleep with ±5 bubble and z's (Ember, Ink, Paper fading); show page year sections |
 
 ---

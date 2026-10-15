@@ -105,3 +105,15 @@ each ramped over 2 s. After the 0.0 ramp: pause, save, end Sleep, restore B.
 | V3.5 | Show page grouped by year, Newest/Oldest toggle | PASS (UI `testEpisodesGroupedByYearWithOrderToggle`) |
 | V3.6 | Floating z's visible while Sleep is on; still with Reduce Motion | Simulator screenshots only (`screenshots/v3/`) |
 | V3.7 | Same on a physical iPhone | NOT RUN (owner) |
+
+## v0.4 — Midnight, hideable mini player, tucked bubble, layouts, reorder, Explore categories (2026-10-15)
+
+| ID | Criterion | Status |
+|---|---|---|
+| V4.1 | Mini player always shown while playing; slides away by tap when paused; returns on play | PASS (`testMiniPlayerHidesWhenPausedAndReturnsOnPlay`) |
+| V4.2 | ±5 bubble tucks into a pill after quiet seconds or a tap; pill reopens it | PASS (`testSleepBubbleCollapsesAndReopens`) |
+| V4.3 | Midnight night-sky theme, default once; AA contrast incl. over waves | PASS (contrast.py; screenshots) — comfort in a dark room NOT RUN (owner) |
+| V4.4 | Drag a Library show onto another to reorder; order persists | PASS (UI drag test + core persistence test) |
+| V4.5 | Large / Small / List from header key and Settings | PASS (`testLibraryLayoutsAndReorder`) |
+| V4.6 | Explore: search entry, Your interests at top, Browse categories open category pages | PASS (`testExploreSearchInterestsAndCategories`; live Sports page screenshot) |
+| V4.7 | Same on a physical iPhone | NOT RUN (owner) |

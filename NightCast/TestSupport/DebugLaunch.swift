@@ -42,6 +42,8 @@ struct LaunchOptions {
     var openShow = false
     var searchTerm: String?
     var page: HomePage?
+    var layout: LibraryLayout?
+    var categoryName: String?
 
     init(arguments: [String]) {
         isDemo = arguments.contains("-demo")
@@ -54,6 +56,8 @@ struct LaunchOptions {
         isLiveTest = arguments.contains("-liveTest")
         openShow = arguments.contains("-openShow")
         if let i = arguments.firstIndex(of: "-search"), i + 1 < arguments.count { searchTerm = arguments[i + 1] }
+        if let i = arguments.firstIndex(of: "-layout"), i + 1 < arguments.count { layout = LibraryLayout(rawValue: arguments[i + 1]) }
+        if let i = arguments.firstIndex(of: "-category"), i + 1 < arguments.count { categoryName = arguments[i + 1] }
         if let i = arguments.firstIndex(of: "-page"), i + 1 < arguments.count {
             page = HomePage.allCases.first { $0.title.lowercased() == arguments[i + 1].lowercased() }
         }
@@ -77,6 +81,10 @@ enum DemoSeed {
         model.seedForDemo(shows)
         if launch.openShow { model.path = [.show(shows[0])] }
         if let page = launch.page { model.homePage = page }
+        if let layout = launch.layout { model.libraryLayout = layout }
+        if let name = launch.categoryName, let category = PodcastCategory.browse.first(where: { $0.name == name }) {
+            model.path = [.category(category)]
+        }
         if let term = launch.searchTerm {
             model.pendingSearchTerm = term
             model.path = [.search]

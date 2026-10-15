@@ -2,6 +2,18 @@
 
 Newest first. Each entry: what changed, what was verified (actual output), blockers.
 
+## 2026-10-15 — Session 4: v0.4 Midnight, mini player, bubble pill, layouts, reorder, Explore categories
+
+- Midnight theme (default, D36), hideable mini player (D33), bubble pill (D34), Library layouts +
+  drag reorder (D37), Explore search / interests / 26 Browse categories / category pages (D35).
+- Verified genre ids live before use; three remembered ids were wrong.
+- Fixed after test failure: compact tiles' VoiceOver label dropped the author.
+- **Verified (actual output, `scripts/test.sh`, iPhone 18 Pro sim):** core 90/90; Debug + Release BUILD
+  SUCCEEDED; UI tests 17 executed, 0 failures (real drag-to-reorder included).
+- Note: press-and-hold tests now wait ~60 s for XCUITest's "animations complete" signal (drag + context
+  menu share the gesture); they pass. Script timeout raised to 15 min.
+- Screenshots: `screenshots/v4/`. Not verified on device (V4.7).
+
 ## 2026-10-15 — Session 3: v0.3 full history, Sleep 10%/min, ±5 bubble, z's
 
 Owner request: entire episode list by year; floating z's; ±5 min bubble above Moon; 10% drop per minute.

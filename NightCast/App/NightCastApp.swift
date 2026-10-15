@@ -40,20 +40,22 @@ struct RootView: View {
                         ShowView(show: show, app: model)
                     case .search:
                         SearchView(directory: model.directory, initialQuery: model.pendingSearchTerm)
+                    case .category(let category):
+                        CategoryView(category: category)
                     }
                 }
         }
         .tint(theme.text)
         // Once something is loaded, the mini player stays on every screen.
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            if model.player.episode != nil {
+            if model.showsMiniPlayer {
                 MiniPlayer()
                     .padding(.horizontal, Space.m)
                     .padding(.bottom, Space.xs)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
-        .animation(.spring(response: 0.35, dampingFraction: 0.85), value: model.player.episode == nil)
+        .animation(.spring(response: 0.35, dampingFraction: 0.85), value: model.showsMiniPlayer)
         .fullScreenCover(isPresented: $model.isPlayerPresented) {
             NowPlayingView()
                 .environment(\.theme, model.theme)

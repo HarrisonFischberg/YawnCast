@@ -125,7 +125,7 @@ struct SearchView: View {
             content
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
-        .background(theme.bg.ignoresSafeArea())
+        .background { ScreenBackground() }
         .toolbar(.hidden, for: .navigationBar)
         .onAppear { focused = true }
         .onDisappear { model.cancel() }

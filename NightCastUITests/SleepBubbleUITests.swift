@@ -24,7 +24,7 @@ final class SleepBubbleUITests: XCTestCase {
         XCTAssertTrue(playPause.waitForExistence(timeout: 8))
         XCTAssertTrue(waitUntil(8) { playPause.label == "Pause" })
 
-        let countdown = app.staticTexts["sleepCountdown"]
+        let countdown = app.buttons["sleepCountdown"]
         XCTAssertFalse(countdown.exists, "no bubble before Sleep")
         app.buttons["moonKey"].tap()
         XCTAssertTrue(countdown.waitForExistence(timeout: 3), "bubble pops up with Sleep")

@@ -94,7 +94,7 @@ struct ShowView: View {
         }
         .scrollIndicators(.hidden)
         .refreshable { await model.load(force: true) }
-        .background(theme.bg.ignoresSafeArea())
+        .background { ScreenBackground() }
         .task { await model.load() }
         .toolbarBackground(theme.bg, for: .navigationBar)
         .navigationBarTitleDisplayMode(.inline)
@@ -246,7 +246,14 @@ private struct YearHeader: View {
         }
         .padding(.top, Space.l)
         .padding(.bottom, Space.s)
-        .background(theme.bg)
+        .background {
+            // Pinned over scrolling rows; a soft frosted band on the night sky.
+            if theme.isNightSky {
+                Rectangle().fill(.ultraThinMaterial).padding(.horizontal, -Space.xl)
+            } else {
+                theme.bg.padding(.horizontal, -Space.xl)
+            }
+        }
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isHeader)
         .accessibilityIdentifier("yearHeader")

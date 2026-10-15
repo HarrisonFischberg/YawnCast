@@ -6,6 +6,7 @@ import SwiftUI
 struct SleepAdjustBubble: View {
     let status: SleepStatus
     let onAdjust: (Int) -> Void
+    var onCollapse: () -> Void = {}
     @Environment(\.theme) private var theme
 
     private var isFading: Bool {
@@ -18,14 +19,19 @@ struct SleepAdjustBubble: View {
             stepButton("−5", label: "Remove 5 minutes", minutes: -5)
                 .disabled(isFading)
                 .opacity(isFading ? 0.35 : 1)
-            Text(centerText)
-                .font(Typo.caption.monospacedDigit())
-                .foregroundStyle(theme.text)
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
-                .frame(minWidth: 112)
-                .contentTransition(.numericText())
-                .accessibilityIdentifier("sleepCountdown")
+            Button(action: onCollapse) {
+                Text(centerText)
+                    .font(Typo.caption.monospacedDigit())
+                    .foregroundStyle(theme.text)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .frame(minWidth: 112, minHeight: 44)
+                    .contentTransition(.numericText())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(centerText)
+            .accessibilityHint("Tucks the countdown into a small bubble.")
+            .accessibilityIdentifier("sleepCountdown")
             stepButton("+5", label: "Add 5 minutes", minutes: 5)
         }
         .padding(.horizontal, Space.xs)
@@ -66,6 +72,45 @@ struct SleepAdjustBubble: View {
         .buttonStyle(.plain)
         .accessibilityLabel(label)
         .accessibilityIdentifier(minutes > 0 ? "sleepPlus5" : "sleepMinus5")
+    }
+}
+
+/// The tucked-away bubble: a small pill above the Moon key; tap to open the ±5 controls.
+struct CollapsedSleepPill: View {
+    let status: SleepStatus
+    let onExpand: () -> Void
+    @Environment(\.theme) private var theme
+
+    var body: some View {
+        Button(action: onExpand) {
+            HStack(spacing: Space.xs) {
+                Image(systemName: "timer")
+                Text(shortText).monospacedDigit().contentTransition(.numericText())
+                Image(systemName: "chevron.up").font(.system(size: 10, weight: .bold))
+            }
+            .font(Typo.caption)
+            .foregroundStyle(theme.text)
+            .padding(.horizontal, Space.m)
+            .frame(minHeight: 44)
+            .background {
+                Capsule()
+                    .fill(theme.raised)
+                    .overlay(Capsule().strokeBorder(theme.border, lineWidth: 1))
+                    .shadow(color: .black.opacity(theme.shadowOpacity), radius: 8, y: 3)
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Sleep countdown, \(shortText)")
+        .accessibilityHint("Shows the add and remove 5 minutes controls.")
+        .accessibilityIdentifier("sleepBubbleCollapsed")
+    }
+
+    private var shortText: String {
+        switch status {
+        case .off: ""
+        case .waiting(let t): TimeFormat.sleepDelay(t)
+        case .fading(let level): "\(Int((level * 100).rounded()))%"
+        }
     }
 }
 

@@ -9,12 +9,17 @@ public struct LibrarySnapshot: Codable, Equatable, Sendable {
     /// Last episode loaded into the player, for the mini-player after relaunch.
     public var lastEpisode: Episode?
     public var themeID: String?
+    public var libraryLayout: LibraryLayout?
+    /// Bumped when a release changes appearance defaults, so they apply once.
+    public var appearanceVersion: Int?
 
-    public init(subscriptions: [Show] = [], positions: [String: PlaybackPosition] = [:], lastEpisode: Episode? = nil, themeID: String? = nil) {
+    public init(subscriptions: [Show] = [], positions: [String: PlaybackPosition] = [:], lastEpisode: Episode? = nil, themeID: String? = nil, libraryLayout: LibraryLayout? = nil, appearanceVersion: Int? = nil) {
         self.subscriptions = subscriptions
         self.positions = positions
         self.lastEpisode = lastEpisode
         self.themeID = themeID
+        self.libraryLayout = libraryLayout
+        self.appearanceVersion = appearanceVersion
     }
 
     public static let empty = LibrarySnapshot()
@@ -33,6 +38,18 @@ public struct LibrarySnapshot: Codable, Equatable, Sendable {
 
     public mutating func unsubscribe(_ show: Show) {
         subscriptions.removeAll { $0.id == show.id }
+    }
+
+    /// Drag-to-reorder: moves the show with `id` into the slot of `targetID`
+    /// (before it when moving up, after it when moving down). Returns true if moved.
+    @discardableResult
+    public mutating func moveSubscription(id: String, onto targetID: String) -> Bool {
+        guard id != targetID,
+              let from = subscriptions.firstIndex(where: { $0.id == id }),
+              let to = subscriptions.firstIndex(where: { $0.id == targetID }) else { return false }
+        let show = subscriptions.remove(at: from)
+        subscriptions.insert(show, at: to)
+        return true
     }
 }
 

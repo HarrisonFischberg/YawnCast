@@ -31,6 +31,10 @@ Onboarding, accounts, social, recommendations, ads, subscriptions/monetization,
 AI summaries, queue manager, autoplay-next, playback speed in main player,
 large artwork on Now Playing, waveforms, transcripts.
 
+> **Changed by owner 2026-10-15 (v0.4):** Midnight night-sky theme by default; mini player hideable
+> when paused; Sleep bubble collapses to a pill; Library drag-to-reorder and Large/Small/List;
+> Explore gets search, "Your interests" at the top, and Browse categories (Sports, Politics, Tech, AI…).
+
 ## Signature interaction: Sleep
 
 > **Changed by owner 2026-10-15 (v0.3):** after the countdown, volume drops **10% every minute**

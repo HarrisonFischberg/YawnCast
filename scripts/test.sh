@@ -25,7 +25,7 @@ run_ui() {
   xcodebuild -project NightCast.xcodeproj -scheme NightCast -destination "$DEST" \
     -derivedDataPath build/DerivedData -parallel-testing-enabled NO "$@" test > "$log" 2>&1 &
   local pid=$!
-  for _ in $(seq 1 90); do
+  for _ in $(seq 1 180); do
     sleep 5
     grep -qE "Test Suite '(All tests|Selected tests)' (passed|failed)|TEST (FAILED|SUCCEEDED)|BUILD FAILED" "$log" && break
   done

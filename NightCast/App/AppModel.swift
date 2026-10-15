@@ -8,6 +8,7 @@ import UIKit
 enum Route: Hashable {
     case show(Show)
     case search
+    case category(PodcastCategory)
 }
 
 /// The three swipeable home pages, left to right.
@@ -47,6 +48,13 @@ final class AppModel {
     }
 
     var isPlayerPresented = false
+    /// The user slid the mini player away while paused. Playing again brings it back.
+    var isMiniPlayerHidden = false
+
+    /// The mini player shows whenever audio is playing, and while paused unless slid away.
+    var showsMiniPlayer: Bool {
+        player.episode != nil && (player.isPlaying || !isMiniPlayerHidden)
+    }
     /// Main navigation stack (show detail, search).
     var path: [Route] = []
     /// Which home page is showing. Library is the middle page.
@@ -60,6 +68,8 @@ final class AppModel {
     /// "Explore" page: suggestions grouped by the Library's top genres.
     private(set) var explore: [ExploreSection] = []
     private(set) var explorePhase: LoadPhase = .idle
+    /// "Your interests" chips on Explore, from the genres and titles of saved shows.
+    private(set) var interests: [PodcastCategory] = []
     /// Brief confirmation shown above the Moon key.
     private(set) var toast: String?
     private(set) var sleepStatus: SleepStatus = .off
@@ -76,12 +86,20 @@ final class AppModel {
     @ObservationIgnored private let feedDisk = FeedDiskCache()
     /// Library shows (by id) that the current Explore results were computed from.
     @ObservationIgnored private var exploreBasis: [String] = []
+    @ObservationIgnored private var categoryCache: [String: [DirectoryResult]] = [:]
 
     init(store: LibraryStore, directory: DirectoryService, feeds: FeedService, clock: PlaybackClock = SystemPlaybackClock(), sleepConfiguration: SleepConfiguration = .standard) {
         self.store = store
         self.directory = directory
         self.feeds = feeds
-        let snapshot = store.load()
+        var snapshot = store.load()
+        // v0.4: Midnight becomes the default look. Apply once, and only over the
+        // previous default (unset or Ink) so a deliberate Paper/Ember choice stays.
+        if (snapshot.appearanceVersion ?? 0) < 4 {
+            if snapshot.themeID == nil || snapshot.themeID == "ink" { snapshot.themeID = Theme.midnight.id }
+            snapshot.appearanceVersion = 4
+            try? store.save(snapshot)
+        }
         library = snapshot
         theme = Theme.with(id: snapshot.themeID)
         player = PlaybackEngine()
@@ -97,6 +115,7 @@ final class AppModel {
             sleepStatus = sleep.status
             nowPlaying?.update()
             runSleepTicker()
+            if player.isPlaying { isMiniPlayerHidden = false }
         }
         player.onEnded = { [weak self] in
             self?.sleep.episodeDidEnd()
@@ -124,6 +143,29 @@ final class AppModel {
     func toggleSubscription(_ show: Show) {
         if library.isSubscribed(show) { unsubscribe(show) } else { library.subscribe(show); persist() }
         recomputeLatestFromCache()
+    }
+
+    /// Large / Small / List. Saved with the Library.
+    var libraryLayout: LibraryLayout {
+        get { library.libraryLayout ?? .large }
+        set {
+            library.libraryLayout = newValue
+            persist()
+        }
+    }
+
+    func moveSubscription(id: String, onto targetID: String) {
+        if library.moveSubscription(id: id, onto: targetID) { persist() }
+    }
+
+    func moveToTop(_ show: Show) {
+        guard let first = library.subscriptions.first, first.id != show.id else { return }
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) { moveSubscription(id: show.id, onto: first.id) }
+    }
+
+    func moveToEnd(_ show: Show) {
+        guard let last = library.subscriptions.last, last.id != show.id else { return }
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) { moveSubscription(id: show.id, onto: last.id) }
     }
 
     func unsubscribe(_ show: Show) {
@@ -238,6 +280,7 @@ final class AppModel {
         let ids = library.subscriptions.compactMap(\.directoryID)
         guard !ids.isEmpty else {
             explore = []
+            interests = []
             exploreBasis = basis
             explorePhase = .loaded
             return
@@ -246,6 +289,10 @@ final class AppModel {
         do {
             let records = try await directory.lookup(ids: ids)
             let taste = Recommender.taste(from: records)
+            interests = PodcastCategory.interests(
+                taste: taste,
+                keywords: Recommender.keywords(fromTitles: library.subscriptions.map(\.title))
+            )
             var rankByID: [Int: Int] = [:]
             for weight in taste.prefix(3) {
                 let chart = (try? await directory.topShowIDs(genreID: weight.genre.id, limit: 25)) ?? []
@@ -287,6 +334,24 @@ final class AppModel {
             persist()
         }
         presentPlayer()
+    }
+
+    /// Shows for an Explore category: the genre's top 50 in chart order, or a
+    /// topic search. Cached for the session.
+    func shows(in category: PodcastCategory, force: Bool = false) async throws -> [DirectoryResult] {
+        if !force, let cached = categoryCache[category.id] { return cached }
+        let results: [DirectoryResult]
+        switch category.source {
+        case .genre(let genreID):
+            let ids = try await directory.topShowIDs(genreID: genreID, limit: 50)
+            let records = try await directory.lookup(ids: ids)
+            let byID = Dictionary(records.map { ($0.directoryID, $0) }, uniquingKeysWith: { first, _ in first })
+            results = ids.compactMap { byID[$0] }
+        case .search(let term):
+            results = try await directory.search(term)
+        }
+        categoryCache[category.id] = results
+        return results
     }
 
     private func presentPlayer() {

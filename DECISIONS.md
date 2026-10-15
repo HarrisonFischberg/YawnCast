@@ -195,3 +195,33 @@ is overridden by the owner for this element only.
 ## D32 · 2026-10-15 · "Website copy"
 There is no NightCast website yet; the README and in-app copy were updated instead. A Rare Creatures
 site (needed for the LLC's Apple enrollment and app privacy pages) would carry the public copy later.
+
+## D33 · 2026-10-15 · v0.4 mini player visibility (owner request)
+Always shown while audio plays. When paused, a chevron (or a downward swipe) slides it away;
+it returns as soon as anything plays (`isMiniPlayerHidden` resets on play).
+
+## D34 · 2026-10-15 · Collapsible Sleep bubble
+The ±5 bubble opens with Sleep, tucks into a small pill ("⏱ 11 min ⌃") after 5 quiet seconds or a tap
+on its center; tapping the pill reopens it. Any ±5 tap restarts the 5-second timer.
+
+## D35 · 2026-10-15 · Explore categories
+26 Browse cards: 24 Apple genres (ids verified live against Apple's charts — several remembered ids
+were wrong, e.g. 1508 is Home & Garden) plus 2 topic searches with no genre (AI → "artificial
+intelligence", Sleep → "sleep stories"). Category page = genre top 50 in chart order, or search
+results. "Your interests" chips (top of Explore) = shared title keywords first, then Library genres.
+
+## D36 · 2026-10-15 · Midnight theme, default
+Animated night sky (gradient, 3 slow waves, 80 deterministic twinkling stars, a few glints), ~15 fps,
+frozen under Reduce Motion. Tokens in `replica/design/tokens.midnight.json`; 0 AA failures, including
+text over the lightest wave. Becomes the default once (appearanceVersion 4) for users on the old
+default (unset/Ink); Paper and Ember choices are kept.
+
+## D37 · 2026-10-15 · Library layouts and reorder
+Large (2 col) / Small (3 col) / List, saved with the Library; header key cycles, Settings picks.
+Reorder: press-hold-drag a show onto another (draggable/dropDestination with the show id), plus
+Move to Top / Move to End in the long-press menu and as VoiceOver actions. "Appearance" sheet is now
+"Settings" (layout + theme).
+
+## D38 · 2026-10-15 · Shared simulators
+Another project's session has also launched apps on "iPhone 18 Pro" (status bar showed "◀ Keepsake").
+Screens captured here were NightCast's; if collisions grow, create a dedicated "NightCast" simulator.

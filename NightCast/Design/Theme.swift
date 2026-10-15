@@ -21,6 +21,19 @@ struct Theme: Identifiable, Equatable {
     /// Top-edge highlight on raised keys.
     let highlight: Color
     let shadowOpacity: Double
+    /// Draw the animated night sky (gradient, waves, stars) instead of a flat `bg`.
+    var isNightSky = false
+
+    /// Default: deep-blue night sky with slow waves and twinkling stars.
+    static let midnight = Theme(
+        id: "midnight", name: "Midnight", blurb: "Night sky, calm",
+        colorScheme: .dark,
+        bg: Color(hex: 0x0A1430), surface: Color(hex: 0x16244D), raised: Color(hex: 0x1E2F60),
+        border: Color(hex: 0x2C3F78), text: Color(hex: 0xEEF2FF), textMuted: Color(hex: 0xA9B7DD),
+        accent: Color(hex: 0xF4CF7B), onAccent: Color(hex: 0x1A1408), danger: Color(hex: 0xFF9A8A),
+        edge: Color(hex: 0x070E24), highlight: .white.opacity(0.10), shadowOpacity: 0.55,
+        isNightSky: true
+    )
 
     static let paper = Theme(
         id: "paper", name: "Paper", blurb: "Warm daylight",
@@ -49,10 +62,10 @@ struct Theme: Identifiable, Equatable {
         edge: Color(hex: 0x030201), highlight: Color(hex: 0xB98F6C).opacity(0.07), shadowOpacity: 0.6
     )
 
-    static let all: [Theme] = [.paper, .ink, .ember]
+    static let all: [Theme] = [.midnight, .paper, .ink, .ember]
 
     static func with(id: String?) -> Theme {
-        all.first { $0.id == id } ?? .ink
+        all.first { $0.id == id } ?? .midnight
     }
 }
 
@@ -69,7 +82,7 @@ extension Color {
 }
 
 private struct ThemeKey: EnvironmentKey {
-    static let defaultValue: Theme = .ink
+    static let defaultValue: Theme = .midnight
 }
 
 extension EnvironmentValues {
