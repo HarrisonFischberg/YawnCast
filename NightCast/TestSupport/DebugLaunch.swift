@@ -77,11 +77,12 @@ enum DemoSeed {
         Show(feedURL: URL(string: "https://feeds.feedburner.com/dancarlin/history?format=xml")!, directoryID: 173001861, title: "Dan Carlin's Hardcore History", author: "Dan Carlin", artworkURL: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Podcasts115/v4/49/b7/eb/49b7eb32-8f08-6fac-aadb-2f002131fe5f/mza_15196161972010256532.jpg/600x600bb.jpg")),
     ]
 
-    static func run(model: AppModel, launch: LaunchOptions) {
+    static func run(model: AppModel, launch: LaunchOptions, arguments: [String] = ProcessInfo.processInfo.arguments) {
         model.seedForDemo(shows)
         if launch.openShow { model.path = [.show(shows[0])] }
         if let page = launch.page { model.homePage = page }
         if let layout = launch.layout { model.libraryLayout = layout }
+        if arguments.contains("-themes") { model.isThemesPresented = true }
         if let name = launch.categoryName, let category = PodcastCategory.browse.first(where: { $0.name == name }) {
             model.path = [.category(category)]
         }

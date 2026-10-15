@@ -248,7 +248,7 @@ private struct YearHeader: View {
         .padding(.bottom, Space.s)
         .background {
             // Pinned over scrolling rows; a soft frosted band on the night sky.
-            if theme.isNightSky {
+            if theme.hasScene {
                 Rectangle().fill(.ultraThinMaterial).padding(.horizontal, -Space.xl)
             } else {
                 theme.bg.padding(.horizontal, -Space.xl)

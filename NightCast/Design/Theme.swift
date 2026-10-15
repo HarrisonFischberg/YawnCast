@@ -21,8 +21,10 @@ struct Theme: Identifiable, Equatable {
     /// Top-edge highlight on raised keys.
     let highlight: Color
     let shadowOpacity: Double
-    /// Draw the animated night sky (gradient, waves, stars) instead of a flat `bg`.
-    var isNightSky = false
+    /// Animated scene drawn behind screens; nil for flat "Color Scape" themes.
+    var scene: SceneKind?
+
+    var hasScene: Bool { scene != nil }
 
     /// Default: deep-blue night sky with slow waves and twinkling stars.
     static let midnight = Theme(
@@ -32,7 +34,47 @@ struct Theme: Identifiable, Equatable {
         border: Color(hex: 0x2C3F78), text: Color(hex: 0xEEF2FF), textMuted: Color(hex: 0xA9B7DD),
         accent: Color(hex: 0xF4CF7B), onAccent: Color(hex: 0x1A1408), danger: Color(hex: 0xFF9A8A),
         edge: Color(hex: 0x070E24), highlight: .white.opacity(0.10), shadowOpacity: 0.55,
-        isNightSky: true
+        scene: .midnight
+    )
+
+    static let mountain = Theme(
+        id: "mountain", name: "Mountain Vista", blurb: "Moonlit peaks, drifting mist",
+        colorScheme: .dark,
+        bg: Color(hex: 0x120F2E), surface: Color(hex: 0x231C4A), raised: Color(hex: 0x2D2560),
+        border: Color(hex: 0x3D3478), text: Color(hex: 0xF1EDFF), textMuted: Color(hex: 0xBDB4E0),
+        accent: Color(hex: 0xCDBDFF), onAccent: Color(hex: 0x1A1238), danger: Color(hex: 0xFF9A9A),
+        edge: Color(hex: 0x0A0820), highlight: .white.opacity(0.10), shadowOpacity: 0.55,
+        scene: .mountain
+    )
+
+    static let beach = Theme(
+        id: "beach", name: "Beach", blurb: "Moonlit sea, soft waves",
+        colorScheme: .dark,
+        bg: Color(hex: 0x071A2B), surface: Color(hex: 0x10304A), raised: Color(hex: 0x163C5A),
+        border: Color(hex: 0x22506F), text: Color(hex: 0xECF7FF), textMuted: Color(hex: 0xA9C7D8),
+        accent: Color(hex: 0x8FE3D3), onAccent: Color(hex: 0x052126), danger: Color(hex: 0xFF9A8A),
+        edge: Color(hex: 0x04111D), highlight: .white.opacity(0.10), shadowOpacity: 0.55,
+        scene: .beach
+    )
+
+    static let rainforest = Theme(
+        id: "rainforest", name: "Rainforest", blurb: "Swaying canopy, fireflies",
+        colorScheme: .dark,
+        bg: Color(hex: 0x04140F), surface: Color(hex: 0x0C2A1F), raised: Color(hex: 0x12362A),
+        border: Color(hex: 0x1E4A3A), text: Color(hex: 0xEAF7EE), textMuted: Color(hex: 0xA8CCB7),
+        accent: Color(hex: 0xD6F07A), onAccent: Color(hex: 0x13200A), danger: Color(hex: 0xFF9A8A),
+        edge: Color(hex: 0x020C08), highlight: .white.opacity(0.08), shadowOpacity: 0.6,
+        scene: .rainforest
+    )
+
+    static let city = Theme(
+        id: "city", name: "City Scape", blurb: "Neon skyline, soft rain",
+        colorScheme: .dark,
+        bg: Color(hex: 0x0B0618), surface: Color(hex: 0x1A1030), raised: Color(hex: 0x24173F),
+        border: Color(hex: 0x36255A), text: Color(hex: 0xF5EEFF), textMuted: Color(hex: 0xC2B4E0),
+        accent: Color(hex: 0xFF6FB5), onAccent: Color(hex: 0x1A0410), danger: Color(hex: 0xFF9A8A),
+        edge: Color(hex: 0x060310), highlight: .white.opacity(0.10), shadowOpacity: 0.6,
+        scene: .city
     )
 
     static let paper = Theme(
@@ -62,7 +104,11 @@ struct Theme: Identifiable, Equatable {
         edge: Color(hex: 0x030201), highlight: Color(hex: 0xB98F6C).opacity(0.07), shadowOpacity: 0.6
     )
 
-    static let all: [Theme] = [.midnight, .paper, .ink, .ember]
+    /// Animated themes, all calm and night-time.
+    static let scenes: [Theme] = [.midnight, .mountain, .beach, .rainforest, .city]
+    /// Flat color themes.
+    static let colorScapes: [Theme] = [.paper, .ember, .ink]
+    static let all: [Theme] = scenes + colorScapes
 
     static func with(id: String?) -> Theme {
         all.first { $0.id == id } ?? .midnight

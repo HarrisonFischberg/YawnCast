@@ -82,3 +82,9 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] Library drag-to-reorder; Large / Small / List; Settings sheet
 - [x] Explore: search, Your interests at top, Browse categories + category pages
 - [ ] Device check of v0.4 (owner)
+
+## v0.5 (owner request 2026-10-15)
+- [x] Themes key (dark/light icon) → Themes sheet; layout stays one-click
+- [x] Scenes: Midnight, Mountain Vista, Beach, Rainforest, City Scape (animated, AA contrast)
+- [x] Color Scapes: Paper, Ember, Ink
+- [ ] Device check of v0.5 scenes (battery/comfort at night, owner)

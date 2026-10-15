@@ -7,7 +7,6 @@ struct LibraryView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
     @Environment(\.dynamicTypeSize) private var typeSize
-    @State private var isSettingsPresented = false
     /// Show currently under a dragged show (highlighted as the drop slot).
     @State private var dropTargetID: String?
 
@@ -23,6 +22,7 @@ struct LibraryView: View {
     }
 
     var body: some View {
+        @Bindable var model = model
         ScrollView {
             VStack(alignment: .leading, spacing: Space.xxl) {
                 header
@@ -46,8 +46,8 @@ struct LibraryView: View {
             .padding(.bottom, Space.xxxl)
         }
         .scrollIndicators(.hidden)
-        .sheet(isPresented: $isSettingsPresented) {
-            SettingsSheet()
+        .sheet(isPresented: $model.isThemesPresented) {
+            ThemesSheet()
                 .presentationDetents([.medium, .large])
         }
     }
@@ -108,8 +108,8 @@ struct LibraryView: View {
                     .accessibilityIdentifier("layoutKey")
                     .sensoryFeedback(.selection, trigger: model.libraryLayout)
                 }
-                IconKey(systemName: "slider.horizontal.3", label: "Settings") { isSettingsPresented = true }
-                    .accessibilityIdentifier("settingsKey")
+                IconKey(systemName: "circle.lefthalf.filled", label: "Themes") { model.isThemesPresented = true }
+                    .accessibilityIdentifier("themesKey")
                 IconKey(systemName: "magnifyingglass", label: "Search podcasts") { model.openSearch() }
                     .accessibilityIdentifier("searchKey")
             }

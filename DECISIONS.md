@@ -225,3 +225,16 @@ Move to Top / Move to End in the long-press menu and as VoiceOver actions. "Appe
 ## D38 · 2026-10-15 · Shared simulators
 Another project's session has also launched apps on "iPhone 18 Pro" (status bar showed "◀ Keepsake").
 Screens captured here were NightCast's; if collisions grow, create a dedicated "NightCast" simulator.
+
+## D39 · 2026-10-15 · Themes: Scenes and Color Scapes (owner request, v0.5)
+Library header keeps the one-click layout key (Large → Small → List). The second key is now a
+dark/light circle labelled "Themes" and opens the Themes sheet (layout removed from it).
+Scenes (animated, calm, night-time like Midnight): Midnight, Mountain Vista (violet dusk, moon at the
+right edge, layered peaks, drifting mist), Beach (moon on the horizon, shimmering moon path, foam
+lines, lapping shore), Rainforest (swaying canopy layers, mist, foreground leaves, blinking fireflies),
+City Scape (Tokyo-style neon haze, two skyline layers with windows switching on/off, pulsing neon
+signs, light rain). Color Scapes: Paper, Ember, Ink. One shared SceneRenderer (Canvas, ~15 fps,
+deterministic layouts, still under Reduce Motion); theme swatches show a still frame of the scene.
+Tokens `replica/design/tokens.{mountain,beach,rainforest,city}.json`: 0 AA failures incl. text over
+each scene's brightest area. Moons were first placed under page titles; moved after screenshot review
+so no scene puts a bright shape where text sits (Mountain: right edge; Beach: on the horizon).

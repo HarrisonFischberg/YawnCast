@@ -117,3 +117,13 @@ each ramped over 2 s. After the 0.0 ramp: pause, save, end Sleep, restore B.
 | V4.5 | Large / Small / List from header key and Settings | PASS (`testLibraryLayoutsAndReorder`) |
 | V4.6 | Explore: search entry, Your interests at top, Browse categories open category pages | PASS (`testExploreSearchInterestsAndCategories`; live Sports page screenshot) |
 | V4.7 | Same on a physical iPhone | NOT RUN (owner) |
+
+## v0.5 — Themes: Scenes + Color Scapes (2026-10-15)
+
+| ID | Criterion | Status |
+|---|---|---|
+| V5.1 | Layout stays one-click; Themes key (dark/light icon) opens Themes | PASS (`testLibraryLayoutsAndReorder`) |
+| V5.2 | Scenes: Midnight, Mountain Vista, Beach, Rainforest, City Scape; Color Scapes: Paper, Ember, Ink | PASS (same test selects Beach and finds all 8) |
+| V5.3 | AA contrast for every scene, incl. its brightest area | PASS (contrast.py × 4) |
+| V5.4 | No bright scene element behind text | Screenshot review only (`screenshots/v5/`) |
+| V5.5 | Comfort and battery at night on a physical iPhone | NOT RUN (owner) |

@@ -104,11 +104,24 @@ final class V4UITests: XCTestCase {
         XCTAssertTrue(waitUntil(3) { rivers.frame.width < large }, "small cards")
         layoutKey.tap()
         XCTAssertTrue(waitUntil(3) { rivers.frame.width > large }, "list rows span the width")
-        app.buttons["settingsKey"].tap()
-        let largeOption = app.buttons["layout-large"]
-        XCTAssertTrue(largeOption.waitForExistence(timeout: 3))
-        largeOption.tap()
-        XCTAssertTrue(largeOption.isSelected)
+        layoutKey.tap()
+        XCTAssertTrue(waitUntil(3) { abs(rivers.frame.width - large) < 1 }, "one click cycles back to large")
+
+        // Themes: Scenes and Color Scapes, one tap applies.
+        app.buttons["themesKey"].tap()
+        let beach = app.buttons["theme-beach"]
+        XCTAssertTrue(beach.waitForExistence(timeout: 3))
+        for id in ["midnight", "mountain", "rainforest", "city"] {
+            XCTAssertTrue(app.buttons["theme-\(id)"].exists, id)
+        }
+        beach.tap()
+        XCTAssertTrue(waitUntil(3) { beach.isSelected })
+        // Color Scapes sit below the Scenes; scroll the sheet to reach them.
+        let ink = app.buttons["theme-ink"]
+        for _ in 0..<3 where !ink.isHittable { app.swipeUp() }
+        for id in ["paper", "ember", "ink"] {
+            XCTAssertTrue(app.buttons["theme-\(id)"].waitForExistence(timeout: 3), id)
+        }
     }
 
     func testExploreSearchInterestsAndCategories() {

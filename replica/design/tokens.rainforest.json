@@ -1,0 +1,66 @@
+{
+  "_about": "NightCast scene theme 'rainforest'. scene-light = brightest area the animated scene reaches behind text.",
+  "color": {
+    "bg": "#04140F",
+    "scene-light": "#1C4A38",
+    "surface": "#0C2A1F",
+    "raised": "#12362A",
+    "border": "#1E4A3A",
+    "border-input": "#6E9E86",
+    "text": "#EAF7EE",
+    "text-muted": "#A8CCB7",
+    "accent": "#D6F07A",
+    "on-accent": "#13200A"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "scene-light"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "scene-light"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "raised"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "accent",
+      "scene-light"
+    ],
+    [
+      "border-input",
+      "bg",
+      "ui"
+    ]
+  ]
+}

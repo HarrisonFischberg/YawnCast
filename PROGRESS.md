@@ -2,6 +2,14 @@
 
 Newest first. Each entry: what changed, what was verified (actual output), blockers.
 
+## 2026-10-15 — Session 5: v0.5 Themes (Scenes + Color Scapes)
+
+- Four new animated scenes + shared renderer; Themes sheet; Themes key; layout key unchanged (D39).
+- Screenshot review caught moons under page titles/show labels → moved (Mountain: right edge; Beach: horizon).
+- **Verified (actual output):** core 90/90; Debug + Release BUILD SUCCEEDED; UI full run 16/17 passed, the
+  one failure was the test not scrolling to Color Scapes in a half-height sheet → test fixed, rerun alone: passed.
+- Screenshots: `screenshots/v5/`. Not verified on device (V5.5).
+
 ## 2026-10-15 — Session 4: v0.4 Midnight, mini player, bubble pill, layouts, reorder, Explore categories
 
 - Midnight theme (default, D36), hideable mini player (D33), bubble pill (D34), Library layouts +

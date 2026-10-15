@@ -48,6 +48,7 @@ final class AppModel {
     }
 
     var isPlayerPresented = false
+    var isThemesPresented = false
     /// The user slid the mini player away while paused. Playing again brings it back.
     var isMiniPlayerHidden = false
 
