@@ -2,6 +2,18 @@
 
 Newest first. Each entry: what changed, what was verified (actual output), blockers.
 
+## 2026-10-15 — Session 2: v0.2 home pages, persistent mini player, Explore
+
+Owner request: mini player always visible once playing; 3-dot pager New · Library · Explore with swipe;
+Explore recommends similar shows. Plus my additions: feed disk cache, unsubscribe/mark-played menus,
+new-episode pip, keyword affinity for Explore.
+- **Verified (actual output, `scripts/test.sh --live`, iPhone 18 Pro sim):** core 70/70; Debug + Release
+  BUILD SUCCEEDED; UI tests 11 executed, 0 failures; live network test passed.
+- Live Explore check: genres alone surfaced self-help shows for a sleep Library; keyword affinity fixed
+  it (Top picks: Calm History, Sleep and Sorcery, Lights Out Library, Just Sleep). Screenshots: `screenshots/v2/`.
+- Found: another session drives the "iPhone 17" simulator → moved to "iPhone 18 Pro" (D27).
+- Not verified on device yet (V2.7).
+
 ## 2026-10-15 — Session 1e: M5 polish, Release hygiene, handoff
 
 - Release excludes TestSupport (D20). Verified by inspecting the Release .app and binary.

@@ -41,6 +41,7 @@ struct LaunchOptions {
     var isLiveTest = false
     var openShow = false
     var searchTerm: String?
+    var page: HomePage?
 
     init(arguments: [String]) {
         isDemo = arguments.contains("-demo")
@@ -53,6 +54,9 @@ struct LaunchOptions {
         isLiveTest = arguments.contains("-liveTest")
         openShow = arguments.contains("-openShow")
         if let i = arguments.firstIndex(of: "-search"), i + 1 < arguments.count { searchTerm = arguments[i + 1] }
+        if let i = arguments.firstIndex(of: "-page"), i + 1 < arguments.count {
+            page = HomePage.allCases.first { $0.title.lowercased() == arguments[i + 1].lowercased() }
+        }
         if let i = arguments.firstIndex(of: "-theme"), i + 1 < arguments.count { themeID = arguments[i + 1] }
     }
 }
@@ -71,10 +75,11 @@ enum DemoSeed {
 
     static func run(model: AppModel, launch: LaunchOptions) {
         model.seedForDemo(shows)
-        if launch.openShow { model.libraryPath = [shows[0]] }
+        if launch.openShow { model.path = [.show(shows[0])] }
+        if let page = launch.page { model.homePage = page }
         if let term = launch.searchTerm {
             model.pendingSearchTerm = term
-            model.isSearchPresented = true
+            model.path = [.search]
         }
         Task {
             do {

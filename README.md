@@ -2,7 +2,9 @@
 
 > "NightCast" is a temporary internal name. It has not been trademark-cleared.
 
-A native iPhone podcast app for falling asleep. It has three screens: Library, Show, and Now Playing.
+A native iPhone podcast app for falling asleep.
+
+**v0.2:** Home is three swipeable pages with dots: **New** (latest episodes from your shows), **Library**, and **Explore** (similar shows). The mini player stays on every screen once something is loaded. Show and Now Playing are unchanged.
 Its signature control is the **Moon** button: one tap, and the episode fades out in steps and then pauses.
 
 Status: built and tested on the **iOS Simulator only**. It has not been run on a physical iPhone.
@@ -46,8 +48,8 @@ These are excluded from Release builds ([D20](DECISIONS.md)).
 ```
 NightCastCore/  (Swift package, no UIKit/AVFoundation; tested with `swift test`)
   Models/       Show, Episode, PlaybackPosition, Feed, FeedURL (canonical identity)
-  Directory/    DirectoryService, ITunesDirectory (decode + dedupe)
-  Feed/         FeedService, HTTPFeedService, RSSParser (XMLParser; durations, dates, HTML)
+  Directory/    DirectoryService, ITunesDirectory (search, lookup, genre charts), Recommender
+  Feed/         FeedService, HTTPFeedService, RSSParser (XMLParser; durations, dates, HTML), LatestEpisodes
   Persistence/  LibraryStore, JSONLibraryStore (atomic; moves corrupt files aside), MemoryLibraryStore
   Sleep/        SleepTimer (pure state machine), SleepController (clock, active-time meter)
   Playback/     SeekMath, TimeFormat, SleepCopy
@@ -56,9 +58,10 @@ NightCast/      (SwiftUI app, iOS 18+, Swift 6, default MainActor isolation)
   App/          NightCastApp, AppModel (library, feeds cache, playback, Sleep wiring)
   Playback/     PlaybackEngine (AVPlayer, audio session, interruptions, route change, gain)
                 NowPlayingBridge (Lock Screen info, remote play/pause/±15/scrub)
-                ArtworkCache (memory + disk; artwork never altered)
+                ArtworkCache (memory + disk; artwork never altered), FeedDiskCache
   Design/       Theme tokens, KeyStyle (physical key), MoonKey, Scrubber
-  Views/        LibraryView + MiniPlayer, SearchView, ShowView, NowPlayingView, AppearanceSheet
+  Views/        HomeView (pager, PageDots, NewEpisodesView, ExploreView), LibraryView + MiniPlayer,
+                SearchView, ShowView, NowPlayingView, AppearanceSheet
   TestSupport/  Fixtures + DebugLaunch (Debug only)
 NightCastUITests/  CoreFlowUITests, SleepUITests, LiveNetworkUITests (opt-in)
 ```
@@ -114,13 +117,13 @@ scripts/test.sh --live
 
 `scripts/test.sh` runs core tests, Debug and Release builds, and the fixture UI tests. `--live` also runs the real-network test.
 
-Results from the last full run (2026-10-15, iPhone 17 simulator, iOS 27.0):
+Results from the last full run (2026-10-15, v0.2, iPhone 18 Pro simulator, iOS 27.0):
 
 | Check | Result |
 |---|---|
-| `swift test` (NightCastCore) | **55 tests in 8 suites passed**: Sleep timing, gain sequence, pause and buffering freeze, cancel, episode end, seek, provisional duration, RSS fixtures (including malformed), search decoding and dedupe, persistence, seek clamping |
+| `swift test` (NightCastCore) | **70 tests in 11 suites passed**: Sleep timing, gain sequence, pause and buffering freeze, cancel, episode end, seek, provisional duration, RSS fixtures (including malformed), search decoding and dedupe, persistence, seek clamping, genres and charts, recommendations, New-page ordering |
 | Debug and Release builds | **BUILD SUCCEEDED**, no Swift warnings. The Release bundle contains no fixtures and no debug symbols |
-| Fixture UI tests | **8 executed, 0 failures**: empty library; search empty, error and retry; subscription survives relaunch; subscribe → play → Sleep on/off; position survives relaunch (no autoplay); full fade on the real player; cancel mid-fade; pause freezes the countdown |
+| Fixture UI tests | **11 executed, 0 failures**: empty library; search empty, error and retry; subscription survives relaunch; subscribe → play → Sleep on/off; position survives relaunch (no autoplay); full fade on the real player; cancel mid-fade; pause freezes the countdown; page dots and swipes; mini player on every screen; unsubscribe from Library |
 | Live UI test (opt-in) | **Passed** (2026-10-15): real search, real RSS (524 episodes), subscribe, stream played with the position advancing |
 
 Observed volume during the full-fade test (`-fastSleep`, sampled every 0.5 s):
@@ -140,6 +143,7 @@ Replica checks:
 | `screenshots/m2/` | Library and Now Playing in all 3 themes, Sleep on, empty state, AX5 text |
 | `screenshots/m3/` | Live run: real search, show detail, streaming |
 | `screenshots/m5/` | Show and Search in Paper and Ember; Show, Search and Library at AX5 text |
+| `screenshots/v2/` | New, Library, Explore pages; mini player on Show detail |
 
 ---
 
@@ -173,7 +177,7 @@ None of these can be marked PASS from simulator results. Record outcomes in [ACC
 
 Nothing has been uploaded, signed, or changed in any developer account.
 
-1. In Xcode, select the **NightCast** target, go to **Signing & Capabilities**, choose your **Team**, and set a unique bundle ID. The placeholder is `dev.nightcast.app`.
+1. Signing is already set up for development: team `KTV2G3Z883`, bundle ID `com.nightcast.ktv2g3z883`, automatic signing. For release you may want a nicer bundle ID (it can't change after the first App Store upload).
 2. Keep the **Background Modes → Audio** capability. It's already in `Config/NightCast-Info.plist`.
 3. Run on your iPhone and work through checks D1–D8 above.
 4. Do **Product → Archive** with the **Release** configuration, then **Distribute App → App Store Connect → Upload**.

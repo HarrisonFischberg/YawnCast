@@ -79,7 +79,7 @@ struct ShowView: View {
                 episodesSection
             }
             .padding(.horizontal, Space.xl)
-            .padding(.bottom, app.player.episode == nil ? Space.xxxl : 120)
+            .padding(.bottom, Space.xxxl)
         }
         .scrollIndicators(.hidden)
         .refreshable { await model.load(force: true) }
@@ -192,6 +192,7 @@ struct ShowView: View {
                         }
                         .buttonStyle(RowStyle())
                         .accessibilityIdentifier("episodeRow")
+                        .contextMenu { EpisodeMenu(episode: episode) }
                         Rectangle().fill(theme.border).frame(height: 1)
                     }
                 }
@@ -249,7 +250,7 @@ struct EpisodeRow: View {
 }
 
 /// A play glyph inside a progress ring.
-private struct ProgressPlayGlyph: View {
+struct ProgressPlayGlyph: View {
     let fraction: Double
     let isPlaying: Bool
     @Environment(\.theme) private var theme
@@ -268,5 +269,19 @@ private struct ProgressPlayGlyph: View {
         }
         .frame(width: 40, height: 40)
         .accessibilityHidden(true)
+    }
+}
+
+/// Long-press actions shared by episode rows.
+struct EpisodeMenu: View {
+    let episode: Episode
+    @Environment(AppModel.self) private var app
+
+    var body: some View {
+        let played = app.position(for: episode)?.completed == true
+        Button { app.play(episode) } label: { Label("Play", systemImage: "play.fill") }
+        Button { app.setPlayed(episode, !played) } label: {
+            Label(played ? "Mark as Unplayed" : "Mark as Played", systemImage: played ? "circle" : "checkmark.circle")
+        }
     }
 }

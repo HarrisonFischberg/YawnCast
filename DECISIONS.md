@@ -133,3 +133,41 @@ DebugLaunch); the same code is also wrapped in `#if DEBUG`, and AppModel demo he
 At accessibility Dynamic Type sizes: Library uses one column, Show header and Search rows stack
 vertically, the Moon key wraps its subtitle and hides its ticks. The search field alone is capped
 at `.accessibility1` because it shares a row with the close key.
+
+## D22 · 2026-10-15 · Development signing (owner-approved)
+Team KTV2G3Z883, bundle ID `com.nightcast.ktv2g3z883`, automatic signing. Xcode created an
+"Apple Development: Harrison Fischberg" certificate and registered device "Hphone"
+(`-allowProvisioningDeviceRegistration`). The dev build is signed with the team wildcard profile
+("iOS Team Provisioning Profile: *"), so no explicit App ID was needed yet; App Store distribution
+will need an explicit App ID record (created when the App Store Connect app record is made).
+Device install command:
+`xcodebuild … -configuration Release -destination 'id=<UDID>' -allowProvisioningUpdates -allowProvisioningDeviceRegistration build`
+then `xcrun devicectl device install app --device <UDID> <path to .app>`.
+
+## D23 · 2026-10-15 · v0.2 home pages (owner request)
+Pager (`TabView` page style) with custom 3-dot indicator: New · Library (default) · Explore.
+Pages/dots appear only once the Library has a show, so first launch keeps one clear action.
+Search is now a pushed screen (was a sheet) so the root mini player can stay visible.
+
+## D24 · 2026-10-15 · Explore recommendations
+No backend, no AI, no account. Inputs: iTunes `lookup` genres of Library shows (primary genre
+weight 2, others 1), Apple's legacy per-genre top-podcast charts (top 25 for the top 3 genres),
+and directory search for title keywords shared by ≥ 2 Library shows (e.g. "sleep"). Score =
+genre overlap + 1.5 × keyword weight + chart-rank bonus; Library shows excluded. Rows:
+"Top picks for you" (best 6), then "Because you like <genre>" (≤ 6 each, no repeats).
+Grids, not horizontal carousels, to avoid fighting the pager's horizontal swipe.
+Observed live: genres alone ranked self-help shows first for a sleep-podcast Library; adding
+keyword affinity moved sleep-story shows to the top.
+
+## D25 · 2026-10-15 · New page + feed disk cache
+Latest 100 dated episodes from the last 30 days across Library feeds, grouped by day.
+Feeds are refreshed 4 at a time once per session and saved to Caches/Feeds, so New and
+Show pages render instantly (and offline) from the last copy.
+
+## D26 · 2026-10-15 · Small additions
+Long-press a Library tile → Unsubscribe; long-press an episode → Play / Mark as Played.
+Accent pip on Library tiles with an unplayed episode from the last 7 days.
+
+## D27 · 2026-10-15 · Dedicated simulator
+Another project's session uses the booted "iPhone 17" simulator. NightCast tests and screenshots
+now run on "iPhone 18 Pro" (`scripts/test.sh` default; override with NIGHTCAST_DEST).

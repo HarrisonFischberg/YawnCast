@@ -27,13 +27,36 @@ struct NightCastApp: App {
 
 struct RootView: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.theme) private var theme
 
     var body: some View {
         @Bindable var model = model
-        LibraryView()
-            .fullScreenCover(isPresented: $model.isPlayerPresented) {
-                NowPlayingView()
-                    .environment(\.theme, model.theme)
+        NavigationStack(path: $model.path) {
+            HomeView()
+                .toolbar(.hidden, for: .navigationBar)
+                .navigationDestination(for: Route.self) { route in
+                    switch route {
+                    case .show(let show):
+                        ShowView(show: show, app: model)
+                    case .search:
+                        SearchView(directory: model.directory, initialQuery: model.pendingSearchTerm)
+                    }
+                }
+        }
+        .tint(theme.text)
+        // Once something is loaded, the mini player stays on every screen.
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            if model.player.episode != nil {
+                MiniPlayer()
+                    .padding(.horizontal, Space.m)
+                    .padding(.bottom, Space.xs)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
             }
+        }
+        .animation(.spring(response: 0.35, dampingFraction: 0.85), value: model.player.episode == nil)
+        .fullScreenCover(isPresented: $model.isPlayerPresented) {
+            NowPlayingView()
+                .environment(\.theme, model.theme)
+        }
     }
 }

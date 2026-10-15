@@ -81,3 +81,15 @@ each ramped over 2 s. After the 0.0 ramp: pause, save, end Sleep, restore B.
 | D6 | Lock Screen + Control Center + AirPods play/pause/±15 work | NOT RUN |
 | D7 | No next episode ever starts automatically | NOT RUN |
 | D8 | Bedtime theme comfortable in a dark room | NOT RUN |
+
+## v0.2 — Home pages, persistent mini player, Explore (owner request 2026-10-15)
+
+| ID | Criterion | Status |
+|---|---|---|
+| V2.1 | Mini player stays visible on Show, Search, Library, New, Explore once an episode is loaded | PASS (`testMiniPlayerStaysOnEveryScreenOncePlaying`) |
+| V2.2 | 3 page dots appear once the Library has a show; Library is the default middle page | PASS (`testPagesAppearAfterSubscribeAndSwipeBothWays`) |
+| V2.3 | Swipe left from Library → Explore; swipe right → New; dots tappable | PASS (same test) |
+| V2.4 | New lists Library episodes newest first, grouped by day | PASS (core `LatestEpisodes` tests + UI test) |
+| V2.5 | Explore suggests shows sharing genres/keywords with the Library, never Library shows | PASS (core `Recommender` tests + fixture UI test); live quality judged by screenshot only |
+| V2.6 | Unsubscribe from a Library tile; pages hide when Library empties | PASS (`testUnsubscribeFromLibraryContextMenu`) |
+| V2.7 | Same on a physical iPhone | NOT RUN (owner) |

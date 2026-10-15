@@ -7,7 +7,7 @@
 set -u
 cd "$(dirname "$0")/.."
 export DEVELOPER_DIR=${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}
-DEST=${NIGHTCAST_DEST:-'platform=iOS Simulator,name=iPhone 17'}
+DEST=${NIGHTCAST_DEST:-'platform=iOS Simulator,name=iPhone 18 Pro'}
 mkdir -p build
 
 echo "== Core (swift test)"

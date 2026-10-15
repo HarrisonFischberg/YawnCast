@@ -56,3 +56,12 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [ ] Device checks D1–D8 (README)
 - [ ] Signing team + bundle ID, TestFlight
 - [ ] Trademark-cleared name, final icon (`/replica-skill:replica-brand`)
+
+## v0.2 (owner request 2026-10-15)
+- [x] Persistent mini player on every screen
+- [x] 3-dot pager: New · Library · Explore, swipe + tappable dots
+- [x] New page (latest episodes by day) + feed disk cache
+- [x] Explore (genres + keywords + charts), Top picks row
+- [x] Unsubscribe / mark played menus, new-episode pip
+- [x] UI tests for pager, mini player, unsubscribe
+- [ ] Device check of v0.2 (owner)

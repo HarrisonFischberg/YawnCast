@@ -87,7 +87,7 @@ public struct PlaybackPosition: Codable, Hashable, Sendable {
     }
 }
 
-public struct Feed: Sendable, Equatable {
+public struct Feed: Codable, Sendable, Equatable {
     public var show: Show
     public var episodes: [Episode]
 

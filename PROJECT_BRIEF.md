@@ -7,7 +7,14 @@
 A native iPhone podcast app (Swift + SwiftUI) that feels like a carefully designed
 physical listening object: simple, bold, tactile, and easy to use at bedtime.
 
-## Three destinations
+## Destinations
+
+> **Changed by owner 2026-10-15 (v0.2):** Home is now three swipeable pages with dots — **New**
+> (latest episodes from Library shows), **Library**, **Explore** (similar shows). This supersedes
+> "no recommendations feed" below for Explore only. Explore stays non-AI, account-free and
+> transparent (genres + title keywords + Apple's public charts). The mini player stays on every
+> screen once something is loaded.
+
 
 1. **Library** — subscribed shows as an artwork grid. Search entry. Compact
    Now Playing bar only when something is loaded. Empty state: one action, "Find a podcast".

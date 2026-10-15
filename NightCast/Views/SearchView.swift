@@ -112,21 +112,21 @@ struct SearchView: View {
         @Bindable var model = model
         VStack(alignment: .leading, spacing: Space.l) {
             HStack(spacing: Space.m) {
-                SearchField(text: $model.query, focused: $focused) { model.retry() }
-                IconKey(systemName: "xmark", label: "Close search") {
+                IconKey(systemName: "chevron.left", label: "Back") {
                     model.cancel()
                     dismiss()
                 }
                 .accessibilityIdentifier("closeSearch")
+                SearchField(text: $model.query, focused: $focused) { model.retry() }
             }
             .padding(.horizontal, Space.xl)
-            .padding(.top, Space.xl)
+            .padding(.top, Space.s)
 
             content
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
         .background(theme.bg.ignoresSafeArea())
-        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
         .onAppear { focused = true }
         .onDisappear { model.cancel() }
     }
@@ -154,7 +154,7 @@ struct SearchView: View {
             ScrollView {
                 LazyVStack(spacing: Space.xs) {
                     ForEach(results) { result in
-                        NavigationLink(value: result.show) {
+                        NavigationLink(value: Route.show(result.show)) {
                             SearchRow(result: result, subscribed: app.isSubscribed(result.show))
                         }
                         .buttonStyle(RowStyle())
