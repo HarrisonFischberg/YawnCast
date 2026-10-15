@@ -60,23 +60,41 @@ struct NowPlayingView: View {
 
                 Spacer(minLength: Space.xxl)
 
-                ZStack(alignment: .top) {
+                VStack(alignment: .trailing, spacing: Space.l) {
+                    ZStack {
+                        if model.sleepStatus != .off {
+                            SleepAdjustBubble(status: model.sleepStatus) { model.adjustSleep(minutes: $0) }
+                                .transition(.scale(scale: 0.6, anchor: .bottomTrailing).combined(with: .opacity))
+                        } else if let toast = model.toast {
+                            Text(toast)
+                                .font(Typo.caption)
+                                .foregroundStyle(theme.text)
+                                .padding(.horizontal, Space.l)
+                                .padding(.vertical, Space.s)
+                                .background(Capsule().fill(theme.surface).overlay(Capsule().strokeBorder(theme.border)))
+                                .transition(.opacity)
+                                .accessibilityHidden(true) // announced via UIAccessibility
+                        }
+                    }
+                    .frame(minHeight: 46, alignment: .bottomTrailing)
+                    .padding(.trailing, Space.xl)
+
                     MoonKey(status: model.sleepStatus) { model.toggleSleep() }
                         .disabled(player.episode == nil)
                         .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: model.sleepStatus == .off)
-                    if let toast = model.toast {
-                        Text(toast)
-                            .font(Typo.caption)
-                            .foregroundStyle(theme.text)
-                            .padding(.horizontal, Space.l)
-                            .padding(.vertical, Space.s)
-                            .background(Capsule().fill(theme.surface).overlay(Capsule().strokeBorder(theme.border)))
-                            .offset(y: -44)
-                            .transition(.opacity.combined(with: .offset(y: 6)))
-                            .accessibilityHidden(true) // announced via UIAccessibility
-                    }
+                        .overlay(alignment: .bottomLeading) {
+                            if model.sleepStatus != .off {
+                                FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
+                                    .frame(width: 90, height: 150)
+                                    // Rise out of the moon well (left side of the key).
+                                    .offset(x: 18, y: -44)
+                                    .transition(.opacity)
+                            }
+                        }
                 }
+                .animation(.spring(response: 0.35, dampingFraction: 0.7), value: model.sleepStatus == .off)
                 .animation(.easeOut(duration: 0.2), value: model.toast)
+                .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
                 .padding(.bottom, Space.l)
             }
             .padding(.horizontal, Space.xxl)

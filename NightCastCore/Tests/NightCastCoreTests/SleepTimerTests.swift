@@ -30,7 +30,7 @@ struct SleepTimerTests {
 
     @Test("Activation returns the delay and reports waiting")
     func activation() {
-        var timer = SleepTimer()
+        var timer = SleepTimer(configuration: .v1)
         let delay = timer.activate(baseline: 1, remaining: 40 * min)
         #expect(delay == 20 * min)
         #expect(timer.isActive)
@@ -42,7 +42,7 @@ struct SleepTimerTests {
 
     @Test("Gain holds at baseline until fade starts")
     func holdsBaseline() {
-        var timer = SleepTimer()
+        var timer = SleepTimer(configuration: .v1)
         timer.activate(baseline: 0.9, remaining: nil)
         timer.advance(activeSeconds: 30 * min - 0.001)
         #expect(timer.gain == 0.9)
@@ -53,7 +53,7 @@ struct SleepTimerTests {
         (0, 0.8), (1, 0.6), (2, 0.4), (3, 0.2),
     ])
     func stepLevels(step: Int, level: Double) {
-        var timer = SleepTimer()
+        var timer = SleepTimer(configuration: .v1)
         timer.activate(baseline: 1, remaining: nil)
         timer.advance(activeSeconds: 30 * 60 + Double(step) * 180 + 2)
         #expect(abs(timer.gain - level) < 1e-9)
@@ -65,7 +65,7 @@ struct SleepTimerTests {
 
     @Test("Steps are smoothed: halfway through a ramp is halfway between levels")
     func rampMidpoint() {
-        var timer = SleepTimer()
+        var timer = SleepTimer(configuration: .v1)
         timer.activate(baseline: 1, remaining: nil)
         timer.advance(activeSeconds: 30 * min + 1) // halfway 1.0 → 0.8
         #expect(abs(timer.gain - 0.9) < 1e-9)
@@ -75,7 +75,7 @@ struct SleepTimerTests {
 
     @Test("Baseline scales every step")
     func baselineScales() {
-        var timer = SleepTimer()
+        var timer = SleepTimer(configuration: .v1)
         timer.activate(baseline: 0.5, remaining: nil)
         timer.advance(activeSeconds: 30 * min + 180 + 2)
         #expect(abs(timer.gain - 0.3) < 1e-9)
@@ -84,7 +84,7 @@ struct SleepTimerTests {
     @Test("Full sequence sampled every second is identical across runs")
     func deterministic() {
         func run() -> [Double] {
-            var timer = SleepTimer()
+            var timer = SleepTimer(configuration: .v1)
             timer.activate(baseline: 1, remaining: 50 * min)
             var out: [Double] = []
             for _ in 0..<(40 * 60) {
@@ -100,7 +100,7 @@ struct SleepTimerTests {
 
     @Test("Reaching zero fires once, ends Sleep, restores baseline")
     func reachesSilence() {
-        var timer = SleepTimer()
+        var timer = SleepTimer(configuration: .v1)
         timer.activate(baseline: 0.8, remaining: nil)
         let silence = 30 * min + 4 * 180 + 2
         #expect(timer.advance(activeSeconds: silence - 0.5) == nil)
@@ -114,7 +114,7 @@ struct SleepTimerTests {
 
     @Test("One huge advance still reports silence exactly once")
     func hugeAdvance() {
-        var timer = SleepTimer()
+        var timer = SleepTimer(configuration: .v1)
         timer.activate(baseline: 1, remaining: nil)
         #expect(timer.advance(activeSeconds: 10 * 3600) == .reachedSilence)
         #expect(timer.advance(activeSeconds: 1) == nil)
@@ -122,7 +122,7 @@ struct SleepTimerTests {
 
     @Test("Zero, negative, NaN advances change nothing")
     func ignoresBadInput() {
-        var timer = SleepTimer()
+        var timer = SleepTimer(configuration: .v1)
         timer.activate(baseline: 1, remaining: nil)
         let before = timer
         timer.advance(activeSeconds: 0)
@@ -135,7 +135,7 @@ struct SleepTimerTests {
 
     @Test("Cancel while waiting restores immediately")
     func cancelWaiting() {
-        var timer = SleepTimer()
+        var timer = SleepTimer(configuration: .v1)
         timer.activate(baseline: 1, remaining: nil)
         timer.advance(activeSeconds: 60)
         timer.cancel(isPlaying: true)
@@ -145,7 +145,7 @@ struct SleepTimerTests {
 
     @Test("Cancel while fading and playing glides back to baseline over 1 s")
     func cancelFadingPlaying() {
-        var timer = SleepTimer()
+        var timer = SleepTimer(configuration: .v1)
         timer.activate(baseline: 1, remaining: nil)
         timer.advance(activeSeconds: 30 * min + 2 * 180 + 2) // at 0.4
         timer.cancel(isPlaying: true)
@@ -160,7 +160,7 @@ struct SleepTimerTests {
 
     @Test("Cancel while paused restores baseline at once")
     func cancelFadingPaused() {
-        var timer = SleepTimer()
+        var timer = SleepTimer(configuration: .v1)
         timer.activate(baseline: 0.7, remaining: nil)
         timer.advance(activeSeconds: 30 * min + 2)
         timer.cancel(isPlaying: false)
@@ -172,7 +172,7 @@ struct SleepTimerTests {
 
     @Test("end() turns Sleep off with baseline gain")
     func endRestores() {
-        var timer = SleepTimer()
+        var timer = SleepTimer(configuration: .v1)
         timer.activate(baseline: 1, remaining: 10 * min)
         timer.advance(activeSeconds: 5 * min + 100)
         #expect(timer.gain < 1)

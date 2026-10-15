@@ -19,7 +19,7 @@ enum DebugLaunch {
             feeds = HTTPFeedService()
         }
         let sleepConfiguration = launch.fastSleep
-            ? SleepConfiguration(maxFadeDelay: 4, stepInterval: 6, stepRamp: 1, cancelRamp: 0.5)
+            ? SleepConfiguration(maxFadeDelay: 4, stepInterval: 3, stepRamp: 1, cancelRamp: 0.5)
             : .standard
         let model = AppModel(store: store, directory: directory, feeds: feeds, sleepConfiguration: sleepConfiguration)
         if let theme = launch.themeID { model.theme = Theme.with(id: theme) }

@@ -44,7 +44,7 @@ struct SleepControllerTests {
 
     @Test("Activation message and gain stay at baseline")
     func activation() {
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         let delay = controller.toggle(player: player, episodeID: "e1", remaining: 3600)
         #expect(delay == 1800)
         #expect(SleepCopy.activated(fadeDelay: delay!) == "Sleep on · fade begins in 30 min")
@@ -53,7 +53,7 @@ struct SleepControllerTests {
 
     @Test("Shorter interval is announced for short episodes")
     func shortMessage() {
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         let delay = controller.toggle(player: player, episodeID: "e1", remaining: 24 * 60)
         #expect(SleepCopy.activated(fadeDelay: delay!) == "Sleep on · fade begins in 12 min")
     }
@@ -61,7 +61,7 @@ struct SleepControllerTests {
     // M4.3
     @Test("Paused time does not consume the countdown")
     func pauseFreezes() {
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         controller.toggle(player: player, episodeID: "e1", remaining: nil)
         run(controller, seconds: 600)
         player.isPlaying = false
@@ -76,7 +76,7 @@ struct SleepControllerTests {
 
     @Test("Buffering time does not consume the countdown")
     func bufferingFreezes() {
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         controller.toggle(player: player, episodeID: "e1", remaining: nil)
         run(controller, seconds: 100)
         player.isBuffering = true
@@ -90,7 +90,7 @@ struct SleepControllerTests {
     @Test("Activating while paused does not count until playback resumes")
     func activateWhilePaused() {
         player.isPlaying = false
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         controller.toggle(player: player, episodeID: "e1", remaining: nil)
         run(controller, seconds: 3600)
         #expect(controller.status == .waiting(untilFade: 1800))
@@ -99,7 +99,7 @@ struct SleepControllerTests {
     // M4.2 + M4.5 end to end
     @Test("Full fade pauses once, restores gain, never plays another episode")
     func fullFade() {
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         controller.toggle(player: player, episodeID: "e1", remaining: nil)
         var observed: [Double] = []
         for checkpoint in [1800.0 + 2, 180, 180, 180] {
@@ -121,7 +121,7 @@ struct SleepControllerTests {
     // M4.4
     @Test("Second tap cancels and smoothly restores baseline")
     func secondTapCancels() {
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         player.gain = 0.9
         controller.toggle(player: player, episodeID: "e1", remaining: nil)
         run(controller, seconds: 1800 + 180 + 2) // 0.6 × 0.9
@@ -137,7 +137,7 @@ struct SleepControllerTests {
     // M4.7
     @Test("Scrubbing does not reset the countdown")
     func seekDoesNotReset() {
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         controller.toggle(player: player, episodeID: "e1", remaining: 3 * 3600)
         run(controller, seconds: 900)
         player.position = 10 // user scrubs back
@@ -151,7 +151,7 @@ struct SleepControllerTests {
     // M4.8
     @Test("Deliberately starting a different episode cancels Sleep")
     func differentEpisodeCancels() {
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         controller.toggle(player: player, episodeID: "e1", remaining: nil)
         run(controller, seconds: 1800 + 2)
         controller.episodeWillChange(to: "e1")
@@ -164,7 +164,7 @@ struct SleepControllerTests {
     // M4.6
     @Test("Episode ending first stops Sleep and restores gain")
     func episodeEndsFirst() {
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         controller.toggle(player: player, episodeID: "e1", remaining: 120)
         run(controller, seconds: 62) // fade started at 60 s
         #expect(player.gain < 1)
@@ -177,7 +177,7 @@ struct SleepControllerTests {
 
     @Test("Interruption pauses the countdown and resumes correctly")
     func interruption() {
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         controller.toggle(player: player, episodeID: "e1", remaining: nil)
         run(controller, seconds: 1000)
         player.isPlaying = false // phone call
@@ -192,7 +192,7 @@ struct SleepControllerTests {
     // M4.9
     @Test("A fresh controller (relaunch) is never active")
     func relaunchNotActive() {
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         #expect(!controller.isActive)
         #expect(controller.status == .off)
         let snapshot = LibrarySnapshot()
@@ -219,7 +219,7 @@ struct ProvisionalDurationTests {
 
     @Test("Feed said 31:22, stream measures 37:04: delay corrected from 8:30 to 11:21 (681 s)")
     func correctsOnce() {
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         let position = 14 * 60 + 22.0
         let feed = 31 * 60 + 22.0
         let delay = controller.toggle(player: player, episodeID: "e1", remaining: feed - position, position: position, durationIsProvisional: true)
@@ -235,7 +235,7 @@ struct ProvisionalDurationTests {
 
     @Test("Measured duration is ignored when R was not provisional")
     func ignoredWhenMeasured() {
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         controller.toggle(player: player, episodeID: "e1", remaining: 1000, position: 0, durationIsProvisional: false)
         controller.measuredDurationArrived(4000, episodeID: "e1")
         #expect(controller.status == .waiting(untilFade: 500))
@@ -243,7 +243,7 @@ struct ProvisionalDurationTests {
 
     @Test("Shorter real duration never starts the fade in the past")
     func neverInThePast() {
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         controller.toggle(player: player, episodeID: "e1", remaining: 3600, position: 0, durationIsProvisional: true)
         run(controller, seconds: 300)
         controller.measuredDurationArrived(200, episodeID: "e1") // R/2 = 100 < 300 elapsed
@@ -255,7 +255,7 @@ struct ProvisionalDurationTests {
 
     @Test("No revision once fading, or for another episode")
     func noRevisionWhenFadingOrOtherEpisode() {
-        let controller = SleepController(clock: clock)
+        let controller = SleepController(clock: clock, configuration: .v1)
         controller.toggle(player: player, episodeID: "e1", remaining: 120, position: 0, durationIsProvisional: true)
         controller.measuredDurationArrived(9000, episodeID: "e2")
         #expect(controller.status == .waiting(untilFade: 60))

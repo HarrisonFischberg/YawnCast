@@ -305,12 +305,31 @@ final class AppModel {
             position: player.position,
             durationIsProvisional: !player.isDurationMeasured
         ) {
-            show(toast: SleepCopy.activated(fadeDelay: delay))
+            // The countdown bubble shows this; VoiceOver hears it.
+            announce(SleepCopy.activated(fadeDelay: delay))
         } else {
             show(toast: SleepCopy.cancelled)
         }
         sleepStatus = sleep.status
         runSleepTicker()
+    }
+
+    /// Increments on each ±5 tap (drives a haptic tick).
+    private(set) var sleepAdjustCount = 0
+
+    /// The ±5 minute bubble above the Moon key.
+    func adjustSleep(minutes: Int) {
+        guard sleep.adjust(by: TimeInterval(minutes) * 60) else { return }
+        sleepAdjustCount += 1
+        sleepStatus = sleep.status
+        if case .waiting(let t) = sleepStatus {
+            announce("Fade begins in \(TimeFormat.sleepDelay(t))")
+        }
+        runSleepTicker()
+    }
+
+    private func announce(_ message: String) {
+        UIAccessibility.post(notification: .announcement, argument: message)
     }
 
     /// Ticks the Sleep controller 4×/s while Sleep needs it and audio is

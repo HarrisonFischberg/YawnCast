@@ -90,10 +90,25 @@ public struct PlaybackPosition: Codable, Hashable, Sendable {
 public struct Feed: Codable, Sendable, Equatable {
     public var show: Show
     public var episodes: [Episode]
+    /// Next page of a paged feed (`<atom:link rel="next">`), if the publisher splits its history.
+    public var nextPageURL: URL?
 
-    public init(show: Show, episodes: [Episode]) {
+    public init(show: Show, episodes: [Episode], nextPageURL: URL? = nil) {
         self.show = show
         self.episodes = episodes
+        self.nextPageURL = nextPageURL
+    }
+
+    /// Newest first; dated before undated; otherwise keeps the given order.
+    public static func sortedNewestFirst(_ episodes: [Episode]) -> [Episode] {
+        episodes.enumerated().sorted { a, b in
+            switch (a.element.published, b.element.published) {
+            case let (x?, y?) where x != y: return x > y
+            case (_?, nil): return true
+            case (nil, _?): return false
+            default: return a.offset < b.offset
+            }
+        }.map(\.element)
     }
 }
 

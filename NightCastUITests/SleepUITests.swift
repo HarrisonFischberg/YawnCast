@@ -1,7 +1,7 @@
 import XCTest
 
 /// Sleep against the real AVPlayer, with `-fastSleep` timings so a full fade
-/// fits in a test: fade after 4 s, steps every 6 s, 1 s glides (total ≈ 29 s
+/// fits in a test: fade after 4 s, 10 steps every 3 s, 1 s glides (total ≈ 32 s
 /// of active playback). `debugGain` mirrors the live AVPlayer.volume.
 @MainActor
 final class SleepUITests: XCTestCase {

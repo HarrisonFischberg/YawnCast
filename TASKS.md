@@ -65,3 +65,12 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] Unsubscribe / mark played menus, new-episode pip
 - [x] UI tests for pager, mini player, unsubscribe
 - [ ] Device check of v0.2 (owner)
+
+## v0.3 (owner request 2026-10-15)
+- [x] Fade 10% every minute
+- [x] ±5 min bubble above Moon (adjust countdown; +5 pauses an active fade)
+- [x] Floating z's while Sleep is on (still under Reduce Motion)
+- [x] Full episode history: follow paged feeds; year sections; Newest/Oldest
+- [x] UI tests for bubble and year sections
+- [ ] Device check of v0.3 (owner)
+- [ ] Rare Creatures website (owner LLC; privacy/support pages)

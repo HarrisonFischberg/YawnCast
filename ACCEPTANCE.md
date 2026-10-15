@@ -93,3 +93,15 @@ each ramped over 2 s. After the 0.0 ramp: pause, save, end Sleep, restore B.
 | V2.5 | Explore suggests shows sharing genres/keywords with the Library, never Library shows | PASS (core `Recommender` tests + fixture UI test); live quality judged by screenshot only |
 | V2.6 | Unsubscribe from a Library tile; pages hide when Library empties | PASS (`testUnsubscribeFromLibraryContextMenu`) |
 | V2.7 | Same on a physical iPhone | NOT RUN (owner) |
+
+## v0.3 — Full history, Sleep 10%/min, ±5 bubble, z's (owner request 2026-10-15)
+
+| ID | Criterion | Status |
+|---|---|---|
+| V3.1 | Fade drops 10% of baseline every active minute, pauses at 0 | PASS (core `TenPercentFadeTests`) |
+| V3.2 | ±5 adjusts countdown; never past, cap 4 h; +5 while fading glides back up | PASS (core `SleepAdjustTests`) |
+| V3.3 | Bubble appears with Sleep, ±5 changes the shown countdown, −5 disabled while fading | PASS (UI `testBubbleAddsAndRemovesFiveMinutes`) |
+| V3.4 | Paged feeds followed (loop-safe, partial failure kept) | PASS (core stub tests) |
+| V3.5 | Show page grouped by year, Newest/Oldest toggle | PASS (UI `testEpisodesGroupedByYearWithOrderToggle`) |
+| V3.6 | Floating z's visible while Sleep is on; still with Reduce Motion | Simulator screenshots only (`screenshots/v3/`) |
+| V3.7 | Same on a physical iPhone | NOT RUN (owner) |

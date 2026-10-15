@@ -118,6 +118,34 @@ struct NetworkServiceTests {
         #expect(FeedURL.key(URL(string: "https://a.com/x?id=1")!) != FeedURL.key(URL(string: "https://a.com/x?id=2")!))
     }
 
+    static func page(_ ids: [Int], next: String?) -> Data {
+        let link = next.map { #"<atom:link rel="next" href="\#($0)"/>"# } ?? ""
+        let items = ids.map { i in
+            "<item><title>E\(i)</title><guid>e\(i)</guid><pubDate>\(i < 100 ? "Mon, 0\(i % 9 + 1) Jan 2018 10:00:00 +0000" : "Tue, 01 Oct 2024 10:00:00 +0000")</pubDate><enclosure url=\"https://cdn.example.com/\(i).mp3\" type=\"audio/mpeg\"/></item>"
+        }.joined()
+        return Data(#"<?xml version="1.0"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Paged</title>\#(link)\#(items)</channel></rss>"#.utf8)
+    }
+
+    @Test func pagedFeedFollowsNextLinksAndStopsOnLoops() async throws {
+        StubURLProtocol.respond(status: 404, body: Data())
+        StubURLProtocol.route([
+            "https://feeds.example.com/quiet": (200, Self.page([101, 102], next: "/quiet?page=2")),
+            "https://feeds.example.com/quiet?page=2": (200, Self.page([3, 4], next: "https://feeds.example.com/quiet?page=3")),
+            "https://feeds.example.com/quiet?page=3": (200, Self.page([1, 2], next: "https://feeds.example.com/quiet")), // loops back
+        ])
+        let feed = try await HTTPFeedService(session: .stubbed).fetch(feedURL)
+        #expect(Set(feed.episodes.map(\.id)) == ["e101", "e102", "e1", "e2", "e3", "e4"])
+        #expect(feed.episodes.first?.id.hasPrefix("e10") == true, "newest first across pages")
+        #expect(feed.nextPageURL == nil)
+    }
+
+    @Test func pagedFeedKeepsFirstPageWhenALaterPageFails() async throws {
+        StubURLProtocol.respond(status: 500, body: Data())
+        StubURLProtocol.route(["https://feeds.example.com/quiet": (200, Self.page([101], next: "/quiet?page=2"))])
+        let feed = try await HTTPFeedService(session: .stubbed).fetch(feedURL)
+        #expect(feed.episodes.map(\.id) == ["e101"])
+    }
+
     @Test func feedFetchParsesAndMapsHTTPErrors() async throws {
         StubURLProtocol.respond(status: 404, body: Data())
         await #expect(throws: FeedError.http(status: 404)) { try await HTTPFeedService(session: .stubbed).fetch(feedURL) }

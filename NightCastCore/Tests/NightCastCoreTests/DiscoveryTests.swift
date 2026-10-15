@@ -167,3 +167,31 @@ struct LatestEpisodesTests {
         #expect(try JSONDecoder().decode(Feed.self, from: data) == feed)
     }
 }
+
+@Suite("Episodes by year (show page)")
+struct EpisodeGroupingTests {
+    func ep(_ id: String, _ year: Int?) -> Episode {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
+        let date = year.flatMap { calendar.date(from: DateComponents(year: $0, month: 6, day: 1)) }
+        return Episode(id: id, showFeedURL: URL(string: "https://f.example/a")!, showTitle: "A", title: id, published: date, audioURL: URL(string: "https://a.example/\(id).mp3")!)
+    }
+
+    var utc: Calendar {
+        var c = Calendar(identifier: .gregorian)
+        c.timeZone = TimeZone(identifier: "UTC")!
+        return c
+    }
+
+    @Test func newestFirstGroupsByYearUndatedLast() {
+        let groups = EpisodeGrouping.byYear([ep("a", 2019), ep("x", nil), ep("b", 2024), ep("c", 2024)], newestFirst: true, calendar: utc)
+        #expect(groups.map(\.year) == [2024, 2019, nil])
+        #expect(groups[0].episodes.count == 2)
+    }
+
+    @Test func oldestFirstRunsStartToFinish() {
+        let groups = EpisodeGrouping.byYear([ep("a", 2019), ep("b", 2024), ep("c", 2021)], newestFirst: false, calendar: utc)
+        #expect(groups.map(\.year) == [2019, 2021, 2024])
+        #expect(groups.flatMap(\.episodes).map(\.id) == ["a", "c", "b"])
+    }
+}

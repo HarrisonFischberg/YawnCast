@@ -6,13 +6,20 @@ final class StubURLProtocol: URLProtocol, @unchecked Sendable {
     nonisolated(unsafe) static var status = 200
     nonisolated(unsafe) static var body = Data()
     nonisolated(unsafe) static var requests: [URLRequest] = []
+    /// Per-URL bodies (absolute string → (status, body)); falls back to `status`/`body`.
+    nonisolated(unsafe) static var routes: [String: (Int, Data)] = [:]
     static let lock = NSLock()
 
     static func respond(status: Int, body: Data) {
         lock.withLock {
             self.status = status
             self.body = body
+            self.routes = [:]
         }
+    }
+
+    static func route(_ routes: [String: (Int, Data)]) {
+        lock.withLock { self.routes = routes }
     }
 
     override class func canInit(with request: URLRequest) -> Bool { true }
@@ -21,7 +28,7 @@ final class StubURLProtocol: URLProtocol, @unchecked Sendable {
     override func startLoading() {
         let (status, body) = Self.lock.withLock {
             Self.requests.append(request)
-            return (Self.status, Self.body)
+            return Self.routes[request.url!.absoluteString] ?? (Self.status, Self.body)
         }
         let response = HTTPURLResponse(url: request.url!, statusCode: status, httpVersion: "HTTP/1.1", headerFields: nil)!
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)

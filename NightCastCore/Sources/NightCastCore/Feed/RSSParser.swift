@@ -57,15 +57,9 @@ public enum RSSParser {
         // Stable de-dup by episode id, newest first.
         var seen = Set<String>()
         let unique = episodes.filter { seen.insert($0.id).inserted }
-        let sorted = unique.enumerated().sorted { a, b in
-            switch (a.element.published, b.element.published) {
-            case let (x?, y?) where x != y: return x > y
-            case (_?, nil): return true
-            case (nil, _?): return false
-            default: return a.offset < b.offset
-            }
-        }.map(\.element)
-        return Feed(show: show, episodes: sorted)
+        let sorted = Feed.sortedNewestFirst(unique)
+        let next = delegate.channel.nextPage.flatMap { URL(string: $0, relativeTo: feedURL)?.absoluteURL }
+        return Feed(show: show, episodes: sorted, nextPageURL: next)
     }
 
     private struct ChannelFields {
@@ -75,6 +69,7 @@ public enum RSSParser {
         var summary = ""
         var imageURL: String?
         var itunesImage: String?
+        var nextPage: String?
     }
 
     private struct ItemFields {
@@ -111,6 +106,10 @@ public enum RSSParser {
                 if current != nil, current?.enclosureURL == nil {
                     current?.enclosureURL = attributes["url"]
                     current?.enclosureType = attributes["type"]
+                }
+            case "atom:link", "link":
+                if current == nil, attributes["rel"] == "next", let href = attributes["href"], !href.isEmpty {
+                    channel.nextPage = href
                 }
             case "itunes:image":
                 if let href = attributes["href"] {

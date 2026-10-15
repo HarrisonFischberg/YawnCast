@@ -171,3 +171,27 @@ Accent pip on Library tiles with an unplayed episode from the last 7 days.
 ## D27 · 2026-10-15 · Dedicated simulator
 Another project's session uses the booted "iPhone 17" simulator. NightCast tests and screenshots
 now run on "iPhone 18 Pro" (`scripts/test.sh` default; override with NIGHTCAST_DEST).
+
+## D28 · 2026-10-15 · Sleep v0.3 spec (owner request)
+`SleepConfiguration.standard`: step 60 s, levels 0.9…0.0 (10 steps), still `min(30 min, R/2)` delay,
+2 s glides. Full fade = 9 min + 2 s after the countdown. Old V1 numbers kept as a test-only `.v1`
+config so state-machine mechanics tests stay meaningful. `-fastSleep` debug timings: 4 s delay, 3 s steps.
+
+## D29 · 2026-10-15 · ±5 minute bubble semantics
+`SleepTimer.adjust(by:)`: while waiting, moves the fade start (clamped to now…now+4 h). While fading,
++5 pauses the fade (volume glides up over the cancel ramp via a "lift", fading restarts after 5 min)
+and −5 is disabled. The bubble replaces the visual "Sleep on" toast; VoiceOver still announces it.
+
+## D30 · 2026-10-15 · Full episode history
+Show pages already listed every episode in a feed. `HTTPFeedService` now also follows
+`<atom:link rel="next">` pages (up to 40, loop-safe, keeps earlier pages if a later one fails).
+Episodes are grouped by year with pinned headers; Newest/Oldest toggle per show page.
+
+## D31 · 2026-10-15 · Floating Z's
+Canvas + TimelineView (30 fps cap), 4 glyphs in the theme accent, drawn only while Sleep is on and the
+Now Playing screen is visible; static when Reduce Motion is on. No sound. Brief's "avoid constant motion"
+is overridden by the owner for this element only.
+
+## D32 · 2026-10-15 · "Website copy"
+There is no NightCast website yet; the README and in-app copy were updated instead. A Rare Creatures
+site (needed for the LLC's Apple enrollment and app privacy pages) would carry the public copy later.

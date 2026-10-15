@@ -4,6 +4,8 @@
 
 A native iPhone podcast app for falling asleep.
 
+**v0.3:** show pages list every episode, start to finish, under year headings (Newest/Oldest toggle); Sleep fades 10% a minute, has a ±5 minute bubble, and floating z's.
+
 **v0.2:** Home is three swipeable pages with dots: **New** (latest episodes from your shows), **Library**, and **Explore** (similar shows). The mini player stays on every screen once something is loaded. Show and Now Playing are unchanged.
 Its signature control is the **Moon** button: one tap, and the episode fades out in steps and then pauses.
 
@@ -71,16 +73,20 @@ NightCastUITests/  CoreFlowUITests, SleepUITests, LiveNetworkUITests (opt-in)
 - **Fade:** the app sets `AVPlayer.volume`, which is local to the app; it never changes the device volume.
 - **Sleep and relaunch:** Sleep state is never persisted, so it can't come back on its own after a relaunch.
 
-### Sleep behaviour (V1)
+### Sleep behaviour (v0.3)
 Let R be the playable seconds remaining when Moon is tapped.
 
-1. The fade begins after `min(30 min, R/2)` of active playback, or after 30 min if the duration is unknown.
-2. Volume then steps to 80%, 60%, 40%, 20% and 0% of the starting volume, one step every 3 active minutes. Each step is a 2 s glide.
-3. At 0% the episode pauses, the position is saved, Sleep ends, and the volume is restored silently. Nothing else plays.
-4. A second tap cancels Sleep and glides the volume back over 1 s.
-5. Playing a different episode cancels Sleep.
-6. Scrubbing does not reset the countdown.
-7. If Moon is tapped before the stream reports its real length, the feed's length is used. It's corrected once, when the real length arrives ([D11](DECISIONS.md)).
+1. **Countdown:** the fade begins after `min(30 min, R/2)` of active playback, or after 30 min if the duration is unknown. Paused or buffering time doesn't count.
+2. **Adjust it:** a bubble pops up above the Moon key with **−5 min** and **+5 min**.
+   - −5 can bring the fade forward to "now", never into the past.
+   - +5 can push it out to at most 4 hours.
+   - While fading, +5 pauses the fade: the volume glides back up, and fading starts again 5 minutes later.
+3. **Fade:** the volume drops **10% every minute**: 90%, 80% … 10%, 0%. Each step is a 2 s glide.
+4. **Silence:** at 0% the episode pauses, the position is saved, Sleep ends, and the volume is restored silently. Nothing else plays.
+5. **While Sleep is on,** small "z"s drift up out of the moon. With Reduce Motion they sit still.
+6. **Cancelling:** a second Moon tap cancels Sleep and glides the volume back over 1 s. Playing a different episode also cancels it.
+7. **Scrubbing** doesn't reset the countdown.
+8. If Moon is tapped before the stream reports its real length, the feed's length is used, then corrected once ([D11](DECISIONS.md)).
 
 ---
 
@@ -117,20 +123,16 @@ scripts/test.sh --live
 
 `scripts/test.sh` runs core tests, Debug and Release builds, and the fixture UI tests. `--live` also runs the real-network test.
 
-Results from the last full run (2026-10-15, v0.2, iPhone 18 Pro simulator, iOS 27.0):
+Results from the last full run (2026-10-15, v0.3, iPhone 18 Pro simulator, iOS 27.0):
 
 | Check | Result |
 |---|---|
-| `swift test` (NightCastCore) | **70 tests in 11 suites passed**: Sleep timing, gain sequence, pause and buffering freeze, cancel, episode end, seek, provisional duration, RSS fixtures (including malformed), search decoding and dedupe, persistence, seek clamping, genres and charts, recommendations, New-page ordering |
+| `swift test` (NightCastCore) | **83 tests in 14 suites passed**: Sleep timing, gain sequence, pause and buffering freeze, cancel, episode end, seek, provisional duration, RSS fixtures (including malformed), search decoding and dedupe, persistence, seek clamping, genres and charts, recommendations, New-page ordering, 10%-per-minute fade, ±5 adjustments, paged feeds, year grouping |
 | Debug and Release builds | **BUILD SUCCEEDED**, no Swift warnings. The Release bundle contains no fixtures and no debug symbols |
-| Fixture UI tests | **11 executed, 0 failures**: empty library; search empty, error and retry; subscription survives relaunch; subscribe → play → Sleep on/off; position survives relaunch (no autoplay); full fade on the real player; cancel mid-fade; pause freezes the countdown; page dots and swipes; mini player on every screen; unsubscribe from Library |
+| Fixture UI tests | **13 executed, 0 failures**: empty library; search empty, error and retry; subscription survives relaunch; subscribe → play → Sleep on/off; position survives relaunch (no autoplay); full fade on the real player; cancel mid-fade; pause freezes the countdown; page dots and swipes; mini player on every screen; unsubscribe from Library; ±5 bubble; year sections and order toggle |
 | Live UI test (opt-in) | **Passed** (2026-10-15): real search, real RSS (524 episodes), subscribe, stream played with the position advancing |
 
-Observed volume during the full-fade test (`-fastSleep`, sampled every 0.5 s):
-
-```
-1.00 … 0.91 0.80 … 0.77 0.67 0.60 … 0.57 0.41 0.40 … 0.31 0.21 0.20 … 0.11 0.01 → paused, volume restored to 1.00
-```
+The full-fade UI test drives the real `AVPlayer.volume` through every step and checks it never rises, hits each level, then pauses with the volume restored. The sampled sequence for the v0.2 spec is in PROGRESS.md.
 
 Replica checks:
 - **Parity:** `parity.py` scores **90.7**. 9 of 11 must-haves are done. The other two, Lock Screen and background audio, are *implemented but unverified on device*. See [replica/parity.md](replica/parity.md).
@@ -144,6 +146,7 @@ Replica checks:
 | `screenshots/m3/` | Live run: real search, show detail, streaming |
 | `screenshots/m5/` | Show and Search in Paper and Ember; Show, Search and Library at AX5 text |
 | `screenshots/v2/` | New, Library, Explore pages; mini player on Show detail |
+| `screenshots/v3/` | Sleep with ±5 bubble and z's (Ember, Ink, Paper fading); show page year sections |
 
 ---
 

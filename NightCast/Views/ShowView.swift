@@ -14,6 +14,11 @@ final class ShowModel {
     private(set) var show: Show
     private(set) var episodes: [Episode] = []
     private(set) var state: State = .loading
+    /// Year sections in the chosen order, recomputed only when episodes or order change.
+    private(set) var groups: [YearGroup] = []
+    var newestFirst = true {
+        didSet { if newestFirst != oldValue { regroup() } }
+    }
 
     @ObservationIgnored private let app: AppModel
 
@@ -44,8 +49,13 @@ final class ShowModel {
         if merged.author == nil { merged.author = show.author }
         show = merged
         episodes = feed.episodes
+        regroup()
         state = episodes.isEmpty ? .empty : .loaded
         app.refreshSubscription(merged)
+    }
+
+    private func regroup() {
+        groups = EpisodeGrouping.byYear(episodes, newestFirst: newestFirst)
     }
 
     static func message(for error: Error) -> String {
@@ -74,8 +84,9 @@ struct ShowView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: Space.xl) {
+            LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
                 header
+                    .padding(.bottom, Space.xl)
                 episodesSection
             }
             .padding(.horizontal, Space.xl)
@@ -171,17 +182,32 @@ struct ShowView: View {
             StateMessage(title: "No episodes yet", message: "This feed has no playable episodes right now.", systemImage: "tray")
                 .padding(.horizontal, -Space.xxl)
         case .loaded:
-            VStack(alignment: .leading, spacing: 0) {
-                Text("Episodes")
+            HStack(alignment: .center) {
+                Text("Episodes · \(model.episodes.count)")
                     .font(Typo.eyebrow)
                     .tracking(1.2)
                     .textCase(.uppercase)
                     .foregroundStyle(theme.textMuted)
-                    .padding(.bottom, Space.s)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("episodesHeader")
-                LazyVStack(spacing: 0) {
-                    ForEach(model.episodes) { episode in
+                Spacer()
+                Button {
+                    withAnimation(.easeOut(duration: 0.2)) { model.newestFirst.toggle() }
+                } label: {
+                    Label(model.newestFirst ? "Newest first" : "Oldest first", systemImage: "arrow.up.arrow.down")
+                        .font(Typo.caption)
+                        .padding(.horizontal, Space.m)
+                        .padding(.vertical, Space.s)
+                }
+                .buttonStyle(.capsuleKey(depth: 3))
+                .fixedSize()
+                .accessibilityHint("Changes the order of the episode list.")
+                .accessibilityIdentifier("episodeOrder")
+            }
+            .padding(.bottom, Space.s)
+            ForEach(model.groups) { group in
+                Section {
+                    ForEach(group.episodes) { episode in
                         Button { app.play(episode) } label: {
                             EpisodeRow(
                                 episode: episode,
@@ -195,9 +221,35 @@ struct ShowView: View {
                         .contextMenu { EpisodeMenu(episode: episode) }
                         Rectangle().fill(theme.border).frame(height: 1)
                     }
+                } header: {
+                    YearHeader(group: group)
                 }
             }
         }
+    }
+}
+
+/// Pinned year heading on the show page: "2024 · 52 episodes".
+private struct YearHeader: View {
+    let group: YearGroup
+    @Environment(\.theme) private var theme
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: Space.s) {
+            Text(group.year.map(String.init) ?? "Undated")
+                .font(.system(.title3, design: .serif, weight: .bold))
+                .foregroundStyle(theme.text)
+            Text("\(group.episodes.count) episode\(group.episodes.count == 1 ? "" : "s")")
+                .font(Typo.caption)
+                .foregroundStyle(theme.textMuted)
+            Spacer()
+        }
+        .padding(.top, Space.l)
+        .padding(.bottom, Space.s)
+        .background(theme.bg)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isHeader)
+        .accessibilityIdentifier("yearHeader")
     }
 }
 

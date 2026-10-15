@@ -1,6 +1,7 @@
 import Foundation
 
-/// Tunables for the Sleep fade. `standard` is the V1 product spec.
+/// Tunables for the Sleep fade. `standard` is the current product spec:
+/// fade starts after min(30 min, R/2), then drops 10% of baseline every minute.
 public struct SleepConfiguration: Sendable, Equatable {
     /// Upper bound on the delay before fading starts.
     public var maxFadeDelay: TimeInterval
@@ -12,13 +13,19 @@ public struct SleepConfiguration: Sendable, Equatable {
     public var stepRamp: TimeInterval
     /// Active playback seconds used to glide back to baseline on cancel.
     public var cancelRamp: TimeInterval
+    /// Longest countdown the ±5 minute adjustments can reach.
+    public var maxAdjustedDelay: TimeInterval
+
+    /// 90%, 80%, … 10%, 0% of baseline.
+    public static let tenPercentSteps: [Double] = (0...9).map { Double(9 - $0) / 10 }
 
     public init(
         maxFadeDelay: TimeInterval = 30 * 60,
-        stepInterval: TimeInterval = 3 * 60,
-        levels: [Double] = [0.8, 0.6, 0.4, 0.2, 0.0],
+        stepInterval: TimeInterval = 60,
+        levels: [Double] = SleepConfiguration.tenPercentSteps,
         stepRamp: TimeInterval = 2,
-        cancelRamp: TimeInterval = 1
+        cancelRamp: TimeInterval = 1,
+        maxAdjustedDelay: TimeInterval = 4 * 3600
     ) {
         precondition(!levels.isEmpty, "Sleep needs at least one fade level")
         precondition(stepRamp >= 0 && stepRamp <= stepInterval, "Ramp must fit inside a step")
@@ -27,6 +34,7 @@ public struct SleepConfiguration: Sendable, Equatable {
         self.levels = levels
         self.stepRamp = stepRamp
         self.cancelRamp = cancelRamp
+        self.maxAdjustedDelay = maxAdjustedDelay
     }
 
     public static let standard = SleepConfiguration()
@@ -65,6 +73,13 @@ public struct SleepTimer: Sendable, Equatable {
     }
 
     private var phase: Phase = .off
+    /// A glide back up to baseline that started at active second `start`
+    /// (after "+5 min" during a fade), so the volume never jumps.
+    private struct Lift: Equatable, Sendable {
+        var from: Double
+        var start: TimeInterval
+    }
+    private var lift: Lift?
     public private(set) var baseline: Double = 1
     /// Active playback seconds from activation until the first fade step.
     public private(set) var fadeDelay: TimeInterval = 0
@@ -108,6 +123,7 @@ public struct SleepTimer: Sendable, Equatable {
         self.baseline = baseline
         fadeDelay = Self.fadeDelay(remaining: remaining, configuration: configuration)
         phase = .on(elapsed: 0)
+        lift = nil
         return fadeDelay
     }
 
@@ -144,12 +160,40 @@ public struct SleepTimer: Sendable, Equatable {
         } else {
             phase = .off
         }
+        lift = nil
     }
 
     /// Ends Sleep immediately with gain back at baseline: the episode ended,
     /// or the user deliberately started a different episode.
     public mutating func end() {
         phase = .off
+        lift = nil
+    }
+
+    /// Active seconds left until Sleep pauses playback, while on.
+    public var timeUntilSilence: TimeInterval? {
+        guard case .on(let t) = phase else { return nil }
+        return max(0, silenceTime - t)
+    }
+
+    /// The ±5 minute bubble. While waiting, moves the fade start by `delta`
+    /// (never into the past, never more than `maxAdjustedDelay` away). While
+    /// fading, a positive `delta` pauses the fade: volume glides back to
+    /// baseline and fading starts over `delta` seconds from now; a negative
+    /// `delta` does nothing. Returns true when anything changed.
+    @discardableResult
+    public mutating func adjust(by delta: TimeInterval) -> Bool {
+        guard case .on(let t) = phase, delta != 0, delta.isFinite else { return false }
+        if t < fadeDelay {
+            let target = max(t, min(fadeDelay + delta, t + configuration.maxAdjustedDelay))
+            guard target != fadeDelay else { return false }
+            fadeDelay = target
+            return true
+        }
+        guard delta > 0 else { return false }
+        lift = Lift(from: multiplier, start: t)
+        fadeDelay = t + min(delta, configuration.maxAdjustedDelay)
+        return true
     }
 
     /// Corrects the fade delay when R was estimated from a provisional
@@ -186,13 +230,20 @@ public struct SleepTimer: Sendable, Equatable {
             let u = configuration.cancelRamp > 0 ? min(1, elapsed / configuration.cancelRamp) : 1
             return from + (1 - from) * u
         case .on(let t):
-            guard t >= fadeDelay else { return 1 }
+            guard t >= fadeDelay else { return liftValue(at: t) }
             let k = currentStep(at: t)
             let stepStart = fadeDelay + Double(k) * configuration.stepInterval
-            let previous = k == 0 ? 1 : configuration.levels[k - 1]
+            let previous = k == 0 ? liftValue(at: fadeDelay) : configuration.levels[k - 1]
             let target = configuration.levels[k]
             let u = configuration.stepRamp > 0 ? min(1, (t - stepStart) / configuration.stepRamp) : 1
             return previous + (target - previous) * u
         }
+    }
+
+    /// Baseline multiplier while waiting: 1, or partway up a lift glide.
+    private func liftValue(at t: TimeInterval) -> Double {
+        guard let lift else { return 1 }
+        let u = configuration.cancelRamp > 0 ? min(1, max(0, t - lift.start) / configuration.cancelRamp) : 1
+        return lift.from + (1 - lift.from) * u
     }
 }

@@ -2,6 +2,19 @@
 
 Newest first. Each entry: what changed, what was verified (actual output), blockers.
 
+## 2026-10-15 — Session 3: v0.3 full history, Sleep 10%/min, ±5 bubble, z's
+
+Owner request: entire episode list by year; floating z's; ±5 min bubble above Moon; 10% drop per minute.
+- Fade: `SleepConfiguration.standard` now 60 s steps, 0.9…0.0 (D28). Old numbers kept as test-only `.v1`.
+- `SleepTimer.adjust(by:)` with lift glide; `SleepController.adjust`; bubble UI (D29).
+- Paged feed following + year grouping, pinned year headers, Newest/Oldest toggle (D30).
+- Floating z's: Canvas/TimelineView, static under Reduce Motion (D31).
+- No website exists; README/in-app copy updated (D32).
+- **Verified (actual output, `scripts/test.sh`, iPhone 18 Pro sim):** core 83/83; Debug + Release BUILD SUCCEEDED;
+  UI tests 13 executed, 0 failures (new: ±5 bubble, year sections/order).
+- Screenshots: `screenshots/v3/`.
+- Not verified: real paged feed in the wild (none of the sample feeds page); device check V3.7.
+
 ## 2026-10-15 — Session 2: v0.2 home pages, persistent mini player, Explore
 
 Owner request: mini player always visible once playing; 3-dot pager New · Library · Explore with swipe;
