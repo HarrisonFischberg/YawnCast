@@ -1,0 +1,67 @@
+{
+  "_about": "NightCast scene theme 'ocean' (Underwater). scene-light = light-ray band near the top.",
+  "color": {
+    "bg": "#031B2A",
+    "scene-light": "#0E4A63",
+    "surface": "#0A2E42",
+    "raised": "#0F3A52",
+    "border": "#1A5068",
+    "border-input": "#6FA6BC",
+    "text": "#E8FBFF",
+    "text-muted": "#A6D0DC",
+    "accent": "#FFB38A",
+    "on-accent": "#2A0E00",
+    "danger": "#FF9A8A"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "scene-light"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "scene-light"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "raised"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "accent",
+      "scene-light"
+    ],
+    [
+      "border-input",
+      "bg",
+      "ui"
+    ]
+  ]
+}

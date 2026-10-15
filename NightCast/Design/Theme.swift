@@ -25,6 +25,8 @@ struct Theme: Identifiable, Equatable {
     var scene: SceneKind?
 
     var hasScene: Bool { scene != nil }
+    /// Keep every color this app draws free of blue (Red Light).
+    var blueFree = false
 
     /// Default: deep-blue night sky with slow waves and twinkling stars.
     static let midnight = Theme(
@@ -67,6 +69,27 @@ struct Theme: Identifiable, Equatable {
         scene: .rainforest
     )
 
+    static let ocean = Theme(
+        id: "ocean", name: "Underwater", blurb: "Drifting fish, rising bubbles",
+        colorScheme: .dark,
+        bg: Color(hex: 0x031B2A), surface: Color(hex: 0x0A2E42), raised: Color(hex: 0x0F3A52),
+        border: Color(hex: 0x1A5068), text: Color(hex: 0xE8FBFF), textMuted: Color(hex: 0xA6D0DC),
+        accent: Color(hex: 0xFFB38A), onAccent: Color(hex: 0x2A0E00), danger: Color(hex: 0xFF9A8A),
+        edge: Color(hex: 0x01111C), highlight: .white.opacity(0.10), shadowOpacity: 0.6,
+        scene: .ocean
+    )
+
+    /// Red-only interface on true black; every token has a blue channel of 0.
+    static let redLight = Theme(
+        id: "redlight", name: "Red Light", blurb: "No blue in the interface",
+        colorScheme: .dark,
+        bg: Color(hex: 0x000000), surface: Color(hex: 0x140300), raised: Color(hex: 0x180400),
+        border: Color(hex: 0x2E0800), text: Color(hex: 0xFF3A00), textMuted: Color(hex: 0xF81000),
+        accent: Color(hex: 0xFF2000), onAccent: Color(hex: 0x000000), danger: Color(hex: 0xFF8A00),
+        edge: Color(hex: 0x000000), highlight: Color(hex: 0xFF3A00).opacity(0.10), shadowOpacity: 0.7,
+        blueFree: true
+    )
+
     static let city = Theme(
         id: "city", name: "City Scape", blurb: "Neon skyline, soft rain",
         colorScheme: .dark,
@@ -105,9 +128,9 @@ struct Theme: Identifiable, Equatable {
     )
 
     /// Animated themes, all calm and night-time.
-    static let scenes: [Theme] = [.midnight, .mountain, .beach, .rainforest, .city]
+    static let scenes: [Theme] = [.midnight, .mountain, .beach, .rainforest, .ocean, .city]
     /// Flat color themes.
-    static let colorScapes: [Theme] = [.paper, .ember, .ink]
+    static let colorScapes: [Theme] = [.paper, .ember, .ink, .redLight]
     static let all: [Theme] = scenes + colorScapes
 
     static func with(id: String?) -> Theme {

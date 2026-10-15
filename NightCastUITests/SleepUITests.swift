@@ -47,7 +47,12 @@ final class SleepUITests: XCTestCase {
         XCTAssertTrue(waitUntil(3) { (moon.value as? String) == "Off" }, "Sleep ended")
         XCTAssertEqual(gain(app), 1.0, accuracy: 0.001, "gain restored for next deliberate play")
 
-        let fade = samples.filter { $0 >= 0 }
+        // Up to the quietest sample. After it the app pauses and then restores
+        // volume to 1.0 (checked above); a sample can land between the restore
+        // and the button label switching to "Play".
+        let valid = samples.filter { $0 >= 0 }
+        let lowest = valid.indices.min { valid[$0] < valid[$1] } ?? valid.endIndex
+        let fade = Array(valid.prefix(through: min(lowest, max(valid.count - 1, 0))))
         XCTAssertFalse(fade.isEmpty)
         // Never increases while fading.
         for (a, b) in zip(fade, fade.dropFirst()) { XCTAssertLessThanOrEqual(b, a + 0.001, "gain rose: \(fade)") }

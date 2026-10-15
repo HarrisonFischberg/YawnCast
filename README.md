@@ -4,6 +4,8 @@
 
 A native iPhone podcast app for falling asleep.
 
+**v0.6:** sixth Scene **Underwater** (fish, bubbles, light rays, kelp) and fourth Color Scape **Red Light** (red on black, no blue in the interface).
+
 **v0.5:** Themes sheet (dark/light circle in the Library header) with **Scenes**, all calm and animated: Midnight, Mountain Vista, Beach, Rainforest, City Scape. Plus **Color Scapes**: Paper, Ember, Ink. The one-click layout key stays.
 
 **v0.4:** Midnight night-sky theme (default); mini player can be slid away when paused; the ±5 bubble tucks into a small pill; Library drag-to-reorder and Large / Small / List layouts (Settings); Explore has search, *Your interests* at the top, and Browse category cards (Sports, Politics, Tech, AI, Hobbies…).
@@ -150,6 +152,7 @@ Replica checks:
 | `screenshots/m3/` | Live run: real search, show detail, streaming |
 | `screenshots/m5/` | Show and Search in Paper and Ember; Show, Search and Library at AX5 text |
 | `screenshots/v2/` | New, Library, Explore pages; mini player on Show detail |
+| `screenshots/v6/` | Underwater and Red Light on Library, Now Playing, Explore |
 | `screenshots/v5/` | The four new scenes on Library and Now Playing; Themes sheet |
 | `screenshots/v4/` | Midnight theme; Library large/small/list; Explore interests and categories; Sports page; Sleep bubble open and tucked |
 | `screenshots/v3/` | Sleep with ±5 bubble and z's (Ember, Ink, Paper fading); show page year sections |

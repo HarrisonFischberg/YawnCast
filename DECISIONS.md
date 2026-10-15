@@ -238,3 +238,13 @@ deterministic layouts, still under Reduce Motion); theme swatches show a still f
 Tokens `replica/design/tokens.{mountain,beach,rainforest,city}.json`: 0 AA failures incl. text over
 each scene's brightest area. Moons were first placed under page titles; moved after screenshot review
 so no scene puts a bright shape where text sits (Mountain: right edge; Beach: on the horizon).
+
+## D40 · 2026-10-15 · Underwater scene and Red Light color scape (owner request, v0.6)
+Scenes now 6: + Underwater (light rays from the surface, slow fish silhouettes with wagging tails,
+rising bubbles, swaying kelp; coral accent). Color Scapes now 4: + Red Light (true black, red-only
+interface; every token's blue channel is 0; key highlights and Explore card tints switch to red via
+`Theme.blueFree`). Tokens `replica/design/tokens.{ocean,redlight}.json`, 0 AA failures after retuning
+Red Light (first pass had small blue values and a 2.87:1 input border).
+Limits, stated honestly: podcast artwork keeps its real colors (the brief forbids altering publisher
+artwork), and iOS-drawn parts (status bar, keyboard, context menus, share sheets) keep system colors.
+This is a red-tinted interface, not a hardware blue-light filter; iOS Night Shift / Color Filters do that.

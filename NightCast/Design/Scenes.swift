@@ -3,7 +3,7 @@ import SwiftUI
 /// The animated backgrounds behind "Scene" themes. All share one mood: dark,
 /// slow, softly sparkling. Drawn with Canvas at ~15 fps; still under Reduce Motion.
 enum SceneKind: String, CaseIterable {
-    case midnight, mountain, beach, rainforest, city
+    case midnight, mountain, beach, rainforest, ocean, city
 }
 
 struct SceneBackground: View {
@@ -56,6 +56,7 @@ enum SceneRenderer {
         case .mountain: mountain(&canvas, size, t)
         case .beach: beach(&canvas, size, t)
         case .rainforest: rainforest(&canvas, size, t)
+        case .ocean: ocean(&canvas, size, t)
         case .city: city(&canvas, size, t)
         }
     }
@@ -172,6 +173,73 @@ enum SceneRenderer {
             guard blink > 0.02 else { continue }
             c.fill(Path(ellipseIn: CGRect(x: x - 9, y: y - 9, width: 18, height: 18)), with: .color(hex(0xD6F07A).opacity(0.16 * blink)))
             c.fill(Path(ellipseIn: CGRect(x: x - 1.8, y: y - 1.8, width: 3.6, height: 3.6)), with: .color(hex(0xEFFFB0).opacity(0.95 * blink)))
+        }
+    }
+
+    // MARK: Underwater — light rays from above, rising bubbles, drifting fish, swaying kelp
+
+    private static func ocean(_ c: inout GraphicsContext, _ size: CGSize, _ t: Double) {
+        gradient(&c, size, [0x0E4A63, 0x06283C, 0x020E18])
+        // Soft light rays fanning down from the surface, swaying slowly.
+        c.drawLayer { rays in
+            rays.addFilter(.blur(radius: 14))
+            for i in 0..<5 {
+                let sway = sin(t * 0.12 + Double(i) * 1.3) * 0.04
+                let top = (0.12 + Double(i) * 0.2 + sway) * size.width
+                let spread = size.width * (0.05 + 0.03 * Double(i % 2))
+                var ray = Path()
+                ray.move(to: CGPoint(x: top - spread * 0.3, y: 0))
+                ray.addLine(to: CGPoint(x: top + spread * 0.3, y: 0))
+                ray.addLine(to: CGPoint(x: top + spread * 2 + size.width * 0.12, y: size.height * 0.75))
+                ray.addLine(to: CGPoint(x: top - spread + size.width * 0.08, y: size.height * 0.75))
+                ray.closeSubpath()
+                rays.fill(ray, with: .linearGradient(Gradient(colors: [.white.opacity(0.10), .clear]),
+                                                     startPoint: CGPoint(x: top, y: 0), endPoint: CGPoint(x: top, y: size.height * 0.75)))
+            }
+        }
+        // Kelp swaying from the sea floor.
+        for strand in Layouts.kelp {
+            var path = Path()
+            let baseX = strand.x * size.width
+            path.move(to: CGPoint(x: baseX, y: size.height + 10))
+            let height = strand.height * size.height
+            var point = CGPoint(x: baseX, y: size.height + 10)
+            for segment in 1...6 {
+                let f = Double(segment) / 6
+                let sway = sin(t * 0.5 + strand.phase + f * 2) * 14 * f
+                let next = CGPoint(x: baseX + sway, y: size.height + 10 - height * f)
+                path.addQuadCurve(to: next, control: CGPoint(x: (point.x + next.x) / 2 + sway * 0.4, y: (point.y + next.y) / 2))
+                point = next
+            }
+            c.stroke(path, with: .color(hex(0x05302B).opacity(0.9)), style: StrokeStyle(lineWidth: strand.width, lineCap: .round))
+        }
+        c.fill(wavePath(size, base: 0.95, amp: 6, k: 1.7, t: 0, speed: 0), with: .color(hex(0x031520)))
+        // Fish: slow silhouettes crossing, tails wagging, nearer ones darker and larger.
+        for fish in Layouts.fish {
+            let travel = (fish.offset + t * fish.speed).truncatingRemainder(dividingBy: 1.4) - 0.2
+            let x = (fish.direction > 0 ? travel : 1 - travel) * size.width
+            let y = (fish.y + 0.015 * sin(t * 0.6 + fish.offset * 9)) * size.height
+            var f = c
+            f.translateBy(x: x, y: y)
+            f.scaleBy(x: fish.direction * fish.size / 20, y: fish.size / 20)
+            f.opacity = fish.near ? 0.9 : 0.55
+            let color = hex(fish.near ? 0x021623 : 0x0B3A52)
+            f.fill(Path(ellipseIn: CGRect(x: -14, y: -6, width: 28, height: 12)), with: .color(color))
+            let wag = sin(t * 4 + fish.offset * 20) * 3
+            var tail = Path()
+            tail.move(to: CGPoint(x: -12, y: 0))
+            tail.addLine(to: CGPoint(x: -22, y: -7 + wag))
+            tail.addLine(to: CGPoint(x: -22, y: 7 + wag))
+            tail.closeSubpath()
+            f.fill(tail, with: .color(color))
+        }
+        // Bubbles rising and wobbling.
+        for bubble in Layouts.bubbles {
+            let rise = (bubble.y + t * bubble.speed).truncatingRemainder(dividingBy: 1.1)
+            let y = size.height * (1.05 - rise)
+            let x = (bubble.x + 0.01 * sin(t * 2 + bubble.y * 30)) * size.width
+            c.stroke(Path(ellipseIn: CGRect(x: x - bubble.r, y: y - bubble.r, width: bubble.r * 2, height: bubble.r * 2)),
+                     with: .color(.white.opacity(0.28 * min(1, rise * 4))), lineWidth: 0.8)
         }
     }
 
@@ -369,6 +437,31 @@ enum SceneRenderer {
             }
             return result
         }
+
+        struct Fish { var offset, y, speed, direction, size: Double; var near: Bool }
+        struct Kelp { var x, height, width, phase: Double }
+        struct Bubble { var x, y, speed, r: Double }
+
+        static let fish: [Fish] = {
+            var r = Random(state: 2024)
+            return (0..<10).map { _ in
+                let near = r.next() > 0.6
+                return Fish(offset: r.next() * 1.4, y: 0.22 + r.next() * 0.6, speed: 0.008 + r.next() * 0.012,
+                            direction: r.next() > 0.5 ? 1 : -1, size: near ? 22 + r.next() * 8 : 12 + r.next() * 6, near: near)
+            }
+        }()
+
+        static let kelp: [Kelp] = {
+            var r = Random(state: 77)
+            return (0..<7).map { i in
+                Kelp(x: (Double(i) + 0.2 + r.next() * 0.6) / 7, height: 0.18 + r.next() * 0.22, width: 5 + r.next() * 5, phase: r.next() * 6)
+            }
+        }()
+
+        static let bubbles: [Bubble] = {
+            var r = Random(state: 5)
+            return (0..<30).map { _ in Bubble(x: r.next(), y: r.next(), speed: 0.03 + r.next() * 0.05, r: 1.5 + r.next() * 3) }
+        }()
 
         static let rain: [Drop] = {
             var r = Random(state: 99)

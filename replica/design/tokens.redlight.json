@@ -1,0 +1,62 @@
+{
+  "_about": "NightCast color scape 'redlight': pure black, red-only interface, blue channel 0 in every token.",
+  "color": {
+    "bg": "#000000",
+    "surface": "#140300",
+    "raised": "#180400",
+    "border": "#2E0800",
+    "border-input": "#C81800",
+    "text": "#FF3A00",
+    "text-muted": "#F81000",
+    "accent": "#FF2000",
+    "on-accent": "#000000",
+    "danger": "#FF8A00"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "raised"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "accent",
+      "surface"
+    ],
+    [
+      "danger",
+      "bg"
+    ],
+    [
+      "border-input",
+      "bg",
+      "ui"
+    ]
+  ]
+}

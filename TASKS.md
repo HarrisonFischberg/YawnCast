@@ -88,3 +88,7 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] Scenes: Midnight, Mountain Vista, Beach, Rainforest, City Scape (animated, AA contrast)
 - [x] Color Scapes: Paper, Ember, Ink
 - [ ] Device check of v0.5 scenes (battery/comfort at night, owner)
+
+## v0.6 (owner request 2026-10-15)
+- [x] Underwater scene (6 scenes total)
+- [x] Red Light color scape (4 scapes total), blue-free tokens + key/card tints

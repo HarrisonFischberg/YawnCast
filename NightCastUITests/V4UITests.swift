@@ -111,15 +111,15 @@ final class V4UITests: XCTestCase {
         app.buttons["themesKey"].tap()
         let beach = app.buttons["theme-beach"]
         XCTAssertTrue(beach.waitForExistence(timeout: 3))
-        for id in ["midnight", "mountain", "rainforest", "city"] {
+        for id in ["midnight", "mountain", "rainforest", "ocean", "city"] {
             XCTAssertTrue(app.buttons["theme-\(id)"].exists, id)
         }
         beach.tap()
         XCTAssertTrue(waitUntil(3) { beach.isSelected })
         // Color Scapes sit below the Scenes; scroll the sheet to reach them.
-        let ink = app.buttons["theme-ink"]
-        for _ in 0..<3 where !ink.isHittable { app.swipeUp() }
-        for id in ["paper", "ember", "ink"] {
+        let redLight = app.buttons["theme-redlight"]
+        for _ in 0..<4 where !redLight.isHittable { app.swipeUp() }
+        for id in ["paper", "ember", "ink", "redlight"] {
             XCTAssertTrue(app.buttons["theme-\(id)"].waitForExistence(timeout: 3), id)
         }
     }

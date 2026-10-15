@@ -127,3 +127,11 @@ each ramped over 2 s. After the 0.0 ramp: pause, save, end Sleep, restore B.
 | V5.3 | AA contrast for every scene, incl. its brightest area | PASS (contrast.py × 4) |
 | V5.4 | No bright scene element behind text | Screenshot review only (`screenshots/v5/`) |
 | V5.5 | Comfort and battery at night on a physical iPhone | NOT RUN (owner) |
+
+## v0.6 — Underwater + Red Light (2026-10-15)
+
+| ID | Criterion | Status |
+|---|---|---|
+| V6.1 | 6 Scenes and 4 Color Scapes in Themes | PASS (`testLibraryLayoutsAndReorder` checks all 10 ids) |
+| V6.2 | Both new themes AA, incl. Underwater's light-ray band | PASS (contrast.py) |
+| V6.3 | Red Light tokens have blue = 0; app-drawn tints/highlights follow | PASS (token check + code); system UI and artwork keep their colors |

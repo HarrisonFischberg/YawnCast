@@ -2,6 +2,15 @@
 
 Newest first. Each entry: what changed, what was verified (actual output), blockers.
 
+## 2026-10-15 — Session 6: v0.6 Underwater + Red Light
+
+- Underwater scene and Red Light color scape (D40). Red Light retuned to blue = 0 and AA after a first
+  failing pass; key highlights and Explore card tints follow `Theme.blueFree`.
+- **Verified (actual output):** core 90/90; Debug + Release BUILD SUCCEEDED; full UI run 16/17 — the failure
+  was a test race (one sample taken after the restore-to-1.0 but before the button said "Play"); test now
+  stops at the quietest sample; Sleep suite + Themes test rerun: 4/4 passed.
+- Screenshots: `screenshots/v6/`.
+
 ## 2026-10-15 — Session 5: v0.5 Themes (Scenes + Color Scapes)
 
 - Four new animated scenes + shared renderer; Themes sheet; Themes key; layout key unchanged (D39).
