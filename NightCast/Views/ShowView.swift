@@ -94,6 +94,7 @@ struct ShowView: View {
             .padding(.bottom, Space.xxxl)
         }
         .scrollIndicators(.hidden)
+        .dockAware()
         .refreshable { await model.load(force: true) }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background { ScreenBackground() }

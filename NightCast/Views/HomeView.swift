@@ -102,6 +102,7 @@ struct NewEpisodesView: View {
             .padding(.bottom, Space.xxxl)
         }
         .scrollIndicators(.hidden)
+        .dockAware()
         .refreshable { await model.refreshLatest(force: true) }
         .task(id: model.library.subscriptions.map(\.id)) { await model.refreshLatest() }
     }

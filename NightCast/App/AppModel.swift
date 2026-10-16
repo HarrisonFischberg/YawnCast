@@ -185,13 +185,17 @@ final class AppModel {
     func openSearch() {
         let page = library.subscriptions.isEmpty ? HomePage.library : homePage
         focusSearchOnAppear = true
-        withAnimation(.spring(response: 0.45, dampingFraction: 0.86)) { searchingOn = page }
+        withAnimation(.smooth(duration: 0.42)) { searchingOn = page }
     }
 
     func endSearch() {
         search.cancel()
-        withAnimation(.spring(response: 0.45, dampingFraction: 0.86)) { searchingOn = nil }
-        search.query = ""
+        withAnimation(.smooth(duration: 0.42)) { searchingOn = nil }
+        // Clear after the fade so results don't blink out mid-animation.
+        Task { [weak self] in
+            try? await Task.sleep(for: .milliseconds(450))
+            if self?.searchingOn == nil { self?.search.query = "" }
+        }
     }
 
     /// Marks an episode played or unplayed without playing it.

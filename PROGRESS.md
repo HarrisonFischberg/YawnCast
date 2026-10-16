@@ -2,6 +2,14 @@
 
 Newest first. Each entry: what changed, what was verified (actual output), blockers.
 
+## 2026-10-15 — Session 9: v0.9 smooth search transition; player shrinks while typing
+
+- D43. Frame-checked via simulator screen recording (50 ms frames): first fix attempt showed the page cutting
+  out in one frame (its animation didn't run inside the pager) → driven by one explicit transaction;
+  second showed the two layers overlapping mid-fade → page fades in 0.18 s, search waits 0.16 s.
+- **Verified (actual output, `scripts/test.sh`):** core 90/90; Debug + Release BUILD SUCCEEDED; UI 17/17.
+- Frame strips: `screenshots/v9/`.
+
 ## 2026-10-15 — Session 8: v0.8 search in place; category page fix
 
 - D42. **Verified (actual output):** `scripts/test.sh` → core 90/90; Debug + Release BUILD SUCCEEDED; UI 17 executed,

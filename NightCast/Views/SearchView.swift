@@ -95,8 +95,58 @@ final class SearchModel {
     }
 }
 
-/// Search field + Cancel shown in place of a page's header while searching.
+/// A home page that can search in place. Both layers stay mounted; switching
+/// only animates opacity, offset and scale, so nothing re-lays out mid-animation.
+/// The page drifts down, shrinks a touch and fades; the search layer fades in a
+/// beat later. Reduce Motion gets a plain cross-fade.
+struct SearchablePage<Content: View>: View {
+    let page: HomePage
+    @ViewBuilder let content: Content
+    @Environment(AppModel.self) private var app
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private var isSearching: Bool { app.searchingOn == page }
+
+    var body: some View {
+        ZStack(alignment: .top) {
+            content
+                // Fade quickly so the two layers barely overlap; the drift/shrink
+                // below follows the (slower) smooth transaction from AppModel.
+                .animation(isSearching ? .easeOut(duration: 0.18) : .easeOut(duration: 0.3).delay(0.1)) {
+                    $0.opacity(isSearching ? 0 : 1)
+                }
+                .scaleEffect(isSearching && !reduceMotion ? 0.965 : 1, anchor: .top)
+                .offset(y: isSearching && !reduceMotion ? 64 : 0)
+                .allowsHitTesting(!isSearching)
+                .accessibilityHidden(isSearching)
+
+            VStack(alignment: .leading, spacing: Space.l) {
+                InlineSearchBar(isActive: isSearching)
+                    .padding(.horizontal, Space.xl)
+                    .padding(.top, Space.s)
+                ScrollView {
+                    SearchResultsView()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, Space.xl)
+                        .padding(.bottom, Space.xxxl)
+                }
+                .scrollIndicators(.hidden)
+                .scrollDismissesKeyboard(.immediately)
+                .dockAware()
+            }
+            .opacity(isSearching ? 1 : 0)
+            .offset(y: isSearching || reduceMotion ? 0 : -12)
+            .allowsHitTesting(isSearching)
+            .accessibilityHidden(!isSearching)
+            // Arrive once the page has mostly faded; leave quickly.
+            .animation(isSearching ? .smooth(duration: 0.34).delay(0.16) : .easeIn(duration: 0.14), value: isSearching)
+        }
+    }
+}
+
+/// Search field + Cancel at the top of a searching page.
 struct InlineSearchBar: View {
+    let isActive: Bool
     @Environment(AppModel.self) private var app
     @Environment(\.theme) private var theme
     @FocusState private var focused: Bool
@@ -111,11 +161,19 @@ struct InlineSearchBar: View {
                 .frame(minHeight: 44)
                 .accessibilityIdentifier("closeSearch")
         }
-        .onAppear {
-            if app.focusSearchOnAppear {
-                focused = true
-                app.focusSearchOnAppear = false
-            }
+        .onChange(of: isActive) { _, active in
+            if active { focusIfRequested() } else { focused = false }
+        }
+        .onAppear { if isActive { focusIfRequested() } }
+    }
+
+    /// Raise the keyboard just after the fade starts (not when returning from a show).
+    private func focusIfRequested() {
+        guard app.focusSearchOnAppear else { return }
+        app.focusSearchOnAppear = false
+        Task {
+            try? await Task.sleep(for: .milliseconds(160))
+            focused = true
         }
     }
 }
@@ -129,8 +187,10 @@ struct SearchResultsView: View {
         let model = app.search
         switch model.state {
         case .idle:
-            StateMessage(title: "Find a show", message: "Search by show name, host, or topic.", systemImage: "magnifyingglass")
-                .padding(.horizontal, -Space.xxl)
+            Text("Search by show name, host, or topic.")
+                .font(Typo.caption)
+                .foregroundStyle(theme.textMuted)
+                .padding(.top, Space.xs)
         case .loading:
             HStack(spacing: Space.m) {
                 ProgressView().tint(theme.text)
@@ -160,17 +220,6 @@ struct SearchResultsView: View {
             .accessibilityElement(children: .contain)
             .accessibilityIdentifier("searchResults")
         }
-    }
-}
-
-/// How a page's normal content leaves and returns around search:
-/// it glides down and fades out, then rises back in.
-extension AnyTransition {
-    static var searchPushDown: AnyTransition {
-        .asymmetric(
-            insertion: .offset(y: 60).combined(with: .opacity),
-            removal: .offset(y: 180).combined(with: .opacity)
-        )
     }
 }
 

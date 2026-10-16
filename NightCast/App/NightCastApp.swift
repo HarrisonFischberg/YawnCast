@@ -46,25 +46,18 @@ struct RootView: View {
                 }
         }
         .tint(theme.text)
-        // Once something is loaded, the mini player stays on every screen.
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            // Stays out of the way while the keyboard is up (it would cover search results).
-            if model.player.episode != nil && !keyboardVisible {
-                if model.showsMiniPlayer {
-                    MiniPlayer()
-                        .padding(.horizontal, Space.m)
-                        .padding(.bottom, Space.xs)
-                        .transition(.scale(scale: 0.4, anchor: .bottom).combined(with: .opacity))
-                } else {
-                    // Slid away: a small oval stays at the bottom; tap it to bring the player back.
-                    MiniPlayerPill()
-                        .padding(.bottom, Space.xs)
-                        .transition(.scale(scale: 2.2, anchor: .bottom).combined(with: .opacity))
-                }
+        // Once something is loaded, the player floats over every screen: full size, or a
+        // small oval while typing or after being slid away (paused).
+        .overlay(alignment: .bottom) {
+            if model.player.episode != nil {
+                MiniPlayerDock(compact: keyboardVisible || !model.showsMiniPlayer)
+                    .padding(.horizontal, Space.m)
+                    .padding(.bottom, Space.xs)
+                    .frame(maxWidth: .infinity)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
-        .animation(.spring(response: 0.35, dampingFraction: 0.85), value: model.showsMiniPlayer)
-        .animation(.easeOut(duration: 0.2), value: keyboardVisible)
+        .animation(.smooth(duration: 0.38), value: model.player.episode == nil)
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in keyboardVisible = true }
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in keyboardVisible = false }
         .fullScreenCover(isPresented: $model.isPlayerPresented) {

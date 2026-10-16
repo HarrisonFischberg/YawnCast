@@ -102,3 +102,7 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] Search in place on Library and Explore (push-down fade)
 - [x] Bug: category page narrow/black bars while loading → full width + placeholder tiles
 - [x] Mini player hides while the keyboard is up
+
+## v0.9 (owner feedback 2026-10-15)
+- [x] Redo the search transition (no reflow; staged fades; frame-checked)
+- [x] Player shrinks to the oval while typing (floating dock)

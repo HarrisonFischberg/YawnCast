@@ -1,5 +1,6 @@
 import NightCastCore
 import SwiftUI
+import UIKit
 
 /// Middle home page: subscribed shows. Large, small or list layout; press,
 /// hold and drag a show to reorder.
@@ -7,7 +8,6 @@ struct LibraryView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
     @Environment(\.dynamicTypeSize) private var typeSize
-    private var isSearching: Bool { model.searchingOn == .library }
     /// Show currently under a dragged show (highlighted as the drop slot).
     @State private var dropTargetID: String?
 
@@ -24,25 +24,12 @@ struct LibraryView: View {
 
     var body: some View {
         @Bindable var model = model
+        SearchablePage(page: .library) {
         ScrollView {
             VStack(alignment: .leading, spacing: Space.xxl) {
-                if isSearching {
-                    // Search in place: the header becomes a search field...
-                    InlineSearchBar()
-                        .padding(.top, Space.s)
-                        .transition(.opacity)
-                    SearchResultsView()
-                        .transition(.opacity.animation(.easeOut(duration: 0.25).delay(0.12)))
-                } else {
-                    header
-                        .transition(.opacity)
-                }
-                // ...and the Library glides down and fades out of the way.
-                if isSearching {
-                    EmptyView()
-                } else if model.library.subscriptions.isEmpty {
+                header
+                if model.library.subscriptions.isEmpty {
                     emptyState
-                        .transition(.searchPushDown)
                 } else {
                     LazyVGrid(
                         columns: columns,
@@ -55,14 +42,14 @@ struct LibraryView: View {
                     }
                     .animation(.spring(response: 0.35, dampingFraction: 0.8), value: model.library.subscriptions.map(\.id))
                     .animation(.spring(response: 0.35, dampingFraction: 0.85), value: model.libraryLayout)
-                    .transition(.searchPushDown)
                 }
             }
             .padding(.horizontal, Space.xl)
             .padding(.bottom, Space.xxxl)
         }
         .scrollIndicators(.hidden)
-        .scrollDismissesKeyboard(.immediately)
+        .dockAware()
+        }
         .sheet(isPresented: $model.isThemesPresented) {
             ThemesSheet()
                 // Opens tall; swipes inside always scroll the list. Resize from the grabber.
@@ -269,120 +256,131 @@ struct TileStyle: ButtonStyle {
     }
 }
 
-struct MiniPlayer: View {
+/// The floating player. Full size normally; morphs into a small oval while you
+/// type or after you slide it away (while paused). It floats over the page, so
+/// changing size never pushes the page's layout around.
+struct MiniPlayerDock: View {
+    let compact: Bool
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
-
-    private func hide() {
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { model.isMiniPlayerHidden = true }
-    }
+    @Namespace private var dock
 
     var body: some View {
         let player = model.player
         HStack(spacing: Space.m) {
-            Button { model.isPlayerPresented = true } label: {
-                HStack(spacing: Space.m) {
-                    ArtworkView(url: player.episode?.artworkURL, cornerRadius: 8, title: player.episode?.showTitle ?? "")
-                        .frame(width: 48, height: 48)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(player.episode?.title ?? "")
-                            .font(Typo.headline)
+            if compact {
+                Button(action: expand) {
+                    HStack(spacing: Space.s) {
+                        artwork(size: 28, corner: 14)
+                        Image(systemName: "chevron.up")
+                            .font(.system(size: 13, weight: .bold))
                             .foregroundStyle(theme.text)
-                            .lineLimit(1)
-                        HStack(spacing: Space.xs) {
-                            if model.sleepStatus != .off {
-                                Image(systemName: "moon.fill").foregroundStyle(theme.accent)
-                            }
-                            Text(player.episode?.showTitle ?? "")
-                                .lineLimit(1)
-                        }
-                        .font(Typo.caption)
-                        .foregroundStyle(theme.textMuted)
+                            .transition(.opacity)
                     }
-                    Spacer(minLength: 0)
-                }
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Now playing: \(player.episode?.title ?? "")")
-            .accessibilityHint("Opens the player.")
-            .accessibilityIdentifier("miniPlayer")
-
-            Button { player.togglePlayPause() } label: {
-                Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
-                    .font(.system(size: 20, weight: .bold))
-                    .contentTransition(.symbolEffect(.replace))
-            }
-            .buttonStyle(.roundKey(.primary, depth: 3))
-            .frame(width: 52, height: 52)
-            .accessibilityLabel(player.isPlaying ? "Pause" : "Play")
-            .sensoryFeedback(.impact(weight: .medium), trigger: player.isPlaying)
-
-            if !player.isPlaying {
-                // Paused: one tap slides the player away until something plays again.
-                Button { hide() } label: {
-                    Image(systemName: "chevron.down")
-                        .font(.system(size: 15, weight: .bold))
-                        .foregroundStyle(theme.textMuted)
-                        .frame(width: 36, height: 52)
-                        .contentShape(Rectangle())
+                    .padding(.leading, Space.xs)
+                    .padding(.trailing, Space.s)
+                    .frame(minHeight: 44)
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("Hide player")
-                .accessibilityIdentifier("hideMiniPlayer")
-                .transition(.opacity.combined(with: .scale))
+                .accessibilityLabel("Show player: \(player.episode?.title ?? "")")
+                .accessibilityIdentifier("miniPlayerPill")
+            } else {
+                Button { model.isPlayerPresented = true } label: {
+                    HStack(spacing: Space.m) {
+                        artwork(size: 48, corner: 8)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(player.episode?.title ?? "")
+                                .font(Typo.headline)
+                                .foregroundStyle(theme.text)
+                                .lineLimit(1)
+                            HStack(spacing: Space.xs) {
+                                if model.sleepStatus != .off {
+                                    Image(systemName: "moon.fill").foregroundStyle(theme.accent)
+                                }
+                                Text(player.episode?.showTitle ?? "").lineLimit(1)
+                            }
+                            .font(Typo.caption)
+                            .foregroundStyle(theme.textMuted)
+                        }
+                        Spacer(minLength: 0)
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Now playing: \(player.episode?.title ?? "")")
+                .accessibilityHint("Opens the player.")
+                .accessibilityIdentifier("miniPlayer")
+                .transition(.opacity)
+
+                Button { player.togglePlayPause() } label: {
+                    Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
+                        .font(.system(size: 20, weight: .bold))
+                        .contentTransition(.symbolEffect(.replace))
+                }
+                .buttonStyle(.roundKey(.primary, depth: 3))
+                .frame(width: 52, height: 52)
+                .accessibilityLabel(player.isPlaying ? "Pause" : "Play")
+                .sensoryFeedback(.impact(weight: .medium), trigger: player.isPlaying)
+                .transition(.opacity)
+
+                if !player.isPlaying {
+                    // Paused: one tap tucks the player into the small oval.
+                    Button { model.isMiniPlayerHidden = true } label: {
+                        Image(systemName: "chevron.down")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(theme.textMuted)
+                            .frame(width: 36, height: 52)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Hide player")
+                    .accessibilityIdentifier("hideMiniPlayer")
+                    .transition(.opacity)
+                }
             }
         }
-        .animation(.easeOut(duration: 0.2), value: player.isPlaying)
-        .gesture(
-            DragGesture(minimumDistance: 20).onEnded { value in
-                if value.translation.height > 40, !player.isPlaying { hide() }
-            }
-        )
-        .padding(Space.m)
+        .padding(compact ? Space.xs : Space.m)
+        .frame(maxWidth: compact ? nil : .infinity)
         .background {
-            RoundedRectangle(cornerRadius: 26, style: .continuous)
+            RoundedRectangle(cornerRadius: compact ? 26 : 26, style: .continuous)
                 .fill(theme.raised)
                 .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(theme.border, lineWidth: 1))
-                .shadow(color: .black.opacity(theme.shadowOpacity), radius: 16, y: 8)
+                .shadow(color: .black.opacity(theme.shadowOpacity), radius: compact ? 10 : 16, y: compact ? 4 : 8)
+                .matchedGeometryEffect(id: "plate", in: dock)
         }
+        .gesture(
+            DragGesture(minimumDistance: 20).onEnded { value in
+                if compact, value.translation.height < -30 { expand() }
+                if !compact, value.translation.height > 40, !player.isPlaying { model.isMiniPlayerHidden = true }
+            }
+        )
+        .animation(.smooth(duration: 0.38), value: compact)
+        .animation(.easeOut(duration: 0.2), value: player.isPlaying)
+    }
+
+    private func artwork(size: CGFloat, corner: CGFloat) -> some View {
+        ArtworkView(url: model.player.episode?.artworkURL, cornerRadius: corner, title: model.player.episode?.showTitle ?? "")
+            .frame(width: size, height: size)
+            .clipShape(RoundedRectangle(cornerRadius: corner, style: .continuous))
+            .matchedGeometryEffect(id: "art", in: dock)
+    }
+
+    /// Back to full size; if typing, put the keyboard away first.
+    private func expand() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        model.isMiniPlayerHidden = false
     }
 }
 
-/// The tucked-away mini player: a small oval with the show's artwork. Tap to restore.
-struct MiniPlayerPill: View {
-    @Environment(AppModel.self) private var model
-    @Environment(\.theme) private var theme
+extension View {
+    /// Leaves room at the bottom of a scroll view for the floating player.
+    func dockAware() -> some View { modifier(DockInset()) }
+}
 
-    var body: some View {
-        Button {
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { model.isMiniPlayerHidden = false }
-        } label: {
-            HStack(spacing: Space.s) {
-                ArtworkView(url: model.player.episode?.artworkURL, cornerRadius: 14, title: model.player.episode?.showTitle ?? "")
-                    .frame(width: 28, height: 28)
-                    .clipShape(Circle())
-                Image(systemName: "chevron.up")
-                    .font(.system(size: 13, weight: .bold))
-                    .foregroundStyle(theme.text)
-            }
-            .padding(.leading, Space.s)
-            .padding(.trailing, Space.m)
-            .frame(minWidth: 76, minHeight: 44)
-            .background {
-                Capsule()
-                    .fill(theme.raised)
-                    .overlay(Capsule().strokeBorder(theme.border, lineWidth: 1))
-                    .shadow(color: .black.opacity(theme.shadowOpacity), radius: 10, y: 4)
-            }
-        }
-        .buttonStyle(TileStyle())
-        .gesture(DragGesture(minimumDistance: 20).onEnded { value in
-            if value.translation.height < -30 {
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { model.isMiniPlayerHidden = false }
-            }
-        })
-        .accessibilityLabel("Show player: \(model.player.episode?.title ?? "")")
-        .accessibilityIdentifier("miniPlayerPill")
+private struct DockInset: ViewModifier {
+    @Environment(AppModel.self) private var model
+    func body(content: Content) -> some View {
+        content.contentMargins(.bottom, model.player.episode == nil ? 0 : 96, for: .scrollContent)
     }
 }

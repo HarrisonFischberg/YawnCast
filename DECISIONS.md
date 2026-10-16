@@ -268,3 +268,16 @@ This is a red-tinted interface, not a hardware blue-light filter; iOS Night Shif
   Cause: while loading, the page's content was only as wide as its title and the scene background took
   that width. Fix: content and background fill the screen from the first frame (also on show pages), and
   loading shows placeholder tiles in the final grid instead of a spinner.
+
+## D43 · 2026-10-15 · v0.9 smooth in-place search; player shrinks instead of hiding (owner feedback)
+- v0.8's transition reflowed the page: content was swapped in/out with insertion/removal transitions
+  while the keyboard rose and the mini player (a safe-area inset) disappeared, so everything moved at once.
+- Now `SearchablePage` keeps both layers mounted. Opening: one smooth 0.42 s transaction drifts the page
+  down 64 pt and scales it to 96.5% while its opacity fades in 0.18 s; the search layer fades in after a
+  0.16 s delay; the keyboard rises 0.16 s later. Closing reverses, with the search layer leaving in 0.14 s.
+  Reduce Motion: cross-fade only. Verified by recording the simulator and checking frames every 50 ms:
+  no single-frame jumps, no overlap between the two layers.
+- The player is now a floating overlay (scroll views get a 96 pt bottom content margin), so resizing it
+  never moves page layout. While typing it morphs (matched geometry) into the small oval above the keyboard;
+  tapping the oval dismisses the keyboard and expands it. The same oval is used after sliding it away.
+- Idle search shows a one-line hint instead of a large headline (less to cross-fade).

@@ -8,8 +8,6 @@ struct ExploreView: View {
     @Environment(\.theme) private var theme
     @Environment(\.dynamicTypeSize) private var typeSize
 
-    private var isSearching: Bool { model.searchingOn == .explore }
-
     private var showColumns: [GridItem] {
         Array(repeating: GridItem(.flexible(), spacing: Space.xl, alignment: .top), count: typeSize.isAccessibilitySize ? 1 : 2)
     }
@@ -19,22 +17,13 @@ struct ExploreView: View {
     }
 
     var body: some View {
+        SearchablePage(page: .explore) {
         ScrollView {
             VStack(alignment: .leading, spacing: Space.xxl) {
                 PageTitle(title: "Explore", subtitle: "Find shows for every interest")
                     .padding(.top, Space.s)
 
-                if isSearching {
-                    // Search in place: the bar becomes a real field...
-                    InlineSearchBar()
-                        .transition(.opacity)
-                    SearchResultsView()
-                        .transition(.opacity.animation(.easeOut(duration: 0.25).delay(0.12)))
-                } else {
-                    SearchCapsule { model.openSearch() }
-                        .transition(.opacity)
-                    // ...and everything below glides down and fades out of the way.
-                    VStack(alignment: .leading, spacing: Space.xxl) {
+                SearchCapsule { model.openSearch() }
 
                 if !model.interests.isEmpty {
                     section("Your interests") {
@@ -65,17 +54,15 @@ struct ExploreView: View {
                 Text("Suggestions use the Apple Podcasts genres and titles of the shows you save, Apple’s public charts, and directory search. Nothing about you is stored or sent anywhere else.")
                     .font(Typo.caption)
                     .foregroundStyle(theme.textMuted)
-                    }
-                    .transition(.searchPushDown)
-                }
             }
             .padding(.horizontal, Space.xl)
             .padding(.bottom, Space.xxxl)
         }
         .scrollIndicators(.hidden)
-        .scrollDismissesKeyboard(.immediately)
+        .dockAware()
         .refreshable { await model.loadExplore(force: true) }
         .task(id: model.library.subscriptions.map(\.id)) { await model.loadExplore() }
+        }
     }
 
     private func section<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
@@ -243,6 +230,7 @@ struct CategoryView: View {
             .padding(.bottom, Space.xxxl)
         }
         .scrollIndicators(.hidden)
+        .dockAware()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background { ScreenBackground() }
         .refreshable { await load(force: true) }
