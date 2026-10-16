@@ -2,6 +2,12 @@
 
 Newest first. Each entry: what changed, what was verified (actual output), blockers.
 
+## 2026-10-15 — Session 7: v0.7 softer Red Light, tucked player oval, smoother Themes sheet
+
+- D41. **Verified (actual output, `scripts/test.sh`):** core 90/90; Debug + Release BUILD SUCCEEDED;
+  UI tests 17 executed, 0 failures (mini player test now checks the oval and restoring from it).
+- Screenshots: `screenshots/v7/`.
+
 ## 2026-10-15 — Session 6: v0.6 Underwater + Red Light
 
 - Underwater scene and Red Light color scape (D40). Red Light retuned to blue = 0 and AA after a first

@@ -92,3 +92,8 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 ## v0.6 (owner request 2026-10-15)
 - [x] Underwater scene (6 scenes total)
 - [x] Red Light color scape (4 scapes total), blue-free tokens + key/card tints
+
+## v0.7 (owner request 2026-10-15)
+- [x] Softer Red Light
+- [x] Hidden player → small oval, tap to restore
+- [x] Themes sheet scrolls without fighting the resize gesture

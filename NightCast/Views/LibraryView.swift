@@ -48,7 +48,10 @@ struct LibraryView: View {
         .scrollIndicators(.hidden)
         .sheet(isPresented: $model.isThemesPresented) {
             ThemesSheet()
-                .presentationDetents([.medium, .large])
+                // Opens tall; swipes inside always scroll the list. Resize from the grabber.
+                .presentationDetents([.fraction(0.8), .large])
+                .presentationContentInteraction(.scrolls)
+                .presentationDragIndicator(.visible)
         }
     }
 
@@ -326,5 +329,43 @@ struct MiniPlayer: View {
                 .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(theme.border, lineWidth: 1))
                 .shadow(color: .black.opacity(theme.shadowOpacity), radius: 16, y: 8)
         }
+    }
+}
+
+/// The tucked-away mini player: a small oval with the show's artwork. Tap to restore.
+struct MiniPlayerPill: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.theme) private var theme
+
+    var body: some View {
+        Button {
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { model.isMiniPlayerHidden = false }
+        } label: {
+            HStack(spacing: Space.s) {
+                ArtworkView(url: model.player.episode?.artworkURL, cornerRadius: 14, title: model.player.episode?.showTitle ?? "")
+                    .frame(width: 28, height: 28)
+                    .clipShape(Circle())
+                Image(systemName: "chevron.up")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(theme.text)
+            }
+            .padding(.leading, Space.s)
+            .padding(.trailing, Space.m)
+            .frame(minWidth: 76, minHeight: 44)
+            .background {
+                Capsule()
+                    .fill(theme.raised)
+                    .overlay(Capsule().strokeBorder(theme.border, lineWidth: 1))
+                    .shadow(color: .black.opacity(theme.shadowOpacity), radius: 10, y: 4)
+            }
+        }
+        .buttonStyle(TileStyle())
+        .gesture(DragGesture(minimumDistance: 20).onEnded { value in
+            if value.translation.height < -30 {
+                withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { model.isMiniPlayerHidden = false }
+            }
+        })
+        .accessibilityLabel("Show player: \(model.player.episode?.title ?? "")")
+        .accessibilityIdentifier("miniPlayerPill")
     }
 }

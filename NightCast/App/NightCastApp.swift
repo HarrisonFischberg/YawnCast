@@ -48,11 +48,18 @@ struct RootView: View {
         .tint(theme.text)
         // Once something is loaded, the mini player stays on every screen.
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            if model.showsMiniPlayer {
-                MiniPlayer()
-                    .padding(.horizontal, Space.m)
-                    .padding(.bottom, Space.xs)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            if model.player.episode != nil {
+                if model.showsMiniPlayer {
+                    MiniPlayer()
+                        .padding(.horizontal, Space.m)
+                        .padding(.bottom, Space.xs)
+                        .transition(.scale(scale: 0.4, anchor: .bottom).combined(with: .opacity))
+                } else {
+                    // Slid away: a small oval stays at the bottom; tap it to bring the player back.
+                    MiniPlayerPill()
+                        .padding(.bottom, Space.xs)
+                        .transition(.scale(scale: 2.2, anchor: .bottom).combined(with: .opacity))
+                }
             }
         }
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: model.showsMiniPlayer)

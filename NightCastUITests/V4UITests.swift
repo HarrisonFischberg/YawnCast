@@ -45,12 +45,18 @@ final class V4UITests: XCTestCase {
         app.buttons["Pause"].firstMatch.tap()
         XCTAssertTrue(hide.waitForExistence(timeout: 3), "hide appears once paused")
         hide.tap()
-        XCTAssertTrue(waitUntil(3) { !mini.exists }, "slid away")
+        let pill = app.buttons["miniPlayerPill"]
+        XCTAssertTrue(waitUntil(3) { !mini.exists && pill.exists }, "tucked into a small oval")
+        pill.tap()
+        XCTAssertTrue(mini.waitForExistence(timeout: 3), "tap the oval to bring it back")
+        hide.tap()
+        XCTAssertTrue(pill.waitForExistence(timeout: 3))
 
         app.buttons["Fixture Episode 1"].tap()
         XCTAssertTrue(app.buttons["closePlayer"].waitForExistence(timeout: 8))
         app.buttons["closePlayer"].tap()
         XCTAssertTrue(mini.waitForExistence(timeout: 5), "back once something plays")
+        XCTAssertFalse(pill.exists)
     }
 
     func testSleepBubbleCollapsesAndReopens() {

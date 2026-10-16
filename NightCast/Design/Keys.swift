@@ -75,7 +75,7 @@ struct KeyStyle<S: InsettableShape>: ButtonStyle {
     private var highlight: Color {
         switch role {
         case .standard: theme.highlight
-        case .primary, .accent: theme.blueFree ? theme.highlight : .white.opacity(theme.colorScheme == .light ? 0.25 : 0.18)
+        case .primary, .accent: theme.warmOnly ? theme.highlight : .white.opacity(theme.colorScheme == .light ? 0.25 : 0.18)
         }
     }
 }

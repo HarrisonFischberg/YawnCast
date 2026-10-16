@@ -83,6 +83,7 @@ enum DemoSeed {
         if let page = launch.page { model.homePage = page }
         if let layout = launch.layout { model.libraryLayout = layout }
         if arguments.contains("-themes") { model.isThemesPresented = true }
+        if arguments.contains("-hidePlayer") { model.isMiniPlayerHidden = true }
         if let name = launch.categoryName, let category = PodcastCategory.browse.first(where: { $0.name == name }) {
             model.path = [.category(category)]
         }

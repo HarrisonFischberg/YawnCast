@@ -160,7 +160,7 @@ struct CategoryCard: View {
 
     /// A gentle, evenly spread hue per card; low saturation so cards don't shout.
     private var tint: Color {
-        if theme.blueFree { return theme.accent }
+        if theme.warmOnly { return theme.accent }
         return Color(hue: (Double(index) * 0.61803398875).truncatingRemainder(dividingBy: 1), saturation: 0.45,
               brightness: theme.colorScheme == .dark ? 0.55 : 0.85)
     }

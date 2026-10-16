@@ -25,8 +25,8 @@ struct Theme: Identifiable, Equatable {
     var scene: SceneKind?
 
     var hasScene: Bool { scene != nil }
-    /// Keep every color this app draws free of blue (Red Light).
-    var blueFree = false
+    /// Use only warm tints for highlights and decorations (Red Light), no cool or rainbow colors.
+    var warmOnly = false
 
     /// Default: deep-blue night sky with slow waves and twinkling stars.
     static let midnight = Theme(
@@ -79,15 +79,15 @@ struct Theme: Identifiable, Equatable {
         scene: .ocean
     )
 
-    /// Red-only interface on true black; every token has a blue channel of 0.
+    /// Warm, low-blue night palette: soft coral and terracotta on warm near-black.
     static let redLight = Theme(
-        id: "redlight", name: "Red Light", blurb: "No blue in the interface",
+        id: "redlight", name: "Red Light", blurb: "Warm, low blue",
         colorScheme: .dark,
-        bg: Color(hex: 0x000000), surface: Color(hex: 0x140300), raised: Color(hex: 0x180400),
-        border: Color(hex: 0x2E0800), text: Color(hex: 0xFF3A00), textMuted: Color(hex: 0xF81000),
-        accent: Color(hex: 0xFF2000), onAccent: Color(hex: 0x000000), danger: Color(hex: 0xFF8A00),
-        edge: Color(hex: 0x000000), highlight: Color(hex: 0xFF3A00).opacity(0.10), shadowOpacity: 0.7,
-        blueFree: true
+        bg: Color(hex: 0x0B0504), surface: Color(hex: 0x1C0E0A), raised: Color(hex: 0x24130E),
+        border: Color(hex: 0x3A1D15), text: Color(hex: 0xEFA084), textMuted: Color(hex: 0xCC8A72),
+        accent: Color(hex: 0xD9805F), onAccent: Color(hex: 0x160704), danger: Color(hex: 0xFFB27A),
+        edge: Color(hex: 0x050202), highlight: Color(hex: 0xEFA084).opacity(0.10), shadowOpacity: 0.7,
+        warmOnly: true
     )
 
     static let city = Theme(
