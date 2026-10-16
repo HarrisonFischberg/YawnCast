@@ -2,6 +2,12 @@
 
 Newest first. Each entry: what changed, what was verified (actual output), blockers.
 
+## 2026-10-15 — Session 10: v0.10 6-minute fade, always-on smaller player, swipe-down, live reorder, site copy
+
+- D44. **Verified (actual output, `scripts/test.sh`):** core 90/90; Debug + Release BUILD SUCCEEDED; UI 18/18
+  (new: player always stays incl. while typing; swipe down closes Now Playing).
+- Site edits committed and pushed in studio-site (see below for deploy check).
+
 ## 2026-10-15 — Session 9: v0.9 smooth search transition; player shrinks while typing
 
 - D43. Frame-checked via simulator screen recording (50 ms frames): first fix attempt showed the page cutting

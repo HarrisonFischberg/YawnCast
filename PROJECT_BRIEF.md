@@ -37,6 +37,7 @@ large artwork on Now Playing, waveforms, transcripts.
 
 ## Signature interaction: Sleep
 
+> **Changed by owner 2026-10-15 (v0.10):** the fade is now 10% every **40 seconds** (6 minutes total).
 > **Changed by owner 2026-10-15 (v0.3):** after the countdown, volume drops **10% every minute**
 > (90% → 0%), then pauses. Tapping Moon also pops a bubble above it with **−5 min / +5 min** to
 > adjust the countdown, and little "z"s float up from the moon while Sleep is on.

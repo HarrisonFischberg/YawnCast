@@ -8,6 +8,9 @@ struct NowPlayingView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var skipTaps = 0
+    /// Swipe-down-to-close: how far the screen has been pulled down.
+    @State private var pullDown: CGFloat = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// The ±5 bubble opens with Sleep, then tucks into a small pill after a
     /// few quiet seconds (or a tap on its center); tapping the pill reopens it.
     @State private var bubbleExpanded = true
@@ -116,6 +119,26 @@ struct NowPlayingView: View {
             }
             .padding(.horizontal, Space.xxl)
         }
+        // Swipe down anywhere (not just the chevron) to drop back into the mini player.
+        .clipShape(RoundedRectangle(cornerRadius: pullDown > 0 ? 38 : 0, style: .continuous))
+        .scaleEffect(reduceMotion ? 1 : 1 - min(pullDown, 400) / 4000, anchor: .top)
+        .offset(y: pullDown)
+        .gesture(
+            DragGesture(minimumDistance: 12)
+                .onChanged { value in
+                    let dy = value.translation.height
+                    guard dy > 0, abs(dy) > abs(value.translation.width) else { return }
+                    pullDown = dy
+                }
+                .onEnded { value in
+                    if value.translation.height > 140 || value.predictedEndTranslation.height > 420 {
+                        dismiss()
+                    } else {
+                        withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { pullDown = 0 }
+                    }
+                }
+        )
+        .presentationBackground(.clear)
         #if DEBUG
         .overlay(alignment: .topTrailing) {
             if ProcessInfo.processInfo.arguments.contains("-uitest") {

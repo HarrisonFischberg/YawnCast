@@ -29,7 +29,7 @@ final class V4UITests: XCTestCase {
         close.tap()
     }
 
-    func testMiniPlayerHidesWhenPausedAndReturnsOnPlay() {
+    func testMiniPlayerAlwaysStaysOnScreen() {
         let app = launch()
         subscribeQuietHours(app)
         app.buttons["Fixture Episode 2"].tap()
@@ -38,25 +38,32 @@ final class V4UITests: XCTestCase {
         app.buttons["closePlayer"].tap()
 
         let mini = app.buttons["miniPlayer"]
-        let hide = app.buttons["hideMiniPlayer"]
         XCTAssertTrue(mini.waitForExistence(timeout: 5))
-        XCTAssertFalse(hide.exists, "can't hide while playing")
-
         app.buttons["Pause"].firstMatch.tap()
-        XCTAssertTrue(hide.waitForExistence(timeout: 3), "hide appears once paused")
-        hide.tap()
-        let pill = app.buttons["miniPlayerPill"]
-        XCTAssertTrue(waitUntil(3) { !mini.exists && pill.exists }, "tucked into a small oval")
-        pill.tap()
-        XCTAssertTrue(mini.waitForExistence(timeout: 3), "tap the oval to bring it back")
-        hide.tap()
-        XCTAssertTrue(pill.waitForExistence(timeout: 3))
+        XCTAssertFalse(app.buttons["hideMiniPlayer"].exists, "no hide control any more")
+        XCTAssertTrue(mini.exists, "stays while paused")
 
-        app.buttons["Fixture Episode 1"].tap()
-        XCTAssertTrue(app.buttons["closePlayer"].waitForExistence(timeout: 8))
-        app.buttons["closePlayer"].tap()
-        XCTAssertTrue(mini.waitForExistence(timeout: 5), "back once something plays")
-        XCTAssertFalse(pill.exists)
+        // Still there while typing in search.
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        let field = app.textFields["searchField"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("q")
+        XCTAssertTrue(mini.exists, "stays while typing")
+        XCTAssertFalse(app.buttons["miniPlayerPill"].exists)
+    }
+
+    func testSwipeDownClosesNowPlaying() {
+        let app = launch()
+        subscribeQuietHours(app)
+        app.buttons["Fixture Episode 3"].tap()
+        let playPause = app.buttons["playPause"]
+        XCTAssertTrue(playPause.waitForExistence(timeout: 8))
+        // Drag from the open middle of the screen (above the scrubber).
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.32))
+        start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: 420)))
+        XCTAssertTrue(waitUntil(4) { !app.buttons["closePlayer"].exists }, "swipe down closed Now Playing")
+        XCTAssertTrue(app.buttons["miniPlayer"].waitForExistence(timeout: 3), "back to the mini player")
     }
 
     func testSleepBubbleCollapsesAndReopens() {

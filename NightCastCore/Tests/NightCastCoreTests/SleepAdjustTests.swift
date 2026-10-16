@@ -8,28 +8,28 @@ extension SleepConfiguration {
     static let v1 = SleepConfiguration(stepInterval: 180, levels: [0.8, 0.6, 0.4, 0.2, 0.0])
 }
 
-@Suite("Sleep — current spec: 10% every minute")
+@Suite("Sleep — current spec: 10% every 40 s, 6 minutes")
 struct TenPercentFadeTests {
     @Test func standardLevelsAreTenPercentSteps() {
         let config = SleepConfiguration.standard
-        #expect(config.stepInterval == 60)
+        #expect(config.stepInterval == 40)
         #expect(config.levels.count == 10)
         #expect(zip(config.levels, [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.0]).allSatisfy { abs($0 - $1) < 1e-12 })
     }
 
-    @Test("Each minute after the fade starts drops 10%", arguments: Array(0..<9))
+    @Test("Each 40 s after the fade starts drops 10%", arguments: Array(0..<9))
     func eachMinute(step: Int) {
         var timer = SleepTimer()
         timer.activate(baseline: 1, remaining: nil)
-        timer.advance(activeSeconds: 1800 + Double(step) * 60 + 2)
+        timer.advance(activeSeconds: 1800 + Double(step) * 40 + 2)
         #expect(abs(timer.gain - (0.9 - Double(step) / 10)) < 1e-9)
     }
 
-    @Test func pausesNineMinutesTwoSecondsAfterFadeStarts() {
+    @Test func pausesSixMinutesTwoSecondsAfterFadeStarts() {
         var timer = SleepTimer()
         timer.activate(baseline: 1, remaining: nil)
-        #expect(timer.timeUntilSilence == TimeInterval(1800 + 540 + 2))
-        #expect(timer.advance(activeSeconds: 1800 + 540 + 1.9) == nil)
+        #expect(timer.timeUntilSilence == TimeInterval(1800 + 360 + 2))
+        #expect(timer.advance(activeSeconds: 1800 + 360 + 1.9) == nil)
         #expect(timer.advance(activeSeconds: 0.1) == .reachedSilence)
         #expect(timer.gain == 1)
     }
@@ -46,7 +46,7 @@ struct SleepAdjustTests {
         do { let changed = timer.adjust(by: -300); #expect(changed) }
         do { let changed = timer.adjust(by: -300); #expect(changed) }
         #expect(timer.status == .waiting(untilFade: 1400))
-        #expect(timer.timeUntilSilence == TimeInterval(1400 + 542))
+        #expect(timer.timeUntilSilence == TimeInterval(1400 + 362))
     }
 
     @Test func minusNeverGoesIntoThePast() {
@@ -72,7 +72,7 @@ struct SleepAdjustTests {
     @Test func plusWhileFadingGlidesBackUpAndWaitsAgain() {
         var timer = SleepTimer()
         timer.activate(baseline: 0.8, remaining: nil)
-        timer.advance(activeSeconds: 1800 + 3 * 60 + 2) // at 60%
+        timer.advance(activeSeconds: 1800 + 3 * 40 + 2) // at 60%
         #expect(abs(timer.gain - 0.8 * 0.6) < 1e-9)
         do { let changed = timer.adjust(by: 300); #expect(changed) }
         #expect(timer.status == .waiting(untilFade: 300))

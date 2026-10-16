@@ -1,7 +1,8 @@
 import Foundation
 
 /// Tunables for the Sleep fade. `standard` is the current product spec:
-/// fade starts after min(30 min, R/2), then drops 10% of baseline every minute.
+/// fade starts after min(30 min, R/2), then drops 10% of baseline every 40 seconds
+/// (100% → 0% in 6 minutes).
 public struct SleepConfiguration: Sendable, Equatable {
     /// Upper bound on the delay before fading starts.
     public var maxFadeDelay: TimeInterval
@@ -21,7 +22,7 @@ public struct SleepConfiguration: Sendable, Equatable {
 
     public init(
         maxFadeDelay: TimeInterval = 30 * 60,
-        stepInterval: TimeInterval = 60,
+        stepInterval: TimeInterval = 40,
         levels: [Double] = SleepConfiguration.tenPercentSteps,
         stepRamp: TimeInterval = 2,
         cancelRamp: TimeInterval = 1,

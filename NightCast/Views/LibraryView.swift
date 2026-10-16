@@ -8,8 +8,10 @@ struct LibraryView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
     @Environment(\.dynamicTypeSize) private var typeSize
-    /// Show currently under a dragged show (highlighted as the drop slot).
-    @State private var dropTargetID: String?
+    /// Show being dragged to a new place (nil when not reordering).
+    @State private var draggingID: String?
+    /// Last time a drag moved over the grid; a drag dropped outside never reports its end.
+    @State private var lastDragActivity = Date()
 
     private var columns: [GridItem] {
         let count: Int
@@ -40,7 +42,9 @@ struct LibraryView: View {
                             item(show)
                         }
                     }
+                    .onDrop(of: [.text], isTargeted: nil) { _ in draggingID = nil; return true }
                     .animation(.spring(response: 0.35, dampingFraction: 0.8), value: model.library.subscriptions.map(\.id))
+                    .sensoryFeedback(.selection, trigger: model.library.subscriptions.map(\.id))
                     .animation(.spring(response: 0.35, dampingFraction: 0.85), value: model.libraryLayout)
                 }
             }
@@ -49,6 +53,13 @@ struct LibraryView: View {
         }
         .scrollIndicators(.hidden)
         .dockAware()
+        }
+        .task(id: draggingID) {
+            // Watchdog: if the drag went quiet (e.g. dropped outside), restore the tile.
+            while draggingID != nil {
+                try? await Task.sleep(for: .seconds(1))
+                if Date().timeIntervalSince(lastDragActivity) > 3 { draggingID = nil }
+            }
         }
         .sheet(isPresented: $model.isThemesPresented) {
             ThemesSheet()
@@ -68,27 +79,18 @@ struct LibraryView: View {
             }
         }
         .buttonStyle(TileStyle())
-        .overlay {
-            if dropTargetID == show.id {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .strokeBorder(theme.accent, lineWidth: 3)
-                    .padding(-4)
-                    .allowsHitTesting(false)
-            }
-        }
-        // Press, hold and drag onto another show to move it there.
-        .draggable(show.id) {
+        // The show being carried stays faintly in its new slot while you drag.
+        .opacity(draggingID == show.id ? 0.35 : 1)
+        // Press and hold to pick up; the grid rearranges live as you pass over other shows.
+        .onDrag {
+            draggingID = show.id
+            lastDragActivity = Date()
+            return NSItemProvider(object: show.id as NSString)
+        } preview: {
             ArtworkView(url: show.artworkURL, cornerRadius: 12, title: show.title)
-                .frame(width: 88, height: 88)
+                .frame(width: 96, height: 96)
         }
-        .dropDestination(for: String.self) { ids, _ in
-            guard let id = ids.first else { return false }
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) { model.moveSubscription(id: id, onto: show.id) }
-            dropTargetID = nil
-            return true
-        } isTargeted: { targeted in
-            if targeted { dropTargetID = show.id } else if dropTargetID == show.id { dropTargetID = nil }
-        }
+        .onDrop(of: [.text], delegate: ReorderDropDelegate(target: show, draggingID: $draggingID, lastActivity: $lastDragActivity, model: model))
         .contextMenu {
             Button { model.moveToTop(show) } label: { Label("Move to Top", systemImage: "arrow.up.to.line") }
             Button { model.moveToEnd(show) } label: { Label("Move to End", systemImage: "arrow.down.to.line") }
@@ -256,120 +258,59 @@ struct TileStyle: ButtonStyle {
     }
 }
 
-/// The floating player. Full size normally; morphs into a small oval while you
-/// type or after you slide it away (while paused). It floats over the page, so
-/// changing size never pushes the page's layout around.
+/// The floating player: always on screen once something is loaded (it never
+/// hides or shrinks away). Compact by design — about 15% smaller than v0.9.
 struct MiniPlayerDock: View {
-    let compact: Bool
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
-    @Namespace private var dock
 
     var body: some View {
         let player = model.player
-        HStack(spacing: Space.m) {
-            if compact {
-                Button(action: expand) {
-                    HStack(spacing: Space.s) {
-                        artwork(size: 28, corner: 14)
-                        Image(systemName: "chevron.up")
-                            .font(.system(size: 13, weight: .bold))
+        HStack(spacing: 10) {
+            Button { model.isPlayerPresented = true } label: {
+                HStack(spacing: 10) {
+                    ArtworkView(url: player.episode?.artworkURL, cornerRadius: 7, title: player.episode?.showTitle ?? "")
+                        .frame(width: 40, height: 40)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(player.episode?.title ?? "")
+                            .font(.system(.subheadline, design: .rounded, weight: .semibold))
                             .foregroundStyle(theme.text)
-                            .transition(.opacity)
-                    }
-                    .padding(.leading, Space.xs)
-                    .padding(.trailing, Space.s)
-                    .frame(minHeight: 44)
-                    .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Show player: \(player.episode?.title ?? "")")
-                .accessibilityIdentifier("miniPlayerPill")
-            } else {
-                Button { model.isPlayerPresented = true } label: {
-                    HStack(spacing: Space.m) {
-                        artwork(size: 48, corner: 8)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(player.episode?.title ?? "")
-                                .font(Typo.headline)
-                                .foregroundStyle(theme.text)
-                                .lineLimit(1)
-                            HStack(spacing: Space.xs) {
-                                if model.sleepStatus != .off {
-                                    Image(systemName: "moon.fill").foregroundStyle(theme.accent)
-                                }
-                                Text(player.episode?.showTitle ?? "").lineLimit(1)
+                            .lineLimit(1)
+                        HStack(spacing: Space.xs) {
+                            if model.sleepStatus != .off {
+                                Image(systemName: "moon.fill").foregroundStyle(theme.accent)
                             }
-                            .font(Typo.caption)
-                            .foregroundStyle(theme.textMuted)
+                            Text(player.episode?.showTitle ?? "").lineLimit(1)
                         }
-                        Spacer(minLength: 0)
+                        .font(.system(.caption, design: .rounded, weight: .medium))
+                        .foregroundStyle(theme.textMuted)
                     }
-                    .contentShape(Rectangle())
+                    Spacer(minLength: 0)
                 }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Now playing: \(player.episode?.title ?? "")")
-                .accessibilityHint("Opens the player.")
-                .accessibilityIdentifier("miniPlayer")
-                .transition(.opacity)
-
-                Button { player.togglePlayPause() } label: {
-                    Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
-                        .font(.system(size: 20, weight: .bold))
-                        .contentTransition(.symbolEffect(.replace))
-                }
-                .buttonStyle(.roundKey(.primary, depth: 3))
-                .frame(width: 52, height: 52)
-                .accessibilityLabel(player.isPlaying ? "Pause" : "Play")
-                .sensoryFeedback(.impact(weight: .medium), trigger: player.isPlaying)
-                .transition(.opacity)
-
-                if !player.isPlaying {
-                    // Paused: one tap tucks the player into the small oval.
-                    Button { model.isMiniPlayerHidden = true } label: {
-                        Image(systemName: "chevron.down")
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(theme.textMuted)
-                            .frame(width: 36, height: 52)
-                            .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel("Hide player")
-                    .accessibilityIdentifier("hideMiniPlayer")
-                    .transition(.opacity)
-                }
+                .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Now playing: \(player.episode?.title ?? "")")
+            .accessibilityHint("Opens the player.")
+            .accessibilityIdentifier("miniPlayer")
+
+            Button { player.togglePlayPause() } label: {
+                Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
+                    .font(.system(size: 17, weight: .bold))
+                    .contentTransition(.symbolEffect(.replace))
+            }
+            .buttonStyle(.roundKey(.primary, depth: 3))
+            .frame(width: 44, height: 44)
+            .accessibilityLabel(player.isPlaying ? "Pause" : "Play")
+            .sensoryFeedback(.impact(weight: .medium), trigger: player.isPlaying)
         }
-        .padding(compact ? Space.xs : Space.m)
-        .frame(maxWidth: compact ? nil : .infinity)
+        .padding(10)
         .background {
-            RoundedRectangle(cornerRadius: compact ? 26 : 26, style: .continuous)
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
                 .fill(theme.raised)
-                .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(theme.border, lineWidth: 1))
-                .shadow(color: .black.opacity(theme.shadowOpacity), radius: compact ? 10 : 16, y: compact ? 4 : 8)
-                .matchedGeometryEffect(id: "plate", in: dock)
+                .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(theme.border, lineWidth: 1))
+                .shadow(color: .black.opacity(theme.shadowOpacity), radius: 12, y: 6)
         }
-        .gesture(
-            DragGesture(minimumDistance: 20).onEnded { value in
-                if compact, value.translation.height < -30 { expand() }
-                if !compact, value.translation.height > 40, !player.isPlaying { model.isMiniPlayerHidden = true }
-            }
-        )
-        .animation(.smooth(duration: 0.38), value: compact)
-        .animation(.easeOut(duration: 0.2), value: player.isPlaying)
-    }
-
-    private func artwork(size: CGFloat, corner: CGFloat) -> some View {
-        ArtworkView(url: model.player.episode?.artworkURL, cornerRadius: corner, title: model.player.episode?.showTitle ?? "")
-            .frame(width: size, height: size)
-            .clipShape(RoundedRectangle(cornerRadius: corner, style: .continuous))
-            .matchedGeometryEffect(id: "art", in: dock)
-    }
-
-    /// Back to full size; if typing, put the keyboard away first.
-    private func expand() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-        model.isMiniPlayerHidden = false
     }
 }
 
@@ -381,6 +322,32 @@ extension View {
 private struct DockInset: ViewModifier {
     @Environment(AppModel.self) private var model
     func body(content: Content) -> some View {
-        content.contentMargins(.bottom, model.player.episode == nil ? 0 : 96, for: .scrollContent)
+        content.contentMargins(.bottom, model.player.episode == nil ? 0 : 82, for: .scrollContent)
+    }
+}
+
+/// Live reordering: entering another show's slot moves the dragged show there at once.
+struct ReorderDropDelegate: DropDelegate {
+    let target: Show
+    @Binding var draggingID: String?
+    @Binding var lastActivity: Date
+    let model: AppModel
+
+    func dropEntered(info: DropInfo) {
+        lastActivity = Date()
+        guard let id = draggingID, id != target.id else { return }
+        withAnimation(.spring(response: 0.32, dampingFraction: 0.82)) {
+            model.moveSubscription(id: id, onto: target.id)
+        }
+    }
+
+    func dropUpdated(info: DropInfo) -> DropProposal? {
+        lastActivity = Date()
+        return DropProposal(operation: .move)
+    }
+
+    func performDrop(info: DropInfo) -> Bool {
+        draggingID = nil
+        return true
     }
 }

@@ -29,7 +29,6 @@ struct NightCastApp: App {
 struct RootView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
-    @State private var keyboardVisible = false
 
     var body: some View {
         @Bindable var model = model
@@ -46,20 +45,17 @@ struct RootView: View {
                 }
         }
         .tint(theme.text)
-        // Once something is loaded, the player floats over every screen: full size, or a
-        // small oval while typing or after being slid away (paused).
+        // Once something is loaded, the player floats over every screen and stays there.
         .overlay(alignment: .bottom) {
             if model.player.episode != nil {
-                MiniPlayerDock(compact: keyboardVisible || !model.showsMiniPlayer)
-                    .padding(.horizontal, Space.m)
+                MiniPlayerDock()
+                    .padding(.horizontal, 30)
                     .padding(.bottom, Space.xs)
                     .frame(maxWidth: .infinity)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
         .animation(.smooth(duration: 0.38), value: model.player.episode == nil)
-        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in keyboardVisible = true }
-        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in keyboardVisible = false }
         .fullScreenCover(isPresented: $model.isPlayerPresented) {
             NowPlayingView()
                 .environment(\.theme, model.theme)

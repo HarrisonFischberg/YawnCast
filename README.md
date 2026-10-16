@@ -4,6 +4,8 @@
 
 A native iPhone podcast app for falling asleep.
 
+**v0.10:** Sleep fades over 6 minutes (10% every 40 s); smaller player that always stays on screen; swipe down to close Now Playing; Library reorders live as you drag.
+
 **v0.9:** smoother in-place search (page drifts and fades, search fades in after it); the player shrinks to an oval while typing instead of disappearing.
 
 **v0.8:** search happens in place on Library and Explore (content glides down and fades; results appear on the same page); category pages open cleanly with placeholder tiles.
@@ -93,7 +95,7 @@ Let R be the playable seconds remaining when Moon is tapped.
    - −5 can bring the fade forward to "now", never into the past.
    - +5 can push it out to at most 4 hours.
    - While fading, +5 pauses the fade: the volume glides back up, and fading starts again 5 minutes later.
-3. **Fade:** the volume drops **10% every minute**: 90%, 80% … 10%, 0%. Each step is a 2 s glide.
+3. **Fade:** the volume drops **10% every 40 seconds**: 90%, 80% … 10%, 0%, so 100% to 0% takes 6 minutes. Each step is a 2 s glide.
 4. **Silence:** at 0% the episode pauses, the position is saved, Sleep ends, and the volume is restored silently. Nothing else plays.
 5. **While Sleep is on,** small "z"s drift up out of the moon. With Reduce Motion they sit still.
 6. **Cancelling:** a second Moon tap cancels Sleep and glides the volume back over 1 s. Playing a different episode also cancels it.
@@ -158,6 +160,7 @@ Replica checks:
 | `screenshots/m3/` | Live run: real search, show detail, streaming |
 | `screenshots/m5/` | Show and Search in Paper and Ember; Show, Search and Library at AX5 text |
 | `screenshots/v2/` | New, Library, Explore pages; mini player on Show detail |
+| `screenshots/v10/` | Smaller always-on player; player above the keyboard while searching |
 | `screenshots/v9/` | Frame strips of the search opening and closing (50 ms apart) |
 | `screenshots/v8/` | In-place search on Library and Explore; category page loading and loaded |
 | `screenshots/v7/` | Softer Red Light; tucked player oval; taller Themes sheet |

@@ -106,3 +106,11 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 ## v0.9 (owner feedback 2026-10-15)
 - [x] Redo the search transition (no reflow; staged fades; frame-checked)
 - [x] Player shrinks to the oval while typing (floating dock)
+
+## v0.10 (owner request 2026-10-15)
+- [x] Sleep fade 6 minutes (10% / 40 s)
+- [x] Player ~15% smaller, never hides
+- [x] Swipe down to close Now Playing
+- [x] Live drag-to-reorder in Library
+- [x] Website copy edits on rarecreatures.app/apps/nightcast
+- [ ] Owner decision: Library search (remove / full bar under title / combined)

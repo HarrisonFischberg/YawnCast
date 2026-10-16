@@ -48,13 +48,6 @@ final class AppModel {
 
     var isPlayerPresented = false
     var isThemesPresented = false
-    /// The user slid the mini player away while paused. Playing again brings it back.
-    var isMiniPlayerHidden = false
-
-    /// The mini player shows whenever audio is playing, and while paused unless slid away.
-    var showsMiniPlayer: Bool {
-        player.episode != nil && (player.isPlaying || !isMiniPlayerHidden)
-    }
     /// Main navigation stack (show detail, search).
     var path: [Route] = []
     /// Which home page is showing. Library is the middle page.
@@ -120,7 +113,6 @@ final class AppModel {
             sleepStatus = sleep.status
             nowPlaying?.update()
             runSleepTicker()
-            if player.isPlaying { isMiniPlayerHidden = false }
         }
         player.onEnded = { [weak self] in
             self?.sleep.episodeDidEnd()

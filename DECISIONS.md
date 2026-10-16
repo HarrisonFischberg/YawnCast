@@ -281,3 +281,16 @@ This is a red-tinted interface, not a hardware blue-light filter; iOS Night Shif
   never moves page layout. While typing it morphs (matched geometry) into the small oval above the keyboard;
   tapping the oval dismisses the keyboard and expands it. The same oval is used after sliding it away.
 - Idle search shows a one-line hint instead of a large headline (less to cross-fade).
+
+## D44 · 2026-10-15 · v0.10 (owner request)
+- Sleep fade: 10% steps every **40 s** (100% → 0% in 6 min, was 9). `SleepConfiguration.standard.stepInterval = 40`.
+- Player: ~15% smaller (40 pt artwork, 44 pt play key, 10 pt padding, 30 pt side margins) and **always on screen**
+  once something is loaded — no hide control, no oval, stays above the keyboard. Scroll views keep 82 pt bottom room.
+- Now Playing: swipe down anywhere to close (follows the finger, rounds its corners, scales slightly; closes past
+  140 pt or on a fast flick, otherwise springs back). Cover background is clear so the app shows through.
+- Library reorder is live: `onDrag` + `DropDelegate`; entering another show's slot moves the carried show there
+  immediately with a spring and a selection haptic; carried tile shows at 35% in its new slot; watchdog restores
+  it if a drag ends outside the grid (iOS gives no end callback).
+- Website (studio-site `apps/nightcast/`): removed the three requested paragraphs and the "Built and tested. Not
+  shipped." section; "never do" list now Never/Never/Never/Yes with the owner's wording. Also removed the hero's
+  "Where it's up to" button (it linked to the removed section) and updated the fade line to the 6-minute spec.
