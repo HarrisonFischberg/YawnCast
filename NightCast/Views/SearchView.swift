@@ -104,6 +104,7 @@ struct SearchablePage<Content: View>: View {
     @ViewBuilder let content: Content
     @Environment(AppModel.self) private var app
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var resultsHeight: CGFloat = 0
 
     private var isSearching: Bool { app.searchingOn == page }
 
@@ -129,7 +130,13 @@ struct SearchablePage<Content: View>: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, Space.xl)
                         .padding(.bottom, Space.xxxl)
+                        // Fill the viewport so a tap on blank space anywhere below
+                        // the results cancels search. Rows and buttons still win.
+                        .frame(minHeight: resultsHeight, alignment: .top)
+                        .contentShape(Rectangle())
+                        .onTapGesture { app.endSearch() }
                 }
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { resultsHeight = $0 }
                 .scrollIndicators(.hidden)
                 .scrollDismissesKeyboard(.immediately)
                 .dockAware()

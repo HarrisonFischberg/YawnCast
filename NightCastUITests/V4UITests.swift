@@ -156,6 +156,13 @@ final class V4UITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["No saved shows match “zzzz”."].waitForExistence(timeout: 3))
         app.buttons["closeSearch"].tap()
         XCTAssertTrue(bar.waitForExistence(timeout: 3))
+
+        // A tap on blank space below the search bar cancels search too.
+        bar.tap()
+        XCTAssertTrue(app.buttons["closeSearch"].waitForExistence(timeout: 5))
+        app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.4)).tap()
+        XCTAssertTrue(waitUntil(3) { let c = app.buttons["closeSearch"]; return !c.exists || !c.isHittable }, "blank tap cancels search")
+        XCTAssertTrue(bar.waitForExistence(timeout: 3))
     }
 
     func testExploreSearchInterestsAndCategories() {
