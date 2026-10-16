@@ -8,12 +8,6 @@ struct NowPlayingView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var skipTaps = 0
-    /// Swipe-down-to-close: how far the screen has been pulled down.
-    @State private var pullDown: CGFloat = 0
-    /// True only while a finger is down. Resets even when the system cancels the
-    /// drag (onEnded never fires then), so the page can't stay stuck part-way down.
-    @GestureState private var isDragging = false
-    @State private var isClosing = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// The ±5 bubble opens with Sleep, then tucks into a small pill after a
     /// few quiet seconds (or a tap on its center); tapping the pill reopens it.
@@ -124,36 +118,7 @@ struct NowPlayingView: View {
             .padding(.horizontal, Space.xxl)
         }
         // Swipe down anywhere (not just the chevron) to drop back into the mini player.
-        // Mask, not clipShape: clipShape trims at the safe area, which cut the
-        // background off above the home indicator and let the page behind show.
-        .mask {
-            RoundedRectangle(cornerRadius: pullDown > 0 ? 38 : 0, style: .continuous)
-                .ignoresSafeArea()
-        }
-        .scaleEffect(reduceMotion ? 1 : 1 - min(pullDown, 400) / 4000, anchor: .top)
-        .offset(y: pullDown)
-        .gesture(
-            DragGesture(minimumDistance: 12)
-                .updating($isDragging) { _, state, _ in state = true }
-                .onChanged { value in
-                    let dy = value.translation.height
-                    guard abs(dy) > abs(value.translation.width) else { return }
-                    pullDown = max(0, dy)
-                }
-                .onEnded { value in
-                    if value.translation.height > 140 || value.predictedEndTranslation.height > 420 {
-                        isClosing = true
-                        dismiss()
-                    } else {
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { pullDown = 0 }
-                    }
-                }
-        )
-        .onChange(of: isDragging) { _, dragging in
-            guard !dragging, !isClosing, pullDown != 0 else { return }
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { pullDown = 0 }
-        }
-        .onAppear { pullDown = 0; isClosing = false }
+        .modifier(PullDownToDismiss { dismiss() })
         .presentationBackground(.clear)
         #if DEBUG
         .overlay(alignment: .topTrailing) {
@@ -225,5 +190,56 @@ struct NowPlayingView: View {
             Spacer(minLength: 0)
         }
         .sensoryFeedback(.impact(weight: .light), trigger: skipTaps)
+    }
+}
+
+/// Swipe-down-to-close for Now Playing. Its own modifier so a drag frame only
+/// updates the offset here, not the whole Now Playing body.
+private struct PullDownToDismiss: ViewModifier {
+    let onDismiss: () -> Void
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// How far the screen has been pulled down.
+    @State private var pullDown: CGFloat = 0
+    /// True only while a finger is down. Resets even when the system cancels the
+    /// drag (onEnded never fires then), so the page can't stay stuck part-way down.
+    @GestureState private var isDragging = false
+    @State private var isClosing = false
+
+    func body(content: Content) -> some View {
+        content
+            // Mask, not clipShape: clipShape trims at the safe area, which cut the
+            // background off above the home indicator and let the page behind show.
+            .mask {
+                RoundedRectangle(cornerRadius: pullDown > 0 ? 38 : 0, style: .continuous)
+                    .ignoresSafeArea()
+            }
+            .scaleEffect(reduceMotion ? 1 : 1 - min(pullDown, 400) / 4000, anchor: .top)
+            .offset(y: pullDown)
+            .gesture(
+                // Global space: measured in the moving view's own space, the
+                // translation shifts as the view does and the drag stutters.
+                DragGesture(minimumDistance: 12, coordinateSpace: .global)
+                    .updating($isDragging) { _, state, _ in state = true }
+                    .onChanged { value in
+                        let dy = value.translation.height
+                        guard abs(dy) > abs(value.translation.width) else { return }
+                        var t = Transaction()
+                        t.disablesAnimations = true
+                        withTransaction(t) { pullDown = max(0, dy) }
+                    }
+                    .onEnded { value in
+                        if value.translation.height > 140 || value.predictedEndTranslation.height > 420 {
+                            isClosing = true
+                            onDismiss()
+                        } else {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { pullDown = 0 }
+                        }
+                    }
+            )
+            .onChange(of: isDragging) { _, dragging in
+                guard !dragging, !isClosing, pullDown != 0 else { return }
+                withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { pullDown = 0 }
+            }
+            .onAppear { pullDown = 0; isClosing = false }
     }
 }
