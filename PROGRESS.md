@@ -2,6 +2,13 @@
 
 Newest first. Each entry: what changed, what was verified (actual output), blockers.
 
+## 2026-10-15 — Session 10c: website NightCast page refreshed
+
+- studio-site 7353794: page copy rewritten to match v0.11 (Home / Sleep / Explore / Looks / Left out), "The maths"
+  removed, four new screenshots (Midnight, City Scape, Underwater, Mountain Vista); sources in `screenshots/site/`.
+- Verified live on rarecreatures.app ~1 min after push; previewed locally at desktop and 375 pt widths (no broken
+  images, no horizontal overflow).
+
 ## 2026-10-15 — Session 10b: v0.11 Library search bar (owner choice: one bar for both)
 
 - D45, D46. **Verified (actual output, `scripts/test.sh` on "NightCast iPhone"):** core 90/90; Debug + Release
