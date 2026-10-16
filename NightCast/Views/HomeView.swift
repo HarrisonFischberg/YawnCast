@@ -24,6 +24,10 @@ struct HomeView: View {
         }
         .background { ScreenBackground() }
         .sensoryFeedback(.selection, trigger: model.homePage)
+        // Leaving a page ends its in-place search.
+        .onChange(of: model.homePage) { _, page in
+            if let searching = model.searchingOn, searching != page { model.endSearch() }
+        }
     }
 }
 

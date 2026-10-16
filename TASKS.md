@@ -97,3 +97,8 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] Softer Red Light
 - [x] Hidden player → small oval, tap to restore
 - [x] Themes sheet scrolls without fighting the resize gesture
+
+## v0.8 (owner request 2026-10-15)
+- [x] Search in place on Library and Explore (push-down fade)
+- [x] Bug: category page narrow/black bars while loading → full width + placeholder tiles
+- [x] Mini player hides while the keyboard is up

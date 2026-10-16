@@ -8,6 +8,8 @@ struct ExploreView: View {
     @Environment(\.theme) private var theme
     @Environment(\.dynamicTypeSize) private var typeSize
 
+    private var isSearching: Bool { model.searchingOn == .explore }
+
     private var showColumns: [GridItem] {
         Array(repeating: GridItem(.flexible(), spacing: Space.xl, alignment: .top), count: typeSize.isAccessibilitySize ? 1 : 2)
     }
@@ -22,7 +24,17 @@ struct ExploreView: View {
                 PageTitle(title: "Explore", subtitle: "Find shows for every interest")
                     .padding(.top, Space.s)
 
-                SearchCapsule { model.openSearch() }
+                if isSearching {
+                    // Search in place: the bar becomes a real field...
+                    InlineSearchBar()
+                        .transition(.opacity)
+                    SearchResultsView()
+                        .transition(.opacity.animation(.easeOut(duration: 0.25).delay(0.12)))
+                } else {
+                    SearchCapsule { model.openSearch() }
+                        .transition(.opacity)
+                    // ...and everything below glides down and fades out of the way.
+                    VStack(alignment: .leading, spacing: Space.xxl) {
 
                 if !model.interests.isEmpty {
                     section("Your interests") {
@@ -53,11 +65,15 @@ struct ExploreView: View {
                 Text("Suggestions use the Apple Podcasts genres and titles of the shows you save, Apple’s public charts, and directory search. Nothing about you is stored or sent anywhere else.")
                     .font(Typo.caption)
                     .foregroundStyle(theme.textMuted)
+                    }
+                    .transition(.searchPushDown)
+                }
             }
             .padding(.horizontal, Space.xl)
             .padding(.bottom, Space.xxxl)
         }
         .scrollIndicators(.hidden)
+        .scrollDismissesKeyboard(.immediately)
         .refreshable { await model.loadExplore(force: true) }
         .task(id: model.library.subscriptions.map(\.id)) { await model.loadExplore() }
     }
@@ -221,10 +237,13 @@ struct CategoryView: View {
                 }
                 content
             }
+            // Fill the width from the first frame (the loading state alone is narrow).
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, Space.xl)
             .padding(.bottom, Space.xxxl)
         }
         .scrollIndicators(.hidden)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background { ScreenBackground() }
         .refreshable { await load(force: true) }
         .task { await load(force: false) }
@@ -236,11 +255,12 @@ struct CategoryView: View {
     private var content: some View {
         switch phase {
         case .idle, .loading:
-            HStack(spacing: Space.m) {
-                ProgressView().tint(theme.text)
-                Text("Loading \(category.name)…").font(Typo.caption).foregroundStyle(theme.textMuted)
+            // Placeholder tiles in the final layout, so nothing jumps when shows arrive.
+            LazyVGrid(columns: columns, alignment: .leading, spacing: Space.xxl) {
+                ForEach(0..<6, id: \.self) { _ in PlaceholderTile() }
             }
-            .accessibilityElement(children: .combine)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Loading \(category.name)")
         case .failed(let message):
             StateMessage(title: "Couldn’t load \(category.name)", message: message, systemImage: "wifi.exclamationmark", actionTitle: "Try again") {
                 Task { await load(force: true) }
@@ -322,6 +342,28 @@ struct FlowLayout: Layout {
             subview.place(at: CGPoint(x: x, y: y), proposal: ProposedViewSize(size))
             x += size.width + spacing
             rowHeight = max(rowHeight, size.height)
+        }
+    }
+}
+
+/// A quiet stand-in for a show tile while a list loads.
+struct PlaceholderTile: View {
+    @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var dim = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Space.s) {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(theme.surface.opacity(0.8))
+                .aspectRatio(1, contentMode: .fit)
+            Capsule().fill(theme.surface.opacity(0.8)).frame(height: 12)
+            Capsule().fill(theme.surface.opacity(0.6)).frame(width: 80, height: 10)
+        }
+        .opacity(dim ? 0.55 : 1)
+        .onAppear {
+            guard !reduceMotion else { return }
+            withAnimation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true)) { dim = true }
         }
     }
 }

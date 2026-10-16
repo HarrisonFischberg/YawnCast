@@ -4,6 +4,8 @@
 
 A native iPhone podcast app for falling asleep.
 
+**v0.8:** search happens in place on Library and Explore (content glides down and fades; results appear on the same page); category pages open cleanly with placeholder tiles.
+
 **v0.7:** softer, warmer Red Light; the slid-away player becomes a small oval you tap to restore; the Themes sheet scrolls smoothly.
 
 **v0.6:** sixth Scene **Underwater** (fish, bubbles, light rays, kelp) and fourth Color Scape **Red Light** (red on black, no blue in the interface).
@@ -154,6 +156,7 @@ Replica checks:
 | `screenshots/m3/` | Live run: real search, show detail, streaming |
 | `screenshots/m5/` | Show and Search in Paper and Ember; Show, Search and Library at AX5 text |
 | `screenshots/v2/` | New, Library, Explore pages; mini player on Show detail |
+| `screenshots/v8/` | In-place search on Library and Explore; category page loading and loaded |
 | `screenshots/v7/` | Softer Red Light; tucked player oval; taller Themes sheet |
 | `screenshots/v6/` | Underwater and Red Light on Library, Now Playing, Explore |
 | `screenshots/v5/` | The four new scenes on Library and Now Playing; Themes sheet |

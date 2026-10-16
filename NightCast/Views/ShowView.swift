@@ -89,11 +89,13 @@ struct ShowView: View {
                     .padding(.bottom, Space.xl)
                 episodesSection
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, Space.xl)
             .padding(.bottom, Space.xxxl)
         }
         .scrollIndicators(.hidden)
         .refreshable { await model.load(force: true) }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background { ScreenBackground() }
         .task { await model.load() }
         .toolbarBackground(theme.bg, for: .navigationBar)

@@ -1,5 +1,6 @@
 import NightCastCore
 import SwiftUI
+import UIKit
 
 @main
 struct NightCastApp: App {
@@ -28,6 +29,7 @@ struct NightCastApp: App {
 struct RootView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
+    @State private var keyboardVisible = false
 
     var body: some View {
         @Bindable var model = model
@@ -38,8 +40,6 @@ struct RootView: View {
                     switch route {
                     case .show(let show):
                         ShowView(show: show, app: model)
-                    case .search:
-                        SearchView(directory: model.directory, initialQuery: model.pendingSearchTerm)
                     case .category(let category):
                         CategoryView(category: category)
                     }
@@ -48,7 +48,8 @@ struct RootView: View {
         .tint(theme.text)
         // Once something is loaded, the mini player stays on every screen.
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            if model.player.episode != nil {
+            // Stays out of the way while the keyboard is up (it would cover search results).
+            if model.player.episode != nil && !keyboardVisible {
                 if model.showsMiniPlayer {
                     MiniPlayer()
                         .padding(.horizontal, Space.m)
@@ -63,6 +64,9 @@ struct RootView: View {
             }
         }
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: model.showsMiniPlayer)
+        .animation(.easeOut(duration: 0.2), value: keyboardVisible)
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in keyboardVisible = true }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in keyboardVisible = false }
         .fullScreenCover(isPresented: $model.isPlayerPresented) {
             NowPlayingView()
                 .environment(\.theme, model.theme)

@@ -2,6 +2,12 @@
 
 Newest first. Each entry: what changed, what was verified (actual output), blockers.
 
+## 2026-10-15 — Session 8: v0.8 search in place; category page fix
+
+- D42. **Verified (actual output):** `scripts/test.sh` → core 90/90; Debug + Release BUILD SUCCEEDED; UI 17 executed,
+  0 failures. Live network test (real search → subscribe → stream, now via in-place search): passed.
+- Category page at 1 s after opening: full width, placeholder tiles → then shows (`screenshots/v8/`).
+
 ## 2026-10-15 — Session 7: v0.7 softer Red Light, tucked player oval, smoother Themes sheet
 
 - D41. **Verified (actual output, `scripts/test.sh`):** core 90/90; Debug + Release BUILD SUCCEEDED;

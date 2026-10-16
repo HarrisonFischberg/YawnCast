@@ -16,7 +16,7 @@ final class LiveNetworkUITests: XCTestCase {
         XCTAssertTrue(field.waitForExistence(timeout: 5))
         field.typeText("nothing much happens")
 
-        let results = app.scrollViews["searchResults"]
+        let results = app.descendants(matching: .any)["searchResults"]
         XCTAssertTrue(results.waitForExistence(timeout: 15), "real search results")
         attach(app, "1-search-results")
         let first = results.buttons.firstMatch

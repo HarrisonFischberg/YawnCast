@@ -7,6 +7,7 @@ struct LibraryView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
     @Environment(\.dynamicTypeSize) private var typeSize
+    private var isSearching: Bool { model.searchingOn == .library }
     /// Show currently under a dragged show (highlighted as the drop slot).
     @State private var dropTargetID: String?
 
@@ -25,9 +26,23 @@ struct LibraryView: View {
         @Bindable var model = model
         ScrollView {
             VStack(alignment: .leading, spacing: Space.xxl) {
-                header
-                if model.library.subscriptions.isEmpty {
+                if isSearching {
+                    // Search in place: the header becomes a search field...
+                    InlineSearchBar()
+                        .padding(.top, Space.s)
+                        .transition(.opacity)
+                    SearchResultsView()
+                        .transition(.opacity.animation(.easeOut(duration: 0.25).delay(0.12)))
+                } else {
+                    header
+                        .transition(.opacity)
+                }
+                // ...and the Library glides down and fades out of the way.
+                if isSearching {
+                    EmptyView()
+                } else if model.library.subscriptions.isEmpty {
                     emptyState
+                        .transition(.searchPushDown)
                 } else {
                     LazyVGrid(
                         columns: columns,
@@ -40,12 +55,14 @@ struct LibraryView: View {
                     }
                     .animation(.spring(response: 0.35, dampingFraction: 0.8), value: model.library.subscriptions.map(\.id))
                     .animation(.spring(response: 0.35, dampingFraction: 0.85), value: model.libraryLayout)
+                    .transition(.searchPushDown)
                 }
             }
             .padding(.horizontal, Space.xl)
             .padding(.bottom, Space.xxxl)
         }
         .scrollIndicators(.hidden)
+        .scrollDismissesKeyboard(.immediately)
         .sheet(isPresented: $model.isThemesPresented) {
             ThemesSheet()
                 // Opens tall; swipes inside always scroll the list. Resize from the grabber.

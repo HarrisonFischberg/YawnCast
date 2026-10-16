@@ -257,3 +257,14 @@ This is a red-tinted interface, not a hardware blue-light filter; iOS Night Shif
   tap (or swipe up) restores it. Playing anything restores it too.
 - Themes sheet: opens at 80% height, `.presentationContentInteraction(.scrolls)` so swipes inside always
   scroll the list, visible grabber for resizing (it was fighting between scroll and resize at half height).
+
+## D42 · 2026-10-15 · v0.8 search in place; category page fix (owner request + bug)
+- No separate Search screen. Tapping search on Library or Explore turns the header/search bar into a
+  real field (+ Cancel); the page's content glides down 180 pt and fades out; results fade in where it
+  was. One shared `SearchModel` in AppModel; `searchingOn` says which page is searching; changing page
+  or Cancel ends it. Opening a result and coming back keeps the search (field focuses only on first open).
+- Mini player tucks away while the keyboard is up (it was covering results).
+- Bug (owner screenshot): a category page showed a narrow scene column with black sides for 1–3 s.
+  Cause: while loading, the page's content was only as wide as its title and the scene background took
+  that width. Fix: content and background fill the screen from the first frame (also on show pages), and
+  loading shows placeholder tiles in the final grid instead of a spinner.

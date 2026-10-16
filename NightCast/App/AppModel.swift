@@ -7,7 +7,6 @@ import UIKit
 /// Screens pushed on the main navigation stack.
 enum Route: Hashable {
     case show(Show)
-    case search
     case category(PodcastCategory)
 }
 
@@ -60,8 +59,12 @@ final class AppModel {
     var path: [Route] = []
     /// Which home page is showing. Library is the middle page.
     var homePage: HomePage = .library
-    /// Query to prefill when Search opens (debug screenshots).
-    var pendingSearchTerm: String?
+    /// Which home page is searching in place (nil = not searching).
+    private(set) var searchingOn: HomePage?
+    /// One shared search (query, debounce, results) used by whichever page is searching.
+    @ObservationIgnored let search: SearchModel
+    /// Focus the field when search opens, but not when coming back from a show page.
+    @ObservationIgnored var focusSearchOnAppear = false
 
     /// "New" page: recent episodes from Library shows, newest first.
     private(set) var latest: [Episode] = []
@@ -93,6 +96,7 @@ final class AppModel {
         self.store = store
         self.directory = directory
         self.feeds = feeds
+        search = SearchModel(directory: directory)
         var snapshot = store.load()
         // v0.4: Midnight becomes the default look. Apply once, and only over the
         // previous default (unset or Ink) so a deliberate Paper/Ember choice stays.
@@ -174,10 +178,20 @@ final class AppModel {
         persist()
         recomputeLatestFromCache()
         if library.subscriptions.isEmpty { homePage = .library }
+        if searchingOn != nil && searchingOn != .library && library.subscriptions.isEmpty { endSearch() }
     }
 
+    /// Search in place on the current home page: its content glides away and results appear.
     func openSearch() {
-        path.append(.search)
+        let page = library.subscriptions.isEmpty ? HomePage.library : homePage
+        focusSearchOnAppear = true
+        withAnimation(.spring(response: 0.45, dampingFraction: 0.86)) { searchingOn = page }
+    }
+
+    func endSearch() {
+        search.cancel()
+        withAnimation(.spring(response: 0.45, dampingFraction: 0.86)) { searchingOn = nil }
+        search.query = ""
     }
 
     /// Marks an episode played or unplayed without playing it.

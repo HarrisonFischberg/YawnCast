@@ -95,81 +95,86 @@ final class SearchModel {
     }
 }
 
-struct SearchView: View {
+/// Search field + Cancel shown in place of a page's header while searching.
+struct InlineSearchBar: View {
     @Environment(AppModel.self) private var app
     @Environment(\.theme) private var theme
-    @Environment(\.dismiss) private var dismiss
-    @State private var model: SearchModel
     @FocusState private var focused: Bool
 
-    init(directory: DirectoryService, initialQuery: String? = nil) {
-        let model = SearchModel(directory: directory)
-        if let initialQuery { model.query = initialQuery }
-        _model = State(initialValue: model)
+    var body: some View {
+        @Bindable var search = app.search
+        HStack(spacing: Space.m) {
+            SearchField(text: $search.query, focused: $focused) { search.retry() }
+            Button("Cancel") { app.endSearch() }
+                .font(Typo.headline)
+                .foregroundStyle(theme.text)
+                .frame(minHeight: 44)
+                .accessibilityIdentifier("closeSearch")
+        }
+        .onAppear {
+            if app.focusSearchOnAppear {
+                focused = true
+                app.focusSearchOnAppear = false
+            }
+        }
     }
+}
+
+/// Search states and results, laid out inside the page's own scroll view.
+struct SearchResultsView: View {
+    @Environment(AppModel.self) private var app
+    @Environment(\.theme) private var theme
 
     var body: some View {
-        @Bindable var model = model
-        VStack(alignment: .leading, spacing: Space.l) {
-            HStack(spacing: Space.m) {
-                IconKey(systemName: "chevron.left", label: "Back") {
-                    model.cancel()
-                    dismiss()
-                }
-                .accessibilityIdentifier("closeSearch")
-                SearchField(text: $model.query, focused: $focused) { model.retry() }
-            }
-            .padding(.horizontal, Space.xl)
-            .padding(.top, Space.s)
-
-            content
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        }
-        .background { ScreenBackground() }
-        .toolbar(.hidden, for: .navigationBar)
-        .onAppear { focused = true }
-        .onDisappear { model.cancel() }
-    }
-
-    @ViewBuilder
-    private var content: some View {
+        let model = app.search
         switch model.state {
         case .idle:
             StateMessage(title: "Find a show", message: "Search by show name, host, or topic.", systemImage: "magnifyingglass")
+                .padding(.horizontal, -Space.xxl)
         case .loading:
-            VStack(spacing: Space.m) {
-                ProgressView().controlSize(.large).tint(theme.text)
+            HStack(spacing: Space.m) {
+                ProgressView().tint(theme.text)
                 Text("Searching…").font(Typo.caption).foregroundStyle(theme.textMuted)
             }
-            .padding(.top, Space.huge)
+            .padding(.top, Space.l)
             .accessibilityElement(children: .combine)
             .accessibilityIdentifier("searchLoading")
         case .empty(let term):
             StateMessage(title: "No shows found", message: "Nothing matched “\(term)”. Try another spelling or a shorter name.", systemImage: "questionmark")
+                .padding(.horizontal, -Space.xxl)
         case .failed(let message):
             StateMessage(title: "Couldn’t search", message: message, systemImage: "wifi.exclamationmark", actionTitle: "Try again") {
                 model.retry()
             }
+            .padding(.horizontal, -Space.xxl)
         case .results(let results):
-            ScrollView {
-                LazyVStack(spacing: Space.xs) {
-                    ForEach(results) { result in
-                        NavigationLink(value: Route.show(result.show)) {
-                            SearchRow(result: result, subscribed: app.isSubscribed(result.show))
-                        }
-                        .buttonStyle(RowStyle())
+            LazyVStack(spacing: Space.xs) {
+                ForEach(results) { result in
+                    NavigationLink(value: Route.show(result.show)) {
+                        SearchRow(result: result, subscribed: app.isSubscribed(result.show))
                     }
+                    .buttonStyle(RowStyle())
                 }
-                .padding(.horizontal, Space.m)
-                .padding(.bottom, Space.xxxl)
             }
-            .scrollDismissesKeyboard(.immediately)
+            .padding(.horizontal, -Space.s)
+            .accessibilityElement(children: .contain)
             .accessibilityIdentifier("searchResults")
         }
     }
 }
 
-private struct SearchField: View {
+/// How a page's normal content leaves and returns around search:
+/// it glides down and fades out, then rises back in.
+extension AnyTransition {
+    static var searchPushDown: AnyTransition {
+        .asymmetric(
+            insertion: .offset(y: 60).combined(with: .opacity),
+            removal: .offset(y: 180).combined(with: .opacity)
+        )
+    }
+}
+
+struct SearchField: View {
     @Binding var text: String
     var focused: FocusState<Bool>.Binding
     var onSubmit: () -> Void = {}

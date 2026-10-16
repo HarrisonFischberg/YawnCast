@@ -88,8 +88,8 @@ enum DemoSeed {
             model.path = [.category(category)]
         }
         if let term = launch.searchTerm {
-            model.pendingSearchTerm = term
-            model.path = [.search]
+            model.openSearch()
+            model.search.query = term
         }
         Task {
             do {
