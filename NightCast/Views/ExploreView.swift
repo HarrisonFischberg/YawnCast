@@ -112,6 +112,8 @@ struct ExploreView: View {
 
 /// Tappable search field look-alike that opens Search.
 struct SearchCapsule: View {
+    var placeholder = "Shows, hosts, topics"
+    var identifier = "exploreSearch"
     let action: () -> Void
     @Environment(\.theme) private var theme
 
@@ -119,7 +121,7 @@ struct SearchCapsule: View {
         Button(action: action) {
             HStack(spacing: Space.s) {
                 Image(systemName: "magnifyingglass").font(.system(size: 17, weight: .bold))
-                Text("Shows, hosts, topics")
+                Text(placeholder)
                 Spacer()
             }
             .font(Typo.headline)
@@ -131,8 +133,8 @@ struct SearchCapsule: View {
             .contentShape(Capsule())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("Search podcasts")
-        .accessibilityIdentifier("exploreSearch")
+        .accessibilityLabel(placeholder)
+        .accessibilityIdentifier(identifier)
     }
 }
 

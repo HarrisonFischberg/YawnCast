@@ -30,6 +30,13 @@ struct LibraryView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Space.xxl) {
                 header
+                if !model.library.subscriptions.isEmpty {
+                    // One bar for both: filters your shows and finds new ones.
+                    SearchCapsule(placeholder: "Search your shows or find new ones", identifier: "librarySearch") {
+                        model.openSearch()
+                    }
+                    .padding(.top, -Space.s)
+                }
                 if model.library.subscriptions.isEmpty {
                     emptyState
                 } else {
@@ -119,8 +126,6 @@ struct LibraryView: View {
                 }
                 IconKey(systemName: "circle.lefthalf.filled", label: "Themes") { model.isThemesPresented = true }
                     .accessibilityIdentifier("themesKey")
-                IconKey(systemName: "magnifyingglass", label: "Search podcasts") { model.openSearch() }
-                    .accessibilityIdentifier("searchKey")
             }
         }
         .padding(.top, Space.s)

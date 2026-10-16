@@ -4,6 +4,8 @@
 
 A native iPhone podcast app for falling asleep.
 
+**v0.11:** Library has one full-width search bar that filters your shows and finds new ones.
+
 **v0.10:** Sleep fades over 6 minutes (10% every 40 s); smaller player that always stays on screen; swipe down to close Now Playing; Library reorders live as you drag.
 
 **v0.9:** smoother in-place search (page drifts and fades, search fades in after it); the player shrinks to an oval while typing instead of disappearing.

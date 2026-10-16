@@ -2,6 +2,12 @@
 
 Newest first. Each entry: what changed, what was verified (actual output), blockers.
 
+## 2026-10-15 — Session 10b: v0.11 Library search bar (owner choice: one bar for both)
+
+- D45, D46. **Verified (actual output, `scripts/test.sh` on "NightCast iPhone"):** core 90/90; Debug + Release
+  BUILD SUCCEEDED; UI 19/19 (new: Library search filters saved shows and finds new ones).
+- Site edits from Session 10 confirmed live on rarecreatures.app ~1 min after push (push to main deploys).
+
 ## 2026-10-15 — Session 10: v0.10 6-minute fade, always-on smaller player, swipe-down, live reorder, site copy
 
 - D44. **Verified (actual output, `scripts/test.sh`):** core 90/90; Debug + Release BUILD SUCCEEDED; UI 18/18

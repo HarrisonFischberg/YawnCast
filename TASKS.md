@@ -113,4 +113,4 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] Swipe down to close Now Playing
 - [x] Live drag-to-reorder in Library
 - [x] Website copy edits on rarecreatures.app/apps/nightcast
-- [ ] Owner decision: Library search (remove / full bar under title / combined)
+- [x] Owner decision: Library search → one bar for both (v0.11)

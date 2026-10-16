@@ -294,3 +294,13 @@ This is a red-tinted interface, not a hardware blue-light filter; iOS Night Shif
 - Website (studio-site `apps/nightcast/`): removed the three requested paragraphs and the "Built and tested. Not
   shipped." section; "never do" list now Never/Never/Never/Yes with the owner's wording. Also removed the hero's
   "Where it's up to" button (it linked to the removed section) and updated the fade line to the 6-minute spec.
+
+## D45 · 2026-10-15 · Library search: one bar for both (owner choice)
+Owner picked "one bar, both" from four options (combined / filter only / none / keep icon). Library header loses
+its search icon; a full-width bar sits under the title (hidden while the Library is empty, so "Find a podcast" stays
+the one action). In-place search on Library shows "In your Library" (instant local title/host match) then "Find new
+shows" (directory). Explore keeps directory-only search.
+
+## D46 · 2026-10-15 · Dedicated "NightCast iPhone" simulator
+Other sessions launched apps and Settings on "iPhone 18 Pro" mid-capture. A dedicated simulator "NightCast iPhone"
+(iPhone 18 Pro, iOS 27.0) is now the default for `scripts/test.sh` and screenshots.

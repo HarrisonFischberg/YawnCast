@@ -121,11 +121,11 @@ struct SearchablePage<Content: View>: View {
                 .accessibilityHidden(isSearching)
 
             VStack(alignment: .leading, spacing: Space.l) {
-                InlineSearchBar(isActive: isSearching)
+                InlineSearchBar(isActive: isSearching, placeholder: page == .library ? "Your shows or new ones" : "Shows, hosts, topics")
                     .padding(.horizontal, Space.xl)
                     .padding(.top, Space.s)
                 ScrollView {
-                    SearchResultsView()
+                    SearchResultsView(includeLibrary: page == .library)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, Space.xl)
                         .padding(.bottom, Space.xxxl)
@@ -147,6 +147,7 @@ struct SearchablePage<Content: View>: View {
 /// Search field + Cancel at the top of a searching page.
 struct InlineSearchBar: View {
     let isActive: Bool
+    var placeholder = "Shows, hosts, topics"
     @Environment(AppModel.self) private var app
     @Environment(\.theme) private var theme
     @FocusState private var focused: Bool
@@ -154,7 +155,7 @@ struct InlineSearchBar: View {
     var body: some View {
         @Bindable var search = app.search
         HStack(spacing: Space.m) {
-            SearchField(text: $search.query, focused: $focused) { search.retry() }
+            SearchField(text: $search.query, focused: $focused, placeholder: placeholder) { search.retry() }
             Button("Cancel") { app.endSearch() }
                 .font(Typo.headline)
                 .foregroundStyle(theme.text)
@@ -179,15 +180,58 @@ struct InlineSearchBar: View {
 }
 
 /// Search states and results, laid out inside the page's own scroll view.
+/// On Library: matching saved shows first ("In your Library"), then new shows from the directory.
 struct SearchResultsView: View {
+    var includeLibrary = false
     @Environment(AppModel.self) private var app
     @Environment(\.theme) private var theme
 
+    private var term: String { app.search.query.trimmingCharacters(in: .whitespacesAndNewlines) }
+
+    /// Saved shows whose title or host contains the query (instant, no network).
+    private var libraryMatches: [Show] {
+        guard includeLibrary, !term.isEmpty else { return [] }
+        return app.library.subscriptions.filter {
+            $0.title.localizedCaseInsensitiveContains(term) || ($0.author?.localizedCaseInsensitiveContains(term) ?? false)
+        }
+    }
+
     var body: some View {
+        VStack(alignment: .leading, spacing: Space.s) {
+            if includeLibrary, !term.isEmpty {
+                sectionHeader("In your Library")
+                if libraryMatches.isEmpty {
+                    Text("No saved shows match “\(term)”.")
+                        .font(Typo.caption)
+                        .foregroundStyle(theme.textMuted)
+                        .padding(.bottom, Space.s)
+                } else {
+                    ForEach(libraryMatches) { show in
+                        NavigationLink(value: Route.show(show)) { ShowListRow(show: show, hasNew: app.hasNewEpisode(show)) }
+                            .buttonStyle(TileStyle())
+                            .accessibilityIdentifier("libraryMatch")
+                    }
+                }
+                sectionHeader("Find new shows")
+                    .padding(.top, Space.l)
+            }
+            directory
+        }
+    }
+
+    private func sectionHeader(_ title: String) -> some View {
+        Text(title)
+            .font(Typo.eyebrow).tracking(1.2).textCase(.uppercase)
+            .foregroundStyle(theme.textMuted)
+            .accessibilityAddTraits(.isHeader)
+    }
+
+    @ViewBuilder
+    private var directory: some View {
         let model = app.search
         switch model.state {
         case .idle:
-            Text("Search by show name, host, or topic.")
+            Text(includeLibrary ? "Type to filter your shows and find new ones." : "Search by show name, host, or topic.")
                 .font(Typo.caption)
                 .foregroundStyle(theme.textMuted)
                 .padding(.top, Space.xs)
@@ -226,6 +270,7 @@ struct SearchResultsView: View {
 struct SearchField: View {
     @Binding var text: String
     var focused: FocusState<Bool>.Binding
+    var placeholder = "Shows, hosts, topics"
     var onSubmit: () -> Void = {}
     @Environment(\.theme) private var theme
 
@@ -235,7 +280,7 @@ struct SearchField: View {
                 .font(.system(size: 17, weight: .bold))
                 .foregroundStyle(theme.textMuted)
                 .accessibilityHidden(true)
-            TextField("", text: $text, prompt: Text("Shows, hosts, topics").foregroundStyle(theme.textMuted))
+            TextField("", text: $text, prompt: Text(placeholder).foregroundStyle(theme.textMuted))
                 .font(Typo.headline)
                 .foregroundStyle(theme.text)
                 .textInputAutocapitalization(.never)
