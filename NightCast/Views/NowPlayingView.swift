@@ -124,7 +124,12 @@ struct NowPlayingView: View {
             .padding(.horizontal, Space.xxl)
         }
         // Swipe down anywhere (not just the chevron) to drop back into the mini player.
-        .clipShape(RoundedRectangle(cornerRadius: pullDown > 0 ? 38 : 0, style: .continuous))
+        // Mask, not clipShape: clipShape trims at the safe area, which cut the
+        // background off above the home indicator and let the page behind show.
+        .mask {
+            RoundedRectangle(cornerRadius: pullDown > 0 ? 38 : 0, style: .continuous)
+                .ignoresSafeArea()
+        }
         .scaleEffect(reduceMotion ? 1 : 1 - min(pullDown, 400) / 4000, anchor: .top)
         .offset(y: pullDown)
         .gesture(
