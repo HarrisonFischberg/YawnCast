@@ -53,7 +53,7 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] Final handoff docs (README, screenshots, device checklist)
 
 ## Owner / device (not automatable)
-- [ ] Device checks D1–D8 (README)
+- [x] Device checks D1–D8 (README) — passed 2026-10-17
 - [ ] Signing team + bundle ID, TestFlight
 - [ ] Trademark-cleared name, final icon (`/replica-skill:replica-brand`)
 
