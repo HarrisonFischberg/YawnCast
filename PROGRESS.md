@@ -2,6 +2,16 @@
 
 Newest first. Each entry: what changed, what was verified (actual output), blockers.
 
+## 2026-10-17 — Session 11: app unit-test target + SearchModel tests
+
+- New `NightCastTests` target (Swift Testing, hosted in the app): 19 SearchModel tests covering debounce, trimming,
+  blank queries, cancel before/during a search, stale answers, case-insensitive cache, retry, error copy.
+  `scripts/test.sh` runs it before the UI tests and now also prints "Testing failed"/"TEST FAILED" lines so a runner
+  that dies before any test starts is visible.
+- **Verified (actual output, owner's Mac):** unit 19/19 on "NightCast iPhone" and "iPhone 17"; `scripts/test.sh` →
+  core 90/90; Debug + Release BUILD SUCCEEDED; UI 19/19. One run was disturbed by another worktree's UI tests sharing
+  the "NightCast iPhone" simulator, and once by a cold simulator ("Invalid connectionUUID"); reruns passed.
+
 ## 2026-10-15 — Session 10c: website NightCast page refreshed
 
 - studio-site 7353794: page copy rewritten to match v0.11 (Home / Sleep / Explore / Looks / Left out), "The maths"

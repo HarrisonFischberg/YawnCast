@@ -33,7 +33,7 @@ run_tests() {
     grep -qE "$finished" "$log" && break
   done
   kill $pid 2>/dev/null
-  grep -E "error: |Test Case.*(passed|failed)|Executed [0-9]+ tests|✘|Test run with" "$log" | sort -u
+  grep -E "error: |Test Case.*(passed|failed)|Executed [0-9]+ tests|✘|Test run with|Testing failed|TEST FAILED" "$log" | sort -u
 }
 
 echo "== App unit tests"
