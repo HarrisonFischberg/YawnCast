@@ -74,6 +74,14 @@ final class AccessibilityUITests: XCTestCase {
         try audit(app, "Library")
         app.buttons["themesKey"].tap()
         XCTAssertTrue(app.buttons["theme-midnight"].waitForExistence(timeout: 5))
+        // At its 80% detent the sheet leaves Library's title and search field showing
+        // above it, dimmed. VoiceOver correctly can't reach them behind the modal, but
+        // the audit still sees that text and reports "Potentially inaccessible text" with
+        // no element. Drag the grabber up to the large detent so only the sheet is audited.
+        let title = app.staticTexts["Themes"]
+        let grabber = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.28))
+        grabber.press(forDuration: 0.1, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.02)))
+        XCTAssertTrue(waitUntil(3) { title.frame.minY < app.frame.height * 0.2 }, "Themes sheet at large detent")
         try audit(app, "Themes")
     }
 
