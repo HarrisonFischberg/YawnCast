@@ -186,10 +186,11 @@ struct ShowView: View {
                 .padding(.horizontal, -Space.xxl)
         case .loaded:
             HStack(alignment: .center) {
-                Text("Episodes · \(model.episodes.count)")
+                // Uppercased here, not with .textCase: textCase also uppercases the
+                // accessibility label, and VoiceOver reads all-caps words letter by letter.
+                Text(verbatim: "Episodes · \(model.episodes.count)".uppercased())
                     .font(Typo.eyebrow)
                     .tracking(1.2)
-                    .textCase(.uppercase)
                     .foregroundStyle(theme.textMuted)
                     .accessibilityLabel("\(model.episodes.count) episode\(model.episodes.count == 1 ? "" : "s")")
                     .accessibilityAddTraits(.isHeader)
