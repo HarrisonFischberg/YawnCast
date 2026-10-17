@@ -195,7 +195,6 @@ None of these can be marked PASS from simulator results. Record outcomes in [ACC
 - **Search provider:** the iTunes Search API is rate-limited (about 20 requests/min, per Apple) and some shows lack feed URLs. Re-read Apple's terms before release.
 - **No dedicated unit tests** for the search model's debounce and cancellation. They are covered indirectly by UI tests.
 - **No app-level crash or analytics reporting.**
-- **App icon** is an original placeholder (moon on a key).
 - **The name** is a working name, not trademark-checked (run `/replica-skill:replica-brand` before launch).
 - **Lock Screen artwork** comes from the episode or show artwork when it can be fetched.
 
