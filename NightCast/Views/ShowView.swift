@@ -191,6 +191,7 @@ struct ShowView: View {
                     .tracking(1.2)
                     .textCase(.uppercase)
                     .foregroundStyle(theme.textMuted)
+                    .accessibilityLabel("\(model.episodes.count) episode\(model.episodes.count == 1 ? "" : "s")")
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("episodesHeader")
                 Spacer()
@@ -222,6 +223,7 @@ struct ShowView: View {
                         .buttonStyle(RowStyle())
                         .accessibilityIdentifier("episodeRow")
                         .contextMenu { EpisodeMenu(episode: episode) }
+                        .episodeAccessibilityActions(episode)
                         Rectangle().fill(theme.border).frame(height: 1)
                     }
                 } header: {
@@ -331,6 +333,25 @@ struct ProgressPlayGlyph: View {
         }
         .frame(width: 40, height: 40)
         .accessibilityHidden(true)
+    }
+}
+
+/// The long-press menu's Mark as Played, as a VoiceOver action (swipe up/down on the row).
+private struct EpisodeAccessibilityActions: ViewModifier {
+    let episode: Episode
+    @Environment(AppModel.self) private var app
+
+    func body(content: Content) -> some View {
+        let played = app.position(for: episode)?.completed == true
+        content.accessibilityAction(named: played ? "Mark as Unplayed" : "Mark as Played") {
+            app.setPlayed(episode, !played)
+        }
+    }
+}
+
+extension View {
+    func episodeAccessibilityActions(_ episode: Episode) -> some View {
+        modifier(EpisodeAccessibilityActions(episode: episode))
     }
 }
 

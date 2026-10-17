@@ -22,7 +22,8 @@ struct MoonKey: View {
                         .font(Typo.title)
                     Text(subtitle)
                         .font(Typo.caption)
-                        .opacity(0.8)
+                        // 0.85 keeps Ember at AA (4.89:1); 0.8 fell to 4.48:1. See scripts/contrast.py.
+                        .opacity(0.85)
                         .contentTransition(.numericText())
                 }
                 .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)

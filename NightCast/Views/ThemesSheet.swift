@@ -5,8 +5,11 @@ import SwiftUI
 struct ThemesSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
+    @Environment(\.dynamicTypeSize) private var typeSize
 
-    private let columns = [GridItem(.flexible(), spacing: Space.m), GridItem(.flexible(), spacing: Space.m)]
+    private var columns: [GridItem] {
+        Array(repeating: GridItem(.flexible(), spacing: Space.m), count: typeSize.isAccessibilitySize ? 1 : 2)
+    }
 
     var body: some View {
         ScrollView {
@@ -53,6 +56,7 @@ private struct ThemeSwatch: View {
     let option: Theme
     let selected: Bool
     @Environment(\.theme) private var current
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         VStack(spacing: Space.s) {
@@ -90,7 +94,7 @@ private struct ThemeSwatch: View {
             Text(option.blurb)
                 .font(Typo.caption)
                 .foregroundStyle(current.textMuted)
-                .lineLimit(1)
+                .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
                 .minimumScaleFactor(0.8)
         }
         .frame(maxWidth: .infinity)

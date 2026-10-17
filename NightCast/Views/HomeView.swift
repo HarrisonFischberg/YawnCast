@@ -44,7 +44,7 @@ struct PageDots: View {
                     withAnimation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.8)) { selection = page }
                 } label: {
                     Capsule()
-                        .fill(page == selection ? theme.text : theme.textMuted.opacity(0.45))
+                        .fill(page == selection ? theme.text : theme.textMuted.opacity(0.75))
                         .frame(width: page == selection ? 22 : 8, height: 8)
                         .frame(width: 36, height: 44)
                         .contentShape(Rectangle())
@@ -148,6 +148,7 @@ struct NewEpisodesView: View {
                     }
                     .buttonStyle(RowStyle())
                     .contextMenu { EpisodeMenu(episode: episode) }
+                    .episodeAccessibilityActions(episode)
                     .accessibilityIdentifier("latestRow")
                 }
             }
