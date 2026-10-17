@@ -53,7 +53,7 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] Final handoff docs (README, screenshots, device checklist)
 
 ## Owner / device (not automatable)
-- [ ] Device checks D1–D8 (README)
+- [x] Device checks D1–D8 (README) — passed 2026-10-17
 - [ ] Signing team + bundle ID, TestFlight
 - [ ] Trademark-cleared name, final icon (`/replica-skill:replica-brand`)
 
@@ -64,7 +64,7 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] Explore (genres + keywords + charts), Top picks row
 - [x] Unsubscribe / mark played menus, new-episode pip
 - [x] UI tests for pager, mini player, unsubscribe
-- [ ] Device check of v0.2 (owner)
+- [x] Device check of v0.2 (owner) — passed 2026-10-17
 
 ## v0.3 (owner request 2026-10-15)
 - [x] Fade 10% every minute
@@ -72,7 +72,7 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] Floating z's while Sleep is on (still under Reduce Motion)
 - [x] Full episode history: follow paged feeds; year sections; Newest/Oldest
 - [x] UI tests for bubble and year sections
-- [ ] Device check of v0.3 (owner)
+- [x] Device check of v0.3 (owner) — passed 2026-10-17
 - [ ] Rare Creatures website (owner LLC; privacy/support pages)
 
 ## v0.4 (owner request 2026-10-15)
@@ -81,13 +81,13 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] Midnight night-sky theme (waves + stars), default
 - [x] Library drag-to-reorder; Large / Small / List; Settings sheet
 - [x] Explore: search, Your interests at top, Browse categories + category pages
-- [ ] Device check of v0.4 (owner)
+- [x] Device check of v0.4 (owner) — passed 2026-10-17
 
 ## v0.5 (owner request 2026-10-15)
 - [x] Themes key (dark/light icon) → Themes sheet; layout stays one-click
 - [x] Scenes: Midnight, Mountain Vista, Beach, Rainforest, City Scape (animated, AA contrast)
 - [x] Color Scapes: Paper, Ember, Ink
-- [ ] Device check of v0.5 scenes (battery/comfort at night, owner)
+- [x] Device check of v0.5 scenes (battery/comfort at night, owner) — passed 2026-10-17
 
 ## v0.6 (owner request 2026-10-15)
 - [x] Underwater scene (6 scenes total)
