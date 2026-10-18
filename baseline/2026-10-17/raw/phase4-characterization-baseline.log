@@ -1,0 +1,428 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project NightCast.xcodeproj -scheme NightCast -destination "platform=iOS Simulator,name=NightCast iPhone" -derivedDataPath build/DerivedData -parallel-testing-enabled NO "-only-testing:NightCastUITests/PreBuiltCharacterizationUITests" test
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  NightCastCore: /Users/harrison/projects/podcast/NightCastCore
+
+2026-10-17 22:50:27.302 xcodebuild[40116:17455969] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (4 targets)
+    Target 'NightCastUITests' in project 'NightCast'
+        ➜ Explicit dependency on target 'NightCast' in project 'NightCast'
+    Target 'NightCast' in project 'NightCast'
+        ➜ Explicit dependency on target 'NightCastCore-product' in project 'NightCastCore'
+    Target 'NightCastCore-product' in project 'NightCastCore'
+        ➜ Explicit dependency on target 'NightCastCore' in project 'NightCastCore'
+    Target 'NightCastCore' in project 'NightCastCore' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --print-asset-tag-combinations --output-format xml1 /Users/harrison/projects/podcast/NightCast/Assets.xcassets
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+Build description signature: 188c1a459a3155817d48dedf03dc779f
+Build description path: /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/XCBuildData/188c1a459a3155817d48dedf03dc779f.xcbuilddata
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk /Users/harrison/projects/podcast/build/DerivedData/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache
+    cd /Users/harrison/projects/podcast/NightCast.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -o /Users/harrison/projects/podcast/build/DerivedData/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache
+
+WriteAuxiliaryFile /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftFileList (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    write-file /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftFileList
+
+WriteAuxiliaryFile /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftConstValuesFileList (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    write-file /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.LinkFileList (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    write-file /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.LinkFileList
+
+WriteAuxiliaryFile /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-OutputFileMap.json (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    write-file /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-OutputFileMap.json
+
+SwiftDriver NightCastUITests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name NightCastUITests -Onone @/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftFileList -DDEBUG -module-alias Testing\=_Testing_Unavailable -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /Users/harrison/projects/podcast/build/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -enable-testing -index-store-path /Users/harrison/projects/podcast/build/DerivedData/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/harrison/projects/podcast/build/DerivedData/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/harrison/projects/podcast/build/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/harrison/projects/podcast/build/DerivedData/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /Users/harrison/projects/podcast/build/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests_const_extract_protocols.json -Xcc -iquote -Xcc /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests-generated-files.hmap -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests-own-target-headers.hmap -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCast-6201f7d1ef5b4a36d8351db46d3b7df4-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests-project-headers.hmap -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/DerivedSources-normal/arm64 -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/DerivedSources/arm64 -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-Swift.h -working-directory /Users/harrison/projects/podcast -experimental-emit-module-separately -disable-cmo
+
+ProcessInfoPlistFile /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCast.app/Info.plist /Users/harrison/projects/podcast/Config/NightCast-Info.plist (in target 'NightCast' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    builtin-infoPlistUtility /Users/harrison/projects/podcast/Config/NightCast-Info.plist -producttype com.apple.product-type.application -genpkginfo /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCast.app/PkgInfo -expandbuildsettings -format binary -platform iphonesimulator -additionalcontentfile /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCast.build/assetcatalog_generated_info.plist -o /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCast.app/Info.plist
+
+CopySwiftLibs /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCast.app (in target 'NightCast' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCast.app/NightCast.debug.dylib --scan-folder /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCast.app/Frameworks --scan-folder /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCast.app/PlugIns --scan-folder /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCast.app/SystemExtensions --scan-folder /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCast.app/Extensions --platform iphonesimulator --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCast.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCast.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
+
+SwiftCompile normal arm64 Compiling\ PreBuiltCharacterizationUITests.swift /Users/harrison/projects/podcast/NightCastUITests/PreBuiltCharacterizationUITests.swift (in target 'NightCastUITests' from project 'NightCast')
+
+SwiftCompile normal arm64 /Users/harrison/projects/podcast/NightCastUITests/PreBuiltCharacterizationUITests.swift (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    builtin-SwiftPerFileCompile PreBuiltCharacterizationUITests.swift
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ NightCastUITests (in target 'NightCastUITests' from project 'NightCast')
+
+SwiftCompile normal arm64 (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for NightCastUITests (in target 'NightCastUITests' from project 'NightCast')
+
+SwiftDriver\ Compilation\ Requirements NightCastUITests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name NightCastUITests -Onone @/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftFileList -DDEBUG -module-alias Testing\=_Testing_Unavailable -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /Users/harrison/projects/podcast/build/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -enable-testing -index-store-path /Users/harrison/projects/podcast/build/DerivedData/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/harrison/projects/podcast/build/DerivedData/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/harrison/projects/podcast/build/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/harrison/projects/podcast/build/DerivedData/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /Users/harrison/projects/podcast/build/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests_const_extract_protocols.json -Xcc -iquote -Xcc /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests-generated-files.hmap -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests-own-target-headers.hmap -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCast-6201f7d1ef5b4a36d8351db46d3b7df4-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests-project-headers.hmap -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/DerivedSources-normal/arm64 -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/DerivedSources/arm64 -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-Swift.h -working-directory /Users/harrison/projects/podcast -experimental-emit-module-separately -disable-cmo
+
+Copy /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests.swiftmodule/arm64-apple-ios-simulator.swiftdoc /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftdoc (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftdoc /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests.swiftmodule/arm64-apple-ios-simulator.swiftdoc
+
+Copy /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftmodule (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftmodule /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests.swiftmodule/arm64-apple-ios-simulator.swiftmodule
+
+Copy /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests.swiftmodule/arm64-apple-ios-simulator.abi.json /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.abi.json (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.abi.json /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests.swiftmodule/arm64-apple-ios-simulator.abi.json
+
+Copy /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftsourceinfo (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftsourceinfo /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo
+
+SwiftDriverJobDiscovery normal arm64 Compiling PreBuiltCharacterizationUITests.swift (in target 'NightCastUITests' from project 'NightCast')
+
+SwiftDriver\ Compilation NightCastUITests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name NightCastUITests -Onone @/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftFileList -DDEBUG -module-alias Testing\=_Testing_Unavailable -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /Users/harrison/projects/podcast/build/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -enable-testing -index-store-path /Users/harrison/projects/podcast/build/DerivedData/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/harrison/projects/podcast/build/DerivedData/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/harrison/projects/podcast/build/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/harrison/projects/podcast/build/DerivedData/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /Users/harrison/projects/podcast/build/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests_const_extract_protocols.json -Xcc -iquote -Xcc /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests-generated-files.hmap -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests-own-target-headers.hmap -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCast-6201f7d1ef5b4a36d8351db46d3b7df4-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests-project-headers.hmap -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/DerivedSources-normal/arm64 -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/DerivedSources/arm64 -Xcc -I/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-Swift.h -working-directory /Users/harrison/projects/podcast -experimental-emit-module-separately -disable-cmo
+
+Ld /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/NightCastUITests normal (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios18.0-simulator -bundle -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -L/Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator -L/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F/Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -F/Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator -iframework /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -iframework /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks -filelist /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.LinkFileList -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @loader_path/Frameworks -Xlinker -dead_strip -Xlinker -object_path_lto -Xlinker /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -debug_variant -Xlinker -dependency_info -Xlinker /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests_dependency_info.dat -fobjc-link-runtime -fprofile-instr-generate -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftmodule -Xlinker -needed_framework -Xlinker XCTest -framework XCTest -Xlinker -needed-lXCTestSwiftSupport -lXCTestSwiftSupport -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __entitlements -Xlinker /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests.xctest-Simulated.xcent -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __ents_der -Xlinker /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests.xctest-Simulated.xcent.der -Xlinker -no_adhoc_codesign -o /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/NightCastUITests
+
+ExtractAppIntentsMetadata (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name NightCastUITests --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk --xcode-version 27A266a --platform-family iOS --deployment-target 18.0 --bundle-identifier com.nightcast.ktv2g3z883.uitests --output /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest --target-triple arm64-apple-ios18.0-simulator --binary-file /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/NightCastUITests --dependency-file /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests_dependency_info.dat --stringsdata-file /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftFileList --metadata-file-list /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests.DependencyMetadataFileList --static-metadata-file-list /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/NightCastUITests.DependencyStaticMetadataFileList --swift-const-vals-list /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-10-17 22:50:29.034 appintentsmetadataprocessor[40153:17456244] Starting appintentsmetadataprocessor export
+2026-10-17 22:50:29.035 appintentsmetadataprocessor[40153:17456244] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+CopySwiftLibs /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/NightCastUITests --scan-folder /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/Frameworks --scan-folder /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/PlugIns --scan-folder /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/SystemExtensions --scan-folder /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/Extensions --platform iphonesimulator --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/Frameworks --strip-bitcode --scan-executable /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
+
+ProcessInfoPlistFile /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/Info.plist /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/empty-NightCastUITests.plist (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    builtin-infoPlistUtility /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/empty-NightCastUITests.plist -producttype com.apple.product-type.bundle.ui-testing -expandbuildsettings -format binary -platform iphonesimulator -additionalcontentfile /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/NightCast.build/Debug-iphonesimulator/NightCastUITests.build/ProductTypeInfoPlistAdditions.plist -o /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/Info.plist
+
+CodeSign /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest
+
+CodeSign /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app (in target 'NightCastUITests' from project 'NightCast')
+    cd /Users/harrison/projects/podcast
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app
+/Users/harrison/projects/podcast/build/DerivedData/Build/Products/Debug-iphonesimulator/NightCastUITests-Runner.app: replacing existing signature
+
+PruneExplicitPrecompiledModules /Users/harrison/projects/podcast/build/DerivedData/SDKExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/harrison/projects/podcast/build/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+2026-10-17 22:50:30.145110-0600 NightCastUITests-Runner[40167:17456501] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-10-17 22:50:32.371.
+Test Suite 'NightCastUITests.xctest' started at 2026-10-17 22:50:32.371.
+Test Suite 'PreBuiltCharacterizationUITests' started at 2026-10-17 22:50:32.371.
+Test Case '-[NightCastUITests.PreBuiltCharacterizationUITests testOpenShowFromLibraryAndPlayEpisode]' started.
+    t =     0.00s Start Test at 2026-10-17 22:50:32.372
+    t =     0.02s Set Up
+    t =     0.03s Open com.nightcast.ktv2g3z883
+    t =     0.03s     Launch com.nightcast.ktv2g3z883
+2026-10-17 22:50:32.450 xcodebuild[40116:17455969] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-17 22:50:32.450 xcodebuild[40116:17455969] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     0.69s         Setting up automation session
+objc[40167]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.6xw3Fu/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x106460398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.6xw3Fu/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x106578310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     2.45s         Wait for com.nightcast.ktv2g3z883 to idle
+    t =     3.98s Tap "findPodcastKey" Button
+    t =     3.98s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     3.98s     Find the "findPodcastKey" Button
+    t =     4.08s     Check for interrupting elements affecting "findPodcastKey" Button
+    t =     4.09s     Synthesize event
+    t =     4.40s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     4.87s Waiting 5.0s for "searchField" TextField to exist
+    t =     5.91s     Checking `Expect predicate `existsNoRetry == 1` for object "searchField" TextField`
+    t =     5.91s         Checking existence of `"searchField" TextField`
+    t =     5.96s Type 'quiet' into "searchField" TextField
+    t =     5.96s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     5.96s     Find the "searchField" TextField
+    t =     5.98s     Check for interrupting elements affecting "searchField" TextField
+    t =     6.00s     Synthesize event
+    t =     6.28s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     6.29s Tap "Quiet Hours, Fixture Studio" Button
+    t =     6.29s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     6.29s     Find the "Quiet Hours, Fixture Studio" Button
+    t =     7.32s         Find the "Quiet Hours, Fixture Studio" Button (retry 1)
+    t =     7.35s     Check for interrupting elements affecting "Quiet Hours, Fixture Studio" Button
+    t =     7.37s     Synthesize event
+    t =     7.66s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     8.17s Waiting 5.0s for "subscribeKey" Button to exist
+    t =     9.21s     Checking `Expect predicate `existsNoRetry == 1` for object "subscribeKey" Button`
+    t =     9.21s         Checking existence of `"subscribeKey" Button`
+    t =     9.24s Tap "subscribeKey" Button
+    t =     9.24s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     9.24s     Find the "subscribeKey" Button
+    t =     9.26s     Check for interrupting elements affecting "subscribeKey" Button
+    t =     9.28s     Synthesize event
+    t =     9.56s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     9.57s Find the "subscribeKey" Button
+    t =     9.58s Waiting 8.0s for "Fixture Episode 3" Button to exist
+    t =    10.61s     Checking `Expect predicate `existsNoRetry == 1` for object "Fixture Episode 3" Button`
+    t =    10.61s         Checking existence of `"Fixture Episode 3" Button`
+    t =    10.64s Terminate com.nightcast.ktv2g3z883:40179
+    t =    11.70s Open com.nightcast.ktv2g3z883
+    t =    11.71s     Launch com.nightcast.ktv2g3z883
+2026-10-17 22:50:44.078 xcodebuild[40116:17455969] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-17 22:50:44.078 xcodebuild[40116:17455969] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =    11.94s         Setting up automation session
+    t =    13.67s         Wait for com.nightcast.ktv2g3z883 to idle
+    t =    15.07s Waiting 8.0s for "Quiet Hours, Fixture Studio" Button to exist
+    t =    16.11s     Checking `Expect predicate `existsNoRetry == 1` for object "Quiet Hours, Fixture Studio" Button`
+    t =    16.11s         Checking existence of `"Quiet Hours, Fixture Studio" Button`
+    t =    16.18s Tap "Quiet Hours, Fixture Studio" Button
+    t =    16.18s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    16.19s     Find the "Quiet Hours, Fixture Studio" Button
+    t =    16.20s     Check for interrupting elements affecting "Quiet Hours, Fixture Studio" Button
+    t =    16.21s     Synthesize event
+    t =    16.50s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    16.87s Waiting 8.0s for "Fixture Episode 2" Button to exist
+    t =    17.91s     Checking `Expect predicate `existsNoRetry == 1` for object "Fixture Episode 2" Button`
+    t =    17.91s         Checking existence of `"Fixture Episode 2" Button`
+    t =    17.94s Checking existence of `"Fixture Episode 1" Button`
+    t =    17.95s Tap "Fixture Episode 2" Button
+    t =    17.95s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    17.96s     Find the "Fixture Episode 2" Button
+    t =    17.97s     Check for interrupting elements affecting "episodeRow" Button
+    t =    17.98s     Synthesize event
+<unknown>:0: warning: -[NightCastUITests.PreBuiltCharacterizationUITests testOpenShowFromLibraryAndPlayEpisode] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.
+    t =    18.27s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    18.73s Waiting 8.0s for "playPause" Button to exist
+    t =    19.76s     Checking `Expect predicate `existsNoRetry == 1` for object "playPause" Button`
+    t =    19.76s         Checking existence of `"playPause" Button`
+    t =    19.80s Checking existence of `"Fixture Episode 2" StaticText`
+    t =    19.81s Waiting 5.0s for "closePlayer" Button to exist
+    t =    20.85s     Checking `Expect predicate `existsNoRetry == 1` for object "closePlayer" Button`
+    t =    20.85s         Checking existence of `"closePlayer" Button`
+    t =    20.88s Tap "closePlayer" Button
+    t =    20.88s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    20.88s     Find the "closePlayer" Button
+    t =    20.89s     Check for interrupting elements affecting "closePlayer" Button
+    t =    20.91s     Synthesize event
+    t =    21.20s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    21.92s Waiting 5.0s for "Fixture Episode 3" Button to exist
+    t =    22.95s     Checking `Expect predicate `existsNoRetry == 1` for object "Fixture Episode 3" Button`
+    t =    22.95s         Checking existence of `"Fixture Episode 3" Button`
+    t =    22.97s Tear Down
+Test Case '-[NightCastUITests.PreBuiltCharacterizationUITests testOpenShowFromLibraryAndPlayEpisode]' passed (23.212 seconds).
+Test Case '-[NightCastUITests.PreBuiltCharacterizationUITests testPositionAndSubscriptionSurviveBackgroundThenKill]' started.
+    t =     0.00s Start Test at 2026-10-17 22:50:55.586
+    t =     0.02s Set Up
+    t =     0.02s Open com.nightcast.ktv2g3z883
+    t =     0.02s     Launch com.nightcast.ktv2g3z883
+    t =     0.03s         Terminate com.nightcast.ktv2g3z883:40233
+2026-10-17 22:50:56.666 xcodebuild[40116:17455969] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-17 22:50:56.666 xcodebuild[40116:17455969] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     1.29s         Setting up automation session
+    t =     2.92s         Wait for com.nightcast.ktv2g3z883 to idle
+    t =     4.28s Tap "findPodcastKey" Button
+    t =     4.28s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     4.28s     Find the "findPodcastKey" Button
+    t =     4.34s     Check for interrupting elements affecting "findPodcastKey" Button
+    t =     4.35s     Synthesize event
+    t =     4.64s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     4.82s Waiting 5.0s for "searchField" TextField to exist
+    t =     5.87s     Checking `Expect predicate `existsNoRetry == 1` for object "searchField" TextField`
+    t =     5.87s         Checking existence of `"searchField" TextField`
+    t =     5.91s Type 'quiet' into "searchField" TextField
+    t =     5.91s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     5.91s     Find the "searchField" TextField
+    t =     5.94s     Check for interrupting elements affecting "searchField" TextField
+    t =     5.96s     Synthesize event
+    t =     6.24s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     6.25s Tap "Quiet Hours, Fixture Studio" Button
+    t =     6.25s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     6.25s     Find the "Quiet Hours, Fixture Studio" Button
+    t =     7.28s         Find the "Quiet Hours, Fixture Studio" Button (retry 1)
+    t =     7.31s     Check for interrupting elements affecting "Quiet Hours, Fixture Studio" Button
+    t =     7.33s     Synthesize event
+    t =     7.62s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     8.09s Waiting 5.0s for "subscribeKey" Button to exist
+    t =     9.13s     Checking `Expect predicate `existsNoRetry == 1` for object "subscribeKey" Button`
+    t =     9.13s         Checking existence of `"subscribeKey" Button`
+    t =     9.17s Tap "subscribeKey" Button
+    t =     9.17s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     9.17s     Find the "subscribeKey" Button
+    t =     9.19s     Check for interrupting elements affecting "subscribeKey" Button
+    t =     9.20s     Synthesize event
+    t =     9.49s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     9.50s Find the "subscribeKey" Button
+    t =     9.51s Waiting 8.0s for "Fixture Episode 3" Button to exist
+    t =    10.55s     Checking `Expect predicate `existsNoRetry == 1` for object "Fixture Episode 3" Button`
+    t =    10.55s         Checking existence of `"Fixture Episode 3" Button`
+    t =    10.58s Tap "Fixture Episode 2" Button
+    t =    10.58s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    10.58s     Find the "Fixture Episode 2" Button
+    t =    10.60s     Check for interrupting elements affecting "episodeRow" Button
+    t =    10.62s     Synthesize event
+<unknown>:0: warning: -[NightCastUITests.PreBuiltCharacterizationUITests testPositionAndSubscriptionSurviveBackgroundThenKill] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.
+    t =    10.90s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    11.32s Waiting 8.0s for "playPause" Button to exist
+    t =    12.35s     Checking `Expect predicate `existsNoRetry == 1` for object "playPause" Button`
+    t =    12.35s         Checking existence of `"playPause" Button`
+    t =    12.39s Tap "Forward 15 seconds" Button
+    t =    12.39s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    12.39s     Find the "Forward 15 seconds" Button
+    t =    12.41s     Check for interrupting elements affecting "goforward.15" Button
+    t =    12.44s     Synthesize event
+    t =    12.73s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    12.73s Tap "Forward 15 seconds" Button
+    t =    12.73s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    12.74s     Find the "Forward 15 seconds" Button
+    t =    12.76s     Check for interrupting elements affecting "goforward.15" Button
+    t =    12.78s     Synthesize event
+    t =    13.07s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    14.08s Tap "playPause" Button
+    t =    14.08s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    14.09s     Find the "playPause" Button
+    t =    14.12s     Check for interrupting elements affecting "playPause" Button
+    t =    14.15s     Synthesize event
+    t =    14.44s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    14.44s Pressing Home button
+    t =    15.92s Terminate com.nightcast.ktv2g3z883:40274
+    t =    16.97s Open com.nightcast.ktv2g3z883
+    t =    16.97s     Launch com.nightcast.ktv2g3z883
+2026-10-17 22:51:12.560 xcodebuild[40116:17455969] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-17 22:51:12.560 xcodebuild[40116:17455969] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =    17.19s         Setting up automation session
+    t =    18.78s         Wait for com.nightcast.ktv2g3z883 to idle
+    t =    20.18s Waiting 8.0s for "Quiet Hours, Fixture Studio" Button to exist
+    t =    21.22s     Checking `Expect predicate `existsNoRetry == 1` for object "Quiet Hours, Fixture Studio" Button`
+    t =    21.22s         Checking existence of `"Quiet Hours, Fixture Studio" Button`
+    t =    21.30s Waiting 5.0s for "miniPlayer" Button to exist
+    t =    22.33s     Checking `Expect predicate `existsNoRetry == 1` for object "miniPlayer" Button`
+    t =    22.33s         Checking existence of `"miniPlayer" Button`
+    t =    22.36s Tap "miniPlayer" Button
+    t =    22.36s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    22.36s     Find the "miniPlayer" Button
+    t =    22.38s     Check for interrupting elements affecting "miniPlayer" Button
+    t =    22.40s     Synthesize event
+    t =    22.69s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    23.05s Waiting 5.0s for "scrubber" Any to exist
+    t =    24.07s     Checking `Expect predicate `existsNoRetry == 1` for object "scrubber" Any`
+    t =    24.07s         Checking existence of `"scrubber" Any`
+    t =    24.11s Find the "scrubber" Any
+    t =    24.13s Tear Down
+Test Case '-[NightCastUITests.PreBuiltCharacterizationUITests testPositionAndSubscriptionSurviveBackgroundThenKill]' passed (24.387 seconds).
+Test Case '-[NightCastUITests.PreBuiltCharacterizationUITests testRelaunchShowsCachedNewEpisodesAndNewMarker]' started.
+    t =     0.00s Start Test at 2026-10-17 22:51:19.973
+    t =     0.02s Set Up
+    t =     0.02s Open com.nightcast.ktv2g3z883
+    t =     0.03s     Launch com.nightcast.ktv2g3z883
+    t =     0.03s         Terminate com.nightcast.ktv2g3z883:40348
+2026-10-17 22:51:21.042 xcodebuild[40116:17455969] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-17 22:51:21.042 xcodebuild[40116:17455969] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     1.28s         Setting up automation session
+    t =     2.81s         Wait for com.nightcast.ktv2g3z883 to idle
+    t =     4.16s Tap "findPodcastKey" Button
+    t =     4.16s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     4.17s     Find the "findPodcastKey" Button
+    t =     4.22s     Check for interrupting elements affecting "findPodcastKey" Button
+    t =     4.23s     Synthesize event
+    t =     4.52s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     4.67s Waiting 5.0s for "searchField" TextField to exist
+    t =     5.70s     Checking `Expect predicate `existsNoRetry == 1` for object "searchField" TextField`
+    t =     5.71s         Checking existence of `"searchField" TextField`
+    t =     5.75s Type 'quiet' into "searchField" TextField
+    t =     5.75s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     5.75s     Find the "searchField" TextField
+    t =     5.77s     Check for interrupting elements affecting "searchField" TextField
+    t =     5.79s     Synthesize event
+    t =     6.08s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     6.08s Tap "Quiet Hours, Fixture Studio" Button
+    t =     6.08s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     6.09s     Find the "Quiet Hours, Fixture Studio" Button
+    t =     7.12s         Find the "Quiet Hours, Fixture Studio" Button (retry 1)
+    t =     7.16s     Check for interrupting elements affecting "Quiet Hours, Fixture Studio" Button
+    t =     7.18s     Synthesize event
+    t =     7.47s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     7.90s Waiting 5.0s for "subscribeKey" Button to exist
+    t =     8.93s     Checking `Expect predicate `existsNoRetry == 1` for object "subscribeKey" Button`
+    t =     8.93s         Checking existence of `"subscribeKey" Button`
+    t =     8.97s Tap "subscribeKey" Button
+    t =     8.97s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     8.97s     Find the "subscribeKey" Button
+    t =     8.99s     Check for interrupting elements affecting "subscribeKey" Button
+    t =     9.01s     Synthesize event
+    t =     9.30s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     9.30s Find the "subscribeKey" Button
+    t =     9.32s Waiting 8.0s for "Fixture Episode 3" Button to exist
+    t =    10.34s     Checking `Expect predicate `existsNoRetry == 1` for object "Fixture Episode 3" Button`
+    t =    10.35s         Checking existence of `"Fixture Episode 3" Button`
+    t =    10.38s Terminate com.nightcast.ktv2g3z883:40381
+    t =    11.43s Open com.nightcast.ktv2g3z883
+    t =    11.43s     Launch com.nightcast.ktv2g3z883
+2026-10-17 22:51:31.409 xcodebuild[40116:17455969] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-17 22:51:31.409 xcodebuild[40116:17455969] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =    11.64s         Setting up automation session
+    t =    13.19s         Wait for com.nightcast.ktv2g3z883 to idle
+    t =    14.60s Waiting 8.0s for "Quiet Hours, Fixture Studio" Button to exist
+    t =    15.62s     Checking `Expect predicate `existsNoRetry == 1` for object "Quiet Hours, Fixture Studio" Button`
+    t =    15.62s         Checking existence of `"Quiet Hours, Fixture Studio" Button`
+    t =    15.70s Find the "Quiet Hours, Fixture Studio" Button
+    t =    15.71s Tap "pageDot-New" Button
+    t =    15.71s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    15.71s     Find the "pageDot-New" Button
+    t =    15.72s     Check for interrupting elements affecting "pageDot-New" Button
+    t =    15.73s     Synthesize event
+    t =    16.02s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    16.02s Find the "pageDot-New" Button
+    t =    16.05s Waiting 8.0s for "Fixture Episode 3, Quiet Hours" Button to exist
+    t =    17.07s     Checking `Expect predicate `existsNoRetry == 1` for object "Fixture Episode 3, Quiet Hours" Button`
+    t =    17.07s         Checking existence of `"Fixture Episode 3, Quiet Hours" Button`
+    t =    17.09s Checking existence of `"Fixture Episode 2, Quiet Hours" Button`
+    t =    17.11s Tear Down
+Test Case '-[NightCastUITests.PreBuiltCharacterizationUITests testRelaunchShowsCachedNewEpisodesAndNewMarker]' passed (17.340 seconds).
+Test Suite 'PreBuiltCharacterizationUITests' passed at 2026-10-17 22:51:37.313.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 64.939 (64.942) seconds
+Test Suite 'NightCastUITests.xctest' passed at 2026-10-17 22:51:37.320.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 64.939 (64.949) seconds
+Test Suite 'Selected tests' passed at 2026-10-17 22:51:37.320.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 64.939 (64.950) seconds
+** BUILD INTERRUPTED **
