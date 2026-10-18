@@ -296,6 +296,7 @@ struct MiniPlayerDock: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Now playing: \(player.episode?.title ?? "")")
+            .accessibilityValue(model.sleepStatus == .off ? (player.episode?.showTitle ?? "") : "\(player.episode?.showTitle ?? ""), Sleep on")
             .accessibilityHint("Opens the player.")
             .accessibilityIdentifier("miniPlayer")
 
@@ -307,6 +308,10 @@ struct MiniPlayerDock: View {
             .buttonStyle(.roundKey(.primary, depth: 3))
             .frame(width: 44, height: 44)
             .accessibilityLabel(player.isPlaying ? "Pause" : "Play")
+            .accessibilityIdentifier("miniPlayPause")
+            .accessibilityShowsLargeContentViewer {
+                Label(player.isPlaying ? "Pause" : "Play", systemImage: player.isPlaying ? "pause.fill" : "play.fill")
+            }
             .sensoryFeedback(.impact(weight: .medium), trigger: player.isPlaying)
         }
         .padding(10)

@@ -34,7 +34,7 @@ struct NowPlayingView: View {
                         .font(Typo.eyebrow)
                         .tracking(1.2)
                         .foregroundStyle(theme.textMuted)
-                        .lineLimit(1)
+                        .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
                     Text(player.episode?.title ?? "Nothing playing")
                         .font(typeSize.isAccessibilitySize ? .system(.title2, design: .serif, weight: .bold) : .system(size: 36, weight: .bold, design: .serif))
                         .foregroundStyle(theme.text)
@@ -73,10 +73,10 @@ struct NowPlayingView: View {
                                     model.adjustSleep(minutes: minutes)
                                     scheduleCollapse()
                                 }, onCollapse: { setExpanded(false) })
-                                .transition(.scale(scale: 0.6, anchor: .bottomTrailing).combined(with: .opacity))
+                                .transition(bubbleTransition)
                             } else {
                                 CollapsedSleepPill(status: model.sleepStatus) { setExpanded(true) }
-                                    .transition(.scale(scale: 0.6, anchor: .bottomTrailing).combined(with: .opacity))
+                                    .transition(bubbleTransition)
                             }
                         } else if let toast = model.toast {
                             Text(toast)
@@ -119,6 +119,9 @@ struct NowPlayingView: View {
         }
         // Swipe down anywhere (not just the chevron) to drop back into the mini player.
         .modifier(PullDownToDismiss { dismiss() })
+        // VoiceOver can't use the swipe; the two-finger scrub (escape) closes it too.
+        .accessibilityElement(children: .contain)
+        .accessibilityAction(.escape) { dismiss() }
         .presentationBackground(.clear)
         #if DEBUG
         .overlay(alignment: .topTrailing) {
@@ -131,6 +134,10 @@ struct NowPlayingView: View {
             }
         }
         #endif
+    }
+
+    private var bubbleTransition: AnyTransition {
+        reduceMotion ? .opacity : .scale(scale: 0.6, anchor: .bottomTrailing).combined(with: .opacity)
     }
 
     private func setExpanded(_ expanded: Bool) {

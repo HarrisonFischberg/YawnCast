@@ -108,7 +108,7 @@ Let R be the playable seconds remaining when Moon is tapped.
 
 ## Design tokens and themes
 
-All three themes pass WCAG AA. Check with Replica's `contrast.py` on `replica/design/tokens.<theme>.json`. Full principles are in [replica/design/principles.md](replica/design/principles.md).
+All ten themes pass WCAG AA. Check with `python3 scripts/contrast.py` (reads `NightCast/Design/Theme.swift`, flags drift from `replica/design/tokens.<theme>.json`). Full principles are in [replica/design/principles.md](replica/design/principles.md).
 
 | Role | Midnight (default) | Paper (day) | Ink (dark) | Ember (bedtime) |
 |---|---|---|---|---|

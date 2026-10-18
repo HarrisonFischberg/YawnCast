@@ -224,6 +224,20 @@ struct SearchResultsView: View {
             }
             directory
         }
+        .onChange(of: app.search.state) { _, state in
+            guard let message = Self.announcement(for: state) else { return }
+            AccessibilityNotification.Announcement(message).post()
+        }
+    }
+
+    /// What VoiceOver says when a search settles (nothing while idle or loading).
+    static func announcement(for state: SearchModel.State) -> String? {
+        switch state {
+        case .idle, .loading: nil
+        case .results(let results): results.count == 1 ? "1 show found" : "\(results.count) shows found"
+        case .empty: "No shows found"
+        case .failed: "Couldn’t search"
+        }
     }
 
     private func sectionHeader(_ title: String) -> some View {
@@ -389,6 +403,7 @@ struct StateMessage: View {
             Text(title)
                 .font(Typo.playerTitle)
                 .foregroundStyle(theme.text)
+                .accessibilityAddTraits(.isHeader)
             Text(message)
                 .font(Typo.body)
                 .foregroundStyle(theme.textMuted)

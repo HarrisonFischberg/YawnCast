@@ -106,5 +106,9 @@ struct IconKey: View {
         .buttonStyle(.roundKey(depth: 3))
         .frame(width: 48, height: 48)
         .accessibilityLabel(label)
+        // The glyph stays 17 pt; at accessibility sizes a long press shows it large.
+        .accessibilityShowsLargeContentViewer {
+            Label(label, systemImage: systemName)
+        }
     }
 }

@@ -7,3 +7,4 @@ xcuserdata/
 screenshots/raw/
 .claude/ralph-loop.local.md
 build/
+__pycache__/
