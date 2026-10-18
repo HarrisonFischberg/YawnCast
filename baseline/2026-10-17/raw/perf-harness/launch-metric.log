@@ -1,0 +1,919 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project NightCast.xcodeproj -scheme NightCast -configuration Release -destination id=5E4786AD-2A04-4FCC-A4E9-CF947DD33BBB -derivedDataPath /tmp/nc-measure/dd -parallel-testing-enabled NO "-only-testing:NightCastUITests/PreBuiltPerfTests" test
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  NightCastCore: /tmp/nc-measure/NightCastCore
+
+2026-10-17 22:14:54.003 xcodebuild[30260:17345252] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (4 targets)
+    Target 'NightCastUITests' in project 'NightCast'
+        ➜ Explicit dependency on target 'NightCast' in project 'NightCast'
+    Target 'NightCast' in project 'NightCast'
+        ➜ Explicit dependency on target 'NightCastCore-product' in project 'NightCastCore'
+    Target 'NightCastCore-product' in project 'NightCastCore'
+        ➜ Explicit dependency on target 'NightCastCore' in project 'NightCastCore'
+    Target 'NightCastCore' in project 'NightCastCore' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --print-asset-tag-combinations --output-format xml1 /tmp/nc-measure/NightCast/Assets.xcassets
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+Build description signature: 889b5178fc340d7c1b97790e4c5e1d19
+Build description path: /tmp/nc-measure/dd/Build/Intermediates.noindex/XCBuildData/889b5178fc340d7c1b97790e4c5e1d19.xcbuilddata
+CreateBuildDirectory /tmp/nc-measure/dd/SDKExplicitPrecompiledModules
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    builtin-create-build-directory /tmp/nc-measure/dd/SDKExplicitPrecompiledModules
+
+CreateBuildDirectory /tmp/nc-measure/dd/ModuleCache.noindex
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    builtin-create-build-directory /tmp/nc-measure/dd/ModuleCache.noindex
+
+CreateBuildDirectory /tmp/nc-measure/dd/CompilationCache.noindex
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    builtin-create-build-directory /tmp/nc-measure/dd/CompilationCache.noindex
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk /tmp/nc-measure/dd/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -o /tmp/nc-measure/dd/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache
+
+CreateBuildDirectory /tmp/nc-measure/dd/Build/Products
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    builtin-create-build-directory /tmp/nc-measure/dd/Build/Products
+
+CreateBuildDirectory /tmp/nc-measure/dd/Build/Intermediates.noindex
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    builtin-create-build-directory /tmp/nc-measure/dd/Build/Intermediates.noindex
+
+CreateBuildDirectory /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    builtin-create-build-directory /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+CreateBuildDirectory /tmp/nc-measure/dd/Build/Intermediates.noindex/ExplicitPrecompiledModules
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    builtin-create-build-directory /tmp/nc-measure/dd/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+CreateBuildDirectory /tmp/nc-measure/dd/Build/Intermediates.noindex/PrecompiledHeaders
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    builtin-create-build-directory /tmp/nc-measure/dd/Build/Intermediates.noindex/PrecompiledHeaders
+
+CreateBuildDirectory /tmp/nc-measure/dd/Build/Intermediates.noindex/EagerLinkingTBDs/Release-iphonesimulator
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    builtin-create-build-directory /tmp/nc-measure/dd/Build/Intermediates.noindex/EagerLinkingTBDs/Release-iphonesimulator
+
+CreateBuildDirectory /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    builtin-create-build-directory /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast-6201f7d1ef5b4a36d8351db46d3b7df4-VFS-iphonesimulator/all-product-headers.yaml
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast-6201f7d1ef5b4a36d8351db46d3b7df4-VFS-iphonesimulator/all-product-headers.yaml
+
+CreateBuildDirectory /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/PackageFrameworks
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    builtin-create-build-directory /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/PackageFrameworks
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/ProductTypeInfoPlistAdditions.plist (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/ProductTypeInfoPlistAdditions.plist
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/empty-NightCastUITests.plist (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/empty-NightCastUITests.plist
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.hmap (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.hmap
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.LinkFileList (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.LinkFileList
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests_const_extract_protocols.json (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests_const_extract_protocols.json
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftFileList (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftFileList
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-OutputFileMap.json (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-OutputFileMap.json
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftConstValuesFileList (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.DependencyStaticMetadataFileList (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.DependencyMetadataFileList (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.DependencyMetadataFileList
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-project-headers.hmap (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-project-headers.hmap
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-own-target-headers.hmap (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-own-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-generated-files.hmap (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-generated-files.hmap
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-all-target-headers.hmap (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-all-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-all-non-framework-target-headers.hmap (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/DerivedSources/Entitlements-Simulated.plist (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/DerivedSources/Entitlements-Simulated.plist
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore_const_extract_protocols.json (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCastCore
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore_const_extract_protocols.json
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.SwiftConstValuesFileList (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCastCore
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.SwiftFileList (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCastCore
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.SwiftFileList
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore-OutputFileMap.json (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCastCore
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore-OutputFileMap.json
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.LinkFileList (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCastCore
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.LinkFileList
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/NightCastCore.modulemap (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCastCore
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/NightCastCore.modulemap
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/NightCastCore.DependencyStaticMetadataFileList (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCastCore
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/NightCastCore.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/NightCastCore.DependencyMetadataFileList (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCastCore
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/NightCastCore.DependencyMetadataFileList
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast_const_extract_protocols.json (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast_const_extract_protocols.json
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.SwiftFileList (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.SwiftFileList
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.SwiftConstValuesFileList (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.LinkFileList (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.LinkFileList
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast-OutputFileMap.json (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast-OutputFileMap.json
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.hmap (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.hmap
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.DependencyStaticMetadataFileList (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-project-headers.hmap (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-project-headers.hmap
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.DependencyMetadataFileList (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.DependencyMetadataFileList
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-own-target-headers.hmap (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-own-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-generated-files.hmap (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-generated-files.hmap
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-all-target-headers.hmap (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-all-target-headers.hmap
+
+Copy /tmp/nc-measure/dd/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/NightCastCore.modulemap /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/NightCastCore.modulemap (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCastCore
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/NightCastCore.modulemap /tmp/nc-measure/dd/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-all-non-framework-target-headers.hmap (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources/Entitlements-Simulated.plist (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    write-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources/Entitlements-Simulated.plist
+
+MkDir /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    /bin/mkdir -p /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest
+
+MkDir /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    /bin/mkdir -p /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app
+
+SwiftDriver NightCastCore normal arm64 com.apple.xcode.tools.swift.compiler (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -parse-as-library -module-name NightCastCore -O -whole-module-optimization @/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.SwiftFileList -DSWIFT_PACKAGE -DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -DXcode -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -swift-version 6 -I /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks -c -num-threads 10 -Xcc -ivfsstatcache -Xcc /tmp/nc-measure/dd/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -sdk-module-cache-path /tmp/nc-measure/dd/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/nc-measure/dd/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -package-name nightcastcore -emit-const-values -const-gather-protocols-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore_const_extract_protocols.json -Xcc -I/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/include -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/DerivedSources-normal/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/DerivedSources/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -emit-objc-header -emit-objc-header-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore-Swift.h -working-directory /tmp/nc-measure/NightCast.xcodeproj -no-emit-module-separately-wmo
+
+SwiftDriver\ Compilation NightCastCore normal arm64 com.apple.xcode.tools.swift.compiler (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -parse-as-library -module-name NightCastCore -O -whole-module-optimization @/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.SwiftFileList -DSWIFT_PACKAGE -DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -DXcode -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -swift-version 6 -I /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks -c -num-threads 10 -Xcc -ivfsstatcache -Xcc /tmp/nc-measure/dd/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -sdk-module-cache-path /tmp/nc-measure/dd/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/nc-measure/dd/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -package-name nightcastcore -emit-const-values -const-gather-protocols-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore_const_extract_protocols.json -Xcc -I/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/include -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/DerivedSources-normal/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/DerivedSources/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -emit-objc-header -emit-objc-header-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore-Swift.h -working-directory /tmp/nc-measure/NightCast.xcodeproj -no-emit-module-separately-wmo
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stddef-9L8LALQ5NCTZ9OTWFCYQK9XDR.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ptrauth-YHZEB6ABSXG1O0U3JA0XOR8P.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdbool-1GZWQNA0HSBT2ZVOT0LD7W51H.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_float-F1YYA81O1IAU5RGKBUP959DN6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_AvailabilityInternal-DHRPCBT8TBT3H4MKRCXYUCFWD.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_SwiftConcurrencyShims-ZNVYYRZZJI7NNA4BVUK8C4DP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/SwiftShims-8KEYOICT6BAXF5OGO8PDLIAEA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ptrcheck-CK0XFJ2G98RQ1MZFS68M7HDD0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdarg-6TUERQ2J0WUXKK5MMJ7RYQKNN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_DarwinFoundation1-C0LT73SRR7LHNH94A8CRCOZYN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_limits-BLCIKE2WTPIFSQUIZSZMF0IRB.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_DarwinFoundation2-C17DBBD25DEASON78O7S2SUV5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/string_h-3X1CVGPMBWJUMG5J22OBUFHRW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/sys_types-4BHHBGOTX4MC7F95B86RKYMXF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdint-EG9UHLQH64IE2WCCL226BIGDP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_DarwinFoundation3-F2VFGPK09XWSDBO27CXCDUQ5D.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_inttypes-8FB2FEQ9281KWMGM9GC69Z3HD.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Darwin-45HQFCF5TTC8UELA2URTIS0KY.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ObjectiveC-BJS1173MDGCV6FA826RIEDLU8.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/os_object-63PG1FVV4CA60SIYV43X1JTWI.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/os_workgroup-8VT559QLTJ6B9LHS6AS49SVY3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Dispatch-3DYSHHLF0Q35RSQ1V3DJUCAT3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/XPC-2BZ8JXPE30Z0W0CZVOKONJIWP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreFoundation-ALUH9XVXJBL86WDSZIBLL090A.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CFNetwork-AEW371C89E7BU0TI5K9RMJJIV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Security-94FYT0K7GJXZFK01V4AGKPWBL.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Foundation-CK4D5EO51UDTSN4QLYYOTNFZQ.pcm
+
+SwiftCompile normal arm64 Compiling\ Categories.swift,\ Directory.swift,\ Recommendations.swift,\ EpisodeGrouping.swift,\ FeedService.swift,\ LatestEpisodes.swift,\ RSSParser.swift,\ Models.swift,\ LibraryStore.swift,\ PlaybackMath.swift,\ SleepController.swift,\ SleepTimer.swift /private/tmp/nc-measure/NightCastCore/Sources/NightCastCore/Directory/Categories.swift /private/tmp/nc-measure/NightCastCore/Sources/NightCastCore/Directory/Directory.swift /private/tmp/nc-measure/NightCastCore/Sources/NightCastCore/Directory/Recommendations.swift /private/tmp/nc-measure/NightCastCore/Sources/NightCastCore/Feed/EpisodeGrouping.swift /private/tmp/nc-measure/NightCastCore/Sources/NightCastCore/Feed/FeedService.swift /private/tmp/nc-measure/NightCastCore/Sources/NightCastCore/Feed/LatestEpisodes.swift /private/tmp/nc-measure/NightCastCore/Sources/NightCastCore/Feed/RSSParser.swift /private/tmp/nc-measure/NightCastCore/Sources/NightCastCore/Models/Models.swift /private/tmp/nc-measure/NightCastCore/Sources/NightCastCore/Persistence/LibraryStore.swift /private/tmp/nc-measure/NightCastCore/Sources/NightCastCore/Playback/PlaybackMath.swift /private/tmp/nc-measure/NightCastCore/Sources/NightCastCore/Sleep/SleepController.swift /private/tmp/nc-measure/NightCastCore/Sources/NightCastCore/Sleep/SleepTimer.swift /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreFoundation.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_DarwinFoundation2.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_DarwinFoundation3.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Swift.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/ObjectiveC.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/System.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_Concurrency.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Darwin.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_DarwinFoundation1.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_StringProcessing.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/XPC.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Dispatch.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Foundation.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Observation.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Combine.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_Builtin_float.swiftmodule/arm64-apple-ios-simulator.swiftmodule /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdbool-1GZWQNA0HSBT2ZVOT0LD7W51H.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_SwiftConcurrencyShims-ZNVYYRZZJI7NNA4BVUK8C4DP.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Dispatch-3DYSHHLF0Q35RSQ1V3DJUCAT3.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ptrcheck-CK0XFJ2G98RQ1MZFS68M7HDD0.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/SwiftShims-8KEYOICT6BAXF5OGO8PDLIAEA.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ObjectiveC-BJS1173MDGCV6FA826RIEDLU8.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ptrauth-YHZEB6ABSXG1O0U3JA0XOR8P.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_limits-BLCIKE2WTPIFSQUIZSZMF0IRB.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreFoundation-ALUH9XVXJBL86WDSZIBLL090A.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_float-F1YYA81O1IAU5RGKBUP959DN6.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Foundation-CK4D5EO51UDTSN4QLYYOTNFZQ.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_AvailabilityInternal-DHRPCBT8TBT3H4MKRCXYUCFWD.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/sys_types-4BHHBGOTX4MC7F95B86RKYMXF.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Security-94FYT0K7GJXZFK01V4AGKPWBL.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CFNetwork-AEW371C89E7BU0TI5K9RMJJIV.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_DarwinFoundation3-F2VFGPK09XWSDBO27CXCDUQ5D.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_DarwinFoundation1-C0LT73SRR7LHNH94A8CRCOZYN.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdint-EG9UHLQH64IE2WCCL226BIGDP.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdarg-6TUERQ2J0WUXKK5MMJ7RYQKNN.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stddef-9L8LALQ5NCTZ9OTWFCYQK9XDR.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Darwin-45HQFCF5TTC8UELA2URTIS0KY.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/os_object-63PG1FVV4CA60SIYV43X1JTWI.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_inttypes-8FB2FEQ9281KWMGM9GC69Z3HD.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/os_workgroup-8VT559QLTJ6B9LHS6AS49SVY3.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_DarwinFoundation2-C17DBBD25DEASON78O7S2SUV5.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/string_h-3X1CVGPMBWJUMG5J22OBUFHRW.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/XPC-2BZ8JXPE30Z0W0CZVOKONJIWP.pcm /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore-dependencies-1.json (in target 'NightCastCore' from project 'NightCastCore')
+
+SwiftCompile normal arm64 (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    
+
+SwiftDriverJobDiscovery normal arm64 Compiling Categories.swift, Directory.swift, Recommendations.swift, EpisodeGrouping.swift, FeedService.swift, LatestEpisodes.swift, RSSParser.swift, Models.swift, LibraryStore.swift, PlaybackMath.swift, SleepController.swift, SleepTimer.swift (in target 'NightCastCore' from project 'NightCastCore')
+
+SwiftDriver\ Compilation\ Requirements NightCastCore normal arm64 com.apple.xcode.tools.swift.compiler (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCast.xcodeproj
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -parse-as-library -module-name NightCastCore -O -whole-module-optimization @/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.SwiftFileList -DSWIFT_PACKAGE -DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -DXcode -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -swift-version 6 -I /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks -c -num-threads 10 -Xcc -ivfsstatcache -Xcc /tmp/nc-measure/dd/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -sdk-module-cache-path /tmp/nc-measure/dd/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/nc-measure/dd/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -package-name nightcastcore -emit-const-values -const-gather-protocols-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore_const_extract_protocols.json -Xcc -I/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/include -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/DerivedSources-normal/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/DerivedSources/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -emit-objc-header -emit-objc-header-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore-Swift.h -working-directory /tmp/nc-measure/NightCast.xcodeproj -no-emit-module-separately-wmo
+
+SwiftMergeGeneratedHeaders /tmp/nc-measure/dd/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/NightCastCore-Swift.h /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore-Swift.h (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCastCore
+    builtin-swiftHeaderTool -arch arm64 /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore-Swift.h -o /tmp/nc-measure/dd/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/NightCastCore-Swift.h
+
+Copy /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastCore.swiftmodule/arm64-apple-ios-simulator.abi.json /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.abi.json (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCastCore
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.abi.json /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastCore.swiftmodule/arm64-apple-ios-simulator.abi.json
+
+Copy /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastCore.swiftmodule/arm64-apple-ios-simulator.swiftmodule /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.swiftmodule (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCastCore
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.swiftmodule /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastCore.swiftmodule/arm64-apple-ios-simulator.swiftmodule
+
+Copy /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastCore.swiftmodule/arm64-apple-ios-simulator.swiftdoc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.swiftdoc (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCastCore
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -rename /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.swiftdoc /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastCore.swiftmodule/arm64-apple-ios-simulator.swiftdoc
+
+Ld /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastCore.o normal (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCastCore
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios18.0-simulator -r -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -F/tmp/nc-measure/dd/Build/Intermediates.noindex/EagerLinkingTBDs/Release-iphonesimulator -F/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -iframework /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -iframework /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks -filelist /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.LinkFileList -nostdlib -Xlinker -object_path_lto -Xlinker /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore_lto.o -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -debug_variant -Xlinker -dependency_info -Xlinker /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.swiftmodule -o /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastCore.o
+
+ProcessProductPackaging "" /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.app-Simulated.xcent (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    
+    Entitlements:
+    
+    {
+    "application-identifier" = "KTV2G3Z883.com.nightcast.ktv2g3z883";
+}
+    
+    builtin-productPackagingUtility -entitlements -format xml -o /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.app-Simulated.xcent
+
+ProcessProductPackagingDER /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.app-Simulated.xcent /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.app-Simulated.xcent.der (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    /usr/bin/derq query -f xml -i /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.app-Simulated.xcent -o /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.app-Simulated.xcent.der --raw
+
+GenerateAssetSymbols /tmp/nc-measure/NightCast/Assets.xcassets (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    /Applications/Xcode.app/Contents/Developer/usr/bin/actool /tmp/nc-measure/NightCast/Assets.xcassets --compile /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app --output-format human-readable-text --notices --warnings --export-dependency-info /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_dependencies --output-partial-info-plist /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_generated_info.plist --app-icon AppIcon --compress-pngs --enable-on-demand-resources YES --development-region en --target-device iphone --minimum-deployment-target 18.0 --platform iphonesimulator --bundle-identifier com.nightcast.ktv2g3z883 --generate-swift-asset-symbols /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources/GeneratedAssetSymbols.swift --generate-objc-asset-symbols /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources/GeneratedAssetSymbols.h --generate-asset-symbol-index /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/* com.apple.actool.compilation-results */
+/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources/GeneratedAssetSymbols.h
+/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources/GeneratedAssetSymbols.swift
+
+
+MkDir /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_output/unthinned (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    /bin/mkdir -p /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_output/unthinned
+
+MkDir /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_output/thinned (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    /bin/mkdir -p /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_output/thinned
+
+CompileAssetCatalogVariant thinned /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app /tmp/nc-measure/NightCast/Assets.xcassets (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    /Applications/Xcode.app/Contents/Developer/usr/bin/actool /tmp/nc-measure/NightCast/Assets.xcassets --compile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_output/thinned --output-format human-readable-text --notices --warnings --export-dependency-info /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_dependencies_thinned --output-partial-info-plist /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_generated_info.plist_thinned --app-icon AppIcon --compress-pngs --enable-on-demand-resources YES --filter-for-thinning-device-configuration iPhone19,2 --filter-for-device-os-version 27.0 --development-region en --target-device iphone --minimum-deployment-target 18.0 --platform iphonesimulator
+/* com.apple.actool.compilation-results */
+/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_generated_info.plist_thinned
+/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_output/thinned/AppIcon60x60@2x.png
+/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_output/thinned/AppIcon76x76@2x~ipad.png
+/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_output/thinned/Assets.car
+
+
+ExtractAppIntentsMetadata (in target 'NightCastCore' from project 'NightCastCore')
+    cd /tmp/nc-measure/NightCastCore
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name NightCastCore --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk --xcode-version 27A266a --platform-family iOS --deployment-target 18.0 --bundle-identifier nightcastcore.NightCastCore --output /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastCore.appintents --target-triple arm64-apple-ios18.0-simulator --binary-file /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastCore.o --dependency-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore_dependency_info.dat --stringsdata-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.SwiftFileList --metadata-file-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/NightCastCore.DependencyMetadataFileList --static-metadata-file-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/NightCastCore.DependencyStaticMetadataFileList --swift-const-vals-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCastCore.build/Release-iphonesimulator/NightCastCore-t.build/Objects-normal/arm64/NightCastCore.SwiftConstValuesFileList --force --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-10-17 22:14:59.030 appintentsmetadataprocessor[30341:17345819] Starting appintentsmetadataprocessor export
+2026-10-17 22:14:59.083 appintentsmetadataprocessor[30341:17345819] Extracted no relevant App Intents symbols, skipping writing output
+
+SwiftDriver NightCast normal arm64 com.apple.xcode.tools.swift.compiler (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name NightCast -O -whole-module-optimization @/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.SwiftFileList -default-isolation\=MainActor -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -swift-version 6 -I /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -F /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/PackageFrameworks -F /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -emit-localized-strings -emit-localized-strings-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64 -c -num-threads 10 -Xcc -ivfsstatcache -Xcc /tmp/nc-measure/dd/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -sdk-module-cache-path /tmp/nc-measure/dd/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/nc-measure/dd/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-generated-files.hmap -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-own-target-headers.hmap -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast-6201f7d1ef5b4a36d8351db46d3b7df4-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-project-headers.hmap -Xcc -I/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/include -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources-normal/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast-Swift.h -working-directory /tmp/nc-measure -no-emit-module-separately-wmo
+
+SwiftDriver\ Compilation NightCast normal arm64 com.apple.xcode.tools.swift.compiler (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name NightCast -O -whole-module-optimization @/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.SwiftFileList -default-isolation\=MainActor -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -swift-version 6 -I /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -F /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/PackageFrameworks -F /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -emit-localized-strings -emit-localized-strings-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64 -c -num-threads 10 -Xcc -ivfsstatcache -Xcc /tmp/nc-measure/dd/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -sdk-module-cache-path /tmp/nc-measure/dd/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/nc-measure/dd/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-generated-files.hmap -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-own-target-headers.hmap -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast-6201f7d1ef5b4a36d8351db46d3b7df4-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-project-headers.hmap -Xcc -I/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/include -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources-normal/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast-Swift.h -working-directory /tmp/nc-measure -no-emit-module-separately-wmo
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ptrauth-9HZV0HWJW3L4CFPQ0TO23BRGG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_float-AQYH4OS35N98A9LFXEXKB55KD.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdbool-4BRAB3U0J7NKHYOQU3D0F0YLJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_AvailabilityInternal-9IQH1RSHSLILW5J8S3JL9DOOP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stddef-93U2KO0B2D5QHF3KK8BNJL0XZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ptrcheck-2CWM8KFHCWVHP53H8W1BKT2O7.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdarg-AA8ESVZOBWFHKDC7YYWF2QYJ2.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/DeveloperToolsSupport-7W2RZHPI64BHZJC8NJGKMYX98.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_SwiftConcurrencyShims-2XVG7A6P3G7BCGSMJQO7GV6KA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/SwiftShims-6QG0EMN0BX92O1QQVWVI1QN25.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_DarwinFoundation1-BU87T7TVAUBSWMIONK37Y92V4.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_limits-5CQ2DONVCN7C0L6MKCUEXKUN9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_DarwinFoundation2-97Y4YOV4X9H0VUOG731KAHQV6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_tgmath-4XVUXF8AFMN9NORWF72R569R9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdint-E1DMCPOKKJP99L23CPM3CYYZE.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/string_h-A46S42V3K6QSFYZ4BYUDZIJNI.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/sys_types-DPQT7G1F6S9VTKKYU6D3CCZDE.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_DarwinFoundation3-8RX29QSU6JIFSB4BK4GOT510.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdatomic-9VMMIR0EB48KK20MTFSDOE9MX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_intrinsics-67WLYTAVHDTSB1K02GGDCC0A.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_inttypes-EQVS2126QBXKWE6H8F4Q1226O.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Darwin-AT63T5T8SK7DYW19LEN5ZEACW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/simd-EBG15OHC3BTIS12JK5O2RQ4N8.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/MachO-3NYWM605HR5ZWE3ZESOBD6VP1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ObjectiveC-EM02UC45J32E98JNIIA5O1701.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/os_object-XULTG7B9M5AFPXKMBJRQXEXM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/os_workgroup-66L18Q6T0M60ADFILPA4B121Y.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Spatial-814A3JR3D2VWBNTDUJKSSPACN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Dispatch-9M5VDXNTZGPGWF5B2GLVXR4PN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/dnssd-2S3BVFK1M2R1Y8T3WFNBGM12Z.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/XPC-36DLC3T9QOS7UVSUBEOSY1GCB.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreFoundation-4B53NVJJ9DEP0XOY5GHDRZC1P.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/os-DWYUH7ODGOBNJ3XTT11O1INKL.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreGraphics-7WX28LLG0E1FNV52G4NW0YAVY.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CFNetwork-4S7OU6UK3F0G0ENOM9XFHQMH3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreAudioTypes-1TCDMIZF2TJWUE3O9SBBQ7GS2.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Security-DDN1Y700N8V9GK1VJFOBEDV5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreAudio-64DXCEQQMP9D5PX69581S3DZF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Foundation-EC6ZC686IAHN64ZSOX2RCS02.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreText-D2A7S3DUXN0OAU1M4HPZZ520J.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ImageIO-CQAVH5C002DBMELPNWFWUME7R.pcm
+
+LinkAssetCatalog /tmp/nc-measure/NightCast/Assets.xcassets (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-linkAssetCatalog --thinned /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_output/thinned --thinned-dependencies /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_dependencies_thinned --thinned-info-plist-content /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_generated_info.plist_thinned --unthinned /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_output/unthinned --unthinned-dependencies /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_dependencies_unthinned --unthinned-info-plist-content /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_generated_info.plist_unthinned --output /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app --plist-output /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_generated_info.plist
+note: Emplaced /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/Assets.car (in target 'NightCast' from project 'NightCast')
+note: Emplaced /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/AppIcon76x76@2x~ipad.png (in target 'NightCast' from project 'NightCast')
+note: Emplaced /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/AppIcon60x60@2x.png (in target 'NightCast' from project 'NightCast')
+
+ProcessInfoPlistFile /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/Info.plist /tmp/nc-measure/Config/NightCast-Info.plist (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-infoPlistUtility /tmp/nc-measure/Config/NightCast-Info.plist -producttype com.apple.product-type.application -genpkginfo /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/PkgInfo -expandbuildsettings -format binary -platform iphonesimulator -additionalcontentfile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/assetcatalog_generated_info.plist -o /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/Info.plist
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/LocalAuthentication-8D0U4NI9VIYYSEN3K9Z9DZSLU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreTransferable-5BRZD39KI9QPJJR8C5K0HO96C.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_LocationEssentials-ANOHGT9IM9RURVZ0GOEP20ENT.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/UserNotifications-B9KLTJJPTME7HLMXRNMNKYL07.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/FileProvider-5NHGTNZGTL9PZRJHTYM48YK99.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreData-7M9QW83BG4VOY0VJO4174AJT1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/OSLog-7UAQZKHO5QMM15R0K0DEQC1LE.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Symbols-AN5MOZOHK409EA0TH8A8CH6YB.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/IOSurface-7AXSJCXRL5Q48LHWPM3DYY25.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/UIUtilities-45D65A6IY8BDW9TEV0NC1LLG1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreMIDI-EJBPP4SZR8DE5FKHICQ34C0AB.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreLocation-556R5YISERYX4GJACZQOCUTL0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/DataDetection-1MSXDHSERZZVCUQR5DKT8YPNT.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/UniformTypeIdentifiers-3E6FKWPN96HML9KGS5FQHSZ8G.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/OpenGLES-5JGDMJQUQMJK950QLM003Y7X1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Network-8KZE7CXFVQWBTCETPHQLCHTRT.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Metal-E1OPQ81EDO2QOYBPN299MN89I.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Accessibility-3LYS2PKIXEHWPL4WYVF86KKMF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreMotion-3OBDD87LKD6E2F1KKCTL8SXMZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/AudioToolbox-C4X4TJNAEBVBCHK809DDMRHTL.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/AVRouting-6KVV5MIL7IDWKIG8AE5WTLV70.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreVideo-ALEMY1ZZLHTCVD6VLZX19U1G4.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreImage-EQ3YG9NBD27TAMPNTRSGWJYKH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreMedia-6GVG8YG9XJADF092TU03PBFM9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/QuartzCore-3A2MSAC7FEOI9W2U1Q3YMC2CJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/SwiftUICore-23E5CE5SGCTDQ60BS4TLQQ2K7.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/AVFAudio-8OC4WNY990DRF53TP24K0LDXR.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/VideoToolbox-EEW0D4XCJOJP1N5RQI3FPW2HA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/MediaToolbox-ARM4S877ZXEQALN119SH7YKYZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/UIKit-4MC2NGXK5H6TBSLFEZE0XZ4DP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/AVFoundation-9LUBFKL7WZH0LVODHRGT78NEQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/SwiftUI-J3EKGCDL5YIO83WOK1Y46OXK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/MediaPlayer-TEPKVWADENMM93KNN2C92S4O.pcm
+
+SwiftCompile normal arm64 Compiling\ AppModel.swift,\ NightCastApp.swift,\ Keys.swift,\ MoonKey.swift,\ Scenes.swift,\ Scrubber.swift,\ SleepExtras.swift,\ Theme.swift,\ ArtworkCache.swift,\ FeedDiskCache.swift,\ NowPlayingBridge.swift,\ PlaybackEngine.swift,\ ExploreView.swift,\ HomeView.swift,\ LibraryView.swift,\ NowPlayingView.swift,\ SearchView.swift,\ ShowView.swift,\ ThemesSheet.swift,\ GeneratedAssetSymbols.swift /tmp/nc-measure/NightCast/App/AppModel.swift /tmp/nc-measure/NightCast/App/NightCastApp.swift /tmp/nc-measure/NightCast/Design/Keys.swift /tmp/nc-measure/NightCast/Design/MoonKey.swift /tmp/nc-measure/NightCast/Design/Scenes.swift /tmp/nc-measure/NightCast/Design/Scrubber.swift /tmp/nc-measure/NightCast/Design/SleepExtras.swift /tmp/nc-measure/NightCast/Design/Theme.swift /tmp/nc-measure/NightCast/Playback/ArtworkCache.swift /tmp/nc-measure/NightCast/Playback/FeedDiskCache.swift /tmp/nc-measure/NightCast/Playback/NowPlayingBridge.swift /tmp/nc-measure/NightCast/Playback/PlaybackEngine.swift /tmp/nc-measure/NightCast/Views/ExploreView.swift /tmp/nc-measure/NightCast/Views/HomeView.swift /tmp/nc-measure/NightCast/Views/LibraryView.swift /tmp/nc-measure/NightCast/Views/NowPlayingView.swift /tmp/nc-measure/NightCast/Views/SearchView.swift /tmp/nc-measure/NightCast/Views/ShowView.swift /tmp/nc-measure/NightCast/Views/ThemesSheet.swift /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources/GeneratedAssetSymbols.swift /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreFoundation.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreTransferable.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/MediaPlayer.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/simd.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/os.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Combine.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/SwiftUI.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/XPC.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/QuartzCore.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreData.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CryptoKit.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/System.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Accessibility.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Observation.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreLocation.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreMedia.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/SwiftUICore.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Foundation.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_DarwinFoundation3.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_DarwinFoundation2.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/AVFAudio.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/AVFoundation.swiftmodule/arm64-apple-ios-simulator.swiftmodule /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastCore.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreText.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreImage.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/ImageIO.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Dispatch.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Swift.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/DataDetection.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Metal.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Darwin.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_StringProcessing.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/ObjectiveC.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/VideoToolbox.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreGraphics.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Spatial.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/UniformTypeIdentifiers.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/AudioToolbox.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreMotion.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_Concurrency.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreAudio.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreMIDI.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/MediaToolbox.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Symbols.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/LocalAuthentication.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreVideo.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/FileProvider.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/OSLog.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/DeveloperToolsSupport.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_DarwinFoundation1.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/UIKit.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_Builtin_float.swiftmodule/arm64-apple-ios-simulator.swiftmodule /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreMIDI-EJBPP4SZR8DE5FKHICQ34C0AB.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdbool-4BRAB3U0J7NKHYOQU3D0F0YLJ.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_tgmath-4XVUXF8AFMN9NORWF72R569R9.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Network-8KZE7CXFVQWBTCETPHQLCHTRT.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ptrcheck-2CWM8KFHCWVHP53H8W1BKT2O7.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreAudioTypes-1TCDMIZF2TJWUE3O9SBBQ7GS2.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreData-7M9QW83BG4VOY0VJO4174AJT1.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Spatial-814A3JR3D2VWBNTDUJKSSPACN.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/LocalAuthentication-8D0U4NI9VIYYSEN3K9Z9DZSLU.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/MediaToolbox-ARM4S877ZXEQALN119SH7YKYZ.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/os_object-XULTG7B9M5AFPXKMBJRQXEXM.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreText-D2A7S3DUXN0OAU1M4HPZZ520J.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/UIKit-4MC2NGXK5H6TBSLFEZE0XZ4DP.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreLocation-556R5YISERYX4GJACZQOCUTL0.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Metal-E1OPQ81EDO2QOYBPN299MN89I.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_DarwinFoundation3-8RX29QSU6JIFSB4BK4GOT510.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Symbols-AN5MOZOHK409EA0TH8A8CH6YB.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/os-DWYUH7ODGOBNJ3XTT11O1INKL.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Accessibility-3LYS2PKIXEHWPL4WYVF86KKMF.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_LocationEssentials-ANOHGT9IM9RURVZ0GOEP20ENT.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/AVFoundation-9LUBFKL7WZH0LVODHRGT78NEQ.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Foundation-EC6ZC686IAHN64ZSOX2RCS02.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/MediaPlayer-TEPKVWADENMM93KNN2C92S4O.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/DataDetection-1MSXDHSERZZVCUQR5DKT8YPNT.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/OSLog-7UAQZKHO5QMM15R0K0DEQC1LE.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/os_workgroup-66L18Q6T0M60ADFILPA4B121Y.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/AudioToolbox-C4X4TJNAEBVBCHK809DDMRHTL.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/UIUtilities-45D65A6IY8BDW9TEV0NC1LLG1.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Security-DDN1Y700N8V9GK1VJFOBEDV5.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreTransferable-5BRZD39KI9QPJJR8C5K0HO96C.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_DarwinFoundation2-97Y4YOV4X9H0VUOG731KAHQV6.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_DarwinFoundation1-BU87T7TVAUBSWMIONK37Y92V4.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdarg-AA8ESVZOBWFHKDC7YYWF2QYJ2.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/QuartzCore-3A2MSAC7FEOI9W2U1Q3YMC2CJ.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_intrinsics-67WLYTAVHDTSB1K02GGDCC0A.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/AVFAudio-8OC4WNY990DRF53TP24K0LDXR.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/FileProvider-5NHGTNZGTL9PZRJHTYM48YK99.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreAudio-64DXCEQQMP9D5PX69581S3DZF.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/UserNotifications-B9KLTJJPTME7HLMXRNMNKYL07.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ObjectiveC-EM02UC45J32E98JNIIA5O1701.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/DeveloperToolsSupport-7W2RZHPI64BHZJC8NJGKMYX98.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/UniformTypeIdentifiers-3E6FKWPN96HML9KGS5FQHSZ8G.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdatomic-9VMMIR0EB48KK20MTFSDOE9MX.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/XPC-36DLC3T9QOS7UVSUBEOSY1GCB.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stddef-93U2KO0B2D5QHF3KK8BNJL0XZ.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/VideoToolbox-EEW0D4XCJOJP1N5RQI3FPW2HA.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/simd-EBG15OHC3BTIS12JK5O2RQ4N8.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/SwiftShims-6QG0EMN0BX92O1QQVWVI1QN25.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/sys_types-DPQT7G1F6S9VTKKYU6D3CCZDE.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreImage-EQ3YG9NBD27TAMPNTRSGWJYKH.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_float-AQYH4OS35N98A9LFXEXKB55KD.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreVideo-ALEMY1ZZLHTCVD6VLZX19U1G4.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/AVRouting-6KVV5MIL7IDWKIG8AE5WTLV70.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreFoundation-4B53NVJJ9DEP0XOY5GHDRZC1P.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdint-E1DMCPOKKJP99L23CPM3CYYZE.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_SwiftConcurrencyShims-2XVG7A6P3G7BCGSMJQO7GV6KA.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/SwiftUI-J3EKGCDL5YIO83WOK1Y46OXK.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/string_h-A46S42V3K6QSFYZ4BYUDZIJNI.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ptrauth-9HZV0HWJW3L4CFPQ0TO23BRGG.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Darwin-AT63T5T8SK7DYW19LEN5ZEACW.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreGraphics-7WX28LLG0E1FNV52G4NW0YAVY.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Dispatch-9M5VDXNTZGPGWF5B2GLVXR4PN.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_limits-5CQ2DONVCN7C0L6MKCUEXKUN9.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ImageIO-CQAVH5C002DBMELPNWFWUME7R.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/MachO-3NYWM605HR5ZWE3ZESOBD6VP1.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_inttypes-EQVS2126QBXKWE6H8F4Q1226O.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/dnssd-2S3BVFK1M2R1Y8T3WFNBGM12Z.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/IOSurface-7AXSJCXRL5Q48LHWPM3DYY25.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CFNetwork-4S7OU6UK3F0G0ENOM9XFHQMH3.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreMedia-6GVG8YG9XJADF092TU03PBFM9.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/SwiftUICore-23E5CE5SGCTDQ60BS4TLQQ2K7.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_AvailabilityInternal-9IQH1RSHSLILW5J8S3JL9DOOP.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/OpenGLES-5JGDMJQUQMJK950QLM003Y7X1.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreMotion-3OBDD87LKD6E2F1KKCTL8SXMZ.pcm /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast-dependencies-1.json (in target 'NightCast' from project 'NightCast')
+
+SwiftCompile normal arm64 (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    
+
+SwiftDriverJobDiscovery normal arm64 Compiling AppModel.swift, NightCastApp.swift, Keys.swift, MoonKey.swift, Scenes.swift, Scrubber.swift, SleepExtras.swift, Theme.swift, ArtworkCache.swift, FeedDiskCache.swift, NowPlayingBridge.swift, PlaybackEngine.swift, ExploreView.swift, HomeView.swift, LibraryView.swift, NowPlayingView.swift, SearchView.swift, ShowView.swift, ThemesSheet.swift, GeneratedAssetSymbols.swift (in target 'NightCast' from project 'NightCast')
+
+SwiftDriver\ Compilation\ Requirements NightCast normal arm64 com.apple.xcode.tools.swift.compiler (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name NightCast -O -whole-module-optimization @/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.SwiftFileList -default-isolation\=MainActor -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -swift-version 6 -I /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -F /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/PackageFrameworks -F /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -emit-localized-strings -emit-localized-strings-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64 -c -num-threads 10 -Xcc -ivfsstatcache -Xcc /tmp/nc-measure/dd/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -sdk-module-cache-path /tmp/nc-measure/dd/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/nc-measure/dd/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-generated-files.hmap -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-own-target-headers.hmap -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast-6201f7d1ef5b4a36d8351db46d3b7df4-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast-project-headers.hmap -Xcc -I/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/include -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources-normal/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast-Swift.h -working-directory /tmp/nc-measure -no-emit-module-separately-wmo
+
+SwiftMergeGeneratedHeaders /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources/NightCast-Swift.h /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast-Swift.h (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-swiftHeaderTool -arch arm64 /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast-Swift.h -o /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/DerivedSources/NightCast-Swift.h
+
+Copy /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.swiftmodule/arm64-apple-ios-simulator.swiftmodule /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.swiftmodule (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.swiftmodule /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.swiftmodule/arm64-apple-ios-simulator.swiftmodule
+
+Copy /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.swiftmodule/arm64-apple-ios-simulator.abi.json /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.abi.json (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.abi.json /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.swiftmodule/arm64-apple-ios-simulator.abi.json
+
+Copy /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.swiftmodule/arm64-apple-ios-simulator.swiftdoc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.swiftdoc (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.swiftdoc /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.swiftmodule/arm64-apple-ios-simulator.swiftdoc
+
+Copy /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.swiftsourceinfo (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.swiftsourceinfo /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo
+
+Ld /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/NightCast normal (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios18.0-simulator -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/tmp/nc-measure/dd/Build/Intermediates.noindex/EagerLinkingTBDs/Release-iphonesimulator -L/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -F/tmp/nc-measure/dd/Build/Intermediates.noindex/EagerLinkingTBDs/Release-iphonesimulator -F/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/PackageFrameworks -F/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -filelist /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.LinkFileList -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @executable_path/Frameworks -Xlinker -dead_strip -Xlinker -object_path_lto -Xlinker /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast_lto.o -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -debug_variant -Xlinker -dependency_info -Xlinker /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast_dependency_info.dat -fobjc-link-runtime -fprofile-instr-generate -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.swiftmodule -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __entitlements -Xlinker /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.app-Simulated.xcent -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __ents_der -Xlinker /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.app-Simulated.xcent.der -Xlinker -no_adhoc_codesign -o /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/NightCast
+
+ProcessProductPackaging "" /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.xctest-Simulated.xcent (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    
+    Entitlements:
+    
+    {
+    "application-identifier" = "KTV2G3Z883.com.nightcast.ktv2g3z883.uitests.xctrunner";
+    "keychain-access-groups" =     (
+        "KTV2G3Z883.com.nightcast.ktv2g3z883.uitests.xctrunner"
+    );
+}
+    
+    builtin-productPackagingUtility -entitlements -format xml -o /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.xctest-Simulated.xcent
+
+ProcessProductPackagingDER /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.xctest-Simulated.xcent /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.xctest-Simulated.xcent.der (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    /usr/bin/derq query -f xml -i /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.xctest-Simulated.xcent -o /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.xctest-Simulated.xcent.der --raw
+
+SwiftDriver NightCastUITests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name NightCastUITests -O -whole-module-optimization @/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftFileList -module-alias Testing\=_Testing_Unavailable -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -swift-version 6 -I /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks -c -num-threads 10 -Xcc -ivfsstatcache -Xcc /tmp/nc-measure/dd/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -sdk-module-cache-path /tmp/nc-measure/dd/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/nc-measure/dd/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-generated-files.hmap -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-own-target-headers.hmap -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast-6201f7d1ef5b4a36d8351db46d3b7df4-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-project-headers.hmap -Xcc -I/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/include -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/DerivedSources/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-Swift.h -working-directory /tmp/nc-measure -no-emit-module-separately-wmo
+
+CopySwiftLibs /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/NightCast --scan-folder /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/Frameworks --scan-folder /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/PlugIns --scan-folder /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/SystemExtensions --scan-folder /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/Extensions --platform iphonesimulator --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
+
+ExtractAppIntentsMetadata (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name NightCast --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk --xcode-version 27A266a --platform-family iOS --deployment-target 18.0 --bundle-identifier com.nightcast.ktv2g3z883 --output /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app --target-triple arm64-apple-ios18.0-simulator --binary-file /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/NightCast --dependency-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast_dependency_info.dat --stringsdata-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.SwiftFileList --metadata-file-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.DependencyMetadataFileList --static-metadata-file-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.DependencyStaticMetadataFileList --swift-const-vals-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/Objects-normal/arm64/NightCast.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-10-17 22:15:06.868 appintentsmetadataprocessor[30466:17346482] Starting appintentsmetadataprocessor export
+2026-10-17 22:15:06.869 appintentsmetadataprocessor[30466:17346482] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+GenerateDSYMFile /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app.dSYM /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/NightCast (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    export PATH\=/Applications/Xcode.app/Contents/SharedFrameworks/SwiftBuild.framework/Versions/A/PlugIns/SWBBuildService.bundle/Contents/PlugIns/SWBUniversalPlatformPlugin.bundle/Contents/Frameworks/SWBUniversalPlatform.framework/Resources:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/local/bin:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/libexec:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/usr/bin:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/usr/local/bin:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/local/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/local/bin:/Users/harrison/.nvm/versions/node/v24.22.0/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/Users/harrison/.docker/bin:/Users/harrison/.nvm/versions/node/v23.8.0/bin
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/dsymutil /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/NightCast -o /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app.dSYM
+
+AppIntentsSSUTraining (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsnltrainingprocessor --infoplist-path /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/Info.plist --temp-dir-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/ssu --bundle-id com.nightcast.ktv2g3z883 --product-path /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app --extracted-metadata-path /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/Metadata.appintents --metadata-file-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast.build/NightCast.DependencyMetadataFileList --source-file /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app/Info.plist --archive-ssu-assets
+2026-10-17 22:15:06.894 appintentsnltrainingprocessor[30468:17346486] Parsing options for appintentsnltrainingprocessor
+2026-10-17 22:15:06.894 appintentsnltrainingprocessor[30468:17346486] Starting AppIntents SSU YAML Generation
+2026-10-17 22:15:06.896 appintentsnltrainingprocessor[30468:17346486] No AppShortcuts found - Skipping.
+
+SwiftDriver\ Compilation NightCastUITests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name NightCastUITests -O -whole-module-optimization @/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftFileList -module-alias Testing\=_Testing_Unavailable -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -swift-version 6 -I /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks -c -num-threads 10 -Xcc -ivfsstatcache -Xcc /tmp/nc-measure/dd/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -sdk-module-cache-path /tmp/nc-measure/dd/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/nc-measure/dd/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-generated-files.hmap -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-own-target-headers.hmap -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast-6201f7d1ef5b4a36d8351db46d3b7df4-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-project-headers.hmap -Xcc -I/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/include -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/DerivedSources/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-Swift.h -working-directory /tmp/nc-measure -no-emit-module-separately-wmo
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCUIAutomation-1W2RCYH47UMCEUWP0VLQB1JAJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCTest-CKV8FUKTSAR7RGKGA9WDSC498.pcm
+
+SwiftExplicitDependencyCompileModuleFromInterface arm64 /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCUIAutomation-3OFVLEZ9ABJ7M.swiftmodule
+
+CodeSign /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app
+
+RegisterExecutionPolicyException /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-RegisterExecutionPolicyException /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app
+
+Validate /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-validationUtility /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app -validate-for-store -shallow-bundle -infoplist-subpath Info.plist
+
+Touch /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app (in target 'NightCast' from project 'NightCast')
+    cd /tmp/nc-measure
+    /usr/bin/touch -c /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCast.app
+
+ProcessInfoPlistFile /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/Info.plist /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/empty-NightCastUITests.plist (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-infoPlistUtility /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/empty-NightCastUITests.plist -producttype com.apple.product-type.bundle.ui-testing -expandbuildsettings -format binary -platform iphonesimulator -additionalcontentfile /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/ProductTypeInfoPlistAdditions.plist -o /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/Info.plist
+
+SwiftExplicitDependencyCompileModuleFromInterface arm64 /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCTest-3QGEVQ4WS2Q0O.swiftmodule
+
+SwiftCompile normal arm64 Compiling\ CoreFlowUITests.swift,\ HomePagesUITests.swift,\ LiveNetworkUITests.swift,\ PreBuiltPerfTests.swift,\ SleepBubbleUITests.swift,\ SleepUITests.swift,\ V4UITests.swift /tmp/nc-measure/NightCastUITests/CoreFlowUITests.swift /tmp/nc-measure/NightCastUITests/HomePagesUITests.swift /tmp/nc-measure/NightCastUITests/LiveNetworkUITests.swift /tmp/nc-measure/NightCastUITests/PreBuiltPerfTests.swift /tmp/nc-measure/NightCastUITests/SleepBubbleUITests.swift /tmp/nc-measure/NightCastUITests/SleepUITests.swift /tmp/nc-measure/NightCastUITests/V4UITests.swift /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/System.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreLocation.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_Concurrency.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Accessibility.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreGraphics.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_Builtin_float.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/ImageIO.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/os.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreMotion.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/QuartzCore.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreImage.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Swift.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_DarwinFoundation2.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/simd.swiftmodule/arm64-apple-ios-simulator.swiftmodule /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCTest-3QGEVQ4WS2Q0O.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_DarwinFoundation3.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Spatial.swiftmodule/arm64-apple-ios-simulator.swiftmodule /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCUIAutomation-3OFVLEZ9ABJ7M.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/DeveloperToolsSupport.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Metal.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/XPC.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Observation.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Darwin.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreVideo.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreText.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/OSLog.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/UIKit.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Symbols.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Combine.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Foundation.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreFoundation.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_StringProcessing.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/CoreTransferable.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/_DarwinFoundation1.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/SwiftUICore.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/ObjectiveC.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/UniformTypeIdentifiers.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/DataDetection.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/Dispatch.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/27.0/FileProvider.swiftmodule/arm64-apple-ios-simulator.swiftmodule /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdatomic-9VMMIR0EB48KK20MTFSDOE9MX.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Dispatch-9M5VDXNTZGPGWF5B2GLVXR4PN.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ptrcheck-2CWM8KFHCWVHP53H8W1BKT2O7.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CFNetwork-4S7OU6UK3F0G0ENOM9XFHQMH3.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdint-E1DMCPOKKJP99L23CPM3CYYZE.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ptrauth-9HZV0HWJW3L4CFPQ0TO23BRGG.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/string_h-A46S42V3K6QSFYZ4BYUDZIJNI.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ImageIO-CQAVH5C002DBMELPNWFWUME7R.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/SwiftUICore-23E5CE5SGCTDQ60BS4TLQQ2K7.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreVideo-ALEMY1ZZLHTCVD6VLZX19U1G4.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/ObjectiveC-EM02UC45J32E98JNIIA5O1701.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/os_object-XULTG7B9M5AFPXKMBJRQXEXM.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreGraphics-7WX28LLG0E1FNV52G4NW0YAVY.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreFoundation-4B53NVJJ9DEP0XOY5GHDRZC1P.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/UIKit-4MC2NGXK5H6TBSLFEZE0XZ4DP.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/OSLog-7UAQZKHO5QMM15R0K0DEQC1LE.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/DeveloperToolsSupport-7W2RZHPI64BHZJC8NJGKMYX98.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_tgmath-4XVUXF8AFMN9NORWF72R569R9.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_LocationEssentials-ANOHGT9IM9RURVZ0GOEP20ENT.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdarg-AA8ESVZOBWFHKDC7YYWF2QYJ2.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/UIUtilities-45D65A6IY8BDW9TEV0NC1LLG1.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/MachO-3NYWM605HR5ZWE3ZESOBD6VP1.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/OpenGLES-5JGDMJQUQMJK950QLM003Y7X1.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/UserNotifications-B9KLTJJPTME7HLMXRNMNKYL07.pcm /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCUIAutomation-1W2RCYH47UMCEUWP0VLQB1JAJ.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/os-DWYUH7ODGOBNJ3XTT11O1INKL.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_DarwinFoundation3-8RX29QSU6JIFSB4BK4GOT510.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_float-AQYH4OS35N98A9LFXEXKB55KD.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_DarwinFoundation1-BU87T7TVAUBSWMIONK37Y92V4.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/DataDetection-1MSXDHSERZZVCUQR5DKT8YPNT.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Metal-E1OPQ81EDO2QOYBPN299MN89I.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Symbols-AN5MOZOHK409EA0TH8A8CH6YB.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/FileProvider-5NHGTNZGTL9PZRJHTYM48YK99.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/XPC-36DLC3T9QOS7UVSUBEOSY1GCB.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Spatial-814A3JR3D2VWBNTDUJKSSPACN.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_DarwinFoundation2-97Y4YOV4X9H0VUOG731KAHQV6.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/SwiftShims-6QG0EMN0BX92O1QQVWVI1QN25.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/UniformTypeIdentifiers-3E6FKWPN96HML9KGS5FQHSZ8G.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreLocation-556R5YISERYX4GJACZQOCUTL0.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/IOSurface-7AXSJCXRL5Q48LHWPM3DYY25.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreImage-EQ3YG9NBD27TAMPNTRSGWJYKH.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/sys_types-DPQT7G1F6S9VTKKYU6D3CCZDE.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreTransferable-5BRZD39KI9QPJJR8C5K0HO96C.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/os_workgroup-66L18Q6T0M60ADFILPA4B121Y.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/QuartzCore-3A2MSAC7FEOI9W2U1Q3YMC2CJ.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_inttypes-EQVS2126QBXKWE6H8F4Q1226O.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Security-DDN1Y700N8V9GK1VJFOBEDV5.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Darwin-AT63T5T8SK7DYW19LEN5ZEACW.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Foundation-EC6ZC686IAHN64ZSOX2RCS02.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stddef-93U2KO0B2D5QHF3KK8BNJL0XZ.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_intrinsics-67WLYTAVHDTSB1K02GGDCC0A.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_AvailabilityInternal-9IQH1RSHSLILW5J8S3JL9DOOP.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/simd-EBG15OHC3BTIS12JK5O2RQ4N8.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreMotion-3OBDD87LKD6E2F1KKCTL8SXMZ.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_limits-5CQ2DONVCN7C0L6MKCUEXKUN9.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_Builtin_stdbool-4BRAB3U0J7NKHYOQU3D0F0YLJ.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/CoreText-D2A7S3DUXN0OAU1M4HPZZ520J.pcm /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules/XCTest-CKV8FUKTSAR7RGKGA9WDSC498.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/Accessibility-3LYS2PKIXEHWPL4WYVF86KKMF.pcm /tmp/nc-measure/dd/SDKExplicitPrecompiledModules/_SwiftConcurrencyShims-2XVG7A6P3G7BCGSMJQO7GV6KA.pcm /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-dependencies-1.json (in target 'NightCastUITests' from project 'NightCast')
+
+SwiftCompile normal arm64 (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    
+
+/tmp/nc-measure/NightCastUITests/PreBuiltPerfTests.swift:5:19: warning: call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]
+ 2 | 
+ 3 | final class PreBuiltPerfTests: XCTestCase {
+ 4 |     func testColdLaunch() {
+   |          `- note: add '@MainActor' to make instance method 'testColdLaunch()' part of global actor 'MainActor'
+ 5 |         let app = XCUIApplication()
+   |                   `- warning: call to main actor-isolated initializer 'init()' in a synchronous nonisolated context [#ActorIsolatedCall]
+ 6 |         app.launchArguments = ["-uitest", "-resetStore", "-theme", "ink"]
+ 7 |         let opts = XCTMeasureOptions()
+
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCUIAutomation.framework/Headers/XCUIApplication.h:29:1: note: calls to initializer 'init()' from outside of its actor context are implicitly asynchronous
+ 27 |  * Returns a proxy for the application specified by the "Target Application" target setting.
+ 28 |  */
+ 29 | - (instancetype)init NS_DESIGNATED_INITIALIZER;
+    | `- note: calls to initializer 'init()' from outside of its actor context are implicitly asynchronous
+ 30 | + (instancetype)new;
+ 31 | 
+
+/tmp/nc-measure/NightCastUITests/PreBuiltPerfTests.swift:6:13: warning: main actor-isolated property 'launchArguments' can not be mutated from a nonisolated context
+ 2 | 
+ 3 | final class PreBuiltPerfTests: XCTestCase {
+ 4 |     func testColdLaunch() {
+   |          `- note: add '@MainActor' to make instance method 'testColdLaunch()' part of global actor 'MainActor'
+ 5 |         let app = XCUIApplication()
+ 6 |         app.launchArguments = ["-uitest", "-resetStore", "-theme", "ink"]
+   |             `- warning: main actor-isolated property 'launchArguments' can not be mutated from a nonisolated context
+ 7 |         let opts = XCTMeasureOptions()
+ 8 |         opts.iterationCount = 5
+
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCUIAutomation.framework/Headers/XCUIApplication.h:93:51: note: mutation of this property is only permitted within the actor
+ 91 |  * is launched.
+ 92 |  */
+ 93 | @property (nonatomic, copy) NSArray <NSString *> *launchArguments;
+    |                                                   `- note: mutation of this property is only permitted within the actor
+ 94 | 
+ 95 | /*!
+
+/tmp/nc-measure/NightCastUITests/PreBuiltPerfTests.swift:10:17: warning: call to main actor-isolated instance method 'launch()' in a synchronous nonisolated context [#ActorIsolatedCall]
+ 8 |         opts.iterationCount = 5
+ 9 |         measure(metrics: [XCTApplicationLaunchMetric(), XCTMemoryMetric(application: app), XCTCPUMetric(application: app)], options: opts) {
+10 |             app.launch()
+   |                 `- warning: call to main actor-isolated instance method 'launch()' in a synchronous nonisolated context [#ActorIsolatedCall]
+11 |         }
+12 |     }
+
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCUIAutomation.framework/Headers/XCUIApplication.h:54:1: note: calls to instance method 'launch()' from outside of its actor context are implicitly asynchronous
+ 52 |  * at that point.
+ 53 | */
+ 54 | - (void)launch;
+    | `- note: calls to instance method 'launch()' from outside of its actor context are implicitly asynchronous
+ 55 | 
+ 56 | /*!
+
+[#ActorIsolatedCall]: <https://docs.swift.org/compiler/documentation/diagnostics/actor-isolated-call>
+SwiftDriverJobDiscovery normal arm64 Compiling CoreFlowUITests.swift, HomePagesUITests.swift, LiveNetworkUITests.swift, PreBuiltPerfTests.swift, SleepBubbleUITests.swift, SleepUITests.swift, V4UITests.swift (in target 'NightCastUITests' from project 'NightCast')
+
+SwiftDriver\ Compilation\ Requirements NightCastUITests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name NightCastUITests -O -whole-module-optimization @/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftFileList -module-alias Testing\=_Testing_Unavailable -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -swift-version 6 -I /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks -c -num-threads 10 -Xcc -ivfsstatcache -Xcc /tmp/nc-measure/dd/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/nc-measure/dd/ModuleCache.noindex -sdk-module-cache-path /tmp/nc-measure/dd/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/nc-measure/dd/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-generated-files.hmap -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-own-target-headers.hmap -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCast-6201f7d1ef5b4a36d8351db46d3b7df4-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests-project-headers.hmap -Xcc -I/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/include -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/DerivedSources/arm64 -Xcc -I/tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/DerivedSources -emit-objc-header -emit-objc-header-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-Swift.h -working-directory /tmp/nc-measure -no-emit-module-separately-wmo
+
+SwiftMergeGeneratedHeaders /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/DerivedSources/NightCastUITests-Swift.h /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-Swift.h (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-swiftHeaderTool -arch arm64 /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests-Swift.h -o /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/DerivedSources/NightCastUITests-Swift.h
+
+Copy /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests.swiftmodule/arm64-apple-ios-simulator.abi.json /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.abi.json (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.abi.json /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests.swiftmodule/arm64-apple-ios-simulator.abi.json
+
+Copy /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests.swiftmodule/arm64-apple-ios-simulator.swiftmodule /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftmodule (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftmodule /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests.swiftmodule/arm64-apple-ios-simulator.swiftmodule
+
+Copy /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests.swiftmodule/arm64-apple-ios-simulator.swiftdoc /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftdoc (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftdoc /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests.swiftmodule/arm64-apple-ios-simulator.swiftdoc
+
+Copy /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftsourceinfo (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftsourceinfo /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo
+
+Ld /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/NightCastUITests normal (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios18.0-simulator -bundle -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -Os -Xlinker -no_warn_duplicate_libraries -L/tmp/nc-measure/dd/Build/Intermediates.noindex/EagerLinkingTBDs/Release-iphonesimulator -L/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -L/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F/tmp/nc-measure/dd/Build/Intermediates.noindex/EagerLinkingTBDs/Release-iphonesimulator -F/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator -iframework /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -iframework /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks -filelist /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.LinkFileList -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @loader_path/Frameworks -Xlinker -dead_strip -Xlinker -object_path_lto -Xlinker /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests_lto.o -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -debug_variant -Xlinker -dependency_info -Xlinker /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests_dependency_info.dat -fobjc-link-runtime -fprofile-instr-generate -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.swiftmodule -Xlinker -needed_framework -Xlinker XCTest -framework XCTest -Xlinker -needed-lXCTestSwiftSupport -lXCTestSwiftSupport -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __entitlements -Xlinker /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.xctest-Simulated.xcent -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __ents_der -Xlinker /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.xctest-Simulated.xcent.der -Xlinker -no_adhoc_codesign -o /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/NightCastUITests
+
+CopySwiftLibs /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/NightCastUITests --scan-folder /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/Frameworks --scan-folder /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/PlugIns --scan-folder /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/SystemExtensions --scan-folder /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/Extensions --platform iphonesimulator --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/Frameworks --strip-bitcode --scan-executable /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
+
+ExtractAppIntentsMetadata (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name NightCastUITests --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk --xcode-version 27A266a --platform-family iOS --deployment-target 18.0 --bundle-identifier com.nightcast.ktv2g3z883.uitests --output /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest --target-triple arm64-apple-ios18.0-simulator --binary-file /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/NightCastUITests --dependency-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests_dependency_info.dat --stringsdata-file /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftFileList --metadata-file-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.DependencyMetadataFileList --static-metadata-file-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.DependencyStaticMetadataFileList --swift-const-vals-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/Objects-normal/arm64/NightCastUITests.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-10-17 22:15:08.006 appintentsmetadataprocessor[30480:17346575] Starting appintentsmetadataprocessor export
+2026-10-17 22:15:08.007 appintentsmetadataprocessor[30480:17346575] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+GenerateDSYMFile /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest.dSYM /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/NightCastUITests (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    export PATH\=/Applications/Xcode.app/Contents/SharedFrameworks/SwiftBuild.framework/Versions/A/PlugIns/SWBBuildService.bundle/Contents/PlugIns/SWBUniversalPlatformPlugin.bundle/Contents/Frameworks/SWBUniversalPlatform.framework/Resources:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/local/bin:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/libexec:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/usr/bin:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/usr/local/bin:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/local/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/local/bin:/Users/harrison/.nvm/versions/node/v24.22.0/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/Users/harrison/.docker/bin:/Users/harrison/.nvm/versions/node/v23.8.0/bin
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/dsymutil /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/NightCastUITests -o /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest.dSYM
+
+AppIntentsSSUTraining (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsnltrainingprocessor --infoplist-path /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/Info.plist --temp-dir-path /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/ssu --bundle-id com.nightcast.ktv2g3z883.uitests --product-path /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest --extracted-metadata-path /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/Metadata.appintents --metadata-file-list /tmp/nc-measure/dd/Build/Intermediates.noindex/NightCast.build/Release-iphonesimulator/NightCastUITests.build/NightCastUITests.DependencyMetadataFileList --source-file /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/Info.plist --archive-ssu-assets
+2026-10-17 22:15:08.024 appintentsnltrainingprocessor[30481:17346578] Parsing options for appintentsnltrainingprocessor
+2026-10-17 22:15:08.025 appintentsnltrainingprocessor[30481:17346578] Starting AppIntents SSU YAML Generation
+2026-10-17 22:15:08.025 appintentsnltrainingprocessor[30481:17346578] No AppShortcuts found - Skipping.
+
+CopyPlistFile /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/Info.plist /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Xcode/Agents/XCTRunner.app/Info.plist (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-copyPlist --validate --convert xml1 --macro-expansion WRAPPEDPRODUCTNAME NightCastUITests-Runner --macro-expansion WRAPPEDPRODUCTBUNDLEIDENTIFIER com.nightcast.ktv2g3z883.uitests.xctrunner --macro-expansion TESTPRODUCTNAME NightCastUITests --macro-expansion TESTPRODUCTBUNDLEIDENTIFIER com.nightcast.ktv2g3z883.uitests --copy-value UIDeviceFamily /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest/Info.plist --outdir /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app -- /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Xcode/Agents/XCTRunner.app/Info.plist
+
+Copy /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PkgInfo /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Xcode/Agents/XCTRunner.app/PkgInfo (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Xcode/Agents/XCTRunner.app/PkgInfo /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app
+
+CopyAndPreserveArchs /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/NightCastUITests-Runner (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Xcode/Agents/XCTRunner.app/XCTRunner -output /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/NightCastUITests-Runner -extract arm64
+
+MkDir /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    /bin/mkdir -p /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app
+
+CodeSign /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest
+
+CodeSign /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app
+/tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app: replacing existing signature
+
+RegisterExecutionPolicyException /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    builtin-RegisterExecutionPolicyException /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest
+
+Touch /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest (in target 'NightCastUITests' from project 'NightCast')
+    cd /tmp/nc-measure
+    /usr/bin/touch -c /tmp/nc-measure/dd/Build/Products/Release-iphonesimulator/NightCastUITests-Runner.app/PlugIns/NightCastUITests.xctest
+
+PruneExplicitPrecompiledModules /tmp/nc-measure/dd/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/nc-measure/dd/SDKExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/nc-measure/dd/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+2026-10-17 22:15:09.576572-0600 NightCastUITests-Runner[30488:17346836] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-10-17 22:15:11.553.
+Test Suite 'NightCastUITests.xctest' started at 2026-10-17 22:15:11.554.
+Test Suite 'PreBuiltPerfTests' started at 2026-10-17 22:15:11.554.
+Test Case '-[NightCastUITests.PreBuiltPerfTests testColdLaunch]' started.
+    t =     0.00s Start Test at 2026-10-17 22:15:11.555
+    t =     0.17s Set Up
+objc[30488]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.6xw3Fu/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x106634398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.6xw3Fu/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x10a49c310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     0.33s Open com.nightcast.ktv2g3z883
+    t =     0.33s     Launch com.nightcast.ktv2g3z883
+2026-10-17 22:15:12.056 xcodebuild[30260:17345252] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-17 22:15:12.056 xcodebuild[30260:17345252] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     0.92s         Setting up automation session
+    t =     2.72s         Wait for com.nightcast.ktv2g3z883 to idle
+    t =     5.06s Open com.nightcast.ktv2g3z883
+    t =     5.06s     Launch com.nightcast.ktv2g3z883
+    t =     5.06s         Terminate com.nightcast.ktv2g3z883:30508
+2026-10-17 22:15:17.665 xcodebuild[30260:17345252] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-17 22:15:17.665 xcodebuild[30260:17345252] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     6.32s         Setting up automation session
+    t =     7.87s         Wait for com.nightcast.ktv2g3z883 to idle
+    t =     9.92s Open com.nightcast.ktv2g3z883
+    t =     9.93s     Launch com.nightcast.ktv2g3z883
+    t =     9.93s         Terminate com.nightcast.ktv2g3z883:30532
+2026-10-17 22:15:22.530 xcodebuild[30260:17345252] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-17 22:15:22.531 xcodebuild[30260:17345252] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =    11.18s         Setting up automation session
+    t =    12.69s         Wait for com.nightcast.ktv2g3z883 to idle
+    t =    14.76s Open com.nightcast.ktv2g3z883
+    t =    14.76s     Launch com.nightcast.ktv2g3z883
+    t =    14.76s         Terminate com.nightcast.ktv2g3z883:30544
+2026-10-17 22:15:27.364 xcodebuild[30260:17345252] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-17 22:15:27.364 xcodebuild[30260:17345252] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =    16.02s         Setting up automation session
+    t =    17.58s         Wait for com.nightcast.ktv2g3z883 to idle
+    t =    19.63s Open com.nightcast.ktv2g3z883
+    t =    19.63s     Launch com.nightcast.ktv2g3z883
+    t =    19.63s         Terminate com.nightcast.ktv2g3z883:30577
+2026-10-17 22:15:32.237 xcodebuild[30260:17345252] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-17 22:15:32.237 xcodebuild[30260:17345252] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =    20.89s         Setting up automation session
+    t =    22.46s         Wait for com.nightcast.ktv2g3z883 to idle
+    t =    24.55s Open com.nightcast.ktv2g3z883
+    t =    24.55s     Launch com.nightcast.ktv2g3z883
+    t =    24.55s         Terminate com.nightcast.ktv2g3z883:30591
+2026-10-17 22:15:37.150 xcodebuild[30260:17345252] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-17 22:15:37.150 xcodebuild[30260:17345252] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =    25.81s         Setting up automation session
+    t =    27.50s         Wait for com.nightcast.ktv2g3z883 to idle
+/tmp/nc-measure/NightCastUITests/PreBuiltPerfTests.swift:9: Test Case '-[NightCastUITests.PreBuiltPerfTests testColdLaunch]' measured [CPU Instructions Retired (ktv2g3z883), kI] average: 46961555.770, relative standard deviation: 0.231%, values: [47080050.782000, 46790815.661000, 46929897.003000, 47078030.445000, 46928984.958000], performanceMetricID:com.apple.dt.XCTMetric_CPU-com.nightcast.ktv2g3z883.instructions_retired, baselineName: "", baselineAverage: , polarity: prefers smaller, maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.000, maxStandardDeviation: 0.000
+/tmp/nc-measure/NightCastUITests/PreBuiltPerfTests.swift:9: Test Case '-[NightCastUITests.PreBuiltPerfTests testColdLaunch]' measured [Memory Peak Physical (ktv2g3z883), kB] average: 34549.779, relative standard deviation: 0.228%, values: [34671.040000, 34539.920000, 34539.968000, 34572.712000, 34425.256000], performanceMetricID:com.apple.dt.XCTMetric_Memory-com.nightcast.ktv2g3z883.physical_peak, baselineName: "", baselineAverage: , polarity: prefers smaller, maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.000, maxStandardDeviation: 0.000
+/tmp/nc-measure/NightCastUITests/PreBuiltPerfTests.swift:9: Test Case '-[NightCastUITests.PreBuiltPerfTests testColdLaunch]' measured [Duration (AppLaunch), s] average: 2.012, relative standard deviation: 3.263%, values: [1.970009, 1.940481, 1.996703, 2.018414, 2.131974], performanceMetricID:com.apple.dt.XCTMetric_ApplicationLaunch-AppLaunch.duration, baselineName: "", baselineAverage: , polarity: prefers smaller, maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.000, maxStandardDeviation: 0.000
+/tmp/nc-measure/NightCastUITests/PreBuiltPerfTests.swift:9: Test Case '-[NightCastUITests.PreBuiltPerfTests testColdLaunch]' measured [CPU Time (ktv2g3z883), s] average: 3.137, relative standard deviation: 4.402%, values: [3.319436, 2.953850, 3.042582, 3.271094, 3.096992], performanceMetricID:com.apple.dt.XCTMetric_CPU-com.nightcast.ktv2g3z883.time, baselineName: "", baselineAverage: , polarity: prefers smaller, maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.000, maxStandardDeviation: 0.000
+/tmp/nc-measure/NightCastUITests/PreBuiltPerfTests.swift:9: Test Case '-[NightCastUITests.PreBuiltPerfTests testColdLaunch]' measured [Memory Physical (ktv2g3z883), kB] average: 33619.168, relative standard deviation: 0.234%, values: [33737.152000, 33606.032000, 33622.464000, 33638.824000, 33491.368000], performanceMetricID:com.apple.dt.XCTMetric_Memory-com.nightcast.ktv2g3z883.physical, baselineName: "", baselineAverage: , polarity: prefers smaller, maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.000, maxStandardDeviation: 0.000
+/tmp/nc-measure/NightCastUITests/PreBuiltPerfTests.swift:9: Test Case '-[NightCastUITests.PreBuiltPerfTests testColdLaunch]' measured [CPU Cycles (ktv2g3z883), kC] average: 13126275.358, relative standard deviation: 3.518%, values: [13709860.807000, 12472849.979000, 12864565.951000, 13587985.751000, 12996114.302000], performanceMetricID:com.apple.dt.XCTMetric_CPU-com.nightcast.ktv2g3z883.cycles, baselineName: "", baselineAverage: , polarity: prefers smaller, maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.000, maxStandardDeviation: 0.000
+/tmp/nc-measure/NightCastUITests/PreBuiltPerfTests.swift:9: Test Case '-[NightCastUITests.PreBuiltPerfTests testColdLaunch]' measured [Absolute Memory Physical (ktv2g3z883), kB] average: 33619.168, relative standard deviation: 0.234%, values: [33737.152000, 33606.032000, 33622.464000, 33638.824000, 33491.368000], performanceMetricID:com.apple.dt.XCTMetric_Memory-com.nightcast.ktv2g3z883.physical_absolute, baselineName: "", baselineAverage: , polarity: prefers smaller, maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.000, maxStandardDeviation: 0.000
+    t =    29.74s Tear Down
+Test Case '-[NightCastUITests.PreBuiltPerfTests testColdLaunch]' passed (30.020 seconds).
+Test Suite 'PreBuiltPerfTests' passed at 2026-10-17 22:15:41.576.
+	 Executed 1 test, with 0 failures (0 unexpected) in 30.020 (30.022) seconds
+Test Suite 'NightCastUITests.xctest' passed at 2026-10-17 22:15:41.576.
+	 Executed 1 test, with 0 failures (0 unexpected) in 30.020 (30.022) seconds
+Test Suite 'Selected tests' passed at 2026-10-17 22:15:41.577.
+	 Executed 1 test, with 0 failures (0 unexpected) in 30.020 (30.023) seconds
+2026-10-17 22:15:41.902 xcodebuild[30260:17345252] [MT] IDETestOperationsObserverDebug: 33.831 elapsed -- Testing started completed.
+2026-10-17 22:15:41.902 xcodebuild[30260:17345252] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-17 22:15:41.902 xcodebuild[30260:17345252] [MT] IDETestOperationsObserverDebug: 33.831 sec, +33.831 sec -- end
+
+Test session results, code coverage, and logs:
+	/tmp/nc-measure/dd/Logs/Test/Test-NightCast-2026.10.17_22-14-54--0600.xcresult
+
+** TEST SUCCEEDED **
+
+Testing started

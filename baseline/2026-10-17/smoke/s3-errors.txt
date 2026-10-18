@@ -1,0 +1,39 @@
+Timestamp               Ty Process[PID:TID]
+2026-10-17 22:13:17.664 E  NightCast[29695:1088d83] (libCoreFSCache.dylib) fopen failed for data file: errno = 2 (No such file or directory)
+2026-10-17 22:13:17.853 E  NightCast[29695:1088d83] (libCoreFSCache.dylib) fopen failed for data file: errno = 2 (No such file or directory)
+2026-10-17 22:13:17.920 E  NightCast[29695:1088d83] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:13:17.928 E  NightCast[29695:1088d83] [com.apple.BoardServices:XPCErrors] non-launching port is incompatible with service identifier "com.apple.PointerUI.pointeruid.default-service"
+2026-10-17 22:13:17.929 E  NightCast[29695:1088d83] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:15:14.660 E  NightCast[30508:108b283] [com.apple.BoardServices:XPCErrors] non-launching port is incompatible with service identifier "com.apple.PointerUI.pointeruid.default-service"
+2026-10-17 22:15:14.677 E  NightCast[30508:108b283] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:15:14.693 E  NightCast[30508:108b283] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:15:19.652 E  NightCast[30532:108b3b1] [com.apple.app_launch_measurement:General] Failed to send CA Event for app launch measurements for ca_event_type: 0 event_name: com.apple.app_launch_measurement.FirstFramePresentationMetric
+2026-10-17 22:15:19.679 E  NightCast[30532:108b39c] [com.apple.BoardServices:XPCErrors] non-launching port is incompatible with service identifier "com.apple.PointerUI.pointeruid.default-service"
+2026-10-17 22:15:19.699 E  NightCast[30532:108b39c] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:15:19.718 E  NightCast[30532:108b39c] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:15:19.871 E  NightCast[30532:108b3b0] [com.apple.app_launch_measurement:General] Failed to send CA Event for app launch measurements for ca_event_type: 1 event_name: com.apple.app_launch_measurement.ExtendedLaunchMetrics
+2026-10-17 22:15:24.481 E  NightCast[30544:108b58c] [com.apple.app_launch_measurement:General] Failed to send CA Event for app launch measurements for ca_event_type: 0 event_name: com.apple.app_launch_measurement.FirstFramePresentationMetric
+2026-10-17 22:15:24.507 E  NightCast[30544:108b520] [com.apple.BoardServices:XPCErrors] non-launching port is incompatible with service identifier "com.apple.PointerUI.pointeruid.default-service"
+2026-10-17 22:15:24.525 E  NightCast[30544:108b520] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:15:24.545 E  NightCast[30544:108b520] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:15:24.722 E  NightCast[30544:108b55a] [com.apple.app_launch_measurement:General] Failed to send CA Event for app launch measurements for ca_event_type: 1 event_name: com.apple.app_launch_measurement.ExtendedLaunchMetrics
+2026-10-17 22:15:29.368 E  NightCast[30577:108b660] [com.apple.app_launch_measurement:General] Failed to send CA Event for app launch measurements for ca_event_type: 0 event_name: com.apple.app_launch_measurement.FirstFramePresentationMetric
+2026-10-17 22:15:29.396 E  NightCast[30577:108b64b] [com.apple.BoardServices:XPCErrors] non-launching port is incompatible with service identifier "com.apple.PointerUI.pointeruid.default-service"
+2026-10-17 22:15:29.413 E  NightCast[30577:108b64b] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:15:29.430 E  NightCast[30577:108b64b] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:15:29.587 E  NightCast[30577:108b661] [com.apple.app_launch_measurement:General] Failed to send CA Event for app launch measurements for ca_event_type: 1 event_name: com.apple.app_launch_measurement.ExtendedLaunchMetrics
+2026-10-17 22:15:34.298 E  NightCast[30591:108b7b9] [com.apple.BoardServices:XPCErrors] non-launching port is incompatible with service identifier "com.apple.PointerUI.pointeruid.default-service"
+2026-10-17 22:15:34.318 E  NightCast[30591:108b7b9] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:15:34.340 E  NightCast[30591:108b7b9] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:15:39.317 E  NightCast[30620:108b8ab] [com.apple.BoardServices:XPCErrors] non-launching port is incompatible with service identifier "com.apple.PointerUI.pointeruid.default-service"
+2026-10-17 22:15:39.334 E  NightCast[30620:108b8ab] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:15:39.353 E  NightCast[30620:108b8ab] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:15:56.413 E  NightCast[30749:108bcce] [com.apple.BoardServices:XPCErrors] non-launching port is incompatible with service identifier "com.apple.PointerUI.pointeruid.default-service"
+2026-10-17 22:15:56.414 E  NightCast[30749:108bcce] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:15:56.414 E  NightCast[30749:108bcce] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:16:06.054 E  NightCast[30821:108c179] [com.apple.BoardServices:XPCErrors] non-launching port is incompatible with service identifier "com.apple.PointerUI.pointeruid.default-service"
+2026-10-17 22:16:06.056 E  NightCast[30821:108c179] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:16:06.056 E  NightCast[30821:108c179] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:16:10.981 E  NightCast[30872:108c2f5] [com.apple.BoardServices:XPCErrors] non-launching port is incompatible with service identifier "com.apple.PointerUI.pointeruid.default-service"
+2026-10-17 22:16:10.983 E  NightCast[30872:108c2f5] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-10-17 22:16:10.983 E  NightCast[30872:108c2f5] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping

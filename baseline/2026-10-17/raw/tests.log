@@ -1,0 +1,34 @@
+== Core (swift test)
+◇ Test run started.
+✔ Test run with 90 tests in 16 suites passed after 0.042 seconds.
+== Build Debug
+** BUILD SUCCEEDED **
+== Build Release
+** BUILD SUCCEEDED **
+== UI tests (fixture mode)
+	 Executed 19 tests, with 0 failures (0 unexpected) in 487.974 (487.997) seconds
+	 Executed 19 tests, with 0 failures (0 unexpected) in 487.974 (487.998) seconds
+	 Executed 2 tests, with 0 failures (0 unexpected) in 24.487 (24.489) seconds
+	 Executed 3 tests, with 0 failures (0 unexpected) in 173.237 (173.240) seconds
+	 Executed 3 tests, with 0 failures (0 unexpected) in 96.526 (96.529) seconds
+	 Executed 5 tests, with 0 failures (0 unexpected) in 73.140 (73.146) seconds
+	 Executed 6 tests, with 0 failures (0 unexpected) in 120.584 (120.589) seconds
+Test Case '-[NightCastUITests.CoreFlowUITests testEmptyLibraryOffersOneAction]' passed (5.992 seconds).
+Test Case '-[NightCastUITests.CoreFlowUITests testPositionSurvivesRelaunch]' passed (20.621 seconds).
+Test Case '-[NightCastUITests.CoreFlowUITests testSearchEmptyAndErrorStatesWithRetry]' passed (13.347 seconds).
+Test Case '-[NightCastUITests.CoreFlowUITests testSubscribePersistsAcrossRelaunch]' passed (16.716 seconds).
+Test Case '-[NightCastUITests.CoreFlowUITests testSubscribePlayAndSleepFlow]' passed (16.464 seconds).
+Test Case '-[NightCastUITests.HomePagesUITests testMiniPlayerStaysOnEveryScreenOncePlaying]' passed (19.032 seconds).
+Test Case '-[NightCastUITests.HomePagesUITests testPagesAppearAfterSubscribeAndSwipeBothWays]' passed (16.966 seconds).
+Test Case '-[NightCastUITests.HomePagesUITests testUnsubscribeFromLibraryContextMenu]' passed (137.240 seconds).
+Test Case '-[NightCastUITests.SleepBubbleUITests testBubbleAddsAndRemovesFiveMinutes]' passed (13.942 seconds).
+Test Case '-[NightCastUITests.SleepBubbleUITests testEpisodesGroupedByYearWithOrderToggle]' passed (10.545 seconds).
+Test Case '-[NightCastUITests.SleepUITests testCancelMidFadeRestoresVolume]' passed (26.075 seconds).
+Test Case '-[NightCastUITests.SleepUITests testFullFadeDrivesPlayerVolumeThenPauses]' passed (46.436 seconds).
+Test Case '-[NightCastUITests.SleepUITests testPauseFreezesCountdown]' passed (24.016 seconds).
+Test Case '-[NightCastUITests.V4UITests testExploreSearchInterestsAndCategories]' passed (16.782 seconds).
+Test Case '-[NightCastUITests.V4UITests testLibraryLayoutsAndReorder]' passed (32.899 seconds).
+Test Case '-[NightCastUITests.V4UITests testLibrarySearchFiltersShowsAndFindsNewOnes]' passed (24.359 seconds).
+Test Case '-[NightCastUITests.V4UITests testMiniPlayerAlwaysStaysOnScreen]' passed (15.374 seconds).
+Test Case '-[NightCastUITests.V4UITests testSleepBubbleCollapsesAndReopens]' passed (17.190 seconds).
+Test Case '-[NightCastUITests.V4UITests testSwipeDownClosesNowPlaying]' passed (13.980 seconds).

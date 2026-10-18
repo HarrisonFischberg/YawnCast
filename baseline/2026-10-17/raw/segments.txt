@@ -1,0 +1,124 @@
+build/DerivedData/Build/Products/Release-iphonesimulator/NightCast.app/NightCast (for architecture x86_64):
+Segment __PAGEZERO: 4294967296 (zero fill) 
+Segment __TEXT: 1347584
+	Section __text: 1120290
+	Section __stubs: 5178
+	Section __init_offsets: 4
+	Section __const: 36960
+	Section __constg_swiftt: 7872
+	Section __swift5_typeref: 112294
+	Section __objc_classname: 485
+	Section __objc_methname: 4740
+	Section __swift5_reflstr: 3959
+	Section __swift5_fieldmd: 8364
+	Section __swift5_assocty: 1656
+	Section __cstring: 9232
+	Section __swift5_capture: 3368
+	Section __swift5_builtin: 180
+	Section __swift5_proto: 856
+	Section __swift5_types: 552
+	Section __swift_as_entry: 232
+	Section __swift_as_ret: 232
+	Section __swift_as_cont: 572
+	Section __swift5_entry: 8
+	Section __oslogstring: 133
+	Section __objc_methtype: 883
+	Section __swift5_mpenum: 40
+	Section __swift5_protos: 20
+	Section __entitlements: 277
+	Section __ents_der: 70
+	Section __unwind_info: 11312
+	Section __eh_frame: 9232
+	total 1339001
+Segment __DATA_CONST: 32768
+	Section __const: 18456
+	Section __objc_classlist: 80
+	Section __objc_protolist: 32
+	Section __objc_imageinfo: 8
+	Section __objc_protorefs: 16
+	Section __got: 12448
+	total 31040
+Segment __DATA: 180224
+	Section __objc_const: 5280
+	Section __objc_selrefs: 576
+	Section __objc_data: 936
+	Section __data: 25060
+	Section __llvm_prf_cnts: 12576
+	Section __llvm_prf_data: 59456
+	Section __llvm_prf_names: 30545
+	Section __llvm_prf_bits: 0
+	Section __llvm_prf_vnds: 0
+	Section __llvm_prf_vns: 0
+	Section __llvm_prf_vtab: 0
+	Section __common: 608 (zerofill)
+	Section __bss: 36936 (zerofill)
+	total 171973
+Segment __LLVM_COV: 49152
+	Section __llvm_covfun: 45414
+	Section __llvm_covmap: 3408
+	total 48822
+Segment __LINKEDIT: 3391488
+total 4299968512
+build/DerivedData/Build/Products/Release-iphonesimulator/NightCast.app/NightCast (for architecture arm64):
+Segment __PAGEZERO: 4294967296 (zero fill) 
+Segment __TEXT: 1327104
+	Section __text: 1080336
+	Section __stubs: 10968
+	Section __objc_stubs: 2272
+	Section __init_offsets: 4
+	Section __objc_methlist: 592
+	Section __const: 34968
+	Section __constg_swiftt: 7872
+	Section __swift5_typeref: 112294
+	Section __objc_classname: 485
+	Section __objc_methname: 4453
+	Section __swift5_reflstr: 3959
+	Section __swift5_fieldmd: 8364
+	Section __swift5_assocty: 1656
+	Section __cstring: 9216
+	Section __swift5_capture: 3368
+	Section __swift5_builtin: 180
+	Section __swift5_proto: 856
+	Section __swift5_types: 552
+	Section __swift_as_entry: 232
+	Section __swift_as_ret: 232
+	Section __swift_as_cont: 572
+	Section __swift5_entry: 8
+	Section __oslogstring: 133
+	Section __objc_methtype: 883
+	Section __swift5_mpenum: 40
+	Section __swift5_protos: 20
+	Section __entitlements: 277
+	Section __ents_der: 70
+	Section __unwind_info: 13312
+	Section __eh_frame: 16508
+	total 1314682
+Segment __DATA_CONST: 49152
+	Section __const: 22120
+	Section __objc_classlist: 80
+	Section __objc_protolist: 32
+	Section __objc_imageinfo: 8
+	Section __objc_protorefs: 16
+	Section __got: 11928
+	total 34184
+Segment __DATA: 196608
+	Section __objc_const: 4296
+	Section __objc_selrefs: 904
+	Section __objc_data: 784
+	Section __data: 25060
+	Section __llvm_prf_cnts: 12576
+	Section __llvm_prf_data: 59456
+	Section __llvm_prf_names: 30545
+	Section __llvm_prf_bits: 0
+	Section __llvm_prf_vnds: 0
+	Section __llvm_prf_vns: 0
+	Section __llvm_prf_vtab: 0
+	Section __common: 608 (zerofill)
+	Section __bss: 37352 (zerofill)
+	total 171581
+Segment __LLVM_COV: 49152
+	Section __llvm_covfun: 45414
+	Section __llvm_covmap: 3408
+	total 48822
+Segment __LINKEDIT: 3375104
+total 4299964416
