@@ -34,7 +34,7 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] Search / Show / Library wired to real services
 - [x] Relaunch restores subscriptions + positions (UI tests)
 - [x] Fixture mode `-uitest` + 5 UI tests; opt-in live-network UI test
-- [ ] SearchModel unit tests for debounce/cancel (needs an app unit-test target)
+- [x] SearchModel unit tests for debounce/cancel (NightCastTests app unit-test target, 19 tests)
 
 ## M4 Sleep in app
 - [x] Fix: R uses feed duration if Sleep is tapped before AVPlayer reports measured duration (observed: feed 31:22 vs stream 37:04 → "9 min" instead of 11). See DECISIONS D11
