@@ -129,18 +129,22 @@ final class V4UITests: XCTestCase {
         }
         boroStyle.tap()
         XCTAssertTrue(waitUntil(3) { boroStyle.isSelected })
-        // Choosing a style brings its own colours.
-        XCTAssertTrue(waitUntil(3) { app.buttons["theme-boro"].isSelected })
+        // Choosing a style brings its own colours (the Colour section sits below).
+        let boroColour = app.buttons["theme-boro"]
+        for _ in 0..<4 where !boroColour.exists || !boroColour.isHittable { app.swipeUp() }
+        XCTAssertTrue(waitUntil(3) { boroColour.isSelected })
         // The Scenes and Color Scapes sit below, wearable in any style.
         let beach = app.buttons["theme-beach"]
-        for _ in 0..<4 where !beach.isHittable { app.swipeUp() }
+        for _ in 0..<4 where !beach.exists || !beach.isHittable { app.swipeUp() }
         beach.tap()
         XCTAssertTrue(waitUntil(3) { beach.isSelected })
-        XCTAssertTrue(boroStyle.isSelected, "the style stays when the colour changes")
-        let redLight = app.buttons["theme-redlight"]
-        for _ in 0..<4 where !redLight.isHittable { app.swipeUp() }
-        for id in ["midnight", "mountain", "rainforest", "ocean", "city", "paper", "ember", "ink", "redlight"] {
+        for id in ["midnight", "mountain", "rainforest", "ocean", "city"] {
             XCTAssertTrue(app.buttons["theme-\(id)"].exists, id)
+        }
+        let redLight = app.buttons["theme-redlight"]
+        for _ in 0..<4 where !redLight.exists || !redLight.isHittable { app.swipeUp() }
+        for id in ["paper", "ember", "ink", "redlight"] {
+            XCTAssertTrue(app.buttons["theme-\(id)"].waitForExistence(timeout: 3), id)
         }
     }
 

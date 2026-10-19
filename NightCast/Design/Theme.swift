@@ -191,7 +191,8 @@ struct Theme: Identifiable, Equatable {
         colorScheme: .dark,
         bg: Color(hex: 0x031B2A), surface: Color(hex: 0x0A2E42), raised: Color(hex: 0x0F3A52),
         border: Color(hex: 0x1A5068), text: Color(hex: 0xE8FBFF), textMuted: Color(hex: 0xA6D0DC),
-        accent: Color(hex: 0xFFB38A), onAccent: Color(hex: 0x2A0E00), danger: Color(hex: 0xFF9A8A),
+        // v0.17: a deep sea blue for the Sleep bar (owner request), was peach #FFB38A.
+        accent: Color(hex: 0x2D6AA3), onAccent: Color(hex: 0xFFFFFF), danger: Color(hex: 0xFF9A8A),
         edge: Color(hex: 0x01111C), highlight: .white.opacity(0.10), shadowOpacity: 0.6,
         scene: .ocean
     )

@@ -2,9 +2,8 @@ import NightCastCore
 import SwiftUI
 
 /// The signature control. One tap turns Sleep on; another turns it off.
-/// Each look draws it in its own way and shows the ten fade steps on it:
-/// moon phases (Almanac), stitches (Boro), the zone ramp (Safelight), colour
-/// bars (Sign-Off), page marks under a dimming lamp (Picture Book).
+/// Every style shows the ten fade steps as a progress bar; the icon follows
+/// the Scene (a wave underwater, a tree in the rainforest).
 struct MoonKey: View {
     let status: SleepStatus
     let action: () -> Void
@@ -12,11 +11,7 @@ struct MoonKey: View {
     @Environment(\.theme) private var theme
 
     var body: some View {
-        if theme.style == .almanac {
-            AlmanacMoonKey(status: status, action: action)
-        } else {
-            LookMoonKey(status: status, action: action)
-        }
+        LookMoonKey(status: status, action: action)
     }
 
     static func accessibilityValue(for status: SleepStatus) -> String {

@@ -348,12 +348,7 @@ struct MiniPlayerDock: View {
                             .lineLimit(1)
                         HStack(spacing: Space.xs) {
                             if model.sleepStatus != .off {
-                                if theme.style == .almanac {
-                                    MoonPhaseGlyph(lit: model.sleepStatus.moonLit, litColor: theme.accent, darkColor: theme.border)
-                                        .frame(width: 12, height: 12)
-                                } else {
-                                    Image(systemName: "moon.fill").foregroundStyle(theme.accent)
-                                }
+                                Image(systemName: SleepGlyph.symbol(theme: theme, fading: false)).foregroundStyle(theme.accent)
                             }
                             Text(player.episode?.showTitle ?? "").lineLimit(1)
                         }

@@ -2,8 +2,7 @@ import NightCastCore
 import SwiftUI
 
 // Shared pieces whose drawing changes with the look: the labelled page tabs, the
-// Moon key for Boro, Safelight, Sign-Off and Picture Book (Almanac has its own in
-// Almanac.swift), and each look's way of showing the ten fade steps.
+// Moon key every style shares, and its progress bar and icon.
 
 /// Running stitch: a dashed line in thread colour (Boro).
 nonisolated struct Stitch: Shape {
@@ -34,95 +33,34 @@ extension SleepStatus {
 
 // MARK: - Page tabs
 
-/// New · Library · Explore as named tabs, in place of the v0.2 dots.
+/// New · Library · Explore as named tabs, in place of the v0.2 dots. Every style
+/// uses Picture Book's: plain labels, the current page on a cut-paper tab.
 struct LookTabs: View {
     @Binding var selection: HomePage
     @Environment(\.theme) private var theme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        switch theme.style {
-        case .almanac:
-            AlmanacTabs(selection: $selection)
-        case .signOff:
-            segmented
-        default:
-            row
-        }
-    }
-
-    private func select(_ page: HomePage) {
-        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) { selection = page }
-    }
-
-    /// Boro, Safelight, Picture Book: a row of labels; the current one is marked.
-    private var row: some View {
-        HStack(spacing: theme.style == .pictureBook ? Space.xs : Space.xxl) {
-            ForEach(HomePage.allCases, id: \.self) { page in
-                Button { select(page) } label: {
-                    label(page)
-                        .frame(minHeight: 44)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .modifier(TabAccessibility(page: page, selected: page == selection))
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: theme.style == .safelight ? .leading : .center)
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel("Pages")
-    }
-
-    @ViewBuilder
-    private func label(_ page: HomePage) -> some View {
-        let on = page == selection
-        switch theme.style {
-        case .safelight:
-            Text(page.title)
-                .font(.custom("BarlowCondensed-SemiBold", size: 17, relativeTo: .subheadline))
-                .tracking(1.6)
-                .textCase(.uppercase)
-                .foregroundStyle(on ? theme.text : theme.textMuted)
-                .padding(.bottom, 6)
-                .overlay(alignment: .bottom) { Rectangle().fill(on ? theme.text : .clear).frame(height: 2) }
-        case .pictureBook:
-            Text(page.title)
-                .font(.system(.subheadline, weight: .semibold))
-                .foregroundStyle(on ? theme.text : theme.textMuted)
-                .padding(.horizontal, Space.l)
-                .padding(.vertical, 7)
-                .background(on ? PaperShape(seed: 1).fill(theme.raised) : nil)
-        default: // Boro
-            Text(page.title)
-                .font(.system(.subheadline, weight: .semibold))
-                .foregroundStyle(on ? theme.text : theme.textMuted)
-                .padding(.bottom, 7)
-                .overlay(alignment: .bottom) {
-                    if on { Stitch().stroke(theme.text, style: .stitch(2)).frame(height: 2) }
-                }
-        }
-    }
-
-    /// Sign-Off: a segmented control.
-    private var segmented: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: Space.xs) {
             ForEach(HomePage.allCases, id: \.self) { page in
                 let on = page == selection
-                Button { select(page) } label: {
+                Button {
+                    withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) { selection = page }
+                } label: {
                     Text(page.title)
                         .font(.system(.subheadline, weight: .semibold))
                         .foregroundStyle(on ? theme.text : theme.textMuted)
-                        .frame(maxWidth: .infinity, minHeight: 36)
-                        .background(Capsule().fill(on ? theme.raised : .clear).shadow(color: .black.opacity(on ? 0.25 : 0), radius: 2, y: 1))
-                        .contentShape(Capsule())
+                        .padding(.horizontal, Space.l)
+                        .padding(.vertical, 7)
+                        .background(on ? PaperShape(seed: 1).fill(theme.raised) : nil)
+                        .frame(minHeight: 44)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .modifier(TabAccessibility(page: page, selected: on))
             }
         }
-        .padding(3)
-        .background(Capsule().fill(theme.surface))
-        .frame(minHeight: 44)
+        .frame(maxWidth: .infinity)
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Pages")
     }
@@ -163,8 +101,9 @@ nonisolated struct PaperShape: InsettableShape {
 
 // MARK: - Moon key
 
-/// The Moon key for Boro, Safelight, Sign-Off and Picture Book. Same behaviour and
-/// copy as every look; each draws the ten fade steps its own way.
+/// The Moon key, the same in every style but for its face: a ruled card (Almanac),
+/// a stitched patch (Boro), a square plate (Safelight), an on-air lamp (Sign-Off),
+/// cut paper (Picture Book).
 struct LookMoonKey: View {
     let status: SleepStatus
     let action: () -> Void
@@ -217,16 +156,23 @@ struct LookMoonKey: View {
         .accessibilityIdentifier("moonKey")
     }
 
+    /// The bar is slightly see-through, so a Scene shows behind it.
+    private static let faceOpacity = 0.88
+
     @ViewBuilder
     private var face: some View {
-        let fill = isOn ? theme.accent : theme.surface
+        let fill = (isOn ? theme.accent : theme.surface).opacity(Self.faceOpacity)
         switch theme.style {
+        case .almanac:
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .fill(fill)
+                .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(isOn ? theme.accent : theme.border, lineWidth: 1.5))
         case .boro:
             // A patch sewn on: raised face, a stitched border just inside the edge.
             RoundedRectangle(cornerRadius: radius, style: .continuous)
                 .fill(fill)
                 .overlay(RoundedRectangle(cornerRadius: radius - 5, style: .continuous).inset(by: 6).stroke(ink.opacity(0.35), style: .stitch(2)))
-                .background(RoundedRectangle(cornerRadius: radius, style: .continuous).fill(isOn ? theme.accent.mix(with: .black, by: 0.4) : theme.edge).offset(y: 6))
+                .background(RoundedRectangle(cornerRadius: radius, style: .continuous).fill((isOn ? theme.accent.mix(with: .black, by: 0.4) : theme.edge).opacity(Self.faceOpacity)).offset(y: 6))
                 .padding(.bottom, 6)
         case .pictureBook:
             PaperShape(seed: 2).fill(fill)
@@ -244,10 +190,12 @@ struct LookMoonKey: View {
     private var well: some View {
         ZStack {
             wellShape.fill(isOn ? Color.black.opacity(0.16) : theme.raised)
-            Image(systemName: theme.style == .pictureBook ? "lamp.table.fill" : (isFading ? "moon.zzz.fill" : "moon.fill"))
+            Image(systemName: SleepGlyph.symbol(theme: theme, fading: isFading))
                 .font(.system(size: 26, weight: .semibold))
-                .foregroundStyle(isOn ? theme.onAccent : theme.accent)
-                .opacity(theme.style == .pictureBook ? max(0.35, status.moonLit) : 1)
+                // In ink while off; the accent face carries the icon once Sleep is on.
+                .foregroundStyle(isOn ? theme.onAccent : theme.text)
+                // The icon dims with the volume, step by step.
+                .opacity(max(0.35, status.moonLit))
                 .contentTransition(.symbolEffect(.replace))
         }
         .frame(width: 56, height: 56)
@@ -285,11 +233,11 @@ struct LookMoonKey: View {
     }
 }
 
-/// The ten fade steps, drawn in the look's own way.
+/// The ten fade steps as a progress bar (Picture Book's, on every style):
+/// each mark goes dark as its step passes.
 struct FadeSteps: View {
     let status: SleepStatus
     let ink: Color
-    @Environment(\.theme) private var theme
 
     /// How many of the ten steps are still to come (lit).
     private var remaining: Int {
@@ -300,74 +248,30 @@ struct FadeSteps: View {
     }
 
     var body: some View {
-        switch theme.style {
-        case .safelight: zoneRamp
-        case .signOff: colourBars
-        default: dashes
-        }
-    }
-
-    /// Boro: ten stitches; Picture Book: ten page marks. Unlit once that step has passed.
-    private var dashes: some View {
-        HStack(spacing: theme.style == .boro ? 7 : 6) {
+        HStack(spacing: 6) {
             ForEach(0..<10, id: \.self) { i in
                 Capsule()
                     .fill(ink.opacity(status == .off ? 0.25 : (i < 10 - remaining ? 0.2 : 0.9)))
-                    .frame(height: theme.style == .boro ? 4 : 6)
+                    .frame(height: 6)
             }
         }
     }
+}
 
-    /// Safelight: the eleven-zone ramp, 100% to 0%, current zone outlined.
-    private var zoneRamp: some View {
-        VStack(spacing: 4) {
-            HStack(spacing: 0) {
-                ForEach(0...10, id: \.self) { i in
-                    Rectangle()
-                        .fill(zone(i))
-                        .overlay(Rectangle().strokeBorder(ink, lineWidth: i == currentZone ? 2.5 : 0))
-                }
-            }
-            .frame(height: 20)
-            .clipShape(RoundedRectangle(cornerRadius: 3))
-            HStack(spacing: 0) {
-                ForEach(0...10, id: \.self) { i in
-                    Text("\(100 - i * 10)")
-                        .font(.custom("BarlowCondensed-SemiBold", size: 11, relativeTo: .caption2))
-                        .monospacedDigit()
-                        .opacity(i == currentZone ? 1 : 0.65)
-                        .frame(maxWidth: .infinity)
-                }
-            }
+/// The Sleep icon: the Scene's own (a wave underwater, a tree in the rainforest),
+/// else the style's (a lamp in Picture Book, the moon elsewhere).
+enum SleepGlyph {
+    static func symbol(theme: Theme, fading: Bool) -> String {
+        switch theme.scene {
+        case .ocean: return "water.waves"
+        case .rainforest: return "tree.fill"
+        case .mountain: return "mountain.2.fill"
+        case .beach: return "beach.umbrella.fill"
+        case .city: return "building.2.fill"
+        case .midnight: return "moon.stars.fill"
+        case nil: break
         }
+        if theme.style == .pictureBook { return "lamp.table.fill" }
+        return fading ? "moon.zzz.fill" : "moon.fill"
     }
-
-    private var currentZone: Int {
-        switch status {
-        case .off: -1
-        case .waiting: 0
-        case .fading(let level): 10 - Int((level * 10).rounded())
-        }
-    }
-
-    /// Zone i, from the colour's text (0, full volume) down to its ground (10, silence).
-    private func zone(_ i: Int) -> Color {
-        theme.text.mix(with: theme.bg, by: Double(i) / 10)
-    }
-
-    /// Sign-Off: ten broadcast bars that go dark one by one.
-    private var colourBars: some View {
-        HStack(spacing: 3) {
-            ForEach(0..<10, id: \.self) { i in
-                RoundedRectangle(cornerRadius: 2)
-                    .fill(i < remaining && status != .off ? Self.bars[i] : ink.opacity(0.18))
-            }
-        }
-        .frame(height: 16)
-    }
-
-    private static let bars: [Color] = [
-        Color(hex: 0xF1F1F1), Color(hex: 0xE9D44A), Color(hex: 0x53C8D8), Color(hex: 0x5DC461), Color(hex: 0xC858C4),
-        Color(hex: 0xDB4A3C), Color(hex: 0x3D53CC), Color(hex: 0x9C9C9C), Color(hex: 0x5B5B5B), Color(hex: 0x2A2A2A),
-    ]
 }

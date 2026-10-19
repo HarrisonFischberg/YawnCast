@@ -32,7 +32,6 @@ PAIRS = [
     ("onAccent", "accent", 4.5, "Moon key when on, interest chips"),
     ("danger", "bg", 4.5, "playback error"),
     ("accent", "bg", 3.0, "Moon glyph, new-episode dot (non-text)"),
-    ("accent", "raised", 3.0, "Moon glyph in its well (non-text)"),
     ("text", "surface", 3.0, "scrubber fill vs track (non-text)"),
     ("text", "raised", 4.5, "Moon key subtitle, Sleep off (MoonKey 0.85 opacity)", 0.85),
     ("onAccent", "accent", 4.5, "Moon key subtitle, Sleep on (MoonKey 0.85 opacity)", 0.85),

@@ -134,6 +134,25 @@ extension ButtonStyle where Self == KeyStyle<Capsule> {
     }
 }
 
+/// Almanac's printed round key: an outline in the colour's rule, no edge.
+/// Every style uses it for the small icon keys (v0.17, owner request).
+struct OutlineKeyStyle: ButtonStyle {
+    @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(theme.text)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Circle().fill(theme.bg.opacity(0.35)).overlay(Circle().strokeBorder(theme.text.opacity(0.55), lineWidth: 1.5)))
+            .scaleEffect(configuration.isPressed ? 0.94 : 1)
+            .opacity(isEnabled ? (configuration.isPressed ? 0.75 : 1) : 0.45)
+            .contentShape(Circle())
+            .animation(reduceMotion ? nil : .spring(response: 0.18, dampingFraction: 0.7), value: configuration.isPressed)
+    }
+}
+
 /// Small 44 pt toolbar key with an SF Symbol.
 struct IconKey: View {
     let systemName: String
@@ -145,7 +164,7 @@ struct IconKey: View {
             Image(systemName: systemName)
                 .font(.system(size: 17, weight: .bold))
         }
-        .buttonStyle(.roundKey(depth: 3))
+        .buttonStyle(OutlineKeyStyle())
         .frame(width: 48, height: 48)
         .accessibilityLabel(label)
         // The glyph stays 17 pt; at accessibility sizes a long press shows it large.
