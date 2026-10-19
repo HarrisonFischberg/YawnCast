@@ -26,7 +26,7 @@ struct SleepAdjustBubble: View {
                     .foregroundStyle(theme.text)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
-                    .frame(minWidth: 112, minHeight: 44)
+                    .frame(minWidth: 98, minHeight: 44)
                     .contentTransition(.numericText())
             }
             .buttonStyle(.plain)
@@ -65,9 +65,10 @@ struct SleepAdjustBubble: View {
     private func stepButton(_ title: String, label: String, minutes: Int) -> some View {
         Button { onAdjust(minutes) } label: {
             Text(title + " min")
-                .font(Typo.headline.monospacedDigit())
+                .font(Typo.bubbleKey.monospacedDigit())
                 .foregroundStyle(theme.text)
-                .frame(minWidth: 64, minHeight: 44)
+                // Narrower than before (v0.17, owner request); still a 44 pt tall target.
+                .frame(minWidth: 56, minHeight: 44)
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

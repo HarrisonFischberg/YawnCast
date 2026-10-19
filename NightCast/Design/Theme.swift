@@ -318,6 +318,13 @@ enum Typo {
         case .pictureBook: .custom("YoungSerif-Regular", size: 24, relativeTo: .title3)
         }
     }
+    /// The Sleep bubble's ±5 keys: about 12% under `headline`.
+    static var bubbleKey: Font {
+        switch style {
+        case .signOff: .system(.subheadline, weight: .semibold)
+        case .pictureBook: .custom("YoungSerif-Regular", size: 15, relativeTo: .subheadline)
+        }
+    }
     /// Small text in the style's own face: the Sleep bubble's countdown and its pill.
     static var small: Font {
         switch style {
