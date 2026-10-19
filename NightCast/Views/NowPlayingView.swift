@@ -100,8 +100,9 @@ struct NowPlayingView: View {
                             if model.sleepStatus != .off {
                                 // Three lines of z's rise out of the Sleep icon, in every theme.
                                 FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
-                                    .frame(width: 110, height: 150)
-                                    .offset(x: 12, y: -126)
+                                    // Tall, so they float well up the screen before fading out.
+                                    .frame(width: 130, height: 360)
+                                    .offset(x: 8, y: -336)
                                     .transition(.opacity)
                             }
                         }
