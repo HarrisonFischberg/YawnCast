@@ -332,7 +332,7 @@ extension View {
 private struct DockInset: ViewModifier {
     @Environment(AppModel.self) private var model
     func body(content: Content) -> some View {
-        content.contentMargins(.bottom, model.player.episode == nil ? 0 : 82, for: .scrollContent)
+        content.contentMargins(.bottom, model.player.episode == nil ? 0 : 48, for: .scrollContent)
     }
 }
 
