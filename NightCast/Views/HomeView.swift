@@ -14,7 +14,6 @@ struct HomeView: View {
                 LibraryView()
             } else {
                 VStack(spacing: Space.m) {
-                    if theme.style == .almanac { AlmanacMasthead() }
                     LookTabs(selection: $model.homePage)
                 }
                 .padding(.horizontal, Space.xl)
@@ -49,9 +48,7 @@ struct PageTitle: View {
                 .textCase(Typo.titleCase)
                 .foregroundStyle(theme.text)
                 .accessibilityAddTraits(.isHeader)
-            if theme.style == .almanac {
-                AlmanacDateline()
-            } else if let subtitle {
+            if let subtitle {
                 Text(subtitle)
                     .font(Typo.caption)
                     .foregroundStyle(theme.textMuted)

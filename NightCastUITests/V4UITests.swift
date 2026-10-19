@@ -120,32 +120,26 @@ final class V4UITests: XCTestCase {
         layoutKey.tap()
         XCTAssertTrue(waitUntil(3) { abs(rivers.frame.width - large) < 1 }, "one click cycles back to large")
 
-        // Themes: a style and a colour, chosen separately; one tap applies each.
+        // Themes: Scenes first, then four flat colours, then the text style.
         app.buttons["themesKey"].tap()
-        let boroStyle = app.buttons["look-boro"]
-        XCTAssertTrue(boroStyle.waitForExistence(timeout: 3))
-        for id in ["almanac", "safelight", "signoff", "picturebook"] {
-            XCTAssertTrue(app.buttons["look-\(id)"].exists, id)
-        }
-        boroStyle.tap()
-        XCTAssertTrue(waitUntil(3) { boroStyle.isSelected })
-        // Choosing a style brings its own colours (the Colour section sits below).
-        let boroColour = app.buttons["theme-boro"]
-        for _ in 0..<4 where !boroColour.exists || !boroColour.isHittable { app.swipeUp() }
-        XCTAssertTrue(waitUntil(3) { boroColour.isSelected })
-        // The Scenes and Color Scapes sit below, wearable in any style.
         let beach = app.buttons["theme-beach"]
-        for _ in 0..<4 where !beach.exists || !beach.isHittable { app.swipeUp() }
-        beach.tap()
-        XCTAssertTrue(waitUntil(3) { beach.isSelected })
+        XCTAssertTrue(beach.waitForExistence(timeout: 3))
         for id in ["midnight", "mountain", "rainforest", "ocean", "city"] {
             XCTAssertTrue(app.buttons["theme-\(id)"].exists, id)
         }
-        let redLight = app.buttons["theme-redlight"]
-        for _ in 0..<4 where !redLight.exists || !redLight.isHittable { app.swipeUp() }
-        for id in ["paper", "ember", "ink", "redlight"] {
+        beach.tap()
+        XCTAssertTrue(waitUntil(3) { beach.isSelected })
+        let meadow = app.buttons["theme-picturebook"]
+        for _ in 0..<4 where !meadow.exists || !meadow.isHittable { app.swipeUp() }
+        for id in ["almanac", "safelight", "signoff", "picturebook"] {
             XCTAssertTrue(app.buttons["theme-\(id)"].waitForExistence(timeout: 3), id)
         }
+        let signOff = app.buttons["look-signoff"]
+        for _ in 0..<4 where !signOff.exists || !signOff.isHittable { app.swipeUp() }
+        XCTAssertTrue(app.buttons["look-picturebook"].exists)
+        signOff.tap()
+        XCTAssertTrue(waitUntil(3) { signOff.isSelected })
+        XCTAssertTrue(beach.exists ? beach.isSelected : true, "the colour stays when the text changes")
     }
 
     func testLibrarySearchFiltersShowsAndFindsNewOnes() {

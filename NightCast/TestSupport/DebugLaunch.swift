@@ -23,9 +23,7 @@ enum DebugLaunch {
             : .standard
         let model = AppModel(store: store, directory: directory, feeds: feeds, sleepConfiguration: sleepConfiguration)
         if let theme = launch.themeID {
-            let colour = Theme.with(id: theme)
-            model.theme = colour
-            if Theme.looks.contains(colour) { model.look = colour.style }
+            model.theme = Theme.migrated(from: theme)
         }
         if let look = launch.lookID.flatMap(ThemeStyle.init(rawValue:)) { model.look = look }
         if launch.isDemo { DemoSeed.run(model: model, launch: launch) }

@@ -8,9 +8,9 @@ public struct LibrarySnapshot: Codable, Equatable, Sendable {
     public var positions: [String: PlaybackPosition]
     /// Last episode loaded into the player, for the mini-player after relaunch.
     public var lastEpisode: Episode?
-    /// The colour (a look's own palette, a Scene or a Color Scape).
+    /// The colour: a Scene or one of the four flat colours.
     public var themeID: String?
-    /// The style: type, keys and Moon key (v0.17). Nil means Almanac.
+    /// The text style (v0.17): "picturebook" or "signoff". Nil means Picture Book.
     public var lookID: String?
     public var libraryLayout: LibraryLayout?
     /// Bumped when a release changes appearance defaults, so they apply once.

@@ -157,13 +157,10 @@ private struct InterestChip: View {
         .foregroundStyle(theme.text)
         .padding(.horizontal, Space.l)
         .frame(minHeight: 44)
-        // The accent belongs to the Moon key; chips are ruled or quietly filled.
-        .background(Capsule().fill(ruled ? Color.clear : theme.surface).overlay(Capsule().strokeBorder(ruled ? theme.border : .clear, lineWidth: 1.5)))
+        // The accent belongs to the Moon key; chips are quietly filled.
+        .background(Capsule().fill(theme.surface))
         .accessibilityElement(children: .combine)
     }
-
-    /// Almanac and Safelight rule their chips; the other looks fill them with the surface.
-    private var ruled: Bool { theme.style == .almanac || theme.style == .safelight }
 }
 
 /// Browse card: icon and name on a softly tinted plate.

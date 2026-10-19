@@ -1,8 +1,8 @@
 import NightCastCore
 import SwiftUI
 
-/// Themes: a style (type, keys, Moon key) and a colour, chosen separately, so the
-/// Scenes and Color Scapes can be worn in any style. One tap applies.
+/// Themes: a colour (a Scene or one of four flat colours) and the text style
+/// (Picture Book or Sign-Off), chosen separately. One tap applies.
 struct ThemesSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
@@ -20,16 +20,9 @@ struct ThemesSheet: View {
                     .textCase(Typo.titleCase)
                     .foregroundStyle(theme.text)
                     .accessibilityAddTraits(.isHeader)
-                styles
-                Text("Colour")
-                    .font(Typo.title)
-                    .textCase(Typo.titleCase)
-                    .foregroundStyle(theme.text)
-                    .padding(.top, Space.l)
-                    .accessibilityAddTraits(.isHeader)
-                group("Style colours", subtitle: "Night and day pages that follow your phone", themes: Theme.looks)
                 group("Scenes", subtitle: "Calm, animated night skies", themes: Theme.scenes)
-                group("Color Scapes", subtitle: "Simple and still", themes: Theme.colorScapes)
+                group("Colours", subtitle: "Simple and still, with a day page that follows your phone", themes: Theme.colours)
+                textStyles
             }
             .padding(Space.xxl)
         }
@@ -38,22 +31,22 @@ struct ThemesSheet: View {
         .sensoryFeedback(.selection, trigger: model.look)
     }
 
-    private var styles: some View {
+    private var textStyles: some View {
         VStack(alignment: .leading, spacing: Space.m) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("Style")
+                Text("Text")
                     .font(Typo.eyebrow).tracking(1.2).textCase(.uppercase)
                     .foregroundStyle(theme.textMuted)
                     .accessibilityAddTraits(.isHeader)
-                Text("Type, keys and how the Moon shows the fade").font(Typo.caption).foregroundStyle(theme.textMuted)
+                Text("The lettering on every screen").font(Typo.caption).foregroundStyle(theme.textMuted)
             }
             LazyVGrid(columns: columns, spacing: Space.l) {
                 ForEach(ThemeStyle.allCases, id: \.self) { look in
                     Button {
-                        withAnimation(.easeInOut(duration: 0.35)) { model.choose(look: look) }
+                        withAnimation(.easeInOut(duration: 0.35)) { model.look = look }
                     } label: { StyleSwatch(look: look, selected: look == model.look) }
                         .buttonStyle(.plain)
-                        .accessibilityLabel("\(look.name) style, \(look.blurb)")
+                        .accessibilityLabel("\(look.name) text")
                         .accessibilityAddTraits(look == model.look ? .isSelected : [])
                         .accessibilityIdentifier("look-\(look.rawValue)")
                 }
@@ -85,7 +78,7 @@ struct ThemesSheet: View {
     }
 }
 
-/// A style's card: "Aa" in its display face, on the current colour.
+/// A text style's card: "Aa" in its display face, on the current colour.
 private struct StyleSwatch: View {
     let look: ThemeStyle
     let selected: Bool

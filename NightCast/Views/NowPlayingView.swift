@@ -96,6 +96,15 @@ struct NowPlayingView: View {
                     MoonKey(status: model.sleepStatus) { model.toggleSleep() }
                         .disabled(player.episode == nil)
                         .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: model.sleepStatus == .off)
+                        .overlay(alignment: .topLeading) {
+                            if model.sleepStatus != .off {
+                                // Three lines of z's rise out of the Sleep icon, in every theme.
+                                FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
+                                    .frame(width: 110, height: 150)
+                                    .offset(x: 12, y: -126)
+                                    .transition(.opacity)
+                            }
+                        }
                 }
                 .animation(.spring(response: 0.35, dampingFraction: 0.7), value: model.sleepStatus == .off)
                 .animation(.spring(response: 0.3, dampingFraction: 0.75), value: bubbleExpanded)

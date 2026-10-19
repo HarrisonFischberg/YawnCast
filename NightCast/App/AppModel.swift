@@ -39,7 +39,7 @@ final class AppModel {
     let directory: DirectoryService
     let feeds: FeedService
 
-    /// The colour: a look's own palette, a Scene or a Color Scape.
+    /// The colour: a Scene or one of the four flat colours.
     var theme: Theme {
         didSet {
             library.themeID = theme.id
@@ -47,7 +47,7 @@ final class AppModel {
         }
     }
 
-    /// The style: type, keys, tabs and Moon key, worn over whichever colour is chosen.
+    /// The text style (Picture Book or Sign-Off), worn over whichever colour is chosen.
     var look: ThemeStyle {
         didSet {
             Typo.style = look
@@ -56,11 +56,6 @@ final class AppModel {
         }
     }
 
-    /// Choosing a style also brings its own colours, unless a Scene or Color Scape is on.
-    func choose(look newLook: ThemeStyle) {
-        if Theme.looks.contains(where: { $0.id == theme.id }) { theme = Theme.palette(of: newLook) }
-        look = newLook
-    }
 
     var isPlayerPresented = false
     var isThemesPresented = false
@@ -107,20 +102,18 @@ final class AppModel {
         self.feeds = feeds
         search = SearchModel(directory: directory)
         var snapshot = store.load()
-        // v0.17: a style (the look) is chosen separately from the colour. A colour that
-        // is a look's own palette brings that style; anything else wears Almanac, the
-        // default. No colour at all (a new install) starts on Almanac's.
-        if (snapshot.appearanceVersion ?? 0) < 7 {
-            if snapshot.themeID == nil { snapshot.themeID = Theme.almanac.id }
-            if snapshot.lookID == nil {
-                snapshot.lookID = Theme.looks.first { $0.id == snapshot.themeID }?.style.rawValue ?? ThemeStyle.almanac.rawValue
-            }
-            snapshot.appearanceVersion = 7
+        // v0.17: a colour (a Scene or one of four flat colours) and a text style (Picture
+        // Book or Sign-Off). Retired colours move to the nearest one; a new install
+        // starts on Almanac with Picture Book text.
+        if (snapshot.appearanceVersion ?? 0) < 8 {
+            snapshot.themeID = Theme.migrated(from: snapshot.themeID).id
+            if ThemeStyle(rawValue: snapshot.lookID ?? "") == nil { snapshot.lookID = ThemeStyle.pictureBook.rawValue }
+            snapshot.appearanceVersion = 8
             try? store.save(snapshot)
         }
         library = snapshot
         theme = Theme.with(id: snapshot.themeID)
-        let savedLook = ThemeStyle(rawValue: snapshot.lookID ?? "") ?? .almanac
+        let savedLook = ThemeStyle(rawValue: snapshot.lookID ?? "") ?? .pictureBook
         look = savedLook
         Typo.style = savedLook
         player = PlaybackEngine()

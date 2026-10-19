@@ -1,27 +1,8 @@
 import NightCastCore
 import SwiftUI
 
-// Shared pieces whose drawing changes with the look: the labelled page tabs, the
-// Moon key every style shares, and its progress bar and icon.
-
-/// Running stitch: a dashed line in thread colour (Boro).
-nonisolated struct Stitch: Shape {
-    var vertical = false
-    func path(in rect: CGRect) -> Path {
-        var p = Path()
-        if vertical {
-            p.move(to: CGPoint(x: rect.midX, y: rect.minY)); p.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
-        } else {
-            p.move(to: CGPoint(x: rect.minX, y: rect.midY)); p.addLine(to: CGPoint(x: rect.maxX, y: rect.midY))
-        }
-        return p
-    }
-}
-
-extension StrokeStyle {
-    /// Sashiko proportions: long stitches, short gaps.
-    static func stitch(_ width: CGFloat = 2) -> StrokeStyle { StrokeStyle(lineWidth: width, lineCap: .round, dash: [8, 6]) }
-}
+// Shared pieces: the labelled page tabs, the Moon key with its progress bar,
+// icon and floating z's.
 
 /// Fade step 0...9 the fade is on, or nil before it starts.
 extension SleepStatus {
@@ -101,9 +82,8 @@ nonisolated struct PaperShape: InsettableShape {
 
 // MARK: - Moon key
 
-/// The Moon key, the same in every style but for its face: a ruled card (Almanac),
-/// a stitched patch (Boro), a square plate (Safelight), an on-air lamp (Sign-Off),
-/// cut paper (Picture Book).
+/// The Moon key, the same in both styles but for its face: cut paper (Picture
+/// Book) or an on-air lamp (Sign-Off).
 struct LookMoonKey: View {
     let status: SleepStatus
     let action: () -> Void
@@ -113,7 +93,6 @@ struct LookMoonKey: View {
 
     private var isOn: Bool { status != .off }
     private var ink: Color { isOn ? theme.onAccent : theme.text }
-    private var radius: CGFloat { theme.style == .safelight ? 12 : 24 }
 
     var body: some View {
         Button(action: action) {
@@ -163,27 +142,12 @@ struct LookMoonKey: View {
     private var face: some View {
         let fill = (isOn ? theme.accent : theme.surface).opacity(Self.faceOpacity)
         switch theme.style {
-        case .almanac:
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(fill)
-                .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(isOn ? theme.accent : theme.border, lineWidth: 1.5))
-        case .boro:
-            // A patch sewn on: raised face, a stitched border just inside the edge.
-            RoundedRectangle(cornerRadius: radius, style: .continuous)
-                .fill(fill)
-                .overlay(RoundedRectangle(cornerRadius: radius - 5, style: .continuous).inset(by: 6).stroke(ink.opacity(0.35), style: .stitch(2)))
-                .background(RoundedRectangle(cornerRadius: radius, style: .continuous).fill((isOn ? theme.accent.mix(with: .black, by: 0.4) : theme.edge).opacity(Self.faceOpacity)).offset(y: 6))
-                .padding(.bottom, 6)
         case .pictureBook:
             PaperShape(seed: 2).fill(fill)
         case .signOff:
-            RoundedRectangle(cornerRadius: radius, style: .continuous)
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .fill(fill)
                 .shadow(color: isOn ? theme.accent.opacity(0.35) : .clear, radius: 18)
-        default: // Safelight
-            RoundedRectangle(cornerRadius: radius, style: .continuous)
-                .fill(fill)
-                .overlay(RoundedRectangle(cornerRadius: radius, style: .continuous).strokeBorder(isOn ? theme.accent : theme.border, lineWidth: 1))
         }
     }
 
@@ -204,10 +168,8 @@ struct LookMoonKey: View {
 
     private var wellShape: AnyShape {
         switch theme.style {
-        case .boro: AnyShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        case .safelight: AnyShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         case .pictureBook: AnyShape(PaperShape(seed: 0))
-        default: AnyShape(Circle())
+        case .signOff: AnyShape(Circle())
         }
     }
 
@@ -273,5 +235,89 @@ enum SleepGlyph {
         }
         if theme.style == .pictureBook { return "lamp.table.fill" }
         return fading ? "moon.zzz.fill" : "moon.fill"
+    }
+}
+
+extension SleepStatus {
+    /// Volume left, 1 until the fade starts.
+    var moonLit: Double {
+        switch self {
+        case .off, .waiting: 1
+        case .fading(let level): level
+        }
+    }
+}
+
+/// Press feedback without a physical edge.
+struct PressDim: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+            .opacity(configuration.isPressed ? 0.85 : 1)
+            .animation(reduceMotion ? nil : .spring(response: 0.18, dampingFraction: 0.7), value: configuration.isPressed)
+    }
+}
+
+/// Little "z"s that drift up out of the Sleep icon while Sleep is on: three lines
+/// of them, side by side, each at its own pace. Still (three resting columns)
+/// with Reduce Motion.
+struct FloatingZs: View {
+    var isFading = false
+    @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    /// Each line: where it starts across, how long one z takes to rise, its size.
+    private static let lines: [(x: Double, period: Double, size: Double)] = [
+        (6, 4.2, 18), (34, 5.0, 22), (62, 4.6, 16),
+    ]
+
+    var body: some View {
+        Group {
+            if reduceMotion {
+                HStack(alignment: .bottom, spacing: 10) {
+                    ForEach(0..<3, id: \.self) { line in
+                        VStack(spacing: 2) {
+                            ForEach(0..<3, id: \.self) { i in
+                                Text("z")
+                                    .font(.system(size: 10 + CGFloat(2 - i) * 4, weight: .heavy, design: .rounded))
+                                    .rotationEffect(.degrees(-12))
+                            }
+                        }
+                        .offset(y: -CGFloat(line % 2) * 10)
+                    }
+                }
+                .foregroundStyle(theme.accent.opacity(0.85))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+            } else {
+                TimelineView(.animation(minimumInterval: 1.0 / 30)) { context in
+                    Canvas { canvas, size in
+                        let t = context.date.timeIntervalSinceReferenceDate
+                        for (n, line) in Self.lines.enumerated() {
+                            // Drowsier when fading: a slower rise.
+                            let period = line.period * (isFading ? 1.3 : 1)
+                            let z = canvas.resolve(
+                                Text("z").font(.system(size: line.size, weight: .heavy, design: .rounded)).foregroundStyle(theme.accent)
+                            )
+                            for i in 0..<3 {
+                                let phase = (t / period + Double(i) / 3 + Double(n) * 0.21).truncatingRemainder(dividingBy: 1)
+                                var layer = canvas
+                                layer.opacity = sin(phase * .pi) * 0.9
+                                layer.translateBy(
+                                    x: line.x + phase * 18 + sin((t + Double(i) * 1.7 + Double(n)) * 1.4) * 5,
+                                    y: size.height * (1 - phase)
+                                )
+                                layer.rotate(by: .degrees(-14 + sin(t * 0.9 + Double(i + n)) * 9))
+                                let scale = 0.45 + phase * 0.75
+                                layer.scaleBy(x: scale, y: scale)
+                                layer.draw(z, at: .zero)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
     }
 }

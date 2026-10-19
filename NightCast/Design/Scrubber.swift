@@ -69,37 +69,6 @@ struct Scrubber: View {
         let hidden = knownDuration == nil
         let dragging = dragFraction != nil
         switch theme.style {
-        case .almanac:
-            // A printed rule with an ink fill and a hairline cursor.
-            ZStack(alignment: .leading) {
-                Rectangle().fill(theme.border).frame(height: 4)
-                Rectangle().fill(theme.text).frame(width: max(0, x), height: 4)
-                Rectangle().fill(theme.text)
-                    .frame(width: dragging ? 6 : 4, height: 26)
-                    .offset(x: x - 2)
-                    .opacity(hidden ? 0 : 1)
-            }
-        case .boro:
-            // A running stitch, sewn in thread up to the knot.
-            ZStack(alignment: .leading) {
-                Stitch().stroke(theme.textMuted.opacity(0.45), style: .stitch(3)).frame(height: 4)
-                Stitch().stroke(theme.text, style: .stitch(3)).frame(width: max(0, x), height: 4)
-                Circle().fill(theme.text)
-                    .shadow(color: .black.opacity(theme.shadowOpacity), radius: 3, y: 2)
-                    .frame(width: 20, height: 20)
-                    .scaleEffect(dragging ? 1.2 : 1)
-                    .offset(x: x - 10)
-                    .opacity(hidden ? 0 : 1)
-            }
-        case .safelight:
-            ZStack(alignment: .leading) {
-                Rectangle().fill(theme.border).frame(height: 6)
-                Rectangle().fill(theme.text).frame(width: max(0, x), height: 6)
-                RoundedRectangle(cornerRadius: 2).fill(theme.text)
-                    .frame(width: dragging ? 8 : 6, height: 26)
-                    .offset(x: x - 3)
-                    .opacity(hidden ? 0 : 1)
-            }
         case .signOff:
             // A tuning scale: minute ticks with a heavier tick every five, and a needle.
             ZStack(alignment: .leading) {

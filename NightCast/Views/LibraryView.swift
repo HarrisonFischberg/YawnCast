@@ -117,7 +117,6 @@ struct LibraryView: View {
                     .textCase(Typo.titleCase)
                     .foregroundStyle(theme.text)
                     .accessibilityAddTraits(.isHeader)
-                if theme.style == .almanac { AlmanacDateline() }
             }
             Spacer()
             HStack(spacing: Space.m) {
@@ -246,19 +245,10 @@ struct ShowTile: View {
                 .lineLimit(typeSize.isAccessibilitySize ? 4 : 2)
                 .multilineTextAlignment(.leading)
             if !compact, let author = show.author {
-                if theme.style == .almanac || theme.style == .safelight {
-                    Text(author)
-                        .font(.system(.caption2, weight: .semibold))
-                        .tracking(1.2)
-                        .textCase(.uppercase)
-                        .foregroundStyle(theme.textMuted)
-                        .lineLimit(1)
-                } else {
-                    Text(author)
-                        .font(Typo.caption)
-                        .foregroundStyle(theme.textMuted)
-                        .lineLimit(1)
-                }
+                Text(author)
+                    .font(Typo.caption)
+                    .foregroundStyle(theme.textMuted)
+                    .lineLimit(1)
             }
         }
         .accessibilityElement(children: .ignore)
@@ -268,9 +258,8 @@ struct ShowTile: View {
     }
 }
 
-/// What sits behind show artwork in each look: Boro sews it onto a cloth patch,
-/// Safelight lays it on a print sheet, Sign-Off frames it as a QSL card,
-/// Picture Book mounts it on a painted mat. Almanac shows it bare.
+/// What sits behind show artwork: Sign-Off frames it as a QSL card, Picture Book
+/// mounts it on a painted mat.
 struct ArtworkMat: ViewModifier {
     let seed: Int
     var compact = false
@@ -279,19 +268,6 @@ struct ArtworkMat: ViewModifier {
     func body(content: Content) -> some View {
         let pad: CGFloat = compact ? 4 : 7
         switch theme.style {
-        case .almanac:
-            content
-        case .boro:
-            content
-                .padding(pad)
-                .background {
-                    RoundedRectangle(cornerRadius: 6, style: .continuous).fill(Self.cloth(theme, seed))
-                        .overlay(RoundedRectangle(cornerRadius: 4, style: .continuous).inset(by: 3).stroke(theme.text.opacity(0.3), style: .stitch(1.5)))
-                }
-        case .safelight:
-            content
-                .padding(pad)
-                .background(RoundedRectangle(cornerRadius: 6).fill(theme.surface).overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(theme.border, lineWidth: 1)))
         case .signOff:
             content
                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
@@ -301,11 +277,6 @@ struct ArtworkMat: ViewModifier {
                 .padding(pad)
                 .background(PaperShape(seed: seed).fill(Self.paint(theme, seed)))
         }
-    }
-
-    /// Indigo patches cut from slightly different dips.
-    private static func cloth(_ theme: Theme, _ seed: Int) -> Color {
-        [theme.raised, theme.surface, theme.raised.mix(with: theme.text, by: 0.06)][abs(seed) % 3]
     }
 
     /// Painted mats: curtain red, mustard, night blue, leaf.
@@ -343,7 +314,7 @@ struct MiniPlayerDock: View {
                         .frame(width: 40, height: 40)
                     VStack(alignment: .leading, spacing: 1) {
                         Text(player.episode?.title ?? "")
-                            .font(theme.style == .almanac ? .custom("OldStandardTT-Bold", size: 16, relativeTo: .subheadline) : .system(.subheadline, weight: .semibold))
+                            .font(.system(.subheadline, weight: .semibold))
                             .foregroundStyle(theme.text)
                             .lineLimit(1)
                         HStack(spacing: Space.xs) {
@@ -383,15 +354,7 @@ struct MiniPlayerDock: View {
         .background {
             let r = theme.style.cardRadius
             RoundedRectangle(cornerRadius: r, style: .continuous)
-                .fill(theme.style == .almanac ? theme.surface : theme.raised)
-                .overlay {
-                    switch theme.style {
-                    case .almanac: RoundedRectangle(cornerRadius: r, style: .continuous).strokeBorder(theme.border, lineWidth: 1.5)
-                    case .safelight: RoundedRectangle(cornerRadius: r, style: .continuous).strokeBorder(theme.border, lineWidth: 1)
-                    case .boro: RoundedRectangle(cornerRadius: r - 4, style: .continuous).inset(by: 4).stroke(theme.text.opacity(0.28), style: .stitch(1.5))
-                    default: EmptyView()
-                    }
-                }
+                .fill(theme.raised)
                 .shadow(color: .black.opacity(theme.shadowOpacity), radius: 12, y: 6)
         }
     }
