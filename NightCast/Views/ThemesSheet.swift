@@ -1,7 +1,8 @@
 import NightCastCore
 import SwiftUI
 
-/// Themes: animated Scenes, then flat Color Scapes. One tap applies.
+/// Themes: the five looks. One tap applies; each follows the phone between its
+/// night and day pages.
 struct ThemesSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
@@ -18,8 +19,7 @@ struct ThemesSheet: View {
                     .font(Typo.title)
                     .foregroundStyle(theme.text)
                     .accessibilityAddTraits(.isHeader)
-                group("Scenes", subtitle: "Calm, animated night skies", themes: Theme.scenes)
-                group("Color Scapes", subtitle: "Simple and still", themes: Theme.colorScapes)
+                group("Looks", subtitle: "Each has a night and a day page that follow your phone", themes: Theme.looks)
             }
             .padding(Space.xxl)
         }
@@ -62,12 +62,12 @@ private struct ThemeSwatch: View {
         VStack(spacing: Space.s) {
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(option.bg)
-                .overlay {
-                    if let scene = option.scene {
-                        // A still frame of the actual scene.
-                        ScenePreview(scene: scene)
-                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                    }
+                .overlay(alignment: .trailing) {
+                    // The day page, as the right-hand third.
+                    let day = option.resolved(for: .light)
+                    Rectangle().fill(day.bg)
+                        .frame(width: 44)
+                        .clipShape(UnevenRoundedRectangle(cornerRadii: .init(bottomTrailing: 18, topTrailing: 18), style: .continuous))
                 }
                 .overlay(alignment: .bottom) {
                     Capsule()

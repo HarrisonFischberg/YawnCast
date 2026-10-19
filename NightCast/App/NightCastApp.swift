@@ -17,12 +17,24 @@ struct NightCastApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView()
+            ThemedRoot()
                 .environment(model)
-                .environment(\.theme, model.theme)
-                .preferredColorScheme(model.theme.colorScheme)
-                .tint(model.theme.accent)
+                // A look with a day page follows the phone; classic themes force their own scheme.
+                .preferredColorScheme(model.theme.followsSystem ? nil : model.theme.colorScheme)
         }
+    }
+}
+
+/// Resolves the theme for the phone's current appearance and hands it down.
+struct ThemedRoot: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.colorScheme) private var scheme
+
+    var body: some View {
+        let theme = model.theme.resolved(for: scheme)
+        RootView()
+            .environment(\.theme, theme)
+            .tint(theme.accent)
     }
 }
 
@@ -61,7 +73,7 @@ struct RootView: View {
         .animation(.smooth(duration: 0.38), value: model.player.episode == nil)
         .fullScreenCover(isPresented: $model.isPlayerPresented) {
             NowPlayingView()
-                .environment(\.theme, model.theme)
+                .environment(\.theme, theme)
         }
     }
 }

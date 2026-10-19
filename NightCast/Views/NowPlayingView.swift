@@ -36,7 +36,8 @@ struct NowPlayingView: View {
                         .foregroundStyle(theme.textMuted)
                         .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
                     Text(player.episode?.title ?? "Nothing playing")
-                        .font(typeSize.isAccessibilitySize ? .system(.title2, design: .serif, weight: .bold) : .system(size: 36, weight: .bold, design: .serif))
+                        .font(typeSize.isAccessibilitySize ? Typo.showTitle : Typo.playerTitle)
+                        .textCase(Typo.titleCase)
                         .foregroundStyle(theme.text)
                         .lineLimit(typeSize.isAccessibilitySize ? 3 : 4)
                         .minimumScaleFactor(0.75)
@@ -95,15 +96,6 @@ struct NowPlayingView: View {
                     MoonKey(status: model.sleepStatus) { model.toggleSleep() }
                         .disabled(player.episode == nil)
                         .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: model.sleepStatus == .off)
-                        .overlay(alignment: .bottomLeading) {
-                            if model.sleepStatus != .off {
-                                FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
-                                    .frame(width: 90, height: 150)
-                                    // Rise out of the moon well (left side of the key).
-                                    .offset(x: 18, y: -44)
-                                    .transition(.opacity)
-                            }
-                        }
                 }
                 .animation(.spring(response: 0.35, dampingFraction: 0.7), value: model.sleepStatus == .off)
                 .animation(.spring(response: 0.3, dampingFraction: 0.75), value: bubbleExpanded)

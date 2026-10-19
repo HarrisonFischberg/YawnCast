@@ -7,7 +7,7 @@ final class V4UITests: XCTestCase {
     private func launch() -> XCUIApplication {
         continueAfterFailure = false
         let app = XCUIApplication()
-        app.launchArguments = ["-uitest", "-resetStore", "-theme", "ink"]
+        app.launchArguments = ["-uitest", "-resetStore", "-theme", "almanac"]
         app.launch()
         return app
     }
@@ -120,20 +120,17 @@ final class V4UITests: XCTestCase {
         layoutKey.tap()
         XCTAssertTrue(waitUntil(3) { abs(rivers.frame.width - large) < 1 }, "one click cycles back to large")
 
-        // Themes: Scenes and Color Scapes, one tap applies.
+        // Themes: the five looks, one tap applies.
         app.buttons["themesKey"].tap()
-        let beach = app.buttons["theme-beach"]
-        XCTAssertTrue(beach.waitForExistence(timeout: 3))
-        for id in ["midnight", "mountain", "rainforest", "ocean", "city"] {
-            XCTAssertTrue(app.buttons["theme-\(id)"].exists, id)
-        }
-        beach.tap()
-        XCTAssertTrue(waitUntil(3) { beach.isSelected })
-        // Color Scapes sit below the Scenes; scroll the sheet to reach them.
-        let redLight = app.buttons["theme-redlight"]
-        for _ in 0..<4 where !redLight.isHittable { app.swipeUp() }
-        for id in ["paper", "ember", "ink", "redlight"] {
+        let boro = app.buttons["theme-boro"]
+        XCTAssertTrue(boro.waitForExistence(timeout: 3))
+        for id in ["almanac", "safelight", "signoff", "picturebook"] {
             XCTAssertTrue(app.buttons["theme-\(id)"].waitForExistence(timeout: 3), id)
+        }
+        boro.tap()
+        XCTAssertTrue(waitUntil(3) { boro.isSelected })
+        for id in ["midnight", "ember", "paper"] {
+            XCTAssertFalse(app.buttons["theme-\(id)"].exists, "\(id) was retired in v0.17")
         }
     }
 

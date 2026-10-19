@@ -111,10 +111,14 @@ struct LibraryView: View {
 
     private var header: some View {
         HStack(alignment: .center) {
-            Text("Library")
-                .font(Typo.display)
-                .foregroundStyle(theme.text)
-                .accessibilityAddTraits(.isHeader)
+            VStack(alignment: .leading, spacing: Space.xs) {
+                Text("Library")
+                    .font(Typo.display)
+                    .textCase(Typo.titleCase)
+                    .foregroundStyle(theme.text)
+                    .accessibilityAddTraits(.isHeader)
+                if theme.style == .almanac { AlmanacDateline() }
+            }
             Spacer()
             HStack(spacing: Space.m) {
                 if !model.library.subscriptions.isEmpty {
@@ -213,9 +217,10 @@ struct NewPip: View {
     @Environment(\.theme) private var theme
 
     var body: some View {
+        // The accent belongs to the Moon alone; the pip is in ink.
         Circle()
-            .fill(theme.accent)
-            .overlay(Circle().strokeBorder(theme.edge, lineWidth: size / 6))
+            .fill(theme.text)
+            .overlay(Circle().strokeBorder(theme.bg, lineWidth: size / 6))
             .frame(width: size, height: size)
             .offset(x: size / 3.5, y: -size / 3.5)
             .accessibilityHidden(true)
@@ -232,7 +237,8 @@ struct ShowTile: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: compact ? Space.xs : Space.s) {
-            ArtworkView(url: show.artworkURL, cornerRadius: compact ? 10 : 14, title: show.title)
+            ArtworkView(url: show.artworkURL, cornerRadius: theme.style.artworkRadius, title: show.title)
+                .modifier(ArtworkMat(seed: show.id.unicodeScalars.reduce(0) { $0 &+ Int($1.value) }, compact: compact))
                 .overlay(alignment: .topTrailing) { if hasNew { NewPip(size: compact ? 14 : 18) } }
             Text(show.title)
                 .font(compact ? Typo.caption : Typo.headline)
@@ -240,16 +246,75 @@ struct ShowTile: View {
                 .lineLimit(typeSize.isAccessibilitySize ? 4 : 2)
                 .multilineTextAlignment(.leading)
             if !compact, let author = show.author {
-                Text(author)
-                    .font(Typo.caption)
-                    .foregroundStyle(theme.textMuted)
-                    .lineLimit(1)
+                if theme.style == .almanac || theme.style == .safelight {
+                    Text(author)
+                        .font(.system(.caption2, weight: .semibold))
+                        .tracking(1.2)
+                        .textCase(.uppercase)
+                        .foregroundStyle(theme.textMuted)
+                        .lineLimit(1)
+                } else {
+                    Text(author)
+                        .font(Typo.caption)
+                        .foregroundStyle(theme.textMuted)
+                        .lineLimit(1)
+                }
             }
         }
         .accessibilityElement(children: .ignore)
         // Same label in every layout (compact cards hide the author visually).
         .accessibilityLabel(show.author.map { "\(show.title), \($0)" } ?? show.title)
         .accessibilityValue(hasNew ? "New episode" : "")
+    }
+}
+
+/// What sits behind show artwork in each look: Boro sews it onto a cloth patch,
+/// Safelight lays it on a print sheet, Sign-Off frames it as a QSL card,
+/// Picture Book mounts it on a painted mat. Almanac shows it bare.
+struct ArtworkMat: ViewModifier {
+    let seed: Int
+    var compact = false
+    @Environment(\.theme) private var theme
+
+    func body(content: Content) -> some View {
+        let pad: CGFloat = compact ? 4 : 7
+        switch theme.style {
+        case .almanac:
+            content
+        case .boro:
+            content
+                .padding(pad)
+                .background {
+                    RoundedRectangle(cornerRadius: 6, style: .continuous).fill(Self.cloth(theme, seed))
+                        .overlay(RoundedRectangle(cornerRadius: 4, style: .continuous).inset(by: 3).stroke(theme.text.opacity(0.3), style: .stitch(1.5)))
+                }
+        case .safelight:
+            content
+                .padding(pad)
+                .background(RoundedRectangle(cornerRadius: 6).fill(theme.surface).overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(theme.border, lineWidth: 1)))
+        case .signOff:
+            content
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .shadow(color: .black.opacity(theme.shadowOpacity * 0.6), radius: 8, y: 5)
+        case .pictureBook:
+            content
+                .padding(pad)
+                .background(PaperShape(seed: seed).fill(Self.paint(theme, seed)))
+        }
+    }
+
+    /// Indigo patches cut from slightly different dips.
+    private static func cloth(_ theme: Theme, _ seed: Int) -> Color {
+        [theme.raised, theme.surface, theme.raised.mix(with: theme.text, by: 0.06)][abs(seed) % 3]
+    }
+
+    /// Painted mats: curtain red, mustard, night blue, leaf.
+    private static func paint(_ theme: Theme, _ seed: Int) -> Color {
+        let night = theme.colorScheme == .dark
+        let colors: [Color] = night
+            ? [Color(hex: 0xB5483A), Color(hex: 0xB8892E), Color(hex: 0x27406B), theme.raised]
+            : [Color(hex: 0xD2533F), Color(hex: 0xE0A93A), Color(hex: 0x2F5596), theme.raised]
+        return colors[abs(seed) % colors.count]
     }
 }
 
@@ -278,16 +343,21 @@ struct MiniPlayerDock: View {
                         .frame(width: 40, height: 40)
                     VStack(alignment: .leading, spacing: 1) {
                         Text(player.episode?.title ?? "")
-                            .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                            .font(theme.style == .almanac ? .custom("OldStandardTT-Bold", size: 16, relativeTo: .subheadline) : .system(.subheadline, weight: .semibold))
                             .foregroundStyle(theme.text)
                             .lineLimit(1)
                         HStack(spacing: Space.xs) {
                             if model.sleepStatus != .off {
-                                Image(systemName: "moon.fill").foregroundStyle(theme.accent)
+                                if theme.style == .almanac {
+                                    MoonPhaseGlyph(lit: model.sleepStatus.moonLit, litColor: theme.accent, darkColor: theme.border)
+                                        .frame(width: 12, height: 12)
+                                } else {
+                                    Image(systemName: "moon.fill").foregroundStyle(theme.accent)
+                                }
                             }
                             Text(player.episode?.showTitle ?? "").lineLimit(1)
                         }
-                        .font(.system(.caption, design: .rounded, weight: .medium))
+                        .font(.system(.caption, weight: .medium))
                         .foregroundStyle(theme.textMuted)
                     }
                     Spacer(minLength: 0)
@@ -316,9 +386,17 @@ struct MiniPlayerDock: View {
         }
         .padding(10)
         .background {
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(theme.raised)
-                .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(theme.border, lineWidth: 1))
+            let r = theme.style.cardRadius
+            RoundedRectangle(cornerRadius: r, style: .continuous)
+                .fill(theme.style == .almanac ? theme.surface : theme.raised)
+                .overlay {
+                    switch theme.style {
+                    case .almanac: RoundedRectangle(cornerRadius: r, style: .continuous).strokeBorder(theme.border, lineWidth: 1.5)
+                    case .safelight: RoundedRectangle(cornerRadius: r, style: .continuous).strokeBorder(theme.border, lineWidth: 1)
+                    case .boro: RoundedRectangle(cornerRadius: r - 4, style: .continuous).inset(by: 4).stroke(theme.text.opacity(0.28), style: .stitch(1.5))
+                    default: EmptyView()
+                    }
+                }
                 .shadow(color: .black.opacity(theme.shadowOpacity), radius: 12, y: 6)
         }
     }

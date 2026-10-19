@@ -6,6 +6,18 @@
 	<array>
 		<string>audio</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>AlfaSlabOne-Regular.ttf</string>
+		<string>OldStandard-Regular.ttf</string>
+		<string>OldStandard-Bold.ttf</string>
+		<string>OldStandard-Italic.ttf</string>
+		<string>ShipporiMinchoB1-ExtraBold.ttf</string>
+		<string>BarlowCondensed-SemiBold.ttf</string>
+		<string>BarlowCondensed-Bold.ttf</string>
+		<string>ArchivoExpanded-ExtraBold.ttf</string>
+		<string>YoungSerif-Regular.ttf</string>
+	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 </dict>

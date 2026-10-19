@@ -41,6 +41,7 @@ final class AppModel {
 
     var theme: Theme {
         didSet {
+            Typo.style = theme.style
             library.themeID = theme.id
             persist()
         }
@@ -91,15 +92,16 @@ final class AppModel {
         self.feeds = feeds
         search = SearchModel(directory: directory)
         var snapshot = store.load()
-        // v0.4: Midnight becomes the default look. Apply once, and only over the
-        // previous default (unset or Ink) so a deliberate Paper/Ember choice stays.
-        if (snapshot.appearanceVersion ?? 0) < 4 {
-            if snapshot.themeID == nil || snapshot.themeID == "ink" { snapshot.themeID = Theme.midnight.id }
-            snapshot.appearanceVersion = 4
+        // v0.17: the five looks replace the ten earlier themes. Ember and Red Light move
+        // to Safelight, every other theme (and no choice at all) to Almanac, the default.
+        if (snapshot.appearanceVersion ?? 0) < 6 {
+            snapshot.themeID = Theme.migrated(from: snapshot.themeID).id
+            snapshot.appearanceVersion = 6
             try? store.save(snapshot)
         }
         library = snapshot
         theme = Theme.with(id: snapshot.themeID)
+        Typo.style = Theme.with(id: snapshot.themeID).style
         player = PlaybackEngine()
         sleep = SleepController(clock: clock, configuration: sleepConfiguration)
         nowPlaying = NowPlayingBridge(engine: player)

@@ -33,37 +33,11 @@ struct Scrubber: View {
                 let width = geo.size.width
                 let thumb: CGFloat = 28
                 let x = thumb / 2 + (width - thumb) * fraction
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(theme.surface)
-                        .overlay(Capsule().stroke(theme.border, lineWidth: 1))
-                        .frame(height: 10)
-                    Capsule()
-                        .fill(theme.text)
-                        .frame(width: max(10, x), height: 10)
-                    Circle()
-                        .fill(theme.raised)
-                        .overlay(Circle().stroke(theme.border, lineWidth: 1))
-                        .shadow(color: .black.opacity(theme.shadowOpacity), radius: 4, y: 2)
-                        .frame(width: thumb, height: thumb)
-                        .scaleEffect(dragFraction == nil ? 1 : 1.15)
-                        .offset(x: x - thumb / 2)
-                        .opacity(knownDuration == nil ? 0 : 1)
-                }
-                .frame(maxHeight: .infinity)
-                .contentShape(Rectangle())
-                .gesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { value in
-                            guard knownDuration != nil else { return }
-                            dragFraction = min(1, max(0, (value.location.x - thumb / 2) / max(1, width - thumb)))
-                        }
-                        .onEnded { _ in
-                            if let f = dragFraction, let d = knownDuration { onSeek(f * d) }
-                            dragFraction = nil
-                        }
-                )
-                .animation(.spring(response: 0.2), value: dragFraction == nil)
+                track(width: width, x: x)
+                    .frame(maxHeight: .infinity)
+                    .contentShape(Rectangle())
+                    .gesture(drag(width: width, thumb: thumb))
+                    .animation(.spring(response: 0.2), value: dragFraction == nil)
             }
             .frame(height: 44)
 
@@ -87,6 +61,87 @@ struct Scrubber: View {
             }
         }
         .accessibilityIdentifier("scrubber")
+    }
+
+    /// The track and its marker, in the look's own drawing.
+    @ViewBuilder
+    private func track(width: CGFloat, x: CGFloat) -> some View {
+        let hidden = knownDuration == nil
+        let dragging = dragFraction != nil
+        switch theme.style {
+        case .almanac:
+            // A printed rule with an ink fill and a hairline cursor.
+            ZStack(alignment: .leading) {
+                Rectangle().fill(theme.border).frame(height: 4)
+                Rectangle().fill(theme.text).frame(width: max(0, x), height: 4)
+                Rectangle().fill(theme.text)
+                    .frame(width: dragging ? 6 : 4, height: 26)
+                    .offset(x: x - 2)
+                    .opacity(hidden ? 0 : 1)
+            }
+        case .boro:
+            // A running stitch, sewn in thread up to the knot.
+            ZStack(alignment: .leading) {
+                Stitch().stroke(theme.textMuted.opacity(0.45), style: .stitch(3)).frame(height: 4)
+                Stitch().stroke(theme.text, style: .stitch(3)).frame(width: max(0, x), height: 4)
+                Circle().fill(theme.text)
+                    .shadow(color: .black.opacity(theme.shadowOpacity), radius: 3, y: 2)
+                    .frame(width: 20, height: 20)
+                    .scaleEffect(dragging ? 1.2 : 1)
+                    .offset(x: x - 10)
+                    .opacity(hidden ? 0 : 1)
+            }
+        case .safelight:
+            ZStack(alignment: .leading) {
+                Rectangle().fill(theme.border).frame(height: 6)
+                Rectangle().fill(theme.text).frame(width: max(0, x), height: 6)
+                RoundedRectangle(cornerRadius: 2).fill(theme.text)
+                    .frame(width: dragging ? 8 : 6, height: 26)
+                    .offset(x: x - 3)
+                    .opacity(hidden ? 0 : 1)
+            }
+        case .signOff:
+            // A tuning scale: minute ticks with a heavier tick every five, and a needle.
+            ZStack(alignment: .leading) {
+                Canvas { context, size in
+                    let count = 40
+                    for i in 0...count {
+                        let px = CGFloat(i) / CGFloat(count) * size.width
+                        let major = i % 5 == 0
+                        let h: CGFloat = major ? 20 : 10
+                        context.fill(Path(CGRect(x: px - (major ? 1 : 0.75), y: size.height - h, width: major ? 2 : 1.5, height: h)),
+                                     with: .color(major ? theme.text : theme.textMuted))
+                    }
+                }
+                .frame(height: 22)
+                RoundedRectangle(cornerRadius: 1.5).fill(theme.text)
+                    .frame(width: dragging ? 5 : 3, height: 36)
+                    .offset(x: x - 1.5)
+                    .opacity(hidden ? 0 : 1)
+            }
+        case .pictureBook:
+            ZStack(alignment: .leading) {
+                Capsule().fill(theme.raised).frame(height: 10)
+                Capsule().fill(theme.text).frame(width: max(10, x), height: 10)
+                PaperShape(seed: 1).fill(theme.text)
+                    .frame(width: 26, height: 26)
+                    .scaleEffect(dragging ? 1.15 : 1)
+                    .offset(x: x - 13)
+                    .opacity(hidden ? 0 : 1)
+            }
+        }
+    }
+
+    private func drag(width: CGFloat, thumb: CGFloat) -> some Gesture {
+        DragGesture(minimumDistance: 0)
+            .onChanged { value in
+                guard knownDuration != nil else { return }
+                dragFraction = min(1, max(0, (value.location.x - thumb / 2) / max(1, width - thumb)))
+            }
+            .onEnded { _ in
+                if let f = dragFraction, let d = knownDuration { onSeek(f * d) }
+                dragFraction = nil
+            }
     }
 
     private var accessibilityValue: String {

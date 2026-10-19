@@ -6,7 +6,7 @@ final class SleepBubbleUITests: XCTestCase {
     private func openFixtureShow() -> XCUIApplication {
         continueAfterFailure = false
         let app = XCUIApplication()
-        app.launchArguments = ["-uitest", "-resetStore", "-theme", "ink"]
+        app.launchArguments = ["-uitest", "-resetStore", "-theme", "almanac"]
         app.launch()
         app.buttons["findPodcastKey"].tap()
         let field = app.textFields["searchField"]

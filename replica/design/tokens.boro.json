@@ -1,0 +1,58 @@
+{
+  "_about": "NightCast look 'boro'",
+  "color": {
+    "bg": "#14203A",
+    "surface": "#1B2A4A",
+    "raised": "#22355C",
+    "border": "#3A4E78",
+    "border-input": "#3A4E78",
+    "text": "#ECE6D6",
+    "text-muted": "#A7B2C9",
+    "accent": "#E2783E",
+    "on-accent": "#1D0E05",
+    "danger": "#FF9A8A"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "accent",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "danger",
+      "bg"
+    ],
+    [
+      "border-input",
+      "bg",
+      "ui"
+    ]
+  ]
+}

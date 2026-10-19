@@ -21,14 +21,56 @@ struct KeyStyle<S: InsettableShape>: ButtonStyle {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.isEnabled) private var isEnabled
 
+    @ViewBuilder
     func makeBody(configuration: Configuration) -> some View {
+        if theme.style.raisedKeys {
+            keyBody(configuration)
+        } else {
+            flatBody(configuration)
+        }
+    }
+
+    /// Printed keys (every look but Boro): no edge; pressing dims and settles.
+    /// Almanac rules a standard key in ink; the others fill it with the surface.
+    private func flatBody(_ configuration: Configuration) -> some View {
+        let pressed = configuration.isPressed
+        return configuration.label
+            .foregroundStyle(foreground)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background {
+                if role == .standard {
+                    switch theme.style {
+                    case .almanac:
+                        shape.fill(theme.bg.opacity(0.001))
+                            .overlay(shape.strokeBorder(theme.border, lineWidth: 1.5))
+                    case .safelight:
+                        shape.fill(theme.surface)
+                            .overlay(shape.strokeBorder(theme.border, lineWidth: 1))
+                    default:
+                        shape.fill(theme.surface)
+                    }
+                } else {
+                    shape.fill(face)
+                }
+            }
+            .scaleEffect(pressed ? 0.96 : 1)
+            .opacity(isEnabled ? (pressed ? 0.75 : 1) : 0.45)
+            .contentShape(shape)
+            .animation(reduceMotion ? nil : .spring(response: 0.18, dampingFraction: 0.7), value: pressed)
+    }
+
+    private func keyBody(_ configuration: Configuration) -> some View {
         let pressed = configuration.isPressed
         let travel = pressed ? depth - 1 : 0
-        configuration.label
+        return configuration.label
             .foregroundStyle(foreground)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {
                 shape.fill(face)
+                    .overlay {
+                        // Boro: a running stitch just inside the edge of every key.
+                        shape.inset(by: 5).stroke(foreground.opacity(0.3), style: .stitch(1.5))
+                    }
                     .overlay {
                         // Top highlight: a thin lit lip on the face.
                         shape.inset(by: 0.5)
