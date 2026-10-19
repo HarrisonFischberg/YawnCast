@@ -318,6 +318,13 @@ enum Typo {
         case .pictureBook: .custom("YoungSerif-Regular", size: 24, relativeTo: .title3)
         }
     }
+    /// Small text in the style's own face: the Sleep bubble's countdown and its pill.
+    static var small: Font {
+        switch style {
+        case .signOff: .custom("ArchivoExpanded-ExtraBold", size: 10, relativeTo: .caption2)
+        case .pictureBook: .custom("YoungSerif-Regular", size: 12, relativeTo: .caption2)
+        }
+    }
     /// Capitals for the style that sets titles in caps.
     static var titleCase: Text.Case? { style.capsTitles ? .uppercase : nil }
     static let body = Font.system(.body, design: .default)

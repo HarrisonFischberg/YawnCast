@@ -21,7 +21,8 @@ struct SleepAdjustBubble: View {
                 .opacity(isFading ? 0.35 : 1)
             Button(action: onCollapse) {
                 Text(centerText)
-                    .font(Typo.caption.monospacedDigit())
+                    // The style's own face, like the ±5 keys beside it.
+                    .font(Typo.small.monospacedDigit())
                     .foregroundStyle(theme.text)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
@@ -88,7 +89,7 @@ struct CollapsedSleepPill: View {
                 Text(shortText).monospacedDigit().contentTransition(.numericText())
                 Image(systemName: "chevron.up").font(.system(size: 10, weight: .bold))
             }
-            .font(Typo.caption)
+            .font(Typo.small)
             .foregroundStyle(theme.text)
             .padding(.horizontal, Space.m)
             .frame(minHeight: 44)
