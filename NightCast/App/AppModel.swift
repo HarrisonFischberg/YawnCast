@@ -39,12 +39,27 @@ final class AppModel {
     let directory: DirectoryService
     let feeds: FeedService
 
+    /// The colour: a look's own palette, a Scene or a Color Scape.
     var theme: Theme {
         didSet {
-            Typo.style = theme.style
             library.themeID = theme.id
             persist()
         }
+    }
+
+    /// The style: type, keys, tabs and Moon key, worn over whichever colour is chosen.
+    var look: ThemeStyle {
+        didSet {
+            Typo.style = look
+            library.lookID = look.rawValue
+            persist()
+        }
+    }
+
+    /// Choosing a style also brings its own colours, unless a Scene or Color Scape is on.
+    func choose(look newLook: ThemeStyle) {
+        if Theme.looks.contains(where: { $0.id == theme.id }) { theme = Theme.palette(of: newLook) }
+        look = newLook
     }
 
     var isPlayerPresented = false
@@ -92,16 +107,22 @@ final class AppModel {
         self.feeds = feeds
         search = SearchModel(directory: directory)
         var snapshot = store.load()
-        // v0.17: the five looks replace the ten earlier themes. Ember and Red Light move
-        // to Safelight, every other theme (and no choice at all) to Almanac, the default.
-        if (snapshot.appearanceVersion ?? 0) < 6 {
-            snapshot.themeID = Theme.migrated(from: snapshot.themeID).id
-            snapshot.appearanceVersion = 6
+        // v0.17: a style (the look) is chosen separately from the colour. A colour that
+        // is a look's own palette brings that style; anything else wears Almanac, the
+        // default. No colour at all (a new install) starts on Almanac's.
+        if (snapshot.appearanceVersion ?? 0) < 7 {
+            if snapshot.themeID == nil { snapshot.themeID = Theme.almanac.id }
+            if snapshot.lookID == nil {
+                snapshot.lookID = Theme.looks.first { $0.id == snapshot.themeID }?.style.rawValue ?? ThemeStyle.almanac.rawValue
+            }
+            snapshot.appearanceVersion = 7
             try? store.save(snapshot)
         }
         library = snapshot
         theme = Theme.with(id: snapshot.themeID)
-        Typo.style = Theme.with(id: snapshot.themeID).style
+        let savedLook = ThemeStyle(rawValue: snapshot.lookID ?? "") ?? .almanac
+        look = savedLook
+        Typo.style = savedLook
         player = PlaybackEngine()
         sleep = SleepController(clock: clock, configuration: sleepConfiguration)
         nowPlaying = NowPlayingBridge(engine: player)

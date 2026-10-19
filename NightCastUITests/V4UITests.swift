@@ -120,17 +120,27 @@ final class V4UITests: XCTestCase {
         layoutKey.tap()
         XCTAssertTrue(waitUntil(3) { abs(rivers.frame.width - large) < 1 }, "one click cycles back to large")
 
-        // Themes: the five looks, one tap applies.
+        // Themes: a style and a colour, chosen separately; one tap applies each.
         app.buttons["themesKey"].tap()
-        let boro = app.buttons["theme-boro"]
-        XCTAssertTrue(boro.waitForExistence(timeout: 3))
+        let boroStyle = app.buttons["look-boro"]
+        XCTAssertTrue(boroStyle.waitForExistence(timeout: 3))
         for id in ["almanac", "safelight", "signoff", "picturebook"] {
-            XCTAssertTrue(app.buttons["theme-\(id)"].waitForExistence(timeout: 3), id)
+            XCTAssertTrue(app.buttons["look-\(id)"].exists, id)
         }
-        boro.tap()
-        XCTAssertTrue(waitUntil(3) { boro.isSelected })
-        for id in ["midnight", "ember", "paper"] {
-            XCTAssertFalse(app.buttons["theme-\(id)"].exists, "\(id) was retired in v0.17")
+        boroStyle.tap()
+        XCTAssertTrue(waitUntil(3) { boroStyle.isSelected })
+        // Choosing a style brings its own colours.
+        XCTAssertTrue(waitUntil(3) { app.buttons["theme-boro"].isSelected })
+        // The Scenes and Color Scapes sit below, wearable in any style.
+        let beach = app.buttons["theme-beach"]
+        for _ in 0..<4 where !beach.isHittable { app.swipeUp() }
+        beach.tap()
+        XCTAssertTrue(waitUntil(3) { beach.isSelected })
+        XCTAssertTrue(boroStyle.isSelected, "the style stays when the colour changes")
+        let redLight = app.buttons["theme-redlight"]
+        for _ in 0..<4 where !redLight.isHittable { app.swipeUp() }
+        for id in ["midnight", "mountain", "rainforest", "ocean", "city", "paper", "ember", "ink", "redlight"] {
+            XCTAssertTrue(app.buttons["theme-\(id)"].exists, id)
         }
     }
 

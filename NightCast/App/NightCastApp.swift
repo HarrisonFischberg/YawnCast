@@ -31,7 +31,7 @@ struct ThemedRoot: View {
     @Environment(\.colorScheme) private var scheme
 
     var body: some View {
-        let theme = model.theme.resolved(for: scheme)
+        let theme = model.theme.resolved(for: scheme).styled(model.look)
         RootView()
             .environment(\.theme, theme)
             .tint(theme.accent)

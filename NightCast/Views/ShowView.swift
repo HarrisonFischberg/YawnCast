@@ -254,8 +254,12 @@ private struct YearHeader: View {
         .padding(.top, Space.l)
         .padding(.bottom, Space.s)
         .background {
-            // Pinned over scrolling rows.
-            theme.bg.padding(.horizontal, -Space.xl)
+            // Pinned over scrolling rows; a soft frosted band over a Scene.
+            if theme.scene != nil {
+                Rectangle().fill(.ultraThinMaterial).padding(.horizontal, -Space.xl)
+            } else {
+                theme.bg.padding(.horizontal, -Space.xl)
+            }
         }
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isHeader)

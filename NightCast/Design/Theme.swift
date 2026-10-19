@@ -21,10 +21,13 @@ struct Theme: Identifiable, Equatable {
     /// Top-edge highlight on raised keys.
     let highlight: Color
     let shadowOpacity: Double
-    /// Use only warm tints for highlights and decorations (Safelight), no cool or rainbow colors.
+    /// Animated scene drawn behind screens (the Scenes); nil for flat colours.
+    var scene: SceneKind?
+    /// Use only warm tints for highlights and decorations (Safelight, Red Light), no cool or rainbow colors.
     var warmOnly = false
-    /// The look's component language: type, keys, tabs, and how the Moon shows the fade.
-    var style: ThemeStyle
+    /// The look this palette belongs to. Every screen draws with the chosen style
+    /// (AppModel.look) over the chosen colour; see `styled(_:)`.
+    var style: ThemeStyle = .almanac
     /// Night page whose day partner is drawn when the phone is in light mode.
     var dayVariant: String?
 
@@ -139,20 +142,131 @@ struct Theme: Identifiable, Equatable {
         style: .pictureBook
     )
 
-    /// The five looks, in the order the Themes sheet shows them.
+    // MARK: Scenes and Color Scapes (v0.5 to v0.16), back as colours in v0.17 so they
+    // can be worn with any style's type.
+
+    /// Default: deep-blue night sky with slow waves and twinkling stars.
+    static let midnight = Theme(
+        id: "midnight", name: "Midnight", blurb: "Night sky, calm",
+        colorScheme: .dark,
+        bg: Color(hex: 0x0A1430), surface: Color(hex: 0x16244D), raised: Color(hex: 0x1E2F60),
+        border: Color(hex: 0x2C3F78), text: Color(hex: 0xEEF2FF), textMuted: Color(hex: 0xA9B7DD),
+        accent: Color(hex: 0xF4CF7B), onAccent: Color(hex: 0x1A1408), danger: Color(hex: 0xFF9A8A),
+        edge: Color(hex: 0x070E24), highlight: .white.opacity(0.10), shadowOpacity: 0.55,
+        scene: .midnight
+    )
+
+    static let mountain = Theme(
+        id: "mountain", name: "Mountain Vista", blurb: "Moonlit peaks, drifting mist",
+        colorScheme: .dark,
+        bg: Color(hex: 0x120F2E), surface: Color(hex: 0x231C4A), raised: Color(hex: 0x2D2560),
+        border: Color(hex: 0x3D3478), text: Color(hex: 0xF1EDFF), textMuted: Color(hex: 0xBDB4E0),
+        accent: Color(hex: 0xCDBDFF), onAccent: Color(hex: 0x1A1238), danger: Color(hex: 0xFF9A9A),
+        edge: Color(hex: 0x0A0820), highlight: .white.opacity(0.10), shadowOpacity: 0.55,
+        scene: .mountain
+    )
+
+    static let beach = Theme(
+        id: "beach", name: "Beach", blurb: "Moonlit sea, soft waves",
+        colorScheme: .dark,
+        bg: Color(hex: 0x071A2B), surface: Color(hex: 0x10304A), raised: Color(hex: 0x163C5A),
+        border: Color(hex: 0x22506F), text: Color(hex: 0xECF7FF), textMuted: Color(hex: 0xA9C7D8),
+        accent: Color(hex: 0x8FE3D3), onAccent: Color(hex: 0x052126), danger: Color(hex: 0xFF9A8A),
+        edge: Color(hex: 0x04111D), highlight: .white.opacity(0.10), shadowOpacity: 0.55,
+        scene: .beach
+    )
+
+    static let rainforest = Theme(
+        id: "rainforest", name: "Rainforest", blurb: "Swaying canopy, fireflies",
+        colorScheme: .dark,
+        bg: Color(hex: 0x04140F), surface: Color(hex: 0x0C2A1F), raised: Color(hex: 0x12362A),
+        border: Color(hex: 0x1E4A3A), text: Color(hex: 0xEAF7EE), textMuted: Color(hex: 0xA8CCB7),
+        accent: Color(hex: 0xD6F07A), onAccent: Color(hex: 0x13200A), danger: Color(hex: 0xFF9A8A),
+        edge: Color(hex: 0x020C08), highlight: .white.opacity(0.08), shadowOpacity: 0.6,
+        scene: .rainforest
+    )
+
+    static let ocean = Theme(
+        id: "ocean", name: "Underwater", blurb: "Drifting fish, rising bubbles",
+        colorScheme: .dark,
+        bg: Color(hex: 0x031B2A), surface: Color(hex: 0x0A2E42), raised: Color(hex: 0x0F3A52),
+        border: Color(hex: 0x1A5068), text: Color(hex: 0xE8FBFF), textMuted: Color(hex: 0xA6D0DC),
+        accent: Color(hex: 0xFFB38A), onAccent: Color(hex: 0x2A0E00), danger: Color(hex: 0xFF9A8A),
+        edge: Color(hex: 0x01111C), highlight: .white.opacity(0.10), shadowOpacity: 0.6,
+        scene: .ocean
+    )
+
+    /// Warm, low-blue night palette: soft coral and terracotta on warm near-black.
+    static let redLight = Theme(
+        id: "redlight", name: "Red Light", blurb: "Warm, low blue",
+        colorScheme: .dark,
+        bg: Color(hex: 0x0B0504), surface: Color(hex: 0x1C0E0A), raised: Color(hex: 0x24130E),
+        border: Color(hex: 0x3A1D15), text: Color(hex: 0xEFA084), textMuted: Color(hex: 0xCC8A72),
+        accent: Color(hex: 0xD9805F), onAccent: Color(hex: 0x160704), danger: Color(hex: 0xFFB27A),
+        edge: Color(hex: 0x050202), highlight: Color(hex: 0xEFA084).opacity(0.10), shadowOpacity: 0.7,
+        warmOnly: true
+    )
+
+    static let city = Theme(
+        id: "city", name: "City Scape", blurb: "Neon skyline, soft rain",
+        colorScheme: .dark,
+        bg: Color(hex: 0x0B0618), surface: Color(hex: 0x1A1030), raised: Color(hex: 0x24173F),
+        border: Color(hex: 0x36255A), text: Color(hex: 0xF5EEFF), textMuted: Color(hex: 0xC2B4E0),
+        accent: Color(hex: 0xFF6FB5), onAccent: Color(hex: 0x1A0410), danger: Color(hex: 0xFF9A8A),
+        edge: Color(hex: 0x060310), highlight: .white.opacity(0.10), shadowOpacity: 0.6,
+        scene: .city
+    )
+
+    static let paper = Theme(
+        id: "paper", name: "Paper", blurb: "Warm daylight",
+        colorScheme: .light,
+        bg: Color(hex: 0xF2EDE3), surface: Color(hex: 0xE7E0D2), raised: Color(hex: 0xFBF8F2),
+        border: Color(hex: 0xD6CDBA), text: Color(hex: 0x1C1A16), textMuted: Color(hex: 0x5C564B),
+        accent: Color(hex: 0x2E2A6B), onAccent: Color(hex: 0xF7F3EA), danger: Color(hex: 0xA33224),
+        edge: Color(hex: 0xCFC5B1), highlight: .white.opacity(0.9), shadowOpacity: 0.12
+    )
+
+    static let ink = Theme(
+        id: "ink", name: "Ink", blurb: "Quiet dark",
+        colorScheme: .dark,
+        bg: Color(hex: 0x111113), surface: Color(hex: 0x1C1C20), raised: Color(hex: 0x26262B),
+        border: Color(hex: 0x2E2E34), text: Color(hex: 0xF1EEE7), textMuted: Color(hex: 0xA29E95),
+        accent: Color(hex: 0xE9B44C), onAccent: Color(hex: 0x1A1408), danger: Color(hex: 0xF07A68),
+        edge: Color(hex: 0x0A0A0B), highlight: .white.opacity(0.08), shadowOpacity: 0.5
+    )
+
+    static let ember = Theme(
+        id: "ember", name: "Ember", blurb: "Bedtime, low light",
+        colorScheme: .dark,
+        bg: Color(hex: 0x070504), surface: Color(hex: 0x110C09), raised: Color(hex: 0x1A120D),
+        border: Color(hex: 0x22170F), text: Color(hex: 0xB98F6C), textMuted: Color(hex: 0x9C7A5C),
+        accent: Color(hex: 0xC27142), onAccent: Color(hex: 0x070504), danger: Color(hex: 0xC96E55),
+        edge: Color(hex: 0x030201), highlight: Color(hex: 0xB98F6C).opacity(0.07), shadowOpacity: 0.6
+    )
+
+    /// The five looks' own palettes, in the order the Themes sheet shows them.
     static let looks: [Theme] = [.almanac, .boro, .safelight, .signOff, .pictureBook]
-    static let all: [Theme] = looks
+    /// Animated colours, all calm and night-time.
+    static let scenes: [Theme] = [.midnight, .mountain, .beach, .rainforest, .ocean, .city]
+    /// Flat colours.
+    static let colorScapes: [Theme] = [.paper, .ember, .ink, .redLight]
+    static let all: [Theme] = looks + scenes + colorScapes
     private static let dayPages: [Theme] = [.almanacDay, .boroDay, .safelightDay, .signOffDay, .pictureBookDay]
 
     static func with(id: String?) -> Theme {
         all.first { $0.id == id } ?? .almanac
     }
 
-    /// The look a stored theme id maps to. The ten themes before v0.17 were retired:
-    /// the dark-room ones (Ember, Red Light) become Safelight, the rest Almanac.
-    static func migrated(from id: String?) -> Theme {
-        if let look = all.first(where: { $0.id == id }) { return look }
-        return id == "ember" || id == "redlight" ? .safelight : .almanac
+    /// This colour drawn in a given style.
+    func styled(_ look: ThemeStyle) -> Theme {
+        var copy = self
+        copy.style = look
+        return copy
+    }
+
+    /// A look's own palette.
+    static func palette(of look: ThemeStyle) -> Theme {
+        looks.first { $0.style == look } ?? .almanac
     }
 
     /// The page to draw in the phone's current appearance.
@@ -161,7 +275,8 @@ struct Theme: Identifiable, Equatable {
         return day
     }
 
-    /// Every look follows the phone's light/dark setting.
+    /// The looks' own palettes follow the phone's light/dark setting; Scenes and
+    /// Color Scapes keep their one appearance, as before.
     var followsSystem: Bool { dayVariant != nil }
 }
 
@@ -189,7 +304,7 @@ extension EnvironmentValues {
 }
 
 /// A look's component language. Colors live in Theme; this is everything else.
-enum ThemeStyle {
+enum ThemeStyle: String, CaseIterable {
     /// Farmer's almanac: slab masthead, Old Standard titles, ruled lines, printed keys.
     case almanac
     /// Indigo cloth: raised keys with a sashiko stitch, Shippori Mincho titles.
@@ -197,9 +312,12 @@ enum ThemeStyle {
     /// Darkroom: condensed caps, square keys, the zone ramp.
     case safelight
     /// Late-night radio: wide heavy caps, QSL cards, a segmented page control.
-    case signOff
+    case signOff = "signoff"
     /// Painted room: Young Serif, cut-paper corners, painted mats.
-    case pictureBook
+    case pictureBook = "picturebook"
+
+    var name: String { Theme.palette(of: self).name }
+    var blurb: String { Theme.palette(of: self).blurb }
 
     /// Physical keys with a visible edge (the v0.1 key), rather than printed ones.
     var raisedKeys: Bool { self == .boro }
@@ -232,7 +350,9 @@ enum ThemeStyle {
 enum Typo {
     static var style: ThemeStyle = .almanac
 
-    static var display: Font {
+    static var display: Font { display(style) }
+
+    static func display(_ style: ThemeStyle) -> Font {
         switch style {
         case .almanac: .custom("AlfaSlabOne-Regular", size: 38, relativeTo: .largeTitle)
         case .boro: .custom("ShipporiMinchoB1-ExtraBold", size: 36, relativeTo: .largeTitle)

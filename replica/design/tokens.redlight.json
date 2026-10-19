@@ -1,0 +1,62 @@
+{
+  "_about": "NightCast color scape 'redlight': warm near-black with soft coral/terracotta; low blue (not zero).",
+  "color": {
+    "bg": "#0B0504",
+    "surface": "#1C0E0A",
+    "raised": "#24130E",
+    "border": "#3A1D15",
+    "border-input": "#9A5A45",
+    "text": "#EFA084",
+    "text-muted": "#CC8A72",
+    "accent": "#D9805F",
+    "on-accent": "#160704",
+    "danger": "#FFB27A"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "raised"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "accent",
+      "surface"
+    ],
+    [
+      "danger",
+      "bg"
+    ],
+    [
+      "border-input",
+      "bg",
+      "ui"
+    ]
+  ]
+}

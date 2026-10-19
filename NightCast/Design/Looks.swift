@@ -324,7 +324,7 @@ struct FadeSteps: View {
             HStack(spacing: 0) {
                 ForEach(0...10, id: \.self) { i in
                     Rectangle()
-                        .fill(Self.zone(i, dark: theme.colorScheme == .dark))
+                        .fill(zone(i))
                         .overlay(Rectangle().strokeBorder(ink, lineWidth: i == currentZone ? 2.5 : 0))
                 }
             }
@@ -350,12 +350,9 @@ struct FadeSteps: View {
         }
     }
 
-    /// Zone i (0 = full volume, brightest; 10 = silence, darkest), warm with no blue.
-    static func zone(_ i: Int, dark: Bool) -> Color {
-        let t = Double(10 - i) / 10
-        return dark
-            ? Color(red: 0.04 + 0.93 * t, green: 0.02 + 0.78 * t, blue: 0.016 + 0.70 * t)
-            : Color(white: 0.06 + 0.88 * (1 - t))
+    /// Zone i, from the colour's text (0, full volume) down to its ground (10, silence).
+    private func zone(_ i: Int) -> Color {
+        theme.text.mix(with: theme.bg, by: Double(i) / 10)
     }
 
     /// Sign-Off: ten broadcast bars that go dark one by one.

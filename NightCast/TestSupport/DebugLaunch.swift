@@ -22,7 +22,12 @@ enum DebugLaunch {
             ? SleepConfiguration(maxFadeDelay: 4, stepInterval: 3, stepRamp: 1, cancelRamp: 0.5)
             : .standard
         let model = AppModel(store: store, directory: directory, feeds: feeds, sleepConfiguration: sleepConfiguration)
-        if let theme = launch.themeID { model.theme = Theme.with(id: theme) }
+        if let theme = launch.themeID {
+            let colour = Theme.with(id: theme)
+            model.theme = colour
+            if Theme.looks.contains(colour) { model.look = colour.style }
+        }
+        if let look = launch.lookID.flatMap(ThemeStyle.init(rawValue:)) { model.look = look }
         if launch.isDemo { DemoSeed.run(model: model, launch: launch) }
         return model
     }
@@ -31,6 +36,8 @@ enum DebugLaunch {
 struct LaunchOptions {
     var isDemo = false
     var themeID: String?
+    /// `-look <style>`: the style, independent of `-theme` (the colour).
+    var lookID: String?
     var openPlayer = false
     var sleepOn = false
     var fastSleep = false
@@ -62,6 +69,7 @@ struct LaunchOptions {
             page = HomePage.allCases.first { $0.title.lowercased() == arguments[i + 1].lowercased() }
         }
         if let i = arguments.firstIndex(of: "-theme"), i + 1 < arguments.count { themeID = arguments[i + 1] }
+        if let i = arguments.firstIndex(of: "-look"), i + 1 < arguments.count { lookID = arguments[i + 1] }
     }
 }
 

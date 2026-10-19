@@ -1,0 +1,66 @@
+{
+  "_about": "NightCast scene theme 'city'. scene-light = brightest area the animated scene reaches behind text.",
+  "color": {
+    "bg": "#0B0618",
+    "scene-light": "#3A1A55",
+    "surface": "#1A1030",
+    "raised": "#24173F",
+    "border": "#36255A",
+    "border-input": "#8E79BE",
+    "text": "#F5EEFF",
+    "text-muted": "#C2B4E0",
+    "accent": "#FF6FB5",
+    "on-accent": "#1A0410"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "scene-light"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "scene-light"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "raised"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "accent",
+      "scene-light"
+    ],
+    [
+      "border-input",
+      "bg",
+      "ui"
+    ]
+  ]
+}

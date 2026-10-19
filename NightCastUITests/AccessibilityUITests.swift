@@ -73,7 +73,7 @@ final class AccessibilityUITests: XCTestCase {
         XCTAssertTrue(app.buttons["pageDot-Library"].waitForExistence(timeout: 5))
         try audit(app, "Library")
         app.buttons["themesKey"].tap()
-        XCTAssertTrue(app.buttons["theme-almanac"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["look-almanac"].waitForExistence(timeout: 5))
         // At its 80% detent the sheet leaves Library's title and search field showing
         // above it, dimmed. VoiceOver correctly can't reach them behind the modal, but
         // the audit still sees that text and reports "Potentially inaccessible text" with
@@ -130,8 +130,8 @@ final class AccessibilityUITests: XCTestCase {
         let themes = app.buttons["themesKey"]
         XCTAssertTrue(themes.waitForExistence(timeout: 5))
         themes.tap()
-        let almanac = app.buttons["theme-almanac"]
-        let boro = app.buttons["theme-boro"]
+        let almanac = app.buttons["look-almanac"]
+        let boro = app.buttons["look-boro"]
         XCTAssertTrue(almanac.waitForExistence(timeout: 5))
         XCTAssertTrue(boro.exists)
         XCTAssertEqual(almanac.frame.minX, boro.frame.minX, accuracy: 1, "one column")

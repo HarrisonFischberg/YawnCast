@@ -4,7 +4,7 @@
 
 A native iPhone podcast app for falling asleep.
 
-**v0.17:** five looks replace the ten themes: **Almanac** (default), **Boro**, **Safelight**, **Sign-Off** and **Picture Book**. Each has a night and a day page that follow the phone's light/dark setting, its own type, and its own way of drawing Sleep's ten fade steps on the Moon key. Ember and Red Light users move to Safelight, everyone else to Almanac. Pages are labelled New / Library / Explore instead of dots.
+**v0.17:** Themes are now a **style** and a **colour**, chosen separately. Five styles: **Almanac** (default), **Boro**, **Safelight**, **Sign-Off** and **Picture Book**, each with its own type, keys and way of drawing Sleep's ten fade steps on the Moon key. Colours: each style's own (night and day pages that follow the phone), plus the six animated Scenes and four Color Scapes, wearable in any style. Pages are labelled New / Library / Explore instead of dots.
 
 **v0.11:** Library has one full-width search bar that filters your shows and finds new ones.
 
@@ -55,7 +55,8 @@ These are excluded from Release builds ([D20](DECISIONS.md)).
 | Argument | Effect |
 |---|---|
 | `-demo` | Uses an in-memory library seeded with 6 real shows and loads a real Radiolab episode, paused |
-| `-theme almanac\|boro\|safelight\|signoff\|picturebook` | Forces a look |
+| `-theme <colour id>` | Forces a colour (a style's own, a Scene or a Color Scape) |
+| `-look almanac\|boro\|safelight\|signoff\|picturebook` | Forces a style |
 | `-openPlayer`, `-openShow`, `-search <term>`, `-sleepOn`, `-autoplay` | Opens screens or starts states, used for screenshots |
 | `-fastSleep` | Short Sleep timings: fade after 4 s, a step every 6 s |
 | `-uitest [-resetStore]` | Fixture search and feeds, a bundled test tone, and a separate library file |

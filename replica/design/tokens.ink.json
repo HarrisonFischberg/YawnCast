@@ -1,0 +1,58 @@
+{
+  "_about": "NightCast theme 'ink'",
+  "color": {
+    "bg": "#111113",
+    "surface": "#1C1C20",
+    "raised": "#26262B",
+    "border": "#2E2E34",
+    "border-input": "#7A7A84",
+    "text": "#F1EEE7",
+    "text-muted": "#A29E95",
+    "accent": "#E9B44C",
+    "on-accent": "#1A1408",
+    "danger": "#F07A68"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "accent",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "danger",
+      "bg"
+    ],
+    [
+      "border-input",
+      "bg",
+      "ui"
+    ]
+  ]
+}
