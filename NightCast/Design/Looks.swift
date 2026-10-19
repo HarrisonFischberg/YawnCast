@@ -95,6 +95,21 @@ struct LookMoonKey: View {
     private var ink: Color { isOn ? theme.onAccent : theme.text }
 
     var body: some View {
+        VStack(alignment: .leading, spacing: Space.m) {
+            toggle
+            if !typeSize.isAccessibilitySize {
+                FadeSteps(status: status, ink: ink)
+                    .accessibilityHidden(true)
+            }
+        }
+        .foregroundStyle(ink)
+        .padding(.horizontal, Space.xl)
+        .padding(.vertical, Space.l)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background { face }
+    }
+
+    private var toggle: some View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: Space.m) {
                 HStack(spacing: Space.l) {
@@ -115,16 +130,7 @@ struct LookMoonKey: View {
                     .minimumScaleFactor(0.75)
                     Spacer(minLength: 0)
                 }
-                if !typeSize.isAccessibilitySize {
-                    FadeSteps(status: status, ink: ink)
-                        .accessibilityHidden(true)
-                }
             }
-            .foregroundStyle(ink)
-            .padding(.horizontal, Space.xl)
-            .padding(.vertical, Space.l)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background { face }
             .contentShape(Rectangle())
         }
         .buttonStyle(PressDim())

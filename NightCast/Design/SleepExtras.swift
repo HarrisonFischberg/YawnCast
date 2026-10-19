@@ -1,13 +1,18 @@
 import NightCastCore
 import SwiftUI
 
-/// The bubble above the Moon key while Sleep is on: "−5 min · Fade in 30 min · +5 min".
-/// While fading, −5 is off and +5 pauses the fade (volume glides back up).
-struct SleepAdjustBubble: View {
+/// The chip above the Moon key while Sleep is on: −5 · 17 min · +5.
+/// While fading it shows the volume, −5 is off, and +5 pauses the fade (volume
+/// glides back up). It stays put; nothing tucks away. Each tap floats a small
+/// "+5 min" / "−5 min" up from the chip so the step size is never a guess.
+struct SleepChip: View {
     let status: SleepStatus
     let onAdjust: (Int) -> Void
-    var onCollapse: () -> Void = {}
     @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// The step just taken, floating up and fading out.
+    @State private var echo: (text: String, id: Int)?
+    @State private var echoRising = false
 
     private var isFading: Bool {
         if case .fading = status { return true }
@@ -15,114 +20,104 @@ struct SleepAdjustBubble: View {
     }
 
     var body: some View {
-        HStack(spacing: 0) {
-            stepButton("−5", label: "Remove 5 minutes", minutes: -5)
+        HStack(spacing: 2) {
+            StepKey(minutes: -5) { step(-5) }
                 .disabled(isFading)
                 .opacity(isFading ? 0.35 : 1)
-            Button(action: onCollapse) {
-                Text(centerText)
-                    // The style's own face, like the ±5 keys beside it.
-                    .font(Typo.small.monospacedDigit())
-                    .foregroundStyle(theme.text)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-                    .frame(minWidth: 98, minHeight: 44)
-                    .contentTransition(.numericText())
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(centerText)
-            .accessibilityHint("Tucks the countdown into a small bubble.")
-            .accessibilityIdentifier("sleepCountdown")
-            stepButton("+5", label: "Add 5 minutes", minutes: 5)
+            SleepReadout(status: status)
+                .foregroundStyle(theme.text)
+                .frame(minWidth: 74)
+            StepKey(minutes: 5) { step(5) }
         }
-        .padding(.horizontal, Space.xs)
+        .padding(.horizontal, 4)
         .background {
             Capsule()
-                .fill(theme.raised)
-                .overlay(Capsule().strokeBorder(theme.border, lineWidth: 1))
-                .shadow(color: .black.opacity(theme.shadowOpacity), radius: 10, y: 4)
+                .fill(theme.raised.opacity(0.92))
+                .shadow(color: .black.opacity(theme.shadowOpacity * 0.6), radius: 10, y: 4)
         }
-        .overlay(alignment: .bottom) {
-            // Small tail pointing down at the Moon key.
-            BubbleTail()
-                .fill(theme.raised)
-                .overlay(BubbleTail().stroke(theme.border, lineWidth: 1).mask(Rectangle().padding(.top, 1)))
-                .frame(width: 18, height: 9)
-                .offset(y: 8)
+        .overlay(alignment: .top) {
+            if let echo {
+                Text(echo.text)
+                    .font(Typo.small)
+                    .foregroundStyle(theme.text)
+                    .offset(y: echoRising && !reduceMotion ? -30 : -10)
+                    .opacity(echoRising ? 0 : 1)
+                    .id(echo.id)
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+            }
         }
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Sleep countdown")
     }
 
-    private var centerText: String {
+    private func step(_ minutes: Int) {
+        onAdjust(minutes)
+        echo = (minutes > 0 ? "+5 min" : "−5 min", (echo?.id ?? 0) + 1)
+        echoRising = false
+        withAnimation(.easeOut(duration: 0.9)) { echoRising = true }
+    }
+}
+
+/// The time to the fade as a big numeral and a small unit ("17 min", "45 sec"),
+/// or the volume while fading ("40 %").
+struct SleepReadout: View {
+    let status: SleepStatus
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 3) {
+            Text(parts.value)
+                .font(Typo.title.monospacedDigit())
+                .contentTransition(.numericText())
+            Text(parts.unit)
+                .font(Typo.small)
+                .opacity(0.8)
+        }
+        .lineLimit(1)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(spoken)
+        .accessibilityIdentifier("sleepCountdown")
+    }
+
+    private var parts: (value: String, unit: String) {
+        switch status {
+        case .off: return ("", "")
+        case .waiting(let t):
+            // "17 min" / "45 sec" → numeral and unit.
+            let text = TimeFormat.sleepDelay(t)
+            guard let space = text.firstIndex(of: " ") else { return (text, "") }
+            return (String(text[..<space]), String(text[text.index(after: space)...]))
+        case .fading(let level): return ("\(Int((level * 100).rounded()))", "%")
+        }
+    }
+
+    private var spoken: String {
         switch status {
         case .off: ""
         case .waiting(let t): "Fade in \(TimeFormat.sleepDelay(t))"
-        case .fading(let level): "Fading · \(Int((level * 100).rounded()))%"
+        case .fading(let level): "Fading, volume \(Int((level * 100).rounded())) percent"
         }
-    }
-
-    private func stepButton(_ title: String, label: String, minutes: Int) -> some View {
-        Button { onAdjust(minutes) } label: {
-            Text(title + " min")
-                .font(Typo.bubbleKey.monospacedDigit())
-                .foregroundStyle(theme.text)
-                // Narrower than before (v0.17, owner request); still a 44 pt tall target.
-                .frame(minWidth: 56, minHeight: 44)
-                .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(label)
-        .accessibilityIdentifier(minutes > 0 ? "sleepPlus5" : "sleepMinus5")
     }
 }
 
-/// The tucked-away bubble: a small pill above the Moon key; tap to open the ±5 controls.
-struct CollapsedSleepPill: View {
-    let status: SleepStatus
-    let onExpand: () -> Void
+/// A round "−5" / "+5" key in the text style's face, 44 pt to tap.
+struct StepKey: View {
+    let minutes: Int
+    let action: () -> Void
     @Environment(\.theme) private var theme
 
     var body: some View {
-        Button(action: onExpand) {
-            HStack(spacing: Space.xs) {
-                Image(systemName: "timer")
-                Text(shortText).monospacedDigit().contentTransition(.numericText())
-                Image(systemName: "chevron.up").font(.system(size: 10, weight: .bold))
-            }
-            .font(Typo.small)
-            .foregroundStyle(theme.text)
-            .padding(.horizontal, Space.m)
-            .frame(minHeight: 44)
-            .background {
-                Capsule()
-                    .fill(theme.raised)
-                    .overlay(Capsule().strokeBorder(theme.border, lineWidth: 1))
-                    .shadow(color: .black.opacity(theme.shadowOpacity), radius: 8, y: 3)
-            }
+        Button(action: action) {
+            Text(minutes > 0 ? "+5" : "−5")
+                .font(Typo.bubbleKey.monospacedDigit())
+                .foregroundStyle(theme.text)
+                .frame(width: 40, height: 40)
+                .background(Circle().fill(theme.surface))
+                .frame(width: 44, height: 44)
+                .contentShape(Circle())
         }
-        .buttonStyle(.plain)
-        .accessibilityLabel("Sleep countdown, \(shortText)")
-        .accessibilityHint("Shows the add and remove 5 minutes controls.")
-        .accessibilityIdentifier("sleepBubbleCollapsed")
-    }
-
-    private var shortText: String {
-        switch status {
-        case .off: ""
-        case .waiting(let t): TimeFormat.sleepDelay(t)
-        case .fading(let level): "\(Int((level * 100).rounded()))%"
-        }
-    }
-}
-
-private struct BubbleTail: Shape {
-    nonisolated init() {}
-    nonisolated func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
-        return path
+        .buttonStyle(PressDim())
+        .accessibilityLabel(minutes > 0 ? "Add 5 minutes" : "Remove 5 minutes")
+        .accessibilityIdentifier(minutes > 0 ? "sleepPlus5" : "sleepMinus5")
     }
 }

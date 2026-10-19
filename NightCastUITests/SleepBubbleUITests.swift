@@ -1,6 +1,6 @@
 import XCTest
 
-/// The ±5 minute bubble above the Moon key, and the show page's year sections.
+/// The ±5 minute chip above the Moon key, and the show page's year sections.
 @MainActor
 final class SleepBubbleUITests: XCTestCase {
     private func openFixtureShow() -> XCUIApplication {
@@ -24,10 +24,10 @@ final class SleepBubbleUITests: XCTestCase {
         XCTAssertTrue(playPause.waitForExistence(timeout: 8))
         XCTAssertTrue(waitUntil(8) { playPause.label == "Pause" })
 
-        let countdown = app.buttons["sleepCountdown"]
-        XCTAssertFalse(countdown.exists, "no bubble before Sleep")
+        let countdown = app.descendants(matching: .any)["sleepCountdown"]
+        XCTAssertFalse(countdown.exists, "no chip before Sleep")
         app.buttons["moonKey"].tap()
-        XCTAssertTrue(countdown.waitForExistence(timeout: 3), "bubble pops up with Sleep")
+        XCTAssertTrue(countdown.waitForExistence(timeout: 3), "chip appears with Sleep")
         // 90 s fixture episode → fade after about 45 s.
         XCTAssertTrue(countdown.label.hasPrefix("Fade in") && countdown.label.hasSuffix("sec"), countdown.label)
 
@@ -40,7 +40,7 @@ final class SleepBubbleUITests: XCTestCase {
         XCTAssertFalse(app.buttons["sleepMinus5"].isEnabled, "minus is off while fading")
 
         app.buttons["moonKey"].tap()
-        XCTAssertTrue(waitUntil(3) { !countdown.exists }, "bubble goes away with Sleep off")
+        XCTAssertTrue(waitUntil(3) { !countdown.exists }, "chip goes away with Sleep off")
     }
 
     func testEpisodesGroupedByYearWithOrderToggle() {

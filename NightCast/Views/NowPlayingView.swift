@@ -9,10 +9,6 @@ struct NowPlayingView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var skipTaps = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    /// The ±5 bubble opens with Sleep, then tucks into a small pill after a
-    /// few quiet seconds (or a tap on its center); tapping the pill reopens it.
-    @State private var bubbleExpanded = true
-    @State private var collapseTask: Task<Void, Never>?
 
     var body: some View {
         let player = model.player
@@ -69,16 +65,9 @@ struct NowPlayingView: View {
                 VStack(alignment: .trailing, spacing: Space.l) {
                     ZStack {
                         if model.sleepStatus != .off {
-                            if bubbleExpanded {
-                                SleepAdjustBubble(status: model.sleepStatus, onAdjust: { minutes in
-                                    model.adjustSleep(minutes: minutes)
-                                    scheduleCollapse()
-                                }, onCollapse: { setExpanded(false) })
-                                .transition(bubbleTransition)
-                            } else {
-                                CollapsedSleepPill(status: model.sleepStatus) { setExpanded(true) }
-                                    .transition(bubbleTransition)
-                            }
+                            // −5 · 17 min · +5, for as long as Sleep is on.
+                            SleepChip(status: model.sleepStatus) { model.adjustSleep(minutes: $0) }
+                                .transition(chipTransition)
                         } else if let toast = model.toast {
                             Text(toast)
                                 .font(Typo.caption)
@@ -108,11 +97,6 @@ struct NowPlayingView: View {
                         }
                 }
                 .animation(.spring(response: 0.35, dampingFraction: 0.7), value: model.sleepStatus == .off)
-                .animation(.spring(response: 0.3, dampingFraction: 0.75), value: bubbleExpanded)
-                .onChange(of: model.sleepStatus == .off) { _, isOff in
-                    if !isOff { setExpanded(true) }
-                }
-                .onAppear { if model.sleepStatus != .off { setExpanded(false) } }
                 .animation(.easeOut(duration: 0.2), value: model.toast)
                 .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
                 .padding(.bottom, Space.l)
@@ -138,22 +122,8 @@ struct NowPlayingView: View {
         #endif
     }
 
-    private var bubbleTransition: AnyTransition {
-        reduceMotion ? .opacity : .scale(scale: 0.6, anchor: .bottomTrailing).combined(with: .opacity)
-    }
-
-    private func setExpanded(_ expanded: Bool) {
-        bubbleExpanded = expanded
-        if expanded { scheduleCollapse() } else { collapseTask?.cancel() }
-    }
-
-    private func scheduleCollapse() {
-        collapseTask?.cancel()
-        collapseTask = Task {
-            try? await Task.sleep(for: .seconds(5))
-            guard !Task.isCancelled else { return }
-            bubbleExpanded = false
-        }
+    private var chipTransition: AnyTransition {
+        reduceMotion ? .opacity : .scale(scale: 0.7, anchor: .bottomTrailing).combined(with: .opacity)
     }
 
     private var transport: some View {

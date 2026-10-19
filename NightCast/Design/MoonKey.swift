@@ -8,8 +8,6 @@ struct MoonKey: View {
     let status: SleepStatus
     let action: () -> Void
 
-    @Environment(\.theme) private var theme
-
     var body: some View {
         LookMoonKey(status: status, action: action)
     }
