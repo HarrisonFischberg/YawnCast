@@ -240,6 +240,10 @@ struct PlaybackMathTests {
         #expect(TimeFormat.duration(3600) == "1 hr")
         #expect(TimeFormat.sleepDelay(1800) == "30 min")
         #expect(TimeFormat.sleepDelay(40) == "40 sec")
+        #expect(TimeFormat.sleepDelayLong(1800) == "30 minutes")
+        #expect(TimeFormat.sleepDelayLong(60) == "1 minute")
+        #expect(TimeFormat.sleepDelayLong(40) == "40 seconds")
+        #expect(TimeFormat.sleepDelayLong(0.5) == "1 second")
         #expect(SleepCopy.status(.fading(level: 0.6)) == "Fading · 60%")
         #expect(SleepCopy.status(.waiting(untilFade: 600)) == "Fade in 10 min")
     }
