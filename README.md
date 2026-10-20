@@ -1,51 +1,95 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/icon-dark.png">
+    <img src="docs/icon.png" alt="NightCast app icon" width="128" height="128">
+  </picture>
+</p>
+
 # NightCast
 
-> "NightCast" is a temporary internal name. It has not been trademark-cleared.
+A calm iPhone podcast app for falling asleep: tap the Moon, and your episode fades out gently and pauses.
 
-A native iPhone podcast app for falling asleep.
+> "NightCast" is a working name. It has not been trademark-cleared.
 
-**v0.11:** Library has one full-width search bar that filters your shows and finds new ones.
+## Screenshots
 
-**v0.10:** Sleep fades over 6 minutes (10% every 40 s); smaller player that always stays on screen; swipe down to close Now Playing; Library reorders live as you drag.
+| Library (Midnight) | Explore (Underwater) | Themes |
+|---|---|---|
+| <img src="docs/screenshots/library-midnight.jpg" width="250" alt="Library page in the Midnight scene with the mini player"> | <img src="docs/screenshots/explore-underwater.jpg" width="250" alt="Explore page with interests and top picks in the Underwater scene"> | <img src="docs/screenshots/themes-sheet.jpg" width="250" alt="Themes sheet listing the animated Scenes"> |
 
-**v0.9:** smoother in-place search (page drifts and fades, search fades in after it); the player shrinks to an oval while typing instead of disappearing.
+| Now Playing, light (Paper) | Now Playing, dark (City Scape, Sleep on) | Search |
+|---|---|---|
+| <img src="docs/screenshots/now-playing-paper-light.jpg" width="250" alt="Now Playing in the light Paper theme"> | <img src="docs/screenshots/now-playing-sleep-dark.jpg" width="250" alt="Now Playing in City Scape with Sleep on and the fade adjust bubble"> | <img src="docs/screenshots/search.jpg" width="250" alt="Searching for a show from Library"> |
 
-**v0.8:** search happens in place on Library and Explore (content glides down and fades; results appear on the same page); category pages open cleanly with placeholder tiles.
+Shows in the screenshots are public podcasts from Apple's directory, mostly from the `-demo` launch argument. No accounts are involved.
 
-**v0.7:** softer, warmer Red Light; the slid-away player becomes a small oval you tap to restore; the Themes sheet scrolls smoothly.
+## What it does
 
-**v0.6:** sixth Scene **Underwater** (fish, bubbles, light rays, kelp) and fourth Color Scape **Red Light** (red on black, no blue in the interface).
+- **Three home pages** you swipe between: **New** (latest episodes from your shows), **Library** and **Explore**.
+- **One search bar** on Library that filters your shows and finds new ones, right in place.
+- **Sleep:** one tap on the Moon starts a countdown, then the volume steps down 10% every 40 seconds and the episode pauses. A small bubble nudges the fade by 5 minutes either way.
+- **Show pages** list every episode under year headings, newest or oldest first.
+- **A mini player** that stays on every screen; swipe down to close Now Playing.
+- **Ten themes:** six animated Scenes (Midnight, Mountain Vista, Beach, Rainforest, Underwater, City Scape) and four Color Scapes (Paper, Ember, Ink, Red Light).
+- **No account, no backend.** Search goes to Apple's public iTunes Search API, and feeds come straight from publishers.
 
-**v0.5:** Themes sheet (dark/light circle in the Library header) with **Scenes**, all calm and animated: Midnight, Mountain Vista, Beach, Rainforest, City Scape. Plus **Color Scapes**: Paper, Ember, Ink. The one-click layout key stays.
+## Dark mode
 
-**v0.4:** Midnight night-sky theme (default); mini player can be slid away when paused; the ±5 bubble tucks into a small pill; Library drag-to-reorder and Large / Small / List layouts (Settings); Explore has search, *Your interests* at the top, and Browse category cards (Sports, Politics, Tech, AI, Hobbies…).
+NightCast is dark by default, because it's meant for bedtime. You pick a theme from the Themes sheet (the half-filled circle in the Library header), and each theme sets the app's appearance:
 
-**v0.3:** show pages list every episode, start to finish, under year headings (Newest/Oldest toggle); Sleep fades 10% a minute, has a ±5 minute bubble, and floating z's.
+- **Paper** is the light theme.
+- **Midnight** (default), the other Scenes, **Ink**, **Ember** and **Red Light** are dark. Red Light keeps blue out of the interface entirely.
 
-**v0.2:** Home is three swipeable pages with dots: **New** (latest episodes from your shows), **Library**, and **Explore** (similar shows). The mini player stays on every screen once something is loaded. Show and Now Playing are unchanged.
-Its signature control is the **Moon** button: one tap, and the episode fades out in steps and then pauses.
+The app follows your chosen theme rather than the system setting, so it stays dark at night even if your phone is in light mode. Your choice is saved with your library. The app icon has a light and a dark version, and iOS picks the matching one for your Home Screen. All ten themes pass WCAG AA contrast (see [Design tokens and themes](#design-tokens-and-themes)).
 
-Status: built and tested on the **iOS Simulator only**. It has not been run on a physical iPhone.
-It is **not** App Store-ready (see [Known limitations](#known-limitations)).
+## Install
+
+NightCast is not on the App Store yet. To run it, build it from source with Xcode.
+
+Requirements: a Mac with **Xcode 27** (iOS 27 SDK). The app runs on **iOS 18.0** or later ([DECISIONS D02](DECISIONS.md)).
+
+**On the simulator**
+
+1. Clone the repo: `git clone https://github.com/HarrisonFischberg/NightCast.git`
+2. Open `NightCast.xcodeproj` in Xcode.
+3. Choose the **NightCast** scheme and an iPhone simulator, then press Run.
+
+No API keys or accounts are needed.
+
+**On your iPhone**
+
+1. Connect your iPhone and pick it as the run destination.
+2. In the NightCast target's **Signing & Capabilities**, choose your own team (the project ships with the owner's team, `KTV2G3Z883`) and, if needed, a unique bundle ID.
+3. Press Run. The first time, trust the developer profile under **Settings → General → VPN & Device Management**.
+
+**From the command line**
+
+```bash
+export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer   # only if xcode-select points at the Command Line Tools
+xcodebuild -project NightCast.xcodeproj -scheme NightCast -destination 'platform=iOS Simulator,name=iPhone 17' build
+```
+
+Status: built and tested on the iOS Simulator, and the device checks D1 to D8 below were passed on the owner's iPhone on 2026-10-17. It is **not** App Store-ready yet (see [Known limitations](#known-limitations)).
+
+<details>
+<summary>Version notes</summary>
+
+- **v0.11:** Library has one full-width search bar that filters your shows and finds new ones.
+- **v0.10:** Sleep fades over 6 minutes (10% every 40 s); smaller player that always stays on screen; swipe down to close Now Playing; Library reorders live as you drag.
+- **v0.9:** smoother in-place search; the player shrinks to an oval while typing.
+- **v0.8:** search happens in place on Library and Explore; category pages open cleanly with placeholder tiles.
+- **v0.7:** softer, warmer Red Light; the slid-away player becomes a small oval you tap to restore.
+- **v0.6:** Underwater scene and the Red Light Color Scape.
+- **v0.5:** Themes sheet with animated Scenes and Color Scapes.
+- **v0.4:** Midnight night-sky theme (default); Library drag to reorder and Large / Small / List layouts; Explore interests and categories.
+- **v0.3:** show pages list every episode under year headings; Sleep ±5 minute bubble and floating z's.
+- **v0.2:** Home is three swipeable pages: New, Library and Explore.
+
+</details>
 
 ---
 
-## Setup and run
-
-Requirements: macOS with **Xcode 27** (iOS 27 SDK) and an iOS Simulator runtime. The minimum iOS version is **18.0** ([DECISIONS D02](DECISIONS.md)).
-
-```bash
-open NightCast.xcodeproj
-```
-
-Choose the **NightCast** scheme and an iPhone simulator, then press Run. No API keys or accounts are needed.
-
-From the command line, if `xcode-select` points at the Command Line Tools rather than Xcode:
-
-```bash
-export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
-xcodebuild -project NightCast.xcodeproj -scheme NightCast -destination 'platform=iOS Simulator,name=iPhone 17' build
-```
+## Development
 
 ### Debug-only launch arguments
 These are excluded from Release builds ([D20](DECISIONS.md)).
@@ -154,7 +198,9 @@ Replica checks:
 - **Parity:** `parity.py` scores **90.7**. 9 of 11 must-haves are done. The other two, Lock Screen and background audio, are *implemented but unverified on device*. See [replica/parity.md](replica/parity.md).
 - **Brand sweep:** `sweep.py` finds nothing in `NightCast/`, `NightCastCore/` or `Config/`. Reference names appear only in internal research docs.
 
-## Screenshots
+## Screenshot archive
+
+Every build's raw simulator captures live in `screenshots/`. The README uses resized copies from `docs/screenshots/`.
 
 | Folder | Contents |
 |---|---|
@@ -162,6 +208,8 @@ Replica checks:
 | `screenshots/m3/` | Live run: real search, show detail, streaming |
 | `screenshots/m5/` | Show and Search in Paper and Ember; Show, Search and Library at AX5 text |
 | `screenshots/v2/` | New, Library, Explore pages; mini player on Show detail |
+| `screenshots/site/` | Website shots: Library (Midnight), Explore (Underwater), Sleep (City Scape), Themes sheet |
+| `screenshots/v14/` | Now Playing covering the bottom edge, before and after |
 | `screenshots/v10/` | Smaller always-on player; player above the keyboard while searching |
 | `screenshots/v9/` | Frame strips of the search opening and closing (50 ms apart) |
 | `screenshots/v8/` | In-place search on Library and Explore; category page loading and loaded |
@@ -175,7 +223,7 @@ Replica checks:
 
 ## Physical-device validation checklist (owner)
 
-None of these can be marked PASS from simulator results. Record outcomes in [ACCEPTANCE.md](ACCEPTANCE.md).
+The owner passed all eight on 2026-10-17 ([TASKS.md](TASKS.md)). Rerun them before each release and record outcomes in [ACCEPTANCE.md](ACCEPTANCE.md).
 
 | ID | Check | How |
 |---|---|---|
@@ -190,10 +238,8 @@ None of these can be marked PASS from simulator results. Record outcomes in [ACC
 
 ## Known limitations
 
-- **Not verified on device:** Lock Screen, remote commands, background audio, interruptions and route changes are implemented but have only been checked in code and on the simulator.
 - **No downloads or offline playback:** streaming only.
 - **Search provider:** the iTunes Search API is rate-limited (about 20 requests/min, per Apple) and some shows lack feed URLs. Re-read Apple's terms before release.
-- **No dedicated unit tests** for the search model's debounce and cancellation. They are covered indirectly by UI tests.
 - **No app-level crash or analytics reporting.**
 - **The name** is a working name, not trademark-checked (run `/replica-skill:replica-brand` before launch).
 - **Lock Screen artwork** comes from the episode or show artwork when it can be fetched.
@@ -204,7 +250,15 @@ Nothing has been uploaded, signed, or changed in any developer account.
 
 1. Signing is already set up for development: team `KTV2G3Z883`, bundle ID `com.nightcast.ktv2g3z883`, automatic signing. For release you may want a nicer bundle ID (it can't change after the first App Store upload).
 2. Keep the **Background Modes → Audio** capability. It's already in `Config/NightCast-Info.plist`.
-3. Run on your iPhone and work through checks D1–D8 above.
+3. Run on your iPhone and work through checks D1 to D8 above.
 4. Do **Product → Archive** with the **Release** configuration, then **Distribute App → App Store Connect → Upload**.
-5. In App Store Connect, create the app record (name, privacy details — the app sends search terms to Apple and fetches feeds from publishers, but you collect nothing; confirm when filling in the form), add internal testers, and start TestFlight.
+5. In App Store Connect, create the app record (name, privacy details: the app sends search terms to Apple and fetches feeds from publishers, but you collect nothing, so confirm that when filling in the form), add internal testers, and start TestFlight.
 6. Before any public release: a trademark-cleared name, final icon, a privacy policy URL, and a review of the iTunes Search API terms.
+
+## Privacy
+
+NightCast has no accounts, no analytics and no backend. Search terms go to Apple's iTunes Search API, and episodes and artwork are fetched directly from each show's publisher. Your library and playback positions stay on your phone.
+
+## Contact
+
+Made by Rare Creatures LLC. Questions or feedback: [hello@rarecreatures.app](mailto:hello@rarecreatures.app) · [rarecreatures.app](https://rarecreatures.app)
