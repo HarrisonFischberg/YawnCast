@@ -94,7 +94,7 @@ struct SleepReadout: View {
     private var spoken: String {
         switch status {
         case .off: ""
-        case .waiting(let t): "Fade in \(TimeFormat.sleepDelay(t))"
+        case .waiting(let t): "Fades in \(TimeFormat.sleepDelay(t))"
         case .fading(let level): "Fading, volume \(Int((level * 100).rounded())) percent"
         }
     }

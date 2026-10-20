@@ -29,7 +29,7 @@ final class SleepBubbleUITests: XCTestCase {
         app.buttons["moonKey"].tap()
         XCTAssertTrue(countdown.waitForExistence(timeout: 3), "chip appears with Sleep")
         // 90 s fixture episode → fade after about 45 s.
-        XCTAssertTrue(countdown.label.hasPrefix("Fade in") && countdown.label.hasSuffix("sec"), countdown.label)
+        XCTAssertTrue(countdown.label.hasPrefix("Fades in") && countdown.label.hasSuffix("sec"), countdown.label)
 
         app.buttons["sleepPlus5"].tap()
         XCTAssertTrue(waitUntil(3) { countdown.label.hasSuffix("min") }, "plus five: \(countdown.label)")

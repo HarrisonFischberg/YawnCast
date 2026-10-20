@@ -195,7 +195,7 @@ struct LookMoonKey: View {
     private var subtitle: String? {
         switch status {
         case .off: nil
-        case .waiting(let t): "Fade in \(TimeFormat.sleepDelayLong(t))."
+        case .waiting(let t): "Fades in \(TimeFormat.sleepDelayLong(t))"
         case .fading(let level): "Volume \(Int((level * 100).rounded()))%"
         }
     }
