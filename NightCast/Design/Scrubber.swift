@@ -63,41 +63,18 @@ struct Scrubber: View {
         .accessibilityIdentifier("scrubber")
     }
 
-    /// The track and its marker, in the look's own drawing.
-    @ViewBuilder
+    /// The track and its marker: a thick flat line in every theme. The part still
+    /// to play is tinted with the accent so it reads against any Scene.
     private func track(width: CGFloat, x: CGFloat) -> some View {
-        let hidden = knownDuration == nil
-        let dragging = dragFraction != nil
-        switch theme.style {
-        case .signOff:
-            // A tuning scale: minute ticks with a heavier tick every five, and a needle.
-            ZStack(alignment: .leading) {
-                Canvas { context, size in
-                    let count = 40
-                    for i in 0...count {
-                        let px = CGFloat(i) / CGFloat(count) * size.width
-                        let major = i % 5 == 0
-                        let h: CGFloat = major ? 20 : 10
-                        context.fill(Path(CGRect(x: px - (major ? 1 : 0.75), y: size.height - h, width: major ? 2 : 1.5, height: h)),
-                                     with: .color(major ? theme.text : theme.textMuted))
-                    }
-                }
-                .frame(height: 22)
-                RoundedRectangle(cornerRadius: 1.5).fill(theme.text)
-                    .frame(width: dragging ? 5 : 3, height: 36)
-                    .offset(x: x - 1.5)
-                    .opacity(hidden ? 0 : 1)
-            }
-        case .pictureBook:
-            ZStack(alignment: .leading) {
-                Capsule().fill(theme.raised).frame(height: 10)
-                Capsule().fill(theme.text).frame(width: max(10, x), height: 10)
-                PaperShape(seed: 1).fill(theme.text)
-                    .frame(width: 26, height: 26)
-                    .scaleEffect(dragging ? 1.15 : 1)
-                    .offset(x: x - 13)
-                    .opacity(hidden ? 0 : 1)
-            }
+        ZStack(alignment: .leading) {
+            Capsule().fill(theme.accent.opacity(0.4)).frame(height: 10)
+            Capsule().fill(theme.text).frame(width: max(10, x), height: 10)
+            PaperShape(seed: 1).fill(theme.text)
+                .frame(width: 26, height: 26)
+                .shadow(color: .black.opacity(theme.shadowOpacity * 0.5), radius: 3, y: 1)
+                .scaleEffect(dragFraction != nil ? 1.15 : 1)
+                .offset(x: x - 13)
+                .opacity(knownDuration == nil ? 0 : 1)
         }
     }
 
