@@ -70,11 +70,16 @@ final class AppModel {
     /// Brief confirmation shown above the Moon key.
     private(set) var toast: String?
     private(set) var sleepStatus: SleepStatus = .off
+    /// Drift back (exp_drift_back): where Sleep's fade began on an episode it then
+    /// faded out and paused. In memory only; cleared by the jump or a different episode.
+    private(set) var driftBack: DriftBackMarker?
 
     @ObservationIgnored private let store: LibraryStore
     @ObservationIgnored private let sleep: SleepController
     @ObservationIgnored private var nowPlaying: NowPlayingBridge?
     @ObservationIgnored private var sleepTicker: Task<Void, Never>?
+    /// Drift back: the fade start of the current Sleep, kept until it pauses the episode.
+    @ObservationIgnored private var fadeBegan: DriftBackMarker?
     @ObservationIgnored private var toastTask: Task<Void, Never>?
     @ObservationIgnored private var feedCache: [String: Feed] = [:]
     @ObservationIgnored private var feedTasks: [String: Task<Feed, Error>] = [:]
@@ -120,9 +125,20 @@ final class AppModel {
         player.onDurationMeasured = { [weak self] episode, duration in
             self?.sleep.measuredDurationArrived(duration, episodeID: episode.id)
         }
+        sleep.onFadeBegan = { [weak self] episodeID, secondsAgo in
+            guard let self, Experiments.isOn(.driftBack) else { return }
+            fadeBegan = DriftBackMarker(episodeID: episodeID, position: max(0, player.position - secondsAgo))
+        }
+        sleep.onFadedToSilence = { [weak self] episodeID in
+            guard let self, let began = fadeBegan, began.episodeID == episodeID else { return }
+            fadeBegan = nil
+            driftBack = began
+        }
         sleep.onChange = { [weak self] in
             guard let self else { return }
             sleepStatus = sleep.status
+            // A new Sleep supersedes the last drift-back marker.
+            if driftBack != nil, sleep.isActive { driftBack = nil }
         }
 
         // Restore the last episode paused at its saved position. Never autoplay;
@@ -339,6 +355,7 @@ final class AppModel {
             if !player.isPlaying { player.play() }
         } else {
             sleep.episodeWillChange(to: episode.id)
+            clearDriftBack()
             let start = SeekMath.resumeTime(saved: library.positions[episode.id], duration: episode.duration)
             player.load(episode, start: start, autoplay: true)
             library.lastEpisode = episode
@@ -367,6 +384,27 @@ final class AppModel {
 
     private func presentPlayer() {
         isPlayerPresented = true
+    }
+
+    // MARK: Drift back (exp_drift_back)
+
+    /// Where to offer "Back to …" on Now Playing: the loaded episode's fade start,
+    /// only once Sleep has paused it and while Sleep is off.
+    var driftBackPosition: TimeInterval? {
+        guard let marker = driftBack, sleepStatus == .off, marker.episodeID == player.episode?.id else { return nil }
+        return marker.position
+    }
+
+    /// Seeks (paused stays paused) to where the fade began, then forgets the marker.
+    func jumpToDriftBack() {
+        guard let position = driftBackPosition else { return }
+        player.seek(to: position)
+        driftBack = nil
+    }
+
+    private func clearDriftBack() {
+        fadeBegan = nil
+        if driftBack != nil { driftBack = nil }
     }
 
     // MARK: Sleep
@@ -455,6 +493,7 @@ final class AppModel {
     }
 
     func loadForDemo(_ episode: Episode, position: TimeInterval) {
+        clearDriftBack()
         player.load(episode, start: position, autoplay: false)
         library.lastEpisode = episode
         persist()
@@ -464,4 +503,10 @@ final class AppModel {
         toggleSleep()
     }
     #endif
+}
+
+/// A playback position on one episode (drift back: where Sleep's fade began).
+struct DriftBackMarker: Equatable {
+    let episodeID: String
+    let position: TimeInterval
 }
