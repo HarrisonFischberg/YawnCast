@@ -60,6 +60,12 @@ struct NowPlayingView: View {
 
                 Scrubber(position: player.position, duration: player.duration) { player.seek(to: $0) }
 
+                if let marker = model.driftBackPosition {
+                    DriftBackKey(position: marker) { model.jumpToDriftBack() }
+                        .padding(.top, Space.m)
+                        .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: -6)))
+                }
+
                 transport
                     .padding(.top, Space.xxl)
 
@@ -115,6 +121,7 @@ struct NowPlayingView: View {
                 .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
                 .padding(.bottom, Space.l)
             }
+            .animation(reduceMotion ? .easeOut(duration: 0.2) : .spring(response: 0.3, dampingFraction: 0.8), value: model.driftBackPosition)
             .padding(.horizontal, Space.xxl)
         }
         // Swipe down anywhere (not just the chevron) to drop back into the mini player.
@@ -197,6 +204,65 @@ struct NowPlayingView: View {
             Spacer(minLength: 0)
         }
         .sensoryFeedback(.impact(weight: .light), trigger: skipTaps)
+    }
+}
+
+/// Drift back (exp_drift_back): after Sleep fades an episode out and pauses it, one
+/// standard key under the scrubber jumps back to where the fade began. Seeks only;
+/// playback stays paused.
+private struct DriftBackKey: View {
+    let position: TimeInterval
+    let action: () -> Void
+
+    @Environment(\.theme) private var theme
+    @Environment(\.dynamicTypeSize) private var typeSize
+    @State private var taps = 0
+
+    var body: some View {
+        Button {
+            taps += 1
+            action()
+            UIAccessibility.post(notification: .announcement, argument: "At \(TimeFormat.spoken(position))")
+        } label: {
+            HStack(spacing: Space.m) {
+                Image(systemName: "arrow.uturn.backward")
+                    .font(.system(.subheadline, design: .rounded, weight: .bold))
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Back to \(TimeFormat.clock(position))")
+                        .font(Typo.headline)
+                        .monospacedDigit()
+                    Text("where the fade began")
+                        .font(Typo.caption)
+                        .foregroundStyle(theme.textMuted)
+                }
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.leading, Space.l)
+            .padding(.trailing, Space.xl)
+            .padding(.vertical, Space.s)
+            .frame(minHeight: 44)
+        }
+        .modifier(DriftBackKeyShape(largeType: typeSize.isAccessibilitySize))
+        .fixedSize(horizontal: !typeSize.isAccessibilitySize, vertical: true)
+        .sensoryFeedback(.selection, trigger: taps)
+        .accessibilityLabel("Back to \(TimeFormat.spoken(position)), where the fade began")
+        .accessibilityHint("Moves the episode there. It stays paused.")
+        .accessibilityIdentifier("driftBackKey")
+    }
+}
+
+/// A capsule key normally; a rounded plate when accessibility text wraps the lines.
+private struct DriftBackKeyShape: ViewModifier {
+    let largeType: Bool
+
+    func body(content: Content) -> some View {
+        if largeType {
+            content.buttonStyle(KeyStyle(shape: RoundedRectangle(cornerRadius: 18, style: .continuous), depth: 3))
+        } else {
+            content.buttonStyle(.capsuleKey(depth: 3))
+        }
     }
 }
 

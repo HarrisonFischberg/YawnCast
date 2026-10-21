@@ -68,6 +68,12 @@ public final class SleepController {
     /// (not on cancel, not when the episode ends).
     public var onFadedToSilence: (@MainActor (String) -> Void)?
 
+    /// Called with the episode id when the countdown runs out and the fade begins,
+    /// plus how many active seconds have already played since that moment (under one
+    /// tick), so the caller can recover the playback position where the fade began.
+    /// Fires again if "+5 min" during a fade sends Sleep back to waiting and it runs out again.
+    public var onFadeBegan: (@MainActor (_ episodeID: String, _ secondsAgo: TimeInterval) -> Void)?
+
     public init(clock: PlaybackClock = SystemPlaybackClock(), configuration: SleepConfiguration = .standard) {
         self.clock = clock
         self.timer = SleepTimer(configuration: configuration)
@@ -118,7 +124,12 @@ public final class SleepController {
     public func sync() {
         guard let player else { return }
         let dt = meter.sample(now: clock.now(), isActive: player.isActivelyPlaying)
+        let elapsedBefore = timer.elapsed
+        let fadeDelay = timer.fadeDelay
         let event = timer.advance(activeSeconds: dt)
+        if let elapsedBefore, let episodeID, elapsedBefore < fadeDelay, elapsedBefore + dt >= fadeDelay {
+            onFadeBegan?(episodeID, elapsedBefore + dt - fadeDelay)
+        }
         if event == .reachedSilence {
             // Pause at zero gain first, then restore gain silently.
             player.gain = 0
