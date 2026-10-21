@@ -156,12 +156,12 @@ final class AppModel {
             self?.sleep.measuredDurationArrived(duration, episodeID: episode.id)
         }
         sleep.onFadeBegan = { [weak self] episodeID, secondsAgo in
-            guard let self else { return }
+            guard let self, Experiments.isOn(.driftBack) else { return }
             fadeBegan = DriftBackMarker(episodeID: episodeID, position: max(0, player.position - secondsAgo))
         }
         sleep.onFadedToSilence = { [weak self] episodeID in
             guard let self else { return }
-            fadedOut = (episodeID, Date())
+            if Experiments.isOn(.wakeExtend) { fadedOut = (episodeID, Date()) }
             guard let began = fadeBegan, began.episodeID == episodeID else { return }
             fadeBegan = nil
             driftBack = began
@@ -393,7 +393,7 @@ final class AppModel {
             persist()
             nightCheckedEpisodeID = nil
         }
-        armSleepIfLate(for: episode)
+        if Experiments.isOn(.nightAuto) { armSleepIfLate(for: episode) }
         presentPlayer()
     }
 
@@ -479,7 +479,8 @@ final class AppModel {
         defer { wasPlaying = playing }
         guard playing, !wasPlaying, let faded = fadedOut else { return }
         fadedOut = nil
-        guard sleepStatus == .off,
+        guard Experiments.isOn(.wakeExtend),
+              sleepStatus == .off,
               player.episode?.id == faded.episodeID,
               Date().timeIntervalSince(faded.at) <= wakeExtendWindow else { return }
         toggleSleep(backOn: true)
@@ -526,20 +527,35 @@ final class AppModel {
 
     /// The last Sleep line pushed to the Lock Screen; Sleep ticks only push when it changes.
     @ObservationIgnored private var lockStatusPushed: String?
+    @ObservationIgnored private var lockStatusOn = false
+    @ObservationIgnored private var lockStatusObserver: NSObjectProtocol?
 
+    /// Reads the flag at launch and again whenever the Feature flags screen changes it
+    /// (the flag is cached because Sleep changes arrive at 4 Hz).
     private func installLockStatus() {
-        nowPlaying?.artistLine = { [weak self] show in
-            LockScreenSleepText.subtitle(show: show, status: self?.sleepStatus ?? .off)
+        if lockStatusObserver == nil {
+            lockStatusObserver = NotificationCenter.default.addObserver(forName: Experiments.didChange, object: nil, queue: .main) { [weak self] _ in
+                MainActor.assumeIsolated { self?.installLockStatus() }
+            }
         }
+        let on = Experiments.isOn(.lockStatus)
+        guard on != lockStatusOn || (on && nowPlaying?.artistLine == nil) else { return }
+        lockStatusOn = on
+        lockStatusPushed = nil
+        nowPlaying?.artistLine = on ? { [weak self] show in
+            LockScreenSleepText.subtitle(show: show, status: self?.sleepStatus ?? .off)
+        } : nil
+        nowPlaying?.update()
     }
 
-    private func lockStatusLine() -> String {
-        LockScreenSleepText.subtitle(show: "", status: sleepStatus)
+    private func lockStatusLine() -> String? {
+        lockStatusOn ? LockScreenSleepText.subtitle(show: "", status: sleepStatus) : nil
     }
 
     /// Called on every Sleep change (4 Hz while counting down). Pushes only when the
     /// whole-minute text or the Sleep phase changed.
     private func refreshLockStatus() {
+        guard lockStatusOn else { return }
         let line = lockStatusLine()
         guard line != lockStatusPushed else { return }
         lockStatusPushed = line

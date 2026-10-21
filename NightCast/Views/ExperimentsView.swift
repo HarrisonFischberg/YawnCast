@@ -1,7 +1,8 @@
 import SwiftUI
 
-/// Hidden test-build screen with one toggle per Evolve experiment.
-/// Reached by long-pressing the version line at the bottom of Themes; never shown from the App Store.
+/// Hidden Feature flags screen: one toggle per shipped feature, plus any Evolve
+/// experiments in test builds. Reached by pressing and holding the version line at the
+/// bottom of Themes, then tapping Feature flags.
 struct ExperimentsView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var states: [String: Bool] = [:]
@@ -10,29 +11,29 @@ struct ExperimentsView: View {
         NavigationStack {
             List {
                 Section {
-                    if Experiment.allCases.isEmpty {
-                        Text("No experiments in this build.")
+                    if available.isEmpty {
+                        Text("No feature flags in this build.")
                             .foregroundStyle(.secondary)
                     }
-                    ForEach(Experiment.allCases) { experiment in
+                    ForEach(available) { experiment in
                         Toggle(experiment.title, isOn: binding(for: experiment))
                             .accessibilityIdentifier("experiment-\(experiment.key)")
                     }
                 } footer: {
-                    Text("Changes apply the next time a screen opens. Launch with -evolve_all YES to turn everything on.")
+                    Text("Shipped features start on. Changes apply the next time a screen opens. Launch with -evolve_all YES to turn everything on.")
                 }
                 Section {
                     Button("Turn all on") {
                         Experiments.setAll(true)
                         reload()
                     }
-                    Button("Reset", role: .destructive) {
+                    Button("Reset to defaults", role: .destructive) {
                         Experiments.reset()
                         reload()
                     }
                 }
             }
-            .navigationTitle("Experiments")
+            .navigationTitle("Feature flags")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
             }
@@ -42,6 +43,8 @@ struct ExperimentsView: View {
         .preferredColorScheme(.dark)
         .onAppear(perform: reload)
     }
+
+    private var available: [Experiment] { Experiment.allCases.filter(Experiments.isAvailable) }
 
     private func binding(for experiment: Experiment) -> Binding<Bool> {
         Binding {
@@ -53,6 +56,6 @@ struct ExperimentsView: View {
     }
 
     private func reload() {
-        states = Dictionary(uniqueKeysWithValues: Experiment.allCases.map { ($0.key, Experiments.isOn($0)) })
+        states = Dictionary(uniqueKeysWithValues: available.map { ($0.key, Experiments.isOn($0)) })
     }
 }
