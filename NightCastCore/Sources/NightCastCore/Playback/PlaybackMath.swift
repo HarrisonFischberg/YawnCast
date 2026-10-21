@@ -80,6 +80,11 @@ public enum SleepCopy {
         "Sleep on · fade begins in \(TimeFormat.sleepDelay(fadeDelay))"
     }
 
+    /// Wake extend: Play pressed soon after Sleep faded out.
+    public static func backOn(fadeDelay: TimeInterval) -> String {
+        "Sleep is back on · fade begins in \(TimeFormat.sleepDelay(fadeDelay))"
+    }
+
     public static let cancelled = "Sleep off"
 
     /// Short status for the Moon key.

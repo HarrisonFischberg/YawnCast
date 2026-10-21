@@ -64,6 +64,10 @@ public final class SleepController {
     /// Called whenever `status` may have changed.
     public var onChange: (@MainActor () -> Void)?
 
+    /// Called with the episode id once Sleep has faded to silence and paused playback
+    /// (not on cancel, not when the episode ends).
+    public var onFadedToSilence: (@MainActor (String) -> Void)?
+
     public init(clock: PlaybackClock = SystemPlaybackClock(), configuration: SleepConfiguration = .standard) {
         self.clock = clock
         self.timer = SleepTimer(configuration: configuration)
@@ -121,6 +125,7 @@ public final class SleepController {
             player.pauseForSleep()
             apply()
             onChange?()
+            if let episodeID { onFadedToSilence?(episodeID) }
             return
         }
         apply()
