@@ -8,6 +8,9 @@ final class NowPlayingBridge {
     private weak var engine: PlaybackEngine?
     private var artwork: MPMediaItemArtwork?
     private var artworkURL: URL?
+    /// Optional override for the artist line (Sleep status on the Lock Screen). Given the
+    /// show title, returns the line to show. `nil` keeps the show title.
+    var artistLine: ((String) -> String)?
 
     init(engine: PlaybackEngine) {
         self.engine = engine
@@ -50,6 +53,11 @@ final class NowPlayingBridge {
     }
 
     /// Pushes current state to the Lock Screen. Cheap; call on every state change.
+    /// The artist line `update()` will publish for `episode`.
+    func artistText(for episode: Episode) -> String {
+        artistLine?(episode.showTitle) ?? episode.showTitle
+    }
+
     func update() {
         guard let engine, let episode = engine.episode else {
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
@@ -57,7 +65,7 @@ final class NowPlayingBridge {
         }
         var info: [String: Any] = [
             MPMediaItemPropertyTitle: episode.title,
-            MPMediaItemPropertyArtist: episode.showTitle,
+            MPMediaItemPropertyArtist: artistText(for: episode),
             MPMediaItemPropertyAlbumTitle: episode.showTitle,
             MPNowPlayingInfoPropertyElapsedPlaybackTime: engine.position,
             MPNowPlayingInfoPropertyPlaybackRate: engine.isActivelyPlaying ? 1.0 : 0.0,
