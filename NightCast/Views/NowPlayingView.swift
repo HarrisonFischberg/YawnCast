@@ -99,12 +99,13 @@ struct NowPlayingView: View {
                     MoonKey(status: model.sleepStatus) { model.toggleSleep() }
                         .disabled(player.episode == nil)
                         .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: model.sleepStatus == .off)
-                        .overlay(alignment: .bottomLeading) {
+                        .overlay(alignment: .topLeading) {
                             if model.sleepStatus != .off {
+                                // Three lines of z's rise out of the moon well.
                                 FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
-                                    .frame(width: 90, height: 150)
-                                    // Rise out of the moon well (left side of the key).
-                                    .offset(x: 18, y: -44)
+                                    // Tall, so they float well up the screen before fading out.
+                                    .frame(width: 130, height: 360)
+                                    .offset(x: 8, y: -336)
                                     .transition(.opacity)
                             }
                         }
