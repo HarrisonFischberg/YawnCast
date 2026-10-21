@@ -69,6 +69,10 @@ final class AppModel {
     private(set) var interests: [PodcastCategory] = []
     /// Brief confirmation shown above the Moon key.
     private(set) var toast: String?
+    /// Note shown in the toast slot when Sleep turned itself on late at night (exp_night_auto).
+    private(set) var nightNote: String?
+    /// Local hour, 0-23. Replaced in Debug by `-nightHour` (TestSupport/DebugLaunch.swift).
+    @ObservationIgnored var currentHour: () -> Int = { Calendar.current.component(.hour, from: Date()) }
     private(set) var sleepStatus: SleepStatus = .off
 
     @ObservationIgnored private let store: LibraryStore
@@ -76,6 +80,9 @@ final class AppModel {
     @ObservationIgnored private var nowPlaying: NowPlayingBridge?
     @ObservationIgnored private var sleepTicker: Task<Void, Never>?
     @ObservationIgnored private var toastTask: Task<Void, Never>?
+    @ObservationIgnored private var nightNoteTask: Task<Void, Never>?
+    /// The episode load the late-night check already ran for, so turning Sleep off sticks.
+    @ObservationIgnored private var nightCheckedEpisodeID: String?
     @ObservationIgnored private var feedCache: [String: Feed] = [:]
     @ObservationIgnored private var feedTasks: [String: Task<Feed, Error>] = [:]
     /// Feeds fetched from the network this session (the disk cache may be older).
@@ -343,8 +350,39 @@ final class AppModel {
             player.load(episode, start: start, autoplay: true)
             library.lastEpisode = episode
             persist()
+            nightCheckedEpisodeID = nil
         }
+        if Experiments.isOn(.nightAuto) { armSleepIfLate(for: episode) }
         presentPlayer()
+    }
+
+    /// exp_night_auto: between 22:00 and 04:59, the first deliberate play of an
+    /// episode load turns Sleep on. Runs after a different episode cancels Sleep (D07).
+    private func armSleepIfLate(for episode: Episode) {
+        guard nightCheckedEpisodeID != episode.id, Self.isLate(hour: currentHour()) else { return }
+        nightCheckedEpisodeID = episode.id
+        guard sleepStatus == .off, player.episode?.id == episode.id else { return }
+        toggleSleep(announcing: false)
+        guard case .waiting(let delay) = sleepStatus else { return }
+        showNightNote(fadeDelay: delay)
+    }
+
+    static func isLate(hour: Int) -> Bool { hour >= 22 || hour < 5 }
+
+    static let nightNoteCopy = "It’s late, so Sleep is on."
+
+    private func showNightNote(fadeDelay: TimeInterval) {
+        nightNote = Self.nightNoteCopy
+        nightNoteTask?.cancel()
+        nightNoteTask = Task { [weak self] in
+            // One message for VoiceOver, after Now Playing has taken focus.
+            try? await Task.sleep(for: .milliseconds(700))
+            guard !Task.isCancelled else { return }
+            self?.announce("\(Self.nightNoteCopy) Fade begins in \(TimeFormat.sleepDelay(fadeDelay)).")
+            try? await Task.sleep(for: .seconds(3.3))
+            guard !Task.isCancelled else { return }
+            self?.nightNote = nil
+        }
     }
 
     /// Shows for an Explore category: the genre's top 50 in chart order, or a
@@ -371,8 +409,12 @@ final class AppModel {
 
     // MARK: Sleep
 
-    func toggleSleep() {
+    func toggleSleep(announcing: Bool = true) {
         guard let episode = player.episode else { return }
+        if nightNote != nil {
+            nightNoteTask?.cancel()
+            nightNote = nil
+        }
         let remaining = SeekMath.remaining(position: player.position, duration: player.duration)
         if let delay = sleep.toggle(
             player: player,
@@ -382,7 +424,7 @@ final class AppModel {
             durationIsProvisional: !player.isDurationMeasured
         ) {
             // The countdown bubble shows this; VoiceOver hears it.
-            announce(SleepCopy.activated(fadeDelay: delay))
+            if announcing { announce(SleepCopy.activated(fadeDelay: delay)) }
         } else {
             show(toast: SleepCopy.cancelled)
         }
