@@ -18,13 +18,21 @@ struct MoonKey: View {
             HStack(spacing: Space.l) {
                 MoonWell(isOn: isOn, isFading: isFading)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
-                        .font(Typo.title)
-                    Text(subtitle)
-                        .font(Typo.caption)
-                        // 0.85 keeps Ember at AA (4.89:1); 0.8 fell to 4.48:1. See scripts/contrast.py.
-                        .opacity(0.85)
-                        .contentTransition(.numericText())
+                    HStack(spacing: Space.s) {
+                        Text(title)
+                            .font(Typo.title)
+                        if case .waiting = status {
+                            AccentHeart()
+                                .accessibilityHidden(true)
+                        }
+                    }
+                    if let subtitle {
+                        Text(subtitle)
+                            .font(Typo.caption)
+                            // 0.85 keeps Ember at AA (4.89:1); 0.8 fell to 4.48:1. See scripts/contrast.py.
+                            .opacity(0.85)
+                            .contentTransition(.numericText())
+                    }
                 }
                 .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
                 .minimumScaleFactor(0.7)
@@ -55,16 +63,16 @@ struct MoonKey: View {
 
     private var title: String {
         switch status {
-        case .off: "Sleep"
-        case .waiting: "Sleep on"
+        case .off: "Ready for bed?"
+        case .waiting: "Sweet dreams"
         case .fading: "Drifting off"
         }
     }
 
-    private var subtitle: String {
+    private var subtitle: String? {
         switch status {
-        case .off: "Fade out, then pause"
-        case .waiting(let t): "Fade begins in \(TimeFormat.sleepDelay(t))"
+        case .off: nil
+        case .waiting(let t): "Fade in \(TimeFormat.sleepDelayLong(t))."
         case .fading(let level): "Volume \(Int((level * 100).rounded()))%"
         }
     }
@@ -75,6 +83,23 @@ struct MoonKey: View {
         case .waiting(let t): "On. Fade begins in \(TimeFormat.spoken(t))"
         case .fading(let level): "On. Fading, volume \(Int((level * 100).rounded())) percent"
         }
+    }
+}
+
+/// The heart after "Sweet dreams", filled with the look's accent. The key face
+/// is already accent while Sleep is on, so an onAccent outline keeps it visible.
+private struct AccentHeart: View {
+    @Environment(\.theme) private var theme
+    @ScaledMetric(relativeTo: .title3) private var size: CGFloat = 17
+
+    var body: some View {
+        ZStack {
+            Image(systemName: "heart.fill")
+                .foregroundStyle(theme.accent)
+            Image(systemName: "heart")
+                .foregroundStyle(theme.onAccent)
+        }
+        .font(.system(size: size, weight: .semibold))
     }
 }
 
