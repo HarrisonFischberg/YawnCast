@@ -1,4 +1,4 @@
-# Pocket Casts — competitor research for NightCast
+# Pocket Casts — competitor research for YawnCast
 
 Researched 2026-10-20. Target: Pocket Casts for iOS (Automattic), https://pocketcasts.com/ — open source at https://github.com/Automattic/pocket-casts-ios.
 Note: pocketcasts.com/plus returned HTTP 403 and Reddit (www/old.reddit.com JSON and HTML) was blocked from this machine, so the Reddit material below only comes from Reddit text quoted inside a GitHub issue. App Store reviews come from Apple's public review RSS feeds (US, GB, CA, AU), which include each review's date.
@@ -157,7 +157,7 @@ Tags: C = complaint, M = missing feature, D = delight. App Store quotes come fro
 28. **C — nightstand widget disappears.** "The "Nightstand mode" widget seems to be unexpectedly uninstalled after every app update."
     — bjsvec, GitHub issue #2759, 2025-02-19. https://github.com/Automattic/pocket-casts-ios/issues/2759
 
-### Business model and noise (relevant to NightCast's no-ads, no-account stance)
+### Business model and noise (relevant to YawnCast's no-ads, no-account stance)
 
 29. **C — ads after paying.** "Paid for this app in 2015 when it was a one-time payment. They recently started injecting ads into the app and player screen and now want an annual subscription to remove them."
     — djr9257, App Store US, 1★, 2025-09-25. https://apps.apple.com/us/app/pocket-casts-podcast-player/id414834813?see-all=reviews
@@ -180,18 +180,18 @@ Tags: C = complaint, M = missing feature, D = delight. App Store quotes come fro
 
 ---
 
-## 3. Ideas NightCast could adopt
+## 3. Ideas YawnCast could adopt
 
 1. **Honest timer state, and a timer that never outlives the night.** Clear any leftover sleep timer once playback has been paused for a long stretch (for example 2 hours) or when a new day starts. Make sure the Moon's lit/unlit state always matches whether a fade will happen. — Quotes 1, 7, 8, 9, 12, 24; GitHub #1860.
-2. **Shake (or headphone double-tap) to add time during the fade, with a soft haptic confirmation.** Pocket Casts only accepts a shake before the timer ends, and gives no feedback. NightCast could accept it during the fade too and confirm with one gentle haptic, without lighting the screen. — Quotes 2, 5, 13; PR #1627.
-3. **Long, gentle fade with a pre-fade cue.** Pocket Casts fades over only 5 s, on a log curve. NightCast's Moon fade could be longer (20–60 s), use a perceptual curve, and optionally give a single soft haptic before it starts. — Quote 4; PR #1629; quote 14.
+2. **Shake (or headphone double-tap) to add time during the fade, with a soft haptic confirmation.** Pocket Casts only accepts a shake before the timer ends, and gives no feedback. YawnCast could accept it during the fade too and confirm with one gentle haptic, without lighting the screen. — Quotes 2, 5, 13; PR #1627.
+3. **Long, gentle fade with a pre-fade cue.** Pocket Casts fades over only 5 s, on a log curve. YawnCast's Moon fade could be longer (20–60 s), use a perceptual curve, and optionally give a single soft haptic before it starts. — Quote 4; PR #1629; quote 14.
 4. **Bedtime auto-arm.** Optionally arm the Moon automatically when playback starts inside a night window (for example 22:00–04:00), so a user who forgets the timer is still covered. — Quotes 3, 16.
-5. **"Until end of episode" as a Moon option.** NightCast has no autoplay-next, so this is just "fade at the episode's end", which helps listeners who match the timer to story length by hand. — Quotes 11, 26; sleep-timer KB.
+5. **"Until end of episode" as a Moon option.** YawnCast has no autoplay-next, so this is just "fade at the episode's end", which helps listeners who match the timer to story length by hand. — Quotes 11, 26; sleep-timer KB.
 6. **Sleep Timer Live Activity / Lock Screen countdown with a +time button.** Lets the user check or extend the timer without unlocking or seeing the bright full app. — CHANGELOG 8.19 (#4949); quote 2 "flashbanged".
 7. **Siri/App Intent "Start sleep timer" that works while locked.** — Quote 27; issue #32; fixed in PC 8.20.
-8. **Keep the dark, quiet promise.** A true-black theme with dim artwork at night, no promotional notifications, no ads. NightCast's no-ads, no-account stance is a differentiator worth stating in the App Store copy. — Quotes 18, 29, 30, 31; 9to5mac 2025-09-24.
+8. **Keep the dark, quiet promise.** A true-black theme with dim artwork at night, no promotional notifications, no ads. YawnCast's no-ads, no-account stance is a differentiator worth stating in the App Store copy. — Quotes 18, 29, 30, 31; 9to5mac 2025-09-24.
 9. **Small rewind after an interruption.** After any interruption, or a resume the next morning, rewind a few seconds so no words are lost. — Quote 32; issue #45.
-10. **A "Bedtime" collection inside Library.** For example a pinned group of sleep shows, kept within NightCast's artwork-grid model rather than as a queue. — Quotes 20, 21.
+10. **A "Bedtime" collection inside Library.** For example a pinned group of sleep shows, kept within YawnCast's artwork-grid model rather than as a queue. — Quotes 20, 21.
 
 ---
 

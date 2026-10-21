@@ -3,7 +3,7 @@
 ## Architecture
 
 ```
-NightCastCore (Swift package, no UIKit/AVFoundation)
+YawnCastCore (Swift package, no UIKit/AVFoundation)
   Models        Show, Episode, PlaybackPosition, Subscription
   Directory     DirectoryService protocol, ITunesDirectory (URLSession), dedupe
   Feed          FeedService, RSSParser (XMLParser), duration/date parsing
@@ -11,7 +11,7 @@ NightCastCore (Swift package, no UIKit/AVFoundation)
   Sleep         SleepTimer (pure state machine), SleepEffect
   Playback math SeekMath (clamp, ±15), TimeFormat
 
-NightCast app (SwiftUI, iOS 18+)
+YawnCast app (SwiftUI, iOS 18+)
   Playback      PlaybackEngine (AVPlayer, gain, session, interruptions, routes)
                 NowPlayingBridge (MPNowPlayingInfoCenter, MPRemoteCommandCenter)
                 SleepDriver (feeds active seconds from an injectable clock into SleepTimer)
@@ -19,7 +19,7 @@ NightCast app (SwiftUI, iOS 18+)
   UI state      LibraryModel, SearchModel, ShowModel, PlayerModel (@Observable)
   Views         LibraryView, SearchView, ShowView, NowPlayingView, AppearanceSheet
   Design        Theme tokens, Moon control, pressable button style, haptics
-NightCastUITests  launch arg `-uitest` swaps network for fixtures
+YawnCastUITests  launch arg `-uitest` swaps network for fixtures
 ```
 
 Data flow: views → @Observable models → services. Services are protocols; tests inject fakes.
@@ -49,7 +49,7 @@ Sequential, never nested. One milestone each.
 - **M3 via /goal** (narrow, verifiable):
   `/goal M3 vertical slice: ACCEPTANCE.md M3.1–M3.7 all PASS, verified by xcodebuild build + test output recorded in PROGRESS.md. Device checks excluded.`
 - **M4 via Ralph** (bounded loop):
-  `/ralph-loop "Read PROGRESS.md and ACCEPTANCE.md. Implement the highest-priority unfinished M4 item. Run swift test in NightCastCore and xcodebuild test. Record results in PROGRESS.md. Output <promise>M4 VERIFIED</promise> only when M4.1–M4.10 are PASS by actual test output. If the same external blocker occurs 3 times, document it and stop." --max-iterations 12 --completion-promise "M4 VERIFIED"`
+  `/ralph-loop "Read PROGRESS.md and ACCEPTANCE.md. Implement the highest-priority unfinished M4 item. Run swift test in YawnCastCore and xcodebuild test. Record results in PROGRESS.md. Output <promise>M4 VERIFIED</promise> only when M4.1–M4.10 are PASS by actual test output. If the same external blocker occurs 3 times, document it and stop." --max-iterations 12 --completion-promise "M4 VERIFIED"`
   Requires installing the `ralph-loop` plugin first (see PROGRESS.md).
 - **M5 via Ralph** after M4 completes, same pattern, `--completion-promise "M5 VERIFIED"`.
 

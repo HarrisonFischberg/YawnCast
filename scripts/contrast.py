@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""WCAG contrast check for every NightCast theme.
+"""WCAG contrast check for every YawnCast theme.
 
-Reads the colors straight from NightCast/Design/Theme.swift (what ships), checks the
+Reads the colors straight from YawnCast/Design/Theme.swift (what ships), checks the
 pairs the UI actually draws, and flags drift from replica/design/tokens.<id>.json.
 
     python3 scripts/contrast.py          # table + failures, exit 1 on any failure
@@ -17,7 +17,7 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-THEME_SWIFT = ROOT / "NightCast/Design/Theme.swift"
+THEME_SWIFT = ROOT / "YawnCast/Design/Theme.swift"
 TOKENS = str(ROOT / "replica/design/tokens.{}.json")
 
 # (foreground, background, minimum, where it appears[, foreground opacity])

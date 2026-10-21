@@ -1,6 +1,6 @@
 # Cycle 001 backlog
 
-Score = evidence (0-3) + impact (0-3) + fits ~40 min (0-3) + fits NightCast's identity (0-3). Picks avoid persisted-data changes, new permissions, new dependencies, pricing and backend.
+Score = evidence (0-3) + impact (0-3) + fits ~40 min (0-3) + fits YawnCast's identity (0-3). Picks avoid persisted-data changes, new permissions, new dependencies, pricing and backend.
 
 | Idea | Flag | Ev | Imp | Fit 40m | Identity | Total | Files | Decision |
 |---|---|---|---|---|---|---|---|---|

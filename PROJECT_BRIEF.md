@@ -1,6 +1,6 @@
-# NightCast — Project Brief
+# YawnCast — Project Brief
 
-> "NightCast" is a temporary internal working name. It is not trademark-cleared.
+> "YawnCast" is a temporary internal working name. It is not trademark-cleared.
 
 ## What
 

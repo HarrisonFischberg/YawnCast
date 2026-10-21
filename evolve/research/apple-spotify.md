@@ -154,20 +154,20 @@ That is 32 quotes in all. The strongest theme across both apps: **after the time
 
 ---
 
-## 4. Ideas NightCast could adopt
+## 4. Ideas YawnCast could adopt
 
-1. **"End of episode" that is guaranteed to stop.** NightCast already has no queue and no autoplay-next. Make that a promise you can see: after an end-of-episode stop, never start anything else, and never let an intro or ad from another episode play. Say it plainly in the timer sheet ("Stops and stays stopped"). Evidence: #S1 to #S8, #S14.
+1. **"End of episode" that is guaranteed to stop.** YawnCast already has no queue and no autoplay-next. Make that a promise you can see: after an end-of-episode stop, never start anything else, and never let an intro or ad from another episode play. Say it plainly in the timer sheet ("Stops and stays stopped"). Evidence: #S1 to #S8, #S14.
 2. **Keep the Moon on the main player, one tap, always.** Never move it into an overflow menu, and never hide it behind "start an episode first." Evidence: #S9; Apple's timer is only in full Now Playing and appears only after playback starts (iPhone Life).
 3. **Show time left on both the timer and the episode while the timer runs.** Use large, dim, glanceable text. Evidence: #A2.
 4. **Fill in the preset gaps and allow longer sessions.** Add 20 and 25 minute presets and something over 1 hour (90 or 120 min). Consider "after N episodes" only if it fits the no-queue model, for example "this episode + 1". Evidence: #A1, #A3, #S12, #S13.
 5. **A "fell asleep" marker.** When a fade-out ends playback, save the position and keep the episode **unplayed**, then offer a "you dozed off at 23:14, jump back?" resume next time. Evidence: #A4, #A7, #A8, #S15.
 6. **A bedtime Lock Screen lock.** Offer a way to stop stray touches from scrubbing or skipping, for example a Now Playing that only reports remote commands for play/pause and leaves skip off, or a "bed mode" with skip disabled. Evidence: #A6.
 7. **A calm Lock Screen and Live Activity.** Keep the episode title, never an AI chapter title. Use small art, not full-screen artwork. A Live Activity could show the Moon countdown. Evidence: #A9, #A10, #A11; Spotify's widget only launches the app (support page).
-8. **Audio-only by design.** NightCast's "no video at night" is a selling point, so state it on the Explore page and onboarding. Evidence: #A5.
+8. **Audio-only by design.** YawnCast's "no video at night" is a selling point, so state it on the Explore page and onboarding. Evidence: #A5.
 9. **Downloads that never vanish.** Never auto-delete an unplayed download, and show storage plainly. Evidence: #A12, #A13.
-10. **Never auto-play on connect.** Bluetooth or CarPlay connections should not start playback. NightCast can state this as a guarantee. Evidence: #A14, #A15.
+10. **Never auto-play on connect.** Bluetooth or CarPlay connections should not start playback. YawnCast can state this as a guarantee. Evidence: #A14, #A15.
 11. **A Siri / Shortcuts "Start sleep timer" intent.** Both rivals let you start a sleep timer by voice (Spotify's "Set a sleep timer"). An App Intent for the Moon timer would work in the dark without unlocking. Source: https://support.spotify.com/us/article/talk-to-spotify/
-12. **Sleep timer that works over AirPlay.** Both rivals grey out or cancel the timer when audio goes to a HomePod or Connect speaker. NightCast's fade-and-pause should keep working when routed to AirPlay. Evidence: the Apple HomePod thread and the Spotify Connect moderator reply (section 1 and 2 tables).
+12. **Sleep timer that works over AirPlay.** Both rivals grey out or cancel the timer when audio goes to a HomePod or Connect speaker. YawnCast's fade-and-pause should keep working when routed to AirPlay. Evidence: the Apple HomePod thread and the Spotify Connect moderator reply (section 1 and 2 tables).
 
 ---
 

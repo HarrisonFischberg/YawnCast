@@ -3,15 +3,15 @@
 All visual decisions here are **original [P]**. No screenshots of reference apps were
 available, so nothing below claims to reproduce a measured reference layout.
 
-## Principles drawn from stated Not Boring values → how NightCast applies them
+## Principles drawn from stated Not Boring values → how YawnCast applies them
 
-| Stated value (source: notbor.ing, reviews) | NightCast application |
+| Stated value (source: notbor.ing, reviews) | YawnCast application |
 |---|---|
 | One thing exceptionally well | One job: fall asleep to a podcast. Three screens. One signature control. |
 | Physical, tactile controls (Camera's dials/shutter) | Oversized transport keys with a visible "travel" (pressed state sinks 2 pt, shadow tightens), crisp haptic on press. Moon is a big round key with a recessed face, not a FAB. |
 | Haptics + motion with purpose | `.sensoryFeedback` on play/pause, ±15, Moon on/off. Springs ≤ 0.35 s. Reduce Motion → crossfades only. |
 | Personalization (skins) | Three coordinated themes, chosen in a tiny sheet. No per-color pickers. |
-| No sounds in Sleep mode | Brief requires silence; NightCast has no UI sounds at all. |
+| No sounds in Sleep mode | Brief requires silence; YawnCast has no UI sounds at all. |
 
 ## Hierarchy on Now Playing (top → bottom)
 1. Episode title — large, expressive (rounded serif-ish display via system `.serif` design at bold weight), up to 3 lines, show name small above.

@@ -1,4 +1,4 @@
-# NightCast app profile (cycle 001, base = main @ 9fbcc25)
+# YawnCast app profile (cycle 001, base = main @ 9fbcc25)
 
 Calm iPhone podcast player for falling asleep. SwiftUI, iOS 18+, no account, no backend.
 Search = Apple iTunes Search API; feeds fetched straight from publishers; streaming only.
@@ -13,7 +13,7 @@ Search = Apple iTunes Search API; feeds fetched straight from publishers; stream
 - Shots: `cycles/001/shots/base-nowplaying.png`, `base-new.png`.
 
 ## Sleep (signature)
-One tap on Moon. Countdown = min(30 min, remaining/2) of active playback, then volume steps down 10% every 40 s (6 min), then pause and save position. ±5 min bubble. VoiceOver announcements. Never plays the next episode. Logic in `NightCastCore/Sleep/`, glue in `AppModel.toggleSleep`.
+One tap on Moon. Countdown = min(30 min, remaining/2) of active playback, then volume steps down 10% every 40 s (6 min), then pause and save position. ±5 min bubble. VoiceOver announcements. Never plays the next episode. Logic in `YawnCastCore/Sleep/`, glue in `AppModel.toggleSleep`.
 
 ## System integration today
 - Lock Screen / Control Center via `NowPlayingBridge`: play, pause, ±15, scrub. Next/previous/rate disabled.

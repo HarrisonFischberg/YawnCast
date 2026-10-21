@@ -11,7 +11,7 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] Tracking files
 
 ## M4-core (no Xcode needed; pulled forward) — 50 tests green
-- [x] NightCastCore package skeleton + `swift test` green
+- [x] YawnCastCore package skeleton + `swift test` green
 - [x] SleepTimer state machine + virtual-time tests (M4.1–M4.7, M4.9)
 - [x] SeekMath + TimeFormat + tests (M3.6)
 - [x] RSSParser + fixtures incl. malformed (M3.3)
@@ -20,7 +20,7 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 
 ## M2 Visual direction
 - [x] Owner: accept Xcode license
-- [x] Create NightCast.xcodeproj (app + UI tests) linking NightCastCore
+- [x] Create YawnCast.xcodeproj (app + UI tests) linking YawnCastCore
 - [x] Theme system + PressableButton + MoonButton + Scrubber
 - [x] Library prototype (grid, empty state, mini-player) with sample artwork from real feeds
 - [x] Now Playing prototype
@@ -34,7 +34,7 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] Search / Show / Library wired to real services
 - [x] Relaunch restores subscriptions + positions (UI tests)
 - [x] Fixture mode `-uitest` + 5 UI tests; opt-in live-network UI test
-- [x] SearchModel unit tests for debounce/cancel (NightCastTests app unit-test target, 19 tests)
+- [x] SearchModel unit tests for debounce/cancel (YawnCastTests app unit-test target, 19 tests)
 
 ## M4 Sleep in app
 - [x] Fix: R uses feed duration if Sleep is tapped before AVPlayer reports measured duration (observed: feed 31:22 vs stream 37:04 → "9 min" instead of 11). See DECISIONS D11

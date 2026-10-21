@@ -10,7 +10,7 @@ Quote sourcing: unless noted, quotes come from the US App Store customer-review 
 - **URL:** https://apps.apple.com/us/app/id6744658836 (dev Arthur de Rijke; released 2025-05-28; iOS 17.6+)
 - **Purpose:** "Fall asleep to your favorite podcasts without managing timers, rewinding episodes, or losing the best moments."
 - **Pricing:** $4.99 paid up-front (US). Only 3 US ratings (5.0).
-- **Sleep behaviors (App Store description):** duration or end-of-episode timer; "Smart Sleep Check: A gentle beep and motion detection can sense if you're still awake, extending the timer"; "Time Window" (timer only active during set hours); sleep-timer statistics; auto-restart across episodes; "Volume Fade-Out: Audio gently fades out during the final seconds"; v4.0 adds "Morning Overview" (listening time, sleep-timer activity, new episodes after the session), Live Activity with timer controls, iCloud sync (off by default). v3.5 added a **Simple mode** with an artwork grid of shows and fullscreen player — very close to NightCast's library.
+- **Sleep behaviors (App Store description):** duration or end-of-episode timer; "Smart Sleep Check: A gentle beep and motion detection can sense if you're still awake, extending the timer"; "Time Window" (timer only active during set hours); sleep-timer statistics; auto-restart across episodes; "Volume Fade-Out: Audio gently fades out during the final seconds"; v4.0 adds "Morning Overview" (listening time, sleep-timer activity, new episodes after the session), Live Activity with timer controls, iCloud sync (off by default). v3.5 added a **Simple mode** with an artwork grid of shows and fullscreen player — very close to YawnCast's library.
 - **Better than a calm bedtime player:** solves "did I fall asleep?" (beep + motion extension), morning recap of where you drifted off, scheduled auto-timer.
 - **Worse:** heavy feature surface (AI summaries, transcription, bookmarks with waveform editor, smart playlists, Binge/Remix modes) — "Expert mode" is the opposite of calm; a beep at bedtime can wake a partner; paid up-front.
 - **Quotes** (Netherlands store feed: https://itunes.apple.com/nl/rss/customerreviews/id=6744658836/sortby=mostrecent/json):
@@ -106,12 +106,12 @@ Quote sourcing: unless noted, quotes come from the US App Store customer-review 
 - **Snipd** (id1557206126): AI summaries/notes — opposite of calm; one 3-star review (2026-06-19) calls bullet-point summaries "very boring". Not a bedtime competitor.
 - BBC Sounds not in US store search; Airr not found on the App Store under that name; Podcast Addict is Android-only.
 
-## Cross-app patterns relevant to NightCast
+## Cross-app patterns relevant to YawnCast
 1. **Extend without waking** (Castro press-play, Pocket Casts shake/auto-restart, Sleepcast beep+motion, Audible shake) is the most common advanced behavior — and the most praised.
-2. **"Where did I drift off?"** recurs (Slumber, Apple Podcasts, Sleep Music Timer, Castro). Sleepcast's Morning Overview answers it; a gentle "you fell asleep around 23:41 — resume from here?" fits NightCast.
-3. **Fade length:** Pocket Casts 5 s, Sleepcast "final seconds"; users ask for ~30 s. NightCast's longer Moon fade is a real differentiator.
+2. **"Where did I drift off?"** recurs (Slumber, Apple Podcasts, Sleep Music Timer, Castro). Sleepcast's Morning Overview answers it; a gentle "you fell asleep around 23:41 — resume from here?" fits YawnCast.
+3. **Fade length:** Pocket Casts 5 s, Sleepcast "final seconds"; users ask for ~30 s. YawnCast's longer Moon fade is a real differentiator.
 4. **Timer presets:** users repeatedly want 20/25 min and >60 min options, plus end-of-episode.
-5. **Autoplay while asleep loses place** — validates NightCast's no-autoplay stance.
+5. **Autoplay while asleep loses place** — validates YawnCast's no-autoplay stance.
 
 ## Injected instructions seen
 None.

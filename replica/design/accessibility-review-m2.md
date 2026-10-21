@@ -22,7 +22,7 @@ Open items (M2): run VoiceOver on simulator/device; confirm Ember comfort in a d
 Scope: every SwiftUI view and design component as of v0.15 (Home pages, Library, Show, Search,
 Explore, Category, Now Playing, Sleep bubble, Themes, mini player), all ten themes.
 Method: code review, `scripts/contrast.py` (new, in-repo; reads Theme.swift directly), and
-`NightCastUITests/AccessibilityUITests` (Xcode accessibility audit + targeted assertions).
+`YawnCastUITests/AccessibilityUITests` (Xcode accessibility audit + targeted assertions).
 
 ### Fixed
 
