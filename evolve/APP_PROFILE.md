@@ -9,7 +9,7 @@ Search = Apple iTunes Search API; feeds fetched straight from publishers; stream
 - **Show detail**: artwork, description, Subscribe, episodes by year, Newest/Oldest, pull to refresh, long-press menu.
 - **Now Playing** (full-screen cover, swipe down to close): show eyebrow, serif title, scrubber, -15 / play / +15 keys, big Sleep bar ("Sleep on · Fade begins in 17 min"), ±5 min bubble, floating z's.
 - **Mini player** floats on every screen once something is loaded.
-- **Themes sheet**: 6 animated Scenes + 4 Color Scapes; now also a test-build-only version line → Experiments.
+- **Themes sheet**: 6 animated Scenes + 4 Color Scapes, with the version line at the bottom. Cycle 001's five features are always on (no flags).
 - Shots: `cycles/001/shots/base-nowplaying.png`, `base-new.png`.
 
 ## Sleep (signature)
