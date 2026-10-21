@@ -1,4 +1,4 @@
-# Sleep shows on the Lock Screen            Flag: exp_lock_status   Status: PLANNED
+# Sleep shows on the Lock Screen            Flag: exp_lock_status   Status: READY
 
 **What changes for the user:** While Sleep is on, the Lock Screen and Control Center player shows "Sleep on · fades in 17 min" (or "Sleep on · fading") under the episode title, so you can see the Moon is set without opening the app.
 **Why (evidence):**
@@ -8,6 +8,10 @@
 - Competitor behavior: Castro shows the timer's time remaining on the Lock Screen and in Control Center, https://castro.fm/support/sleep-timer-tips
 **Where to see it:** Simulator Lock Screen (or `MPNowPlayingInfoCenter` values in a unit test) with `-exp_lock_status YES` and Sleep on.
 **Build plan:** `NowPlayingBridge` gains an optional subtitle provider; when the flag is on and Sleep is not off, the artist line becomes "<show> · Sleep on, fades in N min". AppModel refreshes it on Sleep status change and once a minute while counting down (no faster).
-**Design / Accessibility / Tests / Screenshots:** filled in Phase 3.
-**Risk / what it does not do:** Lock Screen text granularity is whole minutes. No Live Activity (new target, out of scope).
+**Design:** No new UI; one text line. Copy reuses the Moon key voice (DESIGN.md section 10): "Radiolab · Sleep on, fades in 17 min" / "Radiolab · Sleep on, fading". Impeccable critique: sentence case, no exclamation marks, bedtime wording, "fades in" mirrors "Fade begins in"; kept the middle dot already used by SleepCopy.activated. Changed during critique: minutes round up and never show seconds (a "40 sec" line would rewrite the Lock Screen every few seconds, and "0 min" reads as already faded), floor of "1 min". Kept "Sleep on" (not "Drifting off") while fading, so the line reads the same shape in both phases and the Lock Screen stays literal.
+**Accessibility:** The artist line is read by iOS (Lock Screen, Control Center, CarPlay) as ordinary now-playing metadata, so VoiceOver reads the full sentence with no custom label. Text is system-rendered: Dynamic Type, contrast and Reduce Motion are the OS's. No new targets or color.
+**Tests:** NightCastTests/LockScreenSleepTextTests (5 tests: off = show only, waiting minutes and round-up, fading, string changes once a minute across 4 Hz samples, bridge artist line with provider absent (flag off) and present (flag on)): all pass. SleepUITests (3 tests) pass. Release build succeeds. Core untouched.
+**Implementation:** `LockScreenSleepText` (pure), `NowPlayingBridge.artistLine` optional provider + `artistText(for:)`, AppModel `installLockStatus`/`lockStatusLine`/`refreshLockStatus` (flag read once at init; `sleep.onChange` pushes only when the minute or phase text changes; `player.onStateChange` already updates the bridge and records the pushed line). Flag off: no provider, artist = show title as before.
+**Screenshots:** NOT VERIFIED. simctl cannot lock the device or show the Lock Screen and I did not script Device > Lock. Evidence instead: evolve/cycles/001/shots/lock-status-unit-test.log (passing unit-test lines).
+**Risk / what it does not do:** Lock Screen layout may truncate long show names plus the suffix (iOS ellipsizes). Elapsed-time updates from the player already refresh the line on every state change, which is existing behavior. Lock Screen text granularity is whole minutes. No Live Activity (new target, out of scope).
 **Rollback:** delete branch evolve/001/lock-status; flag removal is one commit.
