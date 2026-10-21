@@ -3,3 +3,4 @@
 2026-10-21T00:56:43Z paused for Sonnet switch
 2026-10-21T01:03:10Z resumed (Harold approved build); builders run as Sonnet subagents, sequential
 2026-10-21T01:05:22Z Harold chose model split: Opus builds drift-back + night-auto (Sleep logic), Sonnet builds mini-moon + lock-status; wake-extend already on Sonnet, gets close Opus review
+2026-10-21T02:15:49Z Phase 4 integrate done (all off: pass; all on: original suites pass); Phase 5 review fixes 6d8dfae; REPORT.md written
