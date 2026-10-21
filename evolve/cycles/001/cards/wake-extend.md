@@ -1,4 +1,4 @@
-# Press Play again and Sleep comes back on            Flag: exp_wake_extend   Status: PLANNED
+# Press Play again and Sleep comes back on            Flag: exp_wake_extend   Status: READY
 
 **What changes for the user:** If Sleep has faded and paused the episode and you press Play within 10 minutes (from AirPods, the Lock Screen, the mini player or Now Playing), Sleep turns itself back on with the usual countdown. No need to find the Moon half-asleep.
 **Why (evidence):**
@@ -8,6 +8,9 @@
 - Competitor behavior: Castro re-arms the timer when Play is pressed within 60 s of it ending, https://castro.fm/support/sleep-timer-tips
 **Where to see it:** Now Playing with `-fastSleep`: turn on Sleep, let it fade and pause, press Play. The Moon is lit again and VoiceOver hears "Sleep is back on".
 **Build plan:** In `AppModel`, remember the episode id and time when Sleep pauses playback (the Sleep "at zero" path). On the next transition to playing for the same episode within 10 min of active-clock time, call the existing toggle path once. Different episode or later than 10 min: nothing. Flag check at that seam only. Gentle `.sensoryFeedback(.success)` if a view can observe it cheaply; no sound.
-**Design / Accessibility / Tests / Screenshots:** filled in Phase 3. Tests: UI test with `-fastSleep -exp_wake_extend YES` (re-arms) and without the flag (stays off).
-**Risk / what it does not do:** Does not react to Play after 10 min or on another episode. Doesn't persist across an app kill (in-memory only, by design: no data change).
+**Design:** No new UI. Impeccable critique of copy against DESIGN.md section 10: "Sleep is back on · fade begins in 30 min" is short, plain, sentence case, no exclamation mark, matches the existing "Sleep on · fade begins in ..." pattern. Kept. One announcement only (not the usual activation line plus a second one). No extra haptic: the Moon key already fires its heavy impact when Sleep state changes (NowPlayingView.swift:97), so adding `.success` would double up. No sound.
+**Accessibility:** VoiceOver hears the single announcement "Sleep is back on · fade begins in X" via the existing `announce` path. Moon key label/value (`moonKey`, "On. Fade begins in ...") unchanged. No new controls, so Dynamic Type, contrast, Reduce Motion and 44 pt targets are unaffected.
+**Tests:** NightCastUITests/WakeExtendUITests.swift, `-fastSleep`: fade out and pause, tap Play. Flag on: Moon value "On." again. Flag off: stays "Off". Both pass (about 45 s each). `swift test` in NightCastCore: 90 tests pass. Release build succeeds.
+**Screenshots:** evolve/cycles/001/shots/wake-extend-off.png and wake-extend-on.png, captured by the UI test after fade + Play (demo mode cannot play audio, so -uitest fixture mode was used). The "on" shot catches the Play glyph mid-transition; Sleep is on.
+**Risk / what it does not do:** Does not react to Play after 10 min or on another episode. Doesn't persist across an app kill (in-memory only, by design: no data change). Uses wall-clock Date for the 10 min window. Adds one Core callback `SleepController.onFadedToSilence` (fires only on the fade-to-zero path) and `SleepCopy.backOn`.
 **Rollback:** delete branch evolve/001/wake-extend; flag removal is one commit.
