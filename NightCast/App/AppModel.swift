@@ -75,6 +75,10 @@ final class AppModel {
     @ObservationIgnored private let sleep: SleepController
     @ObservationIgnored private var nowPlaying: NowPlayingBridge?
     @ObservationIgnored private var sleepTicker: Task<Void, Never>?
+    /// Wake extend (exp_wake_extend): the episode Sleep last faded out on, and when. In memory only.
+    @ObservationIgnored private var fadedOut: (episodeID: String, at: Date)?
+    @ObservationIgnored private var wasPlaying = false
+    @ObservationIgnored private let wakeExtendWindow: TimeInterval = 10 * 60
     @ObservationIgnored private var toastTask: Task<Void, Never>?
     @ObservationIgnored private var feedCache: [String: Feed] = [:]
     @ObservationIgnored private var feedTasks: [String: Task<Feed, Error>] = [:]
@@ -113,12 +117,17 @@ final class AppModel {
             sleepStatus = sleep.status
             nowPlaying?.update()
             runSleepTicker()
+            wakeExtendIfNeeded()
         }
         player.onEnded = { [weak self] in
             self?.sleep.episodeDidEnd()
         }
         player.onDurationMeasured = { [weak self] episode, duration in
             self?.sleep.measuredDurationArrived(duration, episodeID: episode.id)
+        }
+        sleep.onFadedToSilence = { [weak self] episodeID in
+            guard Experiments.isOn(.wakeExtend) else { return }
+            self?.fadedOut = (episodeID, Date())
         }
         sleep.onChange = { [weak self] in
             guard let self else { return }
@@ -371,7 +380,20 @@ final class AppModel {
 
     // MARK: Sleep
 
-    func toggleSleep() {
+    /// Play again soon after Sleep faded the same episode out: Sleep comes back on, once.
+    private func wakeExtendIfNeeded() {
+        let playing = player.isPlaying
+        defer { wasPlaying = playing }
+        guard playing, !wasPlaying, let faded = fadedOut else { return }
+        fadedOut = nil
+        guard Experiments.isOn(.wakeExtend),
+              sleepStatus == .off,
+              player.episode?.id == faded.episodeID,
+              Date().timeIntervalSince(faded.at) <= wakeExtendWindow else { return }
+        toggleSleep(backOn: true)
+    }
+
+    func toggleSleep(backOn: Bool = false) {
         guard let episode = player.episode else { return }
         let remaining = SeekMath.remaining(position: player.position, duration: player.duration)
         if let delay = sleep.toggle(
@@ -382,7 +404,7 @@ final class AppModel {
             durationIsProvisional: !player.isDurationMeasured
         ) {
             // The countdown bubble shows this; VoiceOver hears it.
-            announce(SleepCopy.activated(fadeDelay: delay))
+            announce(backOn ? SleepCopy.backOn(fadeDelay: delay) : SleepCopy.activated(fadeDelay: delay))
         } else {
             show(toast: SleepCopy.cancelled)
         }
