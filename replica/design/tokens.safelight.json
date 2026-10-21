@@ -1,16 +1,16 @@
 {
-  "_about": "NightCast theme 'paper'",
+  "_about": "NightCast look 'safelight'",
   "color": {
-    "bg": "#F2EDE3",
-    "surface": "#E7E0D2",
-    "raised": "#FBF8F2",
-    "border": "#D6CDBA",
-    "border-input": "#8A8170",
-    "text": "#1C1A16",
-    "text-muted": "#5C564B",
-    "accent": "#2E2A6B",
-    "on-accent": "#F7F3EA",
-    "danger": "#A33224"
+    "bg": "#0A0504",
+    "surface": "#170B08",
+    "raised": "#24110C",
+    "border": "#4A271C",
+    "border-input": "#4A271C",
+    "text": "#E9AE93",
+    "text-muted": "#C27A5E",
+    "accent": "#FF7A2E",
+    "on-accent": "#1A0602",
+    "danger": "#FFB27A"
   },
   "pairs": [
     [

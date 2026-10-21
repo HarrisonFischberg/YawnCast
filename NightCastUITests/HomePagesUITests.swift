@@ -6,7 +6,7 @@ final class HomePagesUITests: XCTestCase {
     private func launchAndSubscribe() -> XCUIApplication {
         continueAfterFailure = false
         let app = XCUIApplication()
-        app.launchArguments = ["-uitest", "-resetStore", "-theme", "ink"]
+        app.launchArguments = ["-uitest", "-resetStore", "-theme", "almanac"]
         app.launch()
         XCTAssertFalse(app.buttons["pageDot-Library"].exists, "no pages before anything is subscribed")
         app.buttons["findPodcastKey"].tap()

@@ -1,0 +1,58 @@
+{
+  "_about": "NightCast look 'picturebookday'",
+  "color": {
+    "bg": "#2E6A40",
+    "surface": "#347047",
+    "raised": "#36744A",
+    "border": "#5C9A6E",
+    "border-input": "#5C9A6E",
+    "text": "#FFFFFF",
+    "text-muted": "#F0F7EA",
+    "accent": "#F7C844",
+    "on-accent": "#2A1A02",
+    "danger": "#FFD0C8"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "accent",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "danger",
+      "bg"
+    ],
+    [
+      "border-input",
+      "bg",
+      "ui"
+    ]
+  ]
+}

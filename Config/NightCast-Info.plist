@@ -6,6 +6,11 @@
 	<array>
 		<string>audio</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>ArchivoExpanded-ExtraBold.ttf</string>
+		<string>YoungSerif-Regular.ttf</string>
+	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 </dict>

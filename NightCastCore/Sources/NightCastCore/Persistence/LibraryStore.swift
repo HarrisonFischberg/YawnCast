@@ -8,16 +8,20 @@ public struct LibrarySnapshot: Codable, Equatable, Sendable {
     public var positions: [String: PlaybackPosition]
     /// Last episode loaded into the player, for the mini-player after relaunch.
     public var lastEpisode: Episode?
+    /// The colour: a Scene or one of the four flat colours.
     public var themeID: String?
+    /// The text style (v0.17): "picturebook" or "signoff". Nil means Picture Book.
+    public var lookID: String?
     public var libraryLayout: LibraryLayout?
     /// Bumped when a release changes appearance defaults, so they apply once.
     public var appearanceVersion: Int?
 
-    public init(subscriptions: [Show] = [], positions: [String: PlaybackPosition] = [:], lastEpisode: Episode? = nil, themeID: String? = nil, libraryLayout: LibraryLayout? = nil, appearanceVersion: Int? = nil) {
+    public init(subscriptions: [Show] = [], positions: [String: PlaybackPosition] = [:], lastEpisode: Episode? = nil, themeID: String? = nil, lookID: String? = nil, libraryLayout: LibraryLayout? = nil, appearanceVersion: Int? = nil) {
         self.subscriptions = subscriptions
         self.positions = positions
         self.lastEpisode = lastEpisode
         self.themeID = themeID
+        self.lookID = lookID
         self.libraryLayout = libraryLayout
         self.appearanceVersion = appearanceVersion
     }

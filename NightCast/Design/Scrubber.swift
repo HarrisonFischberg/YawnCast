@@ -33,37 +33,11 @@ struct Scrubber: View {
                 let width = geo.size.width
                 let thumb: CGFloat = 28
                 let x = thumb / 2 + (width - thumb) * fraction
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(theme.surface)
-                        .overlay(Capsule().stroke(theme.border, lineWidth: 1))
-                        .frame(height: 10)
-                    Capsule()
-                        .fill(theme.text)
-                        .frame(width: max(10, x), height: 10)
-                    Circle()
-                        .fill(theme.raised)
-                        .overlay(Circle().stroke(theme.border, lineWidth: 1))
-                        .shadow(color: .black.opacity(theme.shadowOpacity), radius: 4, y: 2)
-                        .frame(width: thumb, height: thumb)
-                        .scaleEffect(dragFraction == nil ? 1 : 1.15)
-                        .offset(x: x - thumb / 2)
-                        .opacity(knownDuration == nil ? 0 : 1)
-                }
-                .frame(maxHeight: .infinity)
-                .contentShape(Rectangle())
-                .gesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { value in
-                            guard knownDuration != nil else { return }
-                            dragFraction = min(1, max(0, (value.location.x - thumb / 2) / max(1, width - thumb)))
-                        }
-                        .onEnded { _ in
-                            if let f = dragFraction, let d = knownDuration { onSeek(f * d) }
-                            dragFraction = nil
-                        }
-                )
-                .animation(.spring(response: 0.2), value: dragFraction == nil)
+                track(width: width, x: x)
+                    .frame(maxHeight: .infinity)
+                    .contentShape(Rectangle())
+                    .gesture(drag(width: width, thumb: thumb))
+                    .animation(.spring(response: 0.2), value: dragFraction == nil)
             }
             .frame(height: 44)
 
@@ -87,6 +61,33 @@ struct Scrubber: View {
             }
         }
         .accessibilityIdentifier("scrubber")
+    }
+
+    /// The track and its marker: a thick flat line in every theme. The part still
+    /// to play is tinted with the accent so it reads against any Scene.
+    private func track(width: CGFloat, x: CGFloat) -> some View {
+        ZStack(alignment: .leading) {
+            Capsule().fill(theme.accent.opacity(0.4)).frame(height: 10)
+            Capsule().fill(theme.text).frame(width: max(10, x), height: 10)
+            PaperShape(seed: 1).fill(theme.text)
+                .frame(width: 26, height: 26)
+                .shadow(color: .black.opacity(theme.shadowOpacity * 0.5), radius: 3, y: 1)
+                .scaleEffect(dragFraction != nil ? 1.15 : 1)
+                .offset(x: x - 13)
+                .opacity(knownDuration == nil ? 0 : 1)
+        }
+    }
+
+    private func drag(width: CGFloat, thumb: CGFloat) -> some Gesture {
+        DragGesture(minimumDistance: 0)
+            .onChanged { value in
+                guard knownDuration != nil else { return }
+                dragFraction = min(1, max(0, (value.location.x - thumb / 2) / max(1, width - thumb)))
+            }
+            .onEnded { _ in
+                if let f = dragFraction, let d = knownDuration { onSeek(f * d) }
+                dragFraction = nil
+            }
     }
 
     private var accessibilityValue: String {

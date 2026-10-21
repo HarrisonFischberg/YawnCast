@@ -116,15 +116,20 @@ struct SearchCapsule: View {
     var identifier = "exploreSearch"
     let action: () -> Void
     @Environment(\.theme) private var theme
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         Button(action: action) {
             HStack(spacing: Space.s) {
                 Image(systemName: "magnifyingglass").font(.system(size: 17, weight: .bold))
-                Text(placeholder)
+                // One line always; at accessibility sizes just "Search", so the bar
+                // doesn't grow into a four-line pill (review 2026-10-19, P1).
+                Text(typeSize.isAccessibilitySize ? "Search" : placeholder)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
                 Spacer()
             }
-            .font(Typo.headline)
+            .font(.system(.body, weight: .medium))
             .foregroundStyle(theme.textMuted)
             .padding(.horizontal, Space.l)
             .frame(minHeight: 52)
@@ -149,10 +154,11 @@ private struct InterestChip: View {
             Text(category.name)
         }
         .font(Typo.headline)
-        .foregroundStyle(theme.onAccent)
+        .foregroundStyle(theme.text)
         .padding(.horizontal, Space.l)
         .frame(minHeight: 44)
-        .background(Capsule().fill(theme.accent))
+        // The accent belongs to the Moon key; chips are quietly filled.
+        .background(Capsule().fill(theme.surface))
         .accessibilityElement(children: .combine)
     }
 }
@@ -163,11 +169,9 @@ struct CategoryCard: View {
     let index: Int
     @Environment(\.theme) private var theme
 
-    /// A gentle, evenly spread hue per card; low saturation so cards don't shout.
+    /// The icon plate: the look's own muted ink (no rainbow hues, which no look uses).
     private var tint: Color {
-        if theme.warmOnly { return theme.accent }
-        return Color(hue: (Double(index) * 0.61803398875).truncatingRemainder(dividingBy: 1), saturation: 0.45,
-              brightness: theme.colorScheme == .dark ? 0.55 : 0.85)
+        theme.warmOnly ? theme.accent : theme.textMuted
     }
 
     var body: some View {
@@ -219,6 +223,7 @@ struct CategoryView: View {
                         .foregroundStyle(theme.accent)
                     Text(category.name)
                         .font(Typo.display)
+                        .textCase(Typo.titleCase)
                         .foregroundStyle(theme.text)
                         .lineLimit(2)
                         .minimumScaleFactor(0.7)

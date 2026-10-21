@@ -7,7 +7,7 @@ final class V4UITests: XCTestCase {
     private func launch() -> XCUIApplication {
         continueAfterFailure = false
         let app = XCUIApplication()
-        app.launchArguments = ["-uitest", "-resetStore", "-theme", "ink"]
+        app.launchArguments = ["-uitest", "-resetStore", "-theme", "almanac"]
         app.launch()
         return app
     }
@@ -66,7 +66,7 @@ final class V4UITests: XCTestCase {
         XCTAssertTrue(app.buttons["miniPlayer"].waitForExistence(timeout: 3), "back to the mini player")
     }
 
-    func testSleepBubbleCollapsesAndReopens() {
+    func testSleepChipStaysAndLabelsItsSteps() {
         let app = launch()
         subscribeQuietHours(app)
         app.buttons["Fixture Episode 3"].tap()
@@ -74,14 +74,14 @@ final class V4UITests: XCTestCase {
         XCTAssertTrue(waitUntil(8) { playPause.label == "Pause" })
         app.buttons["moonKey"].tap()
 
-        let countdown = app.buttons["sleepCountdown"]
-        let pill = app.buttons["sleepBubbleCollapsed"]
+        let countdown = app.descendants(matching: .any)["sleepCountdown"]
         XCTAssertTrue(countdown.waitForExistence(timeout: 3))
-        XCTAssertTrue(waitUntil(9) { pill.exists && !countdown.exists }, "tucks away after a few quiet seconds")
-        pill.tap()
-        XCTAssertTrue(countdown.waitForExistence(timeout: 3), "tap the pill for the full ±5 controls")
-        countdown.tap()
-        XCTAssertTrue(waitUntil(3) { pill.exists }, "tap the countdown to tuck it away")
+        let plus = app.buttons["sleepPlus5"]
+        XCTAssertTrue(plus.exists)
+        XCTAssertEqual(plus.label, "Add 5 minutes")
+        // It no longer tucks itself away.
+        sleep(7)
+        XCTAssertTrue(countdown.exists && plus.isHittable, "chip stays while Sleep is on")
     }
 
     func testLibraryLayoutsAndReorder() {
@@ -120,7 +120,7 @@ final class V4UITests: XCTestCase {
         layoutKey.tap()
         XCTAssertTrue(waitUntil(3) { abs(rivers.frame.width - large) < 1 }, "one click cycles back to large")
 
-        // Themes: Scenes and Color Scapes, one tap applies.
+        // Themes: Scenes first, then four flat colours, then the text style.
         app.buttons["themesKey"].tap()
         let beach = app.buttons["theme-beach"]
         XCTAssertTrue(beach.waitForExistence(timeout: 3))
@@ -129,12 +129,17 @@ final class V4UITests: XCTestCase {
         }
         beach.tap()
         XCTAssertTrue(waitUntil(3) { beach.isSelected })
-        // Color Scapes sit below the Scenes; scroll the sheet to reach them.
-        let redLight = app.buttons["theme-redlight"]
-        for _ in 0..<4 where !redLight.isHittable { app.swipeUp() }
-        for id in ["paper", "ember", "ink", "redlight"] {
+        let meadow = app.buttons["theme-picturebook"]
+        for _ in 0..<4 where !meadow.exists || !meadow.isHittable { app.swipeUp() }
+        for id in ["almanac", "safelight", "signoff", "picturebook"] {
             XCTAssertTrue(app.buttons["theme-\(id)"].waitForExistence(timeout: 3), id)
         }
+        let signOff = app.buttons["look-signoff"]
+        for _ in 0..<4 where !signOff.exists || !signOff.isHittable { app.swipeUp() }
+        XCTAssertTrue(app.buttons["look-picturebook"].exists)
+        signOff.tap()
+        XCTAssertTrue(waitUntil(3) { signOff.isSelected })
+        XCTAssertTrue(beach.exists ? beach.isSelected : true, "the colour stays when the text changes")
     }
 
     func testLibrarySearchFiltersShowsAndFindsNewOnes() {

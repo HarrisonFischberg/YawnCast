@@ -8,7 +8,7 @@ final class LiveNetworkUITests: XCTestCase {
         try XCTSkipUnless(ProcessInfo.processInfo.environment["NIGHTCAST_LIVE"] == "1", "Set TEST_RUNNER_NIGHTCAST_LIVE=1 to run")
         continueAfterFailure = false
         let app = XCUIApplication()
-        app.launchArguments = ["-liveTest", "-theme", "ink"]
+        app.launchArguments = ["-liveTest", "-theme", "almanac"]
         app.launch()
 
         app.buttons["findPodcastKey"].tap()

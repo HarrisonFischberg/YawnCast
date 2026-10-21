@@ -39,12 +39,23 @@ final class AppModel {
     let directory: DirectoryService
     let feeds: FeedService
 
+    /// The colour: a Scene or one of the four flat colours.
     var theme: Theme {
         didSet {
             library.themeID = theme.id
             persist()
         }
     }
+
+    /// The text style (Picture Book or Sign-Off), worn over whichever colour is chosen.
+    var look: ThemeStyle {
+        didSet {
+            Typo.style = look
+            library.lookID = look.rawValue
+            persist()
+        }
+    }
+
 
     var isPlayerPresented = false
     var isThemesPresented = false
@@ -107,15 +118,20 @@ final class AppModel {
         self.feeds = feeds
         search = SearchModel(directory: directory)
         var snapshot = store.load()
-        // v0.4: Midnight becomes the default look. Apply once, and only over the
-        // previous default (unset or Ink) so a deliberate Paper/Ember choice stays.
-        if (snapshot.appearanceVersion ?? 0) < 4 {
-            if snapshot.themeID == nil || snapshot.themeID == "ink" { snapshot.themeID = Theme.midnight.id }
-            snapshot.appearanceVersion = 4
+        // v0.17: a colour (a Scene or one of four flat colours) and a text style (Picture
+        // Book or Sign-Off). Retired colours move to the nearest one; a new install
+        // starts on Almanac with Picture Book text.
+        if (snapshot.appearanceVersion ?? 0) < 8 {
+            snapshot.themeID = Theme.migrated(from: snapshot.themeID).id
+            if ThemeStyle(rawValue: snapshot.lookID ?? "") == nil { snapshot.lookID = ThemeStyle.pictureBook.rawValue }
+            snapshot.appearanceVersion = 8
             try? store.save(snapshot)
         }
         library = snapshot
         theme = Theme.with(id: snapshot.themeID)
+        let savedLook = ThemeStyle(rawValue: snapshot.lookID ?? "") ?? .pictureBook
+        look = savedLook
+        Typo.style = savedLook
         player = PlaybackEngine()
         sleep = SleepController(clock: clock, configuration: sleepConfiguration)
         nowPlaying = NowPlayingBridge(engine: player)
@@ -140,12 +156,12 @@ final class AppModel {
             self?.sleep.measuredDurationArrived(duration, episodeID: episode.id)
         }
         sleep.onFadeBegan = { [weak self] episodeID, secondsAgo in
-            guard let self else { return }
+            guard let self, Experiments.isOn(.driftBack) else { return }
             fadeBegan = DriftBackMarker(episodeID: episodeID, position: max(0, player.position - secondsAgo))
         }
         sleep.onFadedToSilence = { [weak self] episodeID in
             guard let self else { return }
-            fadedOut = (episodeID, Date())
+            if Experiments.isOn(.wakeExtend) { fadedOut = (episodeID, Date()) }
             guard let began = fadeBegan, began.episodeID == episodeID else { return }
             fadeBegan = nil
             driftBack = began
@@ -377,7 +393,7 @@ final class AppModel {
             persist()
             nightCheckedEpisodeID = nil
         }
-        armSleepIfLate(for: episode)
+        if Experiments.isOn(.nightAuto) { armSleepIfLate(for: episode) }
         presentPlayer()
     }
 
@@ -463,7 +479,8 @@ final class AppModel {
         defer { wasPlaying = playing }
         guard playing, !wasPlaying, let faded = fadedOut else { return }
         fadedOut = nil
-        guard sleepStatus == .off,
+        guard Experiments.isOn(.wakeExtend),
+              sleepStatus == .off,
               player.episode?.id == faded.episodeID,
               Date().timeIntervalSince(faded.at) <= wakeExtendWindow else { return }
         toggleSleep(backOn: true)
@@ -510,20 +527,35 @@ final class AppModel {
 
     /// The last Sleep line pushed to the Lock Screen; Sleep ticks only push when it changes.
     @ObservationIgnored private var lockStatusPushed: String?
+    @ObservationIgnored private var lockStatusOn = false
+    @ObservationIgnored private var lockStatusObserver: NSObjectProtocol?
 
+    /// Reads the flag at launch and again whenever the Feature flags screen changes it
+    /// (the flag is cached because Sleep changes arrive at 4 Hz).
     private func installLockStatus() {
-        nowPlaying?.artistLine = { [weak self] show in
-            LockScreenSleepText.subtitle(show: show, status: self?.sleepStatus ?? .off)
+        if lockStatusObserver == nil {
+            lockStatusObserver = NotificationCenter.default.addObserver(forName: Experiments.didChange, object: nil, queue: .main) { [weak self] _ in
+                MainActor.assumeIsolated { self?.installLockStatus() }
+            }
         }
+        let on = Experiments.isOn(.lockStatus)
+        guard on != lockStatusOn || (on && nowPlaying?.artistLine == nil) else { return }
+        lockStatusOn = on
+        lockStatusPushed = nil
+        nowPlaying?.artistLine = on ? { [weak self] show in
+            LockScreenSleepText.subtitle(show: show, status: self?.sleepStatus ?? .off)
+        } : nil
+        nowPlaying?.update()
     }
 
-    private func lockStatusLine() -> String {
-        LockScreenSleepText.subtitle(show: "", status: sleepStatus)
+    private func lockStatusLine() -> String? {
+        lockStatusOn ? LockScreenSleepText.subtitle(show: "", status: sleepStatus) : nil
     }
 
     /// Called on every Sleep change (4 Hz while counting down). Pushes only when the
     /// whole-minute text or the Sleep phase changed.
     private func refreshLockStatus() {
+        guard lockStatusOn else { return }
         let line = lockStatusLine()
         guard line != lockStatusPushed else { return }
         lockStatusPushed = line

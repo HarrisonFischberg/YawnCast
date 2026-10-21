@@ -1,0 +1,58 @@
+{
+  "_about": "NightCast look 'almanacday'",
+  "color": {
+    "bg": "#F2C230",
+    "surface": "#E6B520",
+    "raised": "#F7D364",
+    "border": "#17140D",
+    "border-input": "#17140D",
+    "text": "#17140D",
+    "text-muted": "#4D4223",
+    "accent": "#A8261B",
+    "on-accent": "#FBEFD8",
+    "danger": "#8A1C12"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "accent",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "danger",
+      "bg"
+    ],
+    [
+      "border-input",
+      "bg",
+      "ui"
+    ]
+  ]
+}

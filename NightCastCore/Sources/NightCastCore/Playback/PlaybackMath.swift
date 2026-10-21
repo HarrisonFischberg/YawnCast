@@ -72,6 +72,16 @@ public enum TimeFormat {
         if seconds < 60 { return "\(Int(seconds.rounded(.up))) sec" }
         return "\(Int((seconds / 60).rounded())) min"
     }
+
+    /// Spelled-out fade delay for the Moon key: "30 minutes", "1 minute", "40 seconds".
+    public static func sleepDelayLong(_ seconds: TimeInterval) -> String {
+        if seconds < 60 {
+            let n = Int(seconds.rounded(.up))
+            return n == 1 ? "1 second" : "\(n) seconds"
+        }
+        let n = Int((seconds / 60).rounded())
+        return n == 1 ? "1 minute" : "\(n) minutes"
+    }
 }
 
 public enum SleepCopy {
