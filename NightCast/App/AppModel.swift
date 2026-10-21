@@ -82,7 +82,7 @@ final class AppModel {
     @ObservationIgnored private let sleep: SleepController
     @ObservationIgnored private var nowPlaying: NowPlayingBridge?
     @ObservationIgnored private var sleepTicker: Task<Void, Never>?
-    /// Wake extend (exp_wake_extend): the episode Sleep last faded out on, and when. In memory only.
+    /// Wake extend: the episode Sleep last faded out on, and when. In memory only.
     @ObservationIgnored private var fadedOut: (episodeID: String, at: Date)?
     @ObservationIgnored private var wasPlaying = false
     @ObservationIgnored private let wakeExtendWindow: TimeInterval = 10 * 60
@@ -145,7 +145,7 @@ final class AppModel {
         }
         sleep.onFadedToSilence = { [weak self] episodeID in
             guard let self else { return }
-            if Experiments.isOn(.wakeExtend) { fadedOut = (episodeID, Date()) }
+            fadedOut = (episodeID, Date())
             guard let began = fadeBegan, began.episodeID == episodeID else { return }
             fadeBegan = nil
             driftBack = began
@@ -463,8 +463,7 @@ final class AppModel {
         defer { wasPlaying = playing }
         guard playing, !wasPlaying, let faded = fadedOut else { return }
         fadedOut = nil
-        guard Experiments.isOn(.wakeExtend),
-              sleepStatus == .off,
+        guard sleepStatus == .off,
               player.episode?.id == faded.episodeID,
               Date().timeIntervalSince(faded.at) <= wakeExtendWindow else { return }
         toggleSleep(backOn: true)

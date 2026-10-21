@@ -1,14 +1,13 @@
 import XCTest
 
-/// Wake extend (exp_wake_extend): Play within 10 minutes of a Sleep fade-out turns Sleep back on.
+/// Wake extend: Play within 10 minutes of a Sleep fade-out turns Sleep back on.
 /// `-fastSleep` makes a full fade take about 32 s of active playback.
 @MainActor
 final class WakeExtendUITests: XCTestCase {
-    private func fadeOutThenPlay(flag: Bool) -> XCUIApplication {
+    private func fadeOutThenPlay() -> XCUIApplication {
         continueAfterFailure = false
         let app = XCUIApplication()
         app.launchArguments = ["-uitest", "-resetStore", "-fastSleep", "-theme", "ember"]
-        if flag { app.launchArguments += ["-exp_wake_extend", "YES"] }
         app.launch()
         app.buttons["findPodcastKey"].tap()
         let field = app.textFields["searchField"]
@@ -45,17 +44,9 @@ final class WakeExtendUITests: XCTestCase {
     }
 
     func testPlayAfterFadeTurnsSleepBackOn() {
-        let app = fadeOutThenPlay(flag: true)
+        let app = fadeOutThenPlay()
         let moon = app.buttons["moonKey"]
         XCTAssertTrue(waitUntil(5) { (moon.value as? String ?? "").hasPrefix("On.") }, "Sleep back on, got \(moon.value as? String ?? "nil")")
         saveShot("wake-extend-on")
-    }
-
-    func testPlayAfterFadeLeavesSleepOffWithoutFlag() {
-        let app = fadeOutThenPlay(flag: false)
-        let moon = app.buttons["moonKey"]
-        sleep(2)
-        XCTAssertEqual(moon.value as? String, "Off")
-        saveShot("wake-extend-off")
     }
 }
