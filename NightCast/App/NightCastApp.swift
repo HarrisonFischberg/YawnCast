@@ -48,10 +48,13 @@ struct RootView: View {
         // Once something is loaded, the player floats over every screen and stays there.
         .overlay(alignment: .bottom) {
             if model.player.episode != nil {
+                // It sits in the home-indicator strip with a small gap, the same gap it keeps
+                // above the keyboard (which still pushes it up: only the container inset is ignored).
                 MiniPlayerDock()
                     .padding(.horizontal, 30)
                     .padding(.bottom, Space.xs)
                     .frame(maxWidth: .infinity)
+                    .ignoresSafeArea(.container, edges: .bottom)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
