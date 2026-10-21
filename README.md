@@ -1,15 +1,15 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/icon-dark.png">
-    <img src="docs/icon.png" alt="NightCast app icon" width="128" height="128">
+    <img src="docs/icon.png" alt="YawnCast app icon" width="128" height="128">
   </picture>
 </p>
 
-# NightCast
+# YawnCast
 
 A calm iPhone podcast app for falling asleep: tap the Moon, and your episode fades out gently and pauses.
 
-> "NightCast" is a working name. It has not been trademark-cleared.
+> "YawnCast" is a working name. It has not been trademark-cleared.
 
 ## Screenshots
 
@@ -35,7 +35,7 @@ Shows in the screenshots are public podcasts from Apple's directory, mostly from
 
 ## Dark mode
 
-NightCast is dark by default, because it's meant for bedtime. You pick a theme from the Themes sheet (the half-filled circle in the Library header), and each theme sets the app's appearance:
+YawnCast is dark by default, because it's meant for bedtime. You pick a theme from the Themes sheet (the half-filled circle in the Library header), and each theme sets the app's appearance:
 
 - **Paper** is the light theme.
 - **Midnight** (default), the other Scenes, **Ink**, **Ember** and **Red Light** are dark. Red Light keeps blue out of the interface entirely.
@@ -44,29 +44,29 @@ The app follows your chosen theme rather than the system setting, so it stays da
 
 ## Install
 
-NightCast is not on the App Store yet. To run it, build it from source with Xcode.
+YawnCast is not on the App Store yet. To run it, build it from source with Xcode.
 
 Requirements: a Mac with **Xcode 27** (iOS 27 SDK). The app runs on **iOS 18.0** or later ([DECISIONS D02](DECISIONS.md)).
 
 **On the simulator**
 
 1. Clone the repo: `git clone https://github.com/HarrisonFischberg/NightCast.git`
-2. Open `NightCast.xcodeproj` in Xcode.
-3. Choose the **NightCast** scheme and an iPhone simulator, then press Run.
+2. Open `YawnCast.xcodeproj` in Xcode.
+3. Choose the **YawnCast** scheme and an iPhone simulator, then press Run.
 
 No API keys or accounts are needed.
 
 **On your iPhone**
 
 1. Connect your iPhone and pick it as the run destination.
-2. In the NightCast target's **Signing & Capabilities**, choose your own team (the project ships with the owner's team, `KTV2G3Z883`) and, if needed, a unique bundle ID.
+2. In the YawnCast target's **Signing & Capabilities**, choose your own team (the project ships with the owner's team, `KTV2G3Z883`) and, if needed, a unique bundle ID.
 3. Press Run. The first time, trust the developer profile under **Settings → General → VPN & Device Management**.
 
 **From the command line**
 
 ```bash
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer   # only if xcode-select points at the Command Line Tools
-xcodebuild -project NightCast.xcodeproj -scheme NightCast -destination 'platform=iOS Simulator,name=iPhone 17' build
+xcodebuild -project YawnCast.xcodeproj -scheme YawnCast -destination 'platform=iOS Simulator,name=iPhone 17' build
 ```
 
 Status: built and tested on the iOS Simulator, and the device checks D1 to D8 below were passed on the owner's iPhone on 2026-10-17. It is **not** App Store-ready yet (see [Known limitations](#known-limitations)).
@@ -110,7 +110,7 @@ These are excluded from Release builds ([D20](DECISIONS.md)).
 ## Architecture
 
 ```
-NightCastCore/  (Swift package, no UIKit/AVFoundation; tested with `swift test`)
+YawnCastCore/  (Swift package, no UIKit/AVFoundation; tested with `swift test`)
   Models/       Show, Episode, PlaybackPosition, Feed, FeedURL (canonical identity)
   Directory/    DirectoryService, ITunesDirectory (search, lookup, genre charts), Recommender
   Feed/         FeedService, HTTPFeedService, RSSParser (XMLParser; durations, dates, HTML), LatestEpisodes
@@ -118,8 +118,8 @@ NightCastCore/  (Swift package, no UIKit/AVFoundation; tested with `swift test`)
   Sleep/        SleepTimer (pure state machine), SleepController (clock, active-time meter)
   Playback/     SeekMath, TimeFormat, SleepCopy
 
-NightCast/      (SwiftUI app, iOS 18+, Swift 6, default MainActor isolation)
-  App/          NightCastApp, AppModel (library, feeds cache, playback, Sleep wiring)
+YawnCast/      (SwiftUI app, iOS 18+, Swift 6, default MainActor isolation)
+  App/          YawnCastApp, AppModel (library, feeds cache, playback, Sleep wiring)
   Playback/     PlaybackEngine (AVPlayer, audio session, interruptions, route change, gain)
                 NowPlayingBridge (Lock Screen info, remote play/pause/±15/scrub)
                 ArtworkCache (memory + disk; artwork never altered), FeedDiskCache
@@ -127,7 +127,7 @@ NightCast/      (SwiftUI app, iOS 18+, Swift 6, default MainActor isolation)
   Views/        HomeView (pager, PageDots, NewEpisodesView, ExploreView), LibraryView + MiniPlayer,
                 SearchView, ShowView, NowPlayingView, AppearanceSheet
   TestSupport/  Fixtures + DebugLaunch (Debug only)
-NightCastUITests/  CoreFlowUITests, SleepUITests, LiveNetworkUITests (opt-in)
+YawnCastUITests/  CoreFlowUITests, SleepUITests, LiveNetworkUITests (opt-in)
 ```
 
 - **Search:** Apple iTunes Search API. No credentials, and no backend ([D03](DECISIONS.md)).
@@ -154,7 +154,7 @@ Let R be the playable seconds remaining when Moon is tapped.
 
 ## Design tokens and themes
 
-All ten themes pass WCAG AA. Check with `python3 scripts/contrast.py` (reads `NightCast/Design/Theme.swift`, flags drift from `replica/design/tokens.<theme>.json`). Full principles are in [replica/design/principles.md](replica/design/principles.md).
+All ten themes pass WCAG AA. Check with `python3 scripts/contrast.py` (reads `YawnCast/Design/Theme.swift`, flags drift from `replica/design/tokens.<theme>.json`). Full principles are in [replica/design/principles.md](replica/design/principles.md).
 
 | Role | Midnight (default) | Paper (day) | Ink (dark) | Ember (bedtime) |
 |---|---|---|---|---|
@@ -189,7 +189,7 @@ Results from the last full run (2026-10-15, v0.4, iPhone 18 Pro simulator, iOS 2
 
 | Check | Result |
 |---|---|
-| `swift test` (NightCastCore) | **90 tests in 16 suites passed**: Sleep timing, gain sequence, pause and buffering freeze, cancel, episode end, seek, provisional duration, RSS fixtures (including malformed), search decoding and dedupe, persistence, seek clamping, genres and charts, recommendations, New-page ordering, 10%-per-minute fade, ±5 adjustments, paged feeds, year grouping, categories and interests, Library order and layout |
+| `swift test` (YawnCastCore) | **90 tests in 16 suites passed**: Sleep timing, gain sequence, pause and buffering freeze, cancel, episode end, seek, provisional duration, RSS fixtures (including malformed), search decoding and dedupe, persistence, seek clamping, genres and charts, recommendations, New-page ordering, 10%-per-minute fade, ±5 adjustments, paged feeds, year grouping, categories and interests, Library order and layout |
 | Debug and Release builds | **BUILD SUCCEEDED**, no Swift warnings. The Release bundle contains no fixtures and no debug symbols |
 | Fixture UI tests | **17 executed, 0 failures**: empty library; search empty, error and retry; subscription survives relaunch; subscribe → play → Sleep on/off; position survives relaunch (no autoplay); full fade on the real player; cancel mid-fade; pause freezes the countdown; page dots and swipes; mini player on every screen; unsubscribe from Library; ±5 bubble; year sections and order toggle; hiding the mini player; tucking the bubble; drag to reorder and layouts; Explore categories |
 | Live UI test (opt-in) | **Passed** (2026-10-15): real search, real RSS (524 episodes), subscribe, stream played with the position advancing |
@@ -198,7 +198,7 @@ The full-fade UI test drives the real `AVPlayer.volume` through every step and c
 
 Replica checks:
 - **Parity:** `parity.py` scores **90.7**. 9 of 11 must-haves are done. The other two, Lock Screen and background audio, are *implemented but unverified on device*. See [replica/parity.md](replica/parity.md).
-- **Brand sweep:** `sweep.py` finds nothing in `NightCast/`, `NightCastCore/` or `Config/`. Reference names appear only in internal research docs.
+- **Brand sweep:** `sweep.py` finds nothing in `YawnCast/`, `YawnCastCore/` or `Config/`. Reference names appear only in internal research docs.
 
 ## Screenshot archive
 
@@ -251,7 +251,7 @@ The owner passed all eight on 2026-10-17 ([TASKS.md](TASKS.md)). Rerun them befo
 Nothing has been uploaded, signed, or changed in any developer account.
 
 1. Signing is already set up for development: team `KTV2G3Z883`, bundle ID `com.nightcast.ktv2g3z883`, automatic signing. For release you may want a nicer bundle ID (it can't change after the first App Store upload).
-2. Keep the **Background Modes → Audio** capability. It's already in `Config/NightCast-Info.plist`.
+2. Keep the **Background Modes → Audio** capability. It's already in `Config/YawnCast-Info.plist`.
 3. Run on your iPhone and work through checks D1 to D8 above.
 4. Do **Product → Archive** with the **Release** configuration, then **Distribute App → App Store Connect → Upload**.
 5. In App Store Connect, create the app record (name, privacy details: the app sends search terms to Apple and fetches feeds from publishers, but you collect nothing, so confirm that when filling in the form), add internal testers, and start TestFlight.
@@ -259,7 +259,7 @@ Nothing has been uploaded, signed, or changed in any developer account.
 
 ## Privacy
 
-NightCast has no accounts, no analytics and no backend. Search terms go to Apple's iTunes Search API, and episodes and artwork are fetched directly from each show's publisher. Your library and playback positions stay on your phone.
+YawnCast has no accounts, no analytics and no backend. Search terms go to Apple's iTunes Search API, and episodes and artwork are fetched directly from each show's publisher. Your library and playback positions stay on your phone.
 
 ## Contact
 

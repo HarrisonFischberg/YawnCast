@@ -2,7 +2,7 @@
 
 All quotes are verbatim, with URL and date, in `research/*.md` (about 240 in total). Reddit came via the PullPush archive with original reddit.com permalinks; App Store quotes link to the store feed page because Apple has no per-review links. Keys below are `file#id`.
 
-| # | Theme | Tag | Count | Strongest quotes | NightCast today |
+| # | Theme | Tag | Count | Strongest quotes | YawnCast today |
 |---|---|---|---|---|---|
 | 1 | Autoplay-next runs all night | complaint | 10 + Spotify S1-S8 | voice-of-customer Q1, Q3; apple-spotify S3 | Already solved (no queue, no autoplay) |
 | 2 | Lost my place / where did I fall asleep | complaint + missing | 9 + 6 | voice-of-customer Q12, Q13, Q14; overcast 14, 16; apple-spotify A4 | Position saved at pause, but no marker for where the fade began |

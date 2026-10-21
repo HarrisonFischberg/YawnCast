@@ -7,7 +7,7 @@ Researched 2026-10-20. All web content treated as untrusted data.
 - **Site:** https://neuecast.app/ — tagline "Everything you need, and nothing you don't." and "A podcast app designed for the rest of us." The site has no feature list, FAQ or pricing page (links only to /terms, /privacy, mailto, socials, App Store).
 - **App Store:** https://apps.apple.com/us/app/neuecast-podcast-app/id6446780219 — seller Rishi Mody (New York), category News, 9.7 MB, iOS 18.0+, also macOS 15 (M1+) and visionOS 2. English only.
 - **Rating (US, 2026-10-20):** 4.76 from 260 ratings (iTunes lookup API: https://itunes.apple.com/lookup?id=6446780219&country=us).
-- **Current version:** 1.14.1 (2026-09-29). Release note: "Episodes now stay in the queue until marked as played." — i.e. Neuecast now **has a queue** (NightCast deliberately does not).
+- **Current version:** 1.14.1 (2026-09-29). Release note: "Episodes now stay in the queue until marked as played." — i.e. Neuecast now **has a queue** (YawnCast deliberately does not).
 - **Coverage:** iphone-ticker.de launch article 2024-08-15 (https://www.iphone-ticker.de/neuecast-debuetiert-moderne-podcast-app-mit-schlichter-benutzerfreundlichkeit-240103/); appgefahren.de 2024-08-15/16 (https://www.appgefahren.de/neuecast-minimalistische-podcast-app-fuer-das-iphone-startet-363719.html); NY Sun review (https://www.nysun.com/article/neuecast-is-the-best-way-to-listen-to-podcasts-on-iphone — returned HTTP 429; summary via search snippet only: lists dark/light mode, sleep timers, playlist control, customizable skip buttons, bookmarks).
 
 ## Pricing (public pages)
@@ -15,7 +15,7 @@ Researched 2026-10-20. All web content treated as untrusted data.
 - Free download; ad-free (App Store description "Enjoy a private, ad-free experience").
 - In-app purchase listed on the US App Store page: **"Neuecast Premium $14.99"** (https://apps.apple.com/us/app/neuecast-podcast-app/id6446780219, fetched 2026-10-20).
 - At launch (Aug 2024) Premium was €9.99/year and unlocked the customizable player and episode management (appgefahren.de and iphone-ticker.de, URLs above). Reviews in 2024-2025 cite "$10/ year" and "$10 premium"; one 2025 review asks for a lifetime option, so the model appears to have shifted over time — exact current term (annual vs lifetime) not stated on the page.
-- Privacy label (App Store page): "Data Not Linked to You" includes Coarse Location, User ID, Product Interaction, Crash/Performance data. So Neuecast collects analytics; NightCast's no-backend stance is stricter.
+- Privacy label (App Store page): "Data Not Linked to You" includes Coarse Location, User ID, Product Interaction, Crash/Performance data. So Neuecast collects analytics; YawnCast's no-backend stance is stricter.
 - Accessibility label: "The developer has not yet indicated which accessibility features this app supports." (App Store page).
 
 ## Concrete behaviors (with sources)
@@ -24,7 +24,7 @@ Researched 2026-10-20. All web content treated as untrusted data.
 |---|---|---|
 | Sleep timer | "Advanced controls to adjust playback speed, set sleep timers, and more." No public detail on presets, fade, end-of-episode, or shake-to-extend. | App Store description (lookup URL above) |
 | Player | Deliberately simple; shows episode title, not cover art (launch). Player controls customizable with Premium. Customizable skip-forward/back buttons. | appgefahren.de 2024-08; NY Sun snippet |
-| Speed | Playback speed control in player (NightCast omits). Speed was missing at launch — a 2024-10-12 review asks for it. | App Store description; review below |
+| Speed | Playback speed control in player (YawnCast omits). Speed was missing at launch — a 2024-10-12 review asks for it. | App Store description; review below |
 | Home / New | Chronological "New" feed of episodes across subscriptions; reviewers call it a "game changer". | reviews 2025-11-09, 2026-02-19 |
 | Library / show page | Per-podcast search within episodes; episode descriptions shown; chapters with timestamps and auto link section (added later — absent in Aug 2024). | reviews 2026-02-19, 2025-12-14, 2024-08-24 |
 | Explore | "Explore featured podcasts and top charts." Onboarding forced picking from charts (2024). | App Store; review 2024-08-24 |
@@ -78,13 +78,13 @@ All from the US App Store customer-review feed for id6446780219. Page: https://a
 - [missing / start offset] "Set them to begin at specific time ( helps avoid ads 😂)" — Dad_Paul, 2025-12-01
 - [missing / groups] "the ability to group podcasts together. Say, political podcasts, podcasts to learn Spanish, etc." — rrjackson82, 2025-10-26
 - [missing / colour] "I’d also love some customization options to add a little color." — Flowernuggit222579, 2026-03-25
-- [missing / autoplay] "I wish the content just autoplayed, but whatever." — Flowernuggit222579, 2026-03-25 (NightCast intentionally omits autoplay-next)
+- [missing / autoplay] "I wish the content just autoplayed, but whatever." — Flowernuggit222579, 2026-03-25 (YawnCast intentionally omits autoplay-next)
 - [missing / auto-delete] "Would love to see a delete after played option for saved downloads" — Papa Ursa, 2025-11-08
 - [missing / OPML] "I’d love to see a way to import OPML files over from other apps." — Motiivhate, 2024-10-30
 - [missing / Dynamic Type] "The ability to adjust text size is crucial for accessibility." — disc inserted, 2024-09-25
 - [missing / hide played] "remove podcast episode listings instead of just greying them out after they’ve been played." — Tsigos, 2024-09-25
 - [missing / haptics] "I can’t wait until the dev adds haptic feedback to this app though!" — womplyschmoop, 2024-11-03
-- [missing / captions] "the only thing im missing IMO is live captions" — Samantha Ng., 2024-12-26 (NightCast: transcripts out of scope by owner choice)
+- [missing / captions] "the only thing im missing IMO is live captions" — Samantha Ng., 2024-12-26 (YawnCast: transcripts out of scope by owner choice)
 
 ## Other sources checked
 
@@ -93,12 +93,12 @@ All from the US App Store customer-review feed for id6446780219. Page: https://a
 - **Product Hunt:** no Neuecast listing found.
 - AlternativeTo (https://www.alternativeto.net/software/neuecast/about/) described a "$10" one-time purchase per search snippet; conflicts with annual pricing in German launch coverage — not relied on.
 
-## Takeaways for NightCast
+## Takeaways for YawnCast
 
-1. Neuecast's love comes from restraint: no curation, no ads, no account, chronological New feed — NightCast shares all of these; keep it that way.
-2. Its documented pain points that hit bedtime use: playback stopping unexpectedly and losing position, jumpy audio levels, irreversible "mark all played", downloads eating storage. NightCast should guarantee position resume, consider level normalization/voice boost, use undo for destructive actions, and auto-clean played downloads.
-3. Neuecast publishes nothing specific about its sleep timer — NightCast's Moon fade timer is a clear differentiator to make legible.
-4. Accessibility (Dynamic Type) is an open gap in Neuecast's listing — an easy place for NightCast to lead.
+1. Neuecast's love comes from restraint: no curation, no ads, no account, chronological New feed — YawnCast shares all of these; keep it that way.
+2. Its documented pain points that hit bedtime use: playback stopping unexpectedly and losing position, jumpy audio levels, irreversible "mark all played", downloads eating storage. YawnCast should guarantee position resume, consider level normalization/voice boost, use undo for destructive actions, and auto-clean played downloads.
+3. Neuecast publishes nothing specific about its sleep timer — YawnCast's Moon fade timer is a clear differentiator to make legible.
+4. Accessibility (Dynamic Type) is an open gap in Neuecast's listing — an easy place for YawnCast to lead.
 
 ## Injected instructions seen
 

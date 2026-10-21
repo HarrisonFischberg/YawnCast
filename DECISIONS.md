@@ -41,7 +41,7 @@ of cached episodes).
 Background audio via `UIBackgroundModes: audio` with a `.playback` session —
 legitimate, only while actually playing. No silent-audio keep-alive.
 
-## D06 · 2026-10-14 · Sleep = pure state machine in NightCastCore
+## D06 · 2026-10-14 · Sleep = pure state machine in YawnCastCore
 `SleepTimer` is a value type advanced by *active playback seconds*. The app's
 `SleepDriver` measures active time with an injectable clock while the player is
 playing and not buffering. No SwiftUI timer participates in correctness.
@@ -62,9 +62,9 @@ Sleep state is never persisted → can never auto-resume after relaunch.
   or the feed's `itunes:duration`.
 
 ## D08 · 2026-10-14 · Project layout: Swift package + thin Xcode app
-`NightCastCore` (SPM, platform-neutral logic: models, Sleep, RSS, search, store)
+`YawnCastCore` (SPM, platform-neutral logic: models, Sleep, RSS, search, store)
 is testable with `swift test` on macOS even without the iOS toolchain.
-`NightCast.xcodeproj` (app + UI tests) uses Xcode folder-synchronized groups so the
+`YawnCast.xcodeproj` (app + UI tests) uses Xcode folder-synchronized groups so the
 project file stays small and hand-maintainable; no XcodeGen/Tuist install needed.
 
 ## D09 · 2026-10-14 · Tool usage
@@ -102,7 +102,7 @@ iOS 27 sim. Always pass `-parallel-testing-enabled NO`.
 
 ## D15 · 2026-10-15 · Test fixtures inside the app bundle
 `-uitest` swaps in FixtureDirectory / FixtureFeedService and a bundled 90 s 220 Hz tone
-(`NightCast/TestSupport/fixture-tone.m4a`, generated, 311 KB). It currently ships in the app bundle;
+(`YawnCast/TestSupport/fixture-tone.m4a`, generated, 311 KB). It currently ships in the app bundle;
 before release, exclude `TestSupport/` from Release builds (M5).
 
 ## D16 · 2026-10-15 · Opening the player from Search
@@ -169,8 +169,8 @@ Long-press a Library tile → Unsubscribe; long-press an episode → Play / Mark
 Accent pip on Library tiles with an unplayed episode from the last 7 days.
 
 ## D27 · 2026-10-15 · Dedicated simulator
-Another project's session uses the booted "iPhone 17" simulator. NightCast tests and screenshots
-now run on "iPhone 18 Pro" (`scripts/test.sh` default; override with NIGHTCAST_DEST).
+Another project's session uses the booted "iPhone 17" simulator. YawnCast tests and screenshots
+now run on "iPhone 18 Pro" (`scripts/test.sh` default; override with YAWNCAST_DEST).
 
 ## D28 · 2026-10-15 · Sleep v0.3 spec (owner request)
 `SleepConfiguration.standard`: step 60 s, levels 0.9…0.0 (10 steps), still `min(30 min, R/2)` delay,
@@ -193,7 +193,7 @@ Now Playing screen is visible; static when Reduce Motion is on. No sound. Brief'
 is overridden by the owner for this element only.
 
 ## D32 · 2026-10-15 · "Website copy"
-There is no NightCast website yet; the README and in-app copy were updated instead. A Rare Creatures
+There is no YawnCast website yet; the README and in-app copy were updated instead. A Rare Creatures
 site (needed for the LLC's Apple enrollment and app privacy pages) would carry the public copy later.
 
 ## D33 · 2026-10-15 · v0.4 mini player visibility (owner request)
@@ -224,7 +224,7 @@ Move to Top / Move to End in the long-press menu and as VoiceOver actions. "Appe
 
 ## D38 · 2026-10-15 · Shared simulators
 Another project's session has also launched apps on "iPhone 18 Pro" (status bar showed "◀ Keepsake").
-Screens captured here were NightCast's; if collisions grow, create a dedicated "NightCast" simulator.
+Screens captured here were YawnCast's; if collisions grow, create a dedicated "YawnCast" simulator.
 
 ## D39 · 2026-10-15 · Themes: Scenes and Color Scapes (owner request, v0.5)
 Library header keeps the one-click layout key (Large → Small → List). The second key is now a
@@ -304,3 +304,10 @@ shows" (directory). Explore keeps directory-only search.
 ## D46 · 2026-10-15 · Dedicated "NightCast iPhone" simulator
 Other sessions launched apps and Settings on "iPhone 18 Pro" mid-capture. A dedicated simulator "NightCast iPhone"
 (iPhone 18 Pro, iOS 27.0) is now the default for `scripts/test.sh` and screenshots.
+
+## D47 · 2026-10-21 · Renamed to YawnCast (owner request)
+"NightCast" is taken on the App Store. The app, Xcode project, targets, schemes, Swift package (`YawnCastCore`),
+folders, env vars and docs are now YawnCast. Deliberately unchanged: the bundle ID `com.nightcast.ktv2g3z883`
+(it is tied to the App Store Connect record and existing installs), the on-device data folder
+`Application Support/NightCast/` (so saved libraries keep loading), the "NightCast iPhone" simulator name,
+and the GitHub repo name.

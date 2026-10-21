@@ -4,7 +4,7 @@ Newest first. Each entry: what changed, what was verified (actual output), block
 
 ## 2026-10-17 — Session 11: app unit-test target + SearchModel tests
 
-- New `NightCastTests` target (Swift Testing, hosted in the app): 19 SearchModel tests covering debounce, trimming,
+- New `YawnCastTests` target (Swift Testing, hosted in the app): 19 SearchModel tests covering debounce, trimming,
   blank queries, cancel before/during a search, stale answers, case-insensitive cache, retry, error copy.
   `scripts/test.sh` runs it before the UI tests and now also prints "Testing failed"/"TEST FAILED" lines so a runner
   that dies before any test starts is visible.
@@ -12,7 +12,7 @@ Newest first. Each entry: what changed, what was verified (actual output), block
   core 90/90; Debug + Release BUILD SUCCEEDED; UI 19/19. One run was disturbed by another worktree's UI tests sharing
   the "NightCast iPhone" simulator, and once by a cold simulator ("Invalid connectionUUID"); reruns passed.
 
-## 2026-10-15 — Session 10c: website NightCast page refreshed
+## 2026-10-15 — Session 10c: website YawnCast page refreshed
 
 - studio-site 7353794: page copy rewritten to match v0.11 (Home / Sleep / Explore / Looks / Left out), "The maths"
   removed, four new screenshots (Midnight, City Scape, Underwater, Mountain Vista); sources in `screenshots/site/`.
@@ -109,7 +109,7 @@ new-episode pip, keyword affinity for Explore.
 
 - Release excludes TestSupport (D20). Verified by inspecting the Release .app and binary.
 - AX5 fixes after screenshots (D21). Search Return key searches immediately.
-- Replica: `parity.py` 90.7 (`replica/parity.md`), brand `sweep.py` clean on NightCast/, NightCastCore/, Config/.
+- Replica: `parity.py` 90.7 (`replica/parity.md`), brand `sweep.py` clean on YawnCast/, YawnCastCore/, Config/.
 - `scripts/test.sh [--live]` added (handles serial UI tests and the xcodebuild hang).
 - README.md handoff: setup, architecture, tokens, test results, device checklist, limitations, TestFlight steps.
 - **Verified (actual output):** `swift test` 55/55; Debug + Release clean builds, no Swift warnings;
@@ -127,7 +127,7 @@ new-episode pip, keyword affinity for Explore.
 - **Verified (actual output):**
   - `swift test` → 55 tests in 8 suites passed (4 new D11 tests: 31:22 feed vs 37:04 stream → 681 s).
   - Clean `xcodebuild build` → BUILD SUCCEEDED, no Swift warnings.
-  - UI tests (fixture mode, real AVPlayer), `-parallel-testing-enabled NO -skip-testing:NightCastUITests/LiveNetworkUITests`
+  - UI tests (fixture mode, real AVPlayer), `-parallel-testing-enabled NO -skip-testing:YawnCastUITests/LiveNetworkUITests`
     → Executed 8 tests, 0 failures (CoreFlow 5 + Sleep 3).
   - Full fade on the real player (`-fastSleep`: 4 s delay, 6 s steps, 1 s glides), AVPlayer.volume sampled every 0.5 s:
     `1.00 ×8, 0.91, 0.80 ×9, 0.77, 0.67, 0.60 ×9, 0.57, 0.41, 0.40 ×10, 0.31, 0.21, 0.20 ×9, 0.11, 0.01` → paused,
@@ -147,11 +147,11 @@ Owner approved the M2 visual direction. M3 was done directly in-session at the o
   feed cache with shared in-flight requests.
 - Fixture mode `-uitest` (fake directory/feeds, bundled tone, separate store file, `-resetStore`).
 - **Verified (actual output):**
-  - `cd NightCastCore && swift test` → 51 tests in 7 suites passed (LiveFeed is opt-in).
-  - `xcodebuild … -parallel-testing-enabled NO -only-testing:NightCastUITests/CoreFlowUITests test`
+  - `cd YawnCastCore && swift test` → 51 tests in 7 suites passed (LiveFeed is opt-in).
+  - `xcodebuild … -parallel-testing-enabled NO -only-testing:YawnCastUITests/CoreFlowUITests test`
     → Executed 5 tests, 0 failures: empty library, search empty/error/retry, subscribe persists
     across relaunch, subscribe→play→Sleep on/off, position survives relaunch (no autoplay).
-  - `TEST_RUNNER_NIGHTCAST_LIVE=1 … -only-testing:NightCastUITests/LiveNetworkUITests test` → passed:
+  - `TEST_RUNNER_YAWNCAST_LIVE=1 … -only-testing:YawnCastUITests/LiveNetworkUITests test` → passed:
     real iTunes search "nothing much happens" → real Megaphone RSS (524 episodes) → subscribe →
     real stream played and position advanced. Screenshots: `screenshots/m3/live-*.png`.
 - Issues hit: parallel-clone UI test hang (D14); simulator keyboard injection via the panel tool
@@ -163,7 +163,7 @@ Owner approved the M2 visual direction. M3 was done directly in-session at the o
 
 - Owner accepted the Xcode license. `xcodebuild -showsdks`: iOS 27.0 + iOS Simulator 27.0.
   Runtime iOS 27.0 present; iPhone 17 simulator booted. No download needed.
-- `NightCast.xcodeproj` hand-written (folder-synchronized groups, local package `NightCastCore`).
+- `YawnCast.xcodeproj` hand-written (folder-synchronized groups, local package `YawnCastCore`).
   Settings: iOS 18.0, Swift 6, default MainActor isolation, background mode `audio`.
 - Built: Theme (3), KeyStyle (physical key), MoonKey, Scrubber, ArtworkCache, PlaybackEngine
   (AVPlayer, session, interruptions, route change), NowPlayingBridge (lock screen + remote ±15),
@@ -217,20 +217,20 @@ Both /goal and /ralph-loop are user-typed; Claude never claims they ran unless t
 - **Gap:** no screenshots/recordings of either reference. No visual measurements claimed.
   REA not used (no authorized artifacts; nothing interaction-specific on public pages).
 
-### Code: `NightCastCore` (Swift package)
+### Code: `YawnCastCore` (Swift package)
 Models, SleepTimer + SleepController, RSSParser + HTTPFeedService, ITunesDirectory,
 JSONLibraryStore, SeekMath/TimeFormat/SleepCopy.
 
 ### Verification (actual results)
-- `cd NightCastCore && swift test` → **50 tests in 6 suites passed** (macOS host, Swift Testing).
+- `cd YawnCastCore && swift test` → **50 tests in 6 suites passed** (macOS host, Swift Testing).
 - Live check: iTunes Search `term=radiolab` → HTTP 200, 4 results, all with feed URLs.
   Real Radiolab RSS (4.9 MB) parsed by `RSSParser`: **674 episodes, 674 with duration**
-  (`NIGHTCAST_LIVE_FEED=… swift test --filter LiveFeed` → passed).
+  (`YAWNCAST_LIVE_FEED=… swift test --filter LiveFeed` → passed).
 
 ### Blockers
 1. Xcode license: resolved by owner.
 2. Simulator runtime: present.
 
 ### Next
-After license: create `NightCast.xcodeproj`, build Library + Now Playing prototype (M2),
+After license: create `YawnCast.xcodeproj`, build Library + Now Playing prototype (M2),
 capture screenshots, request visual approval.

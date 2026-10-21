@@ -1,4 +1,4 @@
-# Overcast (overcast.fm): competitor research for NightCast
+# Overcast (overcast.fm): competitor research for YawnCast
 
 Researched 2026-10-20. All web content was treated as untrusted data.
 Short source keys used below:
@@ -61,7 +61,7 @@ Short source keys used below:
 - **Streaming was dropped in the 2024 rewrite** ("Streaming… Downloading episodes completely before they begin playback is much more reliable") and later restored [M2024], [AS-MV] 2025.11.1.
 - **Widgets/CarPlay/Watch**: widgets exist (2025.8.1 and 2025.9.2 notes fix widget artwork and colors). Per-episode artwork is "not in playlists or widgets, so you can still identify the podcasts there" (2025.11.2). Watch app has standalone playback, and CarPlay is supported [LOOKUP], [AS-MV].
 - **Accessibility**: the rewrite was pitched as "more accessible" [M2024]. 2025.9.2 added "Layout improvements for small screens and large fonts" and "Improved handling of the Button Shapes accessibility option". 2025.10 gave the now-playing bottom controls "larger touch areas" [AS-MV]. The App Store accessibility label section says "The developer has not yet indicated which accessibility features this app supports." [AS-US]. VoiceOver users were confused when the chapters button moved after the rewrite [MPU] /21.
-- **Transcripts** shipped 2026.4.1 (NightCast deliberately skips this) [AS-MV].
+- **Transcripts** shipped 2026.4.1 (YawnCast deliberately skips this) [AS-MV].
 
 ---
 
@@ -116,11 +116,11 @@ Reddit note: reddit.com and old.reddit.com JSON endpoints refused fetches from t
 
 ---
 
-## 3. Ideas NightCast could adopt
+## 3. Ideas YawnCast could adopt
 
-1. **Keep the Moon one tap, on the main player, always.** Overcast's biggest backlash came from hiding the timer behind a menu (quotes 1, 4, 7, 8, 10), and Overcast eventually restored the button. Guard this with a test or design rule so NightCast never regresses.
+1. **Keep the Moon one tap, on the main player, always.** Overcast's biggest backlash came from hiding the timer behind a menu (quotes 1, 4, 7, 8, 10), and Overcast eventually restored the button. Guard this with a test or design rule so YawnCast never regresses.
 2. **"Where I fell asleep" marker and a one-tap jump back.** When the Moon timer fades and pauses, record the position the fade *started* from (or the last user interaction) and offer "Back to where you drifted off" on next open. This answers quotes 13 to 16, and Overcast has nothing like it beyond Premium Undo [AS-MV 2024.11.1].
-3. **Eyes-closed extend.** Let a headphone play/pause or remote command during the fade (or within N minutes after the auto-pause) restart the timer with the same duration. Dkellam's delight (21) shows Overcast re-arms on Lock Screen play, while Alderete (12) still had to open their eyes. NightCast can make the AirPods/Lock Screen play button extend the Moon automatically.
+3. **Eyes-closed extend.** Let a headphone play/pause or remote command during the fade (or within N minutes after the auto-pause) restart the timer with the same duration. Dkellam's delight (21) shows Overcast re-arms on Lock Screen play, while Alderete (12) still had to open their eyes. YawnCast can make the AirPods/Lock Screen play button extend the Moon automatically.
 4. **Very gentle, long fade, with an off switch.** Overcast only added fade in Aug 2026 and then had to make it optional (Oct 2026). Users want it "very gently" (11). Use a long curve (for example 30 to 60 s) and put a single toggle in Settings.
 5. **Night-safe timer UI.** Use dim, high-contrast, low-luminance controls and no bright sheets. Check contrast at minimum brightness (quotes 2, 3, 9).
 6. **Remember the last Moon duration and show the stop clock time** ("stops at 11:42"), quotes 23 and the Dan_John2442 behavior in section 1.
@@ -129,7 +129,7 @@ Reddit note: reddit.com and old.reddit.com JSON endpoints refused fetches from t
 9. **Lock Screen safety.** Follow Overcast's 2025.6 move and avoid accidental scrubbing from the Lock Screen at night (for example, disable the scrubber while the Moon is armed). Also always pause on headphone disconnect [AS-MV 2025.8.1].
 10. **Moon via Shortcuts/App Intents and the Action button.** "Play my sleep show with a 30-min Moon" in one press (quote 24). This fits the no-account model and stays one-tap.
 11. **Optional per-show "skip intro"** so theme music doesn't wake the listener (quote 27). Keep it minimal and inside show settings.
-12. **A "Bedtime" shelf or favorites in the Library grid** (quote 30, quote 26 re-listening). NightCast's drag-reorder grid already suits this, so it could be a pinned top row.
+12. **A "Bedtime" shelf or favorites in the Library grid** (quote 30, quote 26 re-listening). YawnCast's drag-reorder grid already suits this, so it could be a pinned top row.
 
 ---
 

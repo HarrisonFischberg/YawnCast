@@ -1,4 +1,4 @@
-# Castro: competitor research for NightCast
+# Castro: competitor research for YawnCast
 
 Researched 2026-10-20. Every claim cites the public URL where it was seen. App Store review quotes come from Apple's public customer-reviews RSS feed for app id 1080840241. The feed URL is given per quote (with page and storefront) along with the review ID. The human-readable listing is https://apps.apple.com/us/app/castro-podcast-player/id1080840241.
 
@@ -170,22 +170,22 @@ AS-US-pN means App Store US RSS page N: `https://itunes.apple.com/us/rss/custome
 
 ---
 
-## 3. Ideas NightCast could adopt
+## 3. Ideas YawnCast could adopt
 
 Each idea is tied to the quotes or behaviors above. All of them fit the constraints: no account, no backend, no queue, no autoplay-next.
 
 1. **Tap-to-extend after the Moon fades (headline idea).** For a grace window after the timer pauses, a Play from AirPods or the Lock Screen (remote command) restarts the timer for the same duration with a fresh fade. Castro's window is 60 s. Quotes 1, 3, 4, and 10 suggest this is the single most-loved bedtime behavior. Quote 1 asks for a longer "couple hours" window so a mid-night wake gets a short top-up. Make the extension short and gentle, and skip Castro's "computer voice" announcement: a soft chime or silence suits someone in the dark.
 2. **Sleep-timer status on the Lock Screen and Now Playing.** Show "Moon: 12 min left" in the Now Playing artist line or a Live Activity, so the user can check it without unlocking (quote 2; Castro support page).
-3. **Never burn through the library while asleep.** When the Moon pauses, don't mark the episode played. Rewind a little on the next resume, since the user likely missed the last minutes (quotes 7, 10, 13). NightCast already has no autoplay-next, so make that an explicit selling point in its copy.
+3. **Never burn through the library while asleep.** When the Moon pauses, don't mark the episode played. Rewind a little on the next resume, since the user likely missed the last minutes (quotes 7, 10, 13). YawnCast already has no autoplay-next, so make that an explicit selling point in its copy.
 4. **Rock-solid resume position.** Persist the playhead often and restore it exactly (quote 13). A small "back 30 s since you dozed" offer would also help.
 5. **Optional bedtime auto-arm.** Arm the Moon automatically for playback started inside a user-set window (for example 10pm–6am). Leave it off by default (quote 6).
 6. **Timer presets beyond 60 min and a quick cancel.** Castro tops out at 60 minutes and you cancel by dragging to 0 (quote 7; support page). Offer 90 and 120 minute presets, plus an "end of episode" option, alongside one-tap Moon.
 7. **New-episode triage lite on the New page.** Use swipe actions to dismiss or keep, with no queue (quotes 11, 12, 18, 25). A long-press "clear all new" with an Undo toast (quote 11) fits the undo-over-confirm baseline.
-8. **Keep artwork-grid density sane.** Offer a compact grid option, since redesigns with big tiles drew complaints (quotes 16, 17). NightCast's grid already answers quote 16's request.
-9. **Don't paywall night features.** Castro locks Night Mode behind Plus, and paywalled basics draw anger (quote 21). NightCast's free, no-ads stance and its themes are a positioning angle.
-10. **Offline-first trust.** Castro's server outages broke everything (quote 24). NightCast has no backend, so say so in onboarding or the App Store copy.
+8. **Keep artwork-grid density sane.** Offer a compact grid option, since redesigns with big tiles drew complaints (quotes 16, 17). YawnCast's grid already answers quote 16's request.
+9. **Don't paywall night features.** Castro locks Night Mode behind Plus, and paywalled basics draw anger (quote 21). YawnCast's free, no-ads stance and its themes are a positioning angle.
+10. **Offline-first trust.** Castro's server outages broke everything (quote 24). YawnCast has no backend, so say so in onboarding or the App Store copy.
 11. **Fix failure states for downloads.** If a download fails, the episode stays put and shows a retry (quote 14), and episodes are never silently skipped (quote 15).
-12. **VoiceOver pass on the player and Moon.** Castro's listing declares no accessibility features and has VoiceOver bugs (quote 19). NightCast can declare an accessibility nutrition label and test the Moon timer with VoiceOver.
+12. **VoiceOver pass on the player and Moon.** Castro's listing declares no accessibility features and has VoiceOver bugs (quote 19). YawnCast can declare an accessibility nutrition label and test the Moon timer with VoiceOver.
 
 ---
 

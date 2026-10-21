@@ -23,7 +23,7 @@ Labels: **[O]** observed in a public source · **[I]** interpretation · **[P]**
 - App Store URLs do not give binary or runtime access; none attempted.
 - REA was not used: no authorized local artifacts exist, and the public website has nothing
   interaction-specific to analyze.
-- Therefore the NightCast visual design is an **original design [P]** guided by stated
+- Therefore the YawnCast visual design is an **original design [P]** guided by stated
   principles, not by measured layouts.
 
 ## Screens [P]

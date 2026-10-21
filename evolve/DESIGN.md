@@ -1,4 +1,4 @@
-# NightCast Design System
+# YawnCast Design System
 
 Recorded from the shipped code on branch `evolve/001/base` (2026-10-20). The code wins over
 older docs: where `DECISIONS.md` or `replica/design/principles.md` disagree with the build, this
@@ -20,7 +20,7 @@ file describes the build and says where they differ. Paths are relative to the r
 
 ## 2. Color
 
-### Roles (`Theme`, NightCast/Design/Theme.swift:5-29)
+### Roles (`Theme`, YawnCast/Design/Theme.swift:5-29)
 | Role | Use |
 |---|---|
 | `bg` | Screen background (flat themes) and the base under scenes |
@@ -70,7 +70,7 @@ appearance. Never hard-code hex values in views. Every color comes from a theme 
 (MoonKey.swift:100), floating Z's (SleepExtras.swift:146,155), the moon in the mini player (LibraryView.swift:286).
 It is also used for small markers: the new-episode pip (D26, LibraryView.swift:210-217), the "In your Library"
 check (ExploreView.swift:272), the category page icon (ExploreView.swift:219), and the global tint
-(App/NightCastApp.swift:24). New features use accent only at glyph or dot size.
+(App/YawnCastApp.swift:24). New features use accent only at glyph or dot size.
 
 ## 3. Typography (`Typo`, Theme.swift:164-174)
 System fonts only (SF, SF Rounded, New York via `.serif`). Every style maps to a Dynamic Type text style.
@@ -118,7 +118,7 @@ travels `depth - 1` when pressed and the soft shadow tightens (Keys.swift:24-49)
 
 ## 6. Components
 
-### KeyStyle family (NightCast/Design/Keys.swift)
+### KeyStyle family (YawnCast/Design/Keys.swift)
 - `KeyRole` (Keys.swift:4-11):
   - `.standard`: `raised` face. The default for every key.
   - `.primary`: `text`-colored face with a `bg` label. Use it for the **one main action on a screen**:

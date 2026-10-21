@@ -78,7 +78,7 @@ Source-type sweep, not tied to any one app. Collected 2026-10-20.
 - r/pocketcasts · https://www.reddit.com/r/pocketcasts/comments/qx9e8l/sleep_timer_end_of_episode_leaves_0s/hl8rzs0/ · 2021-11-19 · **delight** · lost place
 
 **Q21**: "Then I fell asleep and was able to find where I had last heard, I wanted to know something which I didn’t quite hear and scrolled back quickly."
-- r/overcast (on transcripts) · https://www.reddit.com/r/overcast/comments/1tobl1o/testflight_build_1157_transcript_text_selection/oo62p1k/ · 2026-05-27 · **delight** · lost place (transcripts, which NightCast deliberately leaves out)
+- r/overcast (on transcripts) · https://www.reddit.com/r/overcast/comments/1tobl1o/testflight_build_1157_transcript_text_selection/oo62p1k/ · 2026-05-27 · **delight** · lost place (transcripts, which YawnCast deliberately leaves out)
 
 **Q22**: "It used to stop right before the end so that if you fall asleep you're still in the right episode. But it's the second night in a row that when I wake up, it has gone passed the end and on to the next episode ... I have to go history to find my episode that I've missed the end."
 - GitHub pocket-casts-android #2266 (user report quoted by the dev team) · https://github.com/Automattic/pocket-casts-android/issues/2266 · 2024-05-21 · **complaint** · lost place / timer reliability
@@ -201,7 +201,7 @@ Source-type sweep, not tied to any one app. Collected 2026-10-20.
 - r/overcast · https://www.reddit.com/r/overcast/comments/1ovm2cg/usability_enhancement_sleep_timer_for_the/nokzt86/ · 2025-11-13 · **complaint** · taps to start timer
 
 **Q58**: "Something in the settings screen to default a 15 minute sleep timer with a moon icon to click on the main screen."
-- r/overcast · https://www.reddit.com/r/overcast/comments/1oubjb9/feature_request_sleep_timer_on_apple_watch/nobcijd/ · 2025-11-11 · **missing** · one-tap timer (close to NightCast's Moon)
+- r/overcast · https://www.reddit.com/r/overcast/comments/1oubjb9/feature_request_sleep_timer_on_apple_watch/nobcijd/ · 2025-11-11 · **missing** · one-tap timer (close to YawnCast's Moon)
 
 **Q59**: "Basic things that should take one tap but take several, like subscribing to/following a podcast, setting a sleep timer, etc. The visuals have gone from simple and clean to fussy and complicated. ... I have no use for playlists, variable speed, etc."
 - r/pocketcasts · https://www.reddit.com/r/pocketcasts/comments/1oqiftq/is_there_an_easy_way_to_transition_from_ovecast/nnm546b/ · 2025-11-07 · **complaint** · taps to start timer / simplicity
@@ -327,8 +327,8 @@ Source-type sweep, not tied to any one app. Collected 2026-10-20.
 
 Some quotes fit more than one theme, so the counts overlap a little. There are 86 quotes in all.
 
-**How this lines up with NightCast** (my reading, not part of the evidence):
-- NightCast's fixed "no autoplay-next" rule speaks directly to the largest complaint cluster.
+**How this lines up with YawnCast** (my reading, not part of the evidence):
+- YawnCast's fixed "no autoplay-next" rule speaks directly to the largest complaint cluster.
 - The Moon timer's ~6-minute fade sits with the majority on fade (Q24-Q28). Q29 is a minority who want a hard stop.
 - The biggest gaps the quotes point at are:
   - "Back to where I fell asleep" (Q11-Q18), for example a bookmark at the moment the fade starts.
