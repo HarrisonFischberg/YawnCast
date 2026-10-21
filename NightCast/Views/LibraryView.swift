@@ -307,8 +307,6 @@ struct MiniPlayerDock: View {
     /// Counts taps on the mini Moon key so its haptic fires only for taps here,
     /// never for Sleep changes made from Now Playing (which has its own haptic).
     @State private var moonTaps = 0
-    /// Read from the Feature flags screen; refreshed when a switch changes.
-    @State private var showsMoonKey = Experiments.isOn(.miniMoon)
 
     var body: some View {
         let player = model.player
@@ -324,10 +322,6 @@ struct MiniPlayerDock: View {
                             .foregroundStyle(theme.text)
                             .lineLimit(1)
                         HStack(spacing: Space.xs) {
-                            // With the Moon key present, the key itself shows Sleep state.
-                            if sleepOn && !showsMoonKey {
-                                Image(systemName: SleepGlyph.symbol(theme: theme, fading: false)).foregroundStyle(theme.accent)
-                            }
                             Text(player.episode?.showTitle ?? "").lineLimit(1)
                         }
                         .font(.system(.caption, weight: .medium))
@@ -343,38 +337,36 @@ struct MiniPlayerDock: View {
             .accessibilityHint("Opens the player.")
             .accessibilityIdentifier("miniPlayer")
 
-            if showsMoonKey {
-                Button {
-                    moonTaps += 1
-                    model.toggleSleep()
-                } label: {
-                    Image(systemName: "moon.fill")
-                        .font(.system(size: 17, weight: .bold))
-                        .foregroundStyle(sleepOn ? theme.onAccent : theme.accent)
-                }
-                .buttonStyle(.roundKey(sleepOn ? .accent : .standard, depth: 3))
-                .frame(width: 44, height: 44)
-                .disabled(player.episode == nil)
-                .accessibilityLabel("Sleep")
-                .accessibilityValue(sleepOn ? "On" : "Off")
-                .accessibilityAddTraits(sleepOn ? .isSelected : [])
-                .accessibilityIdentifier("miniMoonKey")
-                .accessibilityShowsLargeContentViewer {
-                    Label("Sleep", systemImage: "moon.fill")
-                }
-                .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: moonTaps)
-                .overlay(alignment: .topLeading) {
-                    if sleepOn {
-                        // The same z's as the big Moon key, smaller, drifting up off the mini player.
-                        FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
-                            .frame(width: 130, height: 300)
-                            .scaleEffect(0.7, anchor: .bottomLeading)
-                            .offset(x: 2, y: -286)
-                            .transition(.opacity)
-                    }
-                }
-                .animation(.easeOut(duration: 0.3), value: sleepOn)
+            Button {
+                moonTaps += 1
+                model.toggleSleep()
+            } label: {
+                Image(systemName: "moon.fill")
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundStyle(sleepOn ? theme.onAccent : theme.accent)
             }
+            .buttonStyle(.roundKey(sleepOn ? .accent : .standard, depth: 3))
+            .frame(width: 44, height: 44)
+            .disabled(player.episode == nil)
+            .accessibilityLabel("Sleep")
+            .accessibilityValue(sleepOn ? "On" : "Off")
+            .accessibilityAddTraits(sleepOn ? .isSelected : [])
+            .accessibilityIdentifier("miniMoonKey")
+            .accessibilityShowsLargeContentViewer {
+                Label("Sleep", systemImage: "moon.fill")
+            }
+            .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: moonTaps)
+            .overlay(alignment: .topLeading) {
+                if sleepOn {
+                    // The same z's as the big Moon key, smaller, drifting up off the mini player.
+                    FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
+                        .frame(width: 130, height: 300)
+                        .scaleEffect(0.7, anchor: .bottomLeading)
+                        .offset(x: 2, y: -286)
+                        .transition(.opacity)
+                }
+            }
+            .animation(.easeOut(duration: 0.3), value: sleepOn)
 
             Button { player.togglePlayPause() } label: {
                 Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
@@ -391,9 +383,6 @@ struct MiniPlayerDock: View {
             .sensoryFeedback(.impact(weight: .medium), trigger: player.isPlaying)
         }
         .padding(10)
-        .onReceive(NotificationCenter.default.publisher(for: Experiments.didChange)) { _ in
-            showsMoonKey = Experiments.isOn(.miniMoon)
-        }
         .background {
             let r = theme.style.cardRadius
             RoundedRectangle(cornerRadius: r, style: .continuous)

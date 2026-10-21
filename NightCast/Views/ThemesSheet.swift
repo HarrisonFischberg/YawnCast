@@ -7,9 +7,6 @@ struct ThemesSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
     @Environment(\.dynamicTypeSize) private var typeSize
-    @State private var isExperimentsPresented = false
-    /// Pressing and holding the version line reveals the Feature flags button under it.
-    @State private var showsFlagsButton = false
 
     private var columns: [GridItem] {
         Array(repeating: GridItem(.flexible(), spacing: Space.m), count: typeSize.isAccessibilitySize ? 1 : 2)
@@ -33,33 +30,17 @@ struct ThemesSheet: View {
         .background { ScreenBackground() }
         .sensoryFeedback(.selection, trigger: model.theme)
         .sensoryFeedback(.selection, trigger: model.look)
-        .sheet(isPresented: $isExperimentsPresented) { ExperimentsView() }
     }
 
-    /// The version, at the bottom. Press and hold it to reveal the Feature flags button.
+    /// The version, at the bottom.
     private var versionLine: some View {
         let info = Bundle.main.infoDictionary
         let version = "\(info?["CFBundleShortVersionString"] as? String ?? "?") (\(info?["CFBundleVersion"] as? String ?? "?"))"
-        return VStack(spacing: Space.m) {
-            Text("NightCast \(version)")
-                .font(Typo.caption)
-                .foregroundStyle(theme.textMuted)
-                .onLongPressGesture { withAnimation(.easeOut(duration: 0.25)) { showsFlagsButton = true } }
-                .accessibilityAction(named: "Feature flags") { isExperimentsPresented = true }
-                .accessibilityIdentifier("version-line")
-            if showsFlagsButton {
-                Button("Feature flags") { isExperimentsPresented = true }
-                    .font(Typo.headline)
-                    .foregroundStyle(theme.text)
-                    .padding(.horizontal, Space.l)
-                    .frame(minHeight: 44)
-                    .background(Capsule().strokeBorder(theme.border))
-                    .accessibilityIdentifier("featureFlagsButton")
-                    .transition(.opacity.combined(with: .move(edge: .top)))
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .sensoryFeedback(.impact(weight: .medium), trigger: showsFlagsButton)
+        return Text("NightCast \(version)")
+            .font(Typo.caption)
+            .foregroundStyle(theme.textMuted)
+            .frame(maxWidth: .infinity)
+            .accessibilityIdentifier("version-line")
     }
 
     private var textStyles: some View {
