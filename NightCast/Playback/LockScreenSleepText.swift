@@ -1,7 +1,7 @@
 import Foundation
 import NightCastCore
 
-/// The artist line on the Lock Screen and in Control Center when `exp_lock_status` is on.
+/// The artist line on the Lock Screen and in Control Center while Sleep is on.
 /// Pure, so it can be tested without MediaPlayer. Whole minutes only: the Lock Screen
 /// should not be rewritten at the 4 Hz Sleep tick rate.
 nonisolated enum LockScreenSleepText {

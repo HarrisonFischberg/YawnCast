@@ -32,7 +32,7 @@ struct LockScreenSleepTextTests {
     @MainActor @Test func bridgeArtistLineFollowsProvider() {
         let episode = Episode(id: "e1", showFeedURL: URL(string: "https://example.com/feed")!, showTitle: "Radiolab", title: "Ep", audioURL: URL(string: "https://example.com/a.mp3")!)
         let bridge = NowPlayingBridge(engine: PlaybackEngine())
-        #expect(bridge.artistText(for: episode) == episode.showTitle) // flag off: no provider
+        #expect(bridge.artistText(for: episode) == episode.showTitle) // no provider: show title only
         bridge.artistLine = { LockScreenSleepText.subtitle(show: $0, status: .waiting(untilFade: 600)) }
         #expect(bridge.artistText(for: episode) == "\(episode.showTitle) · Sleep on, fades in 10 min")
     }
