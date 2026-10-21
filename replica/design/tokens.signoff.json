@@ -1,0 +1,58 @@
+{
+  "_about": "NightCast look 'signoff'",
+  "color": {
+    "bg": "#1F1029",
+    "surface": "#2B1838",
+    "raised": "#37204A",
+    "border": "#4D3263",
+    "border-input": "#4D3263",
+    "text": "#F7EEE6",
+    "text-muted": "#C3AFCB",
+    "accent": "#FF5A47",
+    "on-accent": "#2A0503",
+    "danger": "#FFA090"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "accent",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "danger",
+      "bg"
+    ],
+    [
+      "border-input",
+      "bg",
+      "ui"
+    ]
+  ]
+}

@@ -10,7 +10,7 @@ final class AccessibilityUITests: XCTestCase {
     private func launch(extra: [String] = []) -> XCUIApplication {
         continueAfterFailure = false
         let app = XCUIApplication()
-        app.launchArguments = ["-uitest", "-resetStore", "-theme", "ink"] + extra
+        app.launchArguments = ["-uitest", "-resetStore", "-theme", "almanac"] + extra
         app.launch()
         return app
     }

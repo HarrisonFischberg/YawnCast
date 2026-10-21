@@ -22,7 +22,10 @@ enum DebugLaunch {
             ? SleepConfiguration(maxFadeDelay: 4, stepInterval: 3, stepRamp: 1, cancelRamp: 0.5)
             : .standard
         let model = AppModel(store: store, directory: directory, feeds: feeds, sleepConfiguration: sleepConfiguration)
-        if let theme = launch.themeID { model.theme = Theme.with(id: theme) }
+        if let theme = launch.themeID {
+            model.theme = Theme.migrated(from: theme)
+        }
+        if let look = launch.lookID.flatMap(ThemeStyle.init(rawValue:)) { model.look = look }
         // UI tests run at noon unless they ask for a time, so late-night Sleep can't arm by surprise.
         if let hour = launch.nightHour ?? (launch.isUITest ? 12 : nil) { model.currentHour = { hour } }
         if launch.isDemo { DemoSeed.run(model: model, launch: launch) }
@@ -33,6 +36,8 @@ enum DebugLaunch {
 struct LaunchOptions {
     var isDemo = false
     var themeID: String?
+    /// `-look <style>`: the style, independent of `-theme` (the colour).
+    var lookID: String?
     var openPlayer = false
     var sleepOn = false
     var fastSleep = false
@@ -68,6 +73,7 @@ struct LaunchOptions {
         if let i = arguments.firstIndex(of: "-nightHour"), i + 1 < arguments.count,
            let hour = Int(arguments[i + 1]), (0...23).contains(hour) { nightHour = hour }
         if let i = arguments.firstIndex(of: "-theme"), i + 1 < arguments.count { themeID = arguments[i + 1] }
+        if let i = arguments.firstIndex(of: "-look"), i + 1 < arguments.count { lookID = arguments[i + 1] }
     }
 }
 

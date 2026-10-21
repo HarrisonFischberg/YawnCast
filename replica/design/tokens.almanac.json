@@ -1,16 +1,16 @@
 {
-  "_about": "NightCast theme 'ember'",
+  "_about": "NightCast look 'almanac'",
   "color": {
-    "bg": "#070504",
-    "surface": "#110C09",
-    "raised": "#1A120D",
-    "border": "#22170F",
-    "border-input": "#86623F",
-    "text": "#B98F6C",
-    "text-muted": "#9C7A5C",
-    "accent": "#C27142",
-    "on-accent": "#070504",
-    "danger": "#C96E55"
+    "bg": "#100F0C",
+    "surface": "#1C180F",
+    "raised": "#241F14",
+    "border": "#4A4231",
+    "border-input": "#4A4231",
+    "text": "#EFE6CF",
+    "text-muted": "#A99F86",
+    "accent": "#F2C230",
+    "on-accent": "#17140D",
+    "danger": "#FF8F7A"
   },
   "pairs": [
     [

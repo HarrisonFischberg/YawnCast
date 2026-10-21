@@ -39,12 +39,23 @@ final class AppModel {
     let directory: DirectoryService
     let feeds: FeedService
 
+    /// The colour: a Scene or one of the four flat colours.
     var theme: Theme {
         didSet {
             library.themeID = theme.id
             persist()
         }
     }
+
+    /// The text style (Picture Book or Sign-Off), worn over whichever colour is chosen.
+    var look: ThemeStyle {
+        didSet {
+            Typo.style = look
+            library.lookID = look.rawValue
+            persist()
+        }
+    }
+
 
     var isPlayerPresented = false
     var isThemesPresented = false
@@ -107,15 +118,20 @@ final class AppModel {
         self.feeds = feeds
         search = SearchModel(directory: directory)
         var snapshot = store.load()
-        // v0.4: Midnight becomes the default look. Apply once, and only over the
-        // previous default (unset or Ink) so a deliberate Paper/Ember choice stays.
-        if (snapshot.appearanceVersion ?? 0) < 4 {
-            if snapshot.themeID == nil || snapshot.themeID == "ink" { snapshot.themeID = Theme.midnight.id }
-            snapshot.appearanceVersion = 4
+        // v0.17: a colour (a Scene or one of four flat colours) and a text style (Picture
+        // Book or Sign-Off). Retired colours move to the nearest one; a new install
+        // starts on Almanac with Picture Book text.
+        if (snapshot.appearanceVersion ?? 0) < 8 {
+            snapshot.themeID = Theme.migrated(from: snapshot.themeID).id
+            if ThemeStyle(rawValue: snapshot.lookID ?? "") == nil { snapshot.lookID = ThemeStyle.pictureBook.rawValue }
+            snapshot.appearanceVersion = 8
             try? store.save(snapshot)
         }
         library = snapshot
         theme = Theme.with(id: snapshot.themeID)
+        let savedLook = ThemeStyle(rawValue: snapshot.lookID ?? "") ?? .pictureBook
+        look = savedLook
+        Typo.style = savedLook
         player = PlaybackEngine()
         sleep = SleepController(clock: clock, configuration: sleepConfiguration)
         nowPlaying = NowPlayingBridge(engine: player)

@@ -74,6 +74,7 @@ Status: built and tested on the iOS Simulator, and the device checks D1 to D8 be
 <details>
 <summary>Version notes</summary>
 
+- **v0.17:** Themes is now **Scenes** (the six animated ones), **Colours** (four flat palettes with day pages that follow the phone: Almanac, Ember, Plum, Meadow, which absorb the old Color Scapes) and **Text** (Picture Book or Sign-Off lettering), chosen separately. Every theme shares the labelled New / Library / Explore tabs, outlined round keys, and a see-through Sleep bar with a ten-mark progress bar, three lines of rising z's, and an icon that follows the Scene. The ±5 bubble is now a Sleep chip.
 - **v0.11:** Library has one full-width search bar that filters your shows and finds new ones.
 - **v0.10:** Sleep fades over 6 minutes (10% every 40 s); smaller player that always stays on screen; swipe down to close Now Playing; Library reorders live as you drag.
 - **v0.9:** smoother in-place search; the player shrinks to an oval while typing.
@@ -97,7 +98,8 @@ These are excluded from Release builds ([D20](DECISIONS.md)).
 | Argument | Effect |
 |---|---|
 | `-demo` | Uses an in-memory library seeded with 6 real shows and loads a real Radiolab episode, paused |
-| `-theme paper\|ink\|ember` | Forces a theme |
+| `-theme <colour id>` | Forces a colour or Scene |
+| `-look picturebook\|signoff` | Forces the text style |
 | `-openPlayer`, `-openShow`, `-search <term>`, `-sleepOn`, `-autoplay` | Opens screens or starts states, used for screenshots |
 | `-fastSleep` | Short Sleep timings: fade after 4 s, a step every 6 s |
 | `-uitest [-resetStore]` | Fixture search and feeds, a bundled test tone, and a separate library file |

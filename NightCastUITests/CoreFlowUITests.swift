@@ -7,7 +7,7 @@ final class CoreFlowUITests: XCTestCase {
     private func launch(reset: Bool, extra: [String] = []) -> XCUIApplication {
         continueAfterFailure = false
         let app = XCUIApplication()
-        app.launchArguments = ["-uitest", "-theme", "ink"] + (reset ? ["-resetStore"] : []) + extra
+        app.launchArguments = ["-uitest", "-theme", "almanac"] + (reset ? ["-resetStore"] : []) + extra
         app.launch()
         return app
     }

@@ -8,7 +8,7 @@ final class SleepUITests: XCTestCase {
     private func startPlayback() -> XCUIApplication {
         continueAfterFailure = false
         let app = XCUIApplication()
-        app.launchArguments = ["-uitest", "-resetStore", "-fastSleep", "-theme", "ember"]
+        app.launchArguments = ["-uitest", "-resetStore", "-fastSleep", "-theme", "safelight"]
         app.launch()
         app.buttons["findPodcastKey"].tap()
         let field = app.textFields["searchField"]

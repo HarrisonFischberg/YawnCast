@@ -13,7 +13,11 @@ struct HomeView: View {
             if model.library.subscriptions.isEmpty {
                 LibraryView()
             } else {
-                PageDots(selection: $model.homePage)
+                VStack(spacing: Space.m) {
+                    LookTabs(selection: $model.homePage)
+                }
+                .padding(.horizontal, Space.xl)
+                .padding(.top, Space.s)
                 TabView(selection: $model.homePage) {
                     NewEpisodesView().tag(HomePage.new)
                     LibraryView().tag(HomePage.library)
@@ -31,37 +35,6 @@ struct HomeView: View {
     }
 }
 
-/// Three page dots; the current page is a longer pill. Each dot is a 44 pt target.
-struct PageDots: View {
-    @Binding var selection: HomePage
-    @Environment(\.theme) private var theme
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
-    var body: some View {
-        HStack(spacing: 0) {
-            ForEach(HomePage.allCases, id: \.self) { page in
-                Button {
-                    withAnimation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.8)) { selection = page }
-                } label: {
-                    Capsule()
-                        .fill(page == selection ? theme.text : theme.textMuted.opacity(0.75))
-                        .frame(width: page == selection ? 22 : 8, height: 8)
-                        .frame(width: 36, height: 44)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(page.title)
-                .accessibilityAddTraits(page == selection ? .isSelected : [])
-                .accessibilityIdentifier("pageDot-\(page.title)")
-            }
-        }
-        .animation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.8), value: selection)
-        .frame(maxWidth: .infinity)
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel("Pages")
-    }
-}
-
 /// Large page title shared by the home pages.
 struct PageTitle: View {
     let title: String
@@ -72,6 +45,7 @@ struct PageTitle: View {
         VStack(alignment: .leading, spacing: Space.xs) {
             Text(title)
                 .font(Typo.display)
+                .textCase(Typo.titleCase)
                 .foregroundStyle(theme.text)
                 .accessibilityAddTraits(.isHeader)
             if let subtitle {

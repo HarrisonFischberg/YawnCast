@@ -9,8 +9,8 @@
     "border-input": "#6FA6BC",
     "text": "#E8FBFF",
     "text-muted": "#A6D0DC",
-    "accent": "#FFB38A",
-    "on-accent": "#2A0E00",
+    "accent": "#2D6AA3",
+    "on-accent": "#FFFFFF",
     "danger": "#FF9A8A"
   },
   "pairs": [

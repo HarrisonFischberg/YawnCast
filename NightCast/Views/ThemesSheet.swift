@@ -1,7 +1,8 @@
 import NightCastCore
 import SwiftUI
 
-/// Themes: animated Scenes, then flat Color Scapes. One tap applies.
+/// Themes: a colour (a Scene or one of four flat colours) and the text style
+/// (Picture Book or Sign-Off), chosen separately. One tap applies.
 struct ThemesSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
@@ -17,16 +18,19 @@ struct ThemesSheet: View {
             VStack(alignment: .leading, spacing: Space.xl) {
                 Text("Themes")
                     .font(Typo.title)
+                    .textCase(Typo.titleCase)
                     .foregroundStyle(theme.text)
                     .accessibilityAddTraits(.isHeader)
                 group("Scenes", subtitle: "Calm, animated night skies", themes: Theme.scenes)
-                group("Color Scapes", subtitle: "Simple and still", themes: Theme.colorScapes)
+                group("Colours", subtitle: "Simple and still, with a day page that follows your phone", themes: Theme.colours)
+                textStyles
                 if Experiments.canOverride { versionLine }
             }
             .padding(Space.xxl)
         }
         .background { ScreenBackground() }
         .sensoryFeedback(.selection, trigger: model.theme)
+        .sensoryFeedback(.selection, trigger: model.look)
         .sheet(isPresented: $isExperimentsPresented) { ExperimentsView() }
     }
 
@@ -43,6 +47,29 @@ struct ThemesSheet: View {
             .accessibilityIdentifier("version-line")
     }
 
+    private var textStyles: some View {
+        VStack(alignment: .leading, spacing: Space.m) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Text")
+                    .font(Typo.eyebrow).tracking(1.2).textCase(.uppercase)
+                    .foregroundStyle(theme.textMuted)
+                    .accessibilityAddTraits(.isHeader)
+                Text("The lettering on every screen").font(Typo.caption).foregroundStyle(theme.textMuted)
+            }
+            LazyVGrid(columns: columns, spacing: Space.l) {
+                ForEach(ThemeStyle.allCases, id: \.self) { look in
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.35)) { model.look = look }
+                    } label: { StyleSwatch(look: look, selected: look == model.look) }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("\(look.name) text")
+                        .accessibilityAddTraits(look == model.look ? .isSelected : [])
+                        .accessibilityIdentifier("look-\(look.rawValue)")
+                }
+            }
+        }
+    }
+
     private func group(_ title: String, subtitle: String, themes: [Theme]) -> some View {
         VStack(alignment: .leading, spacing: Space.m) {
             VStack(alignment: .leading, spacing: 2) {
@@ -56,14 +83,44 @@ struct ThemesSheet: View {
                 ForEach(themes) { option in
                     Button {
                         withAnimation(.easeInOut(duration: 0.35)) { model.theme = option }
-                    } label: { ThemeSwatch(option: option, selected: option == model.theme) }
+                    } label: { ThemeSwatch(option: option, selected: option.id == model.theme.id) }
                         .buttonStyle(.plain)
                         .accessibilityLabel("\(option.name), \(option.blurb)")
-                        .accessibilityAddTraits(option == model.theme ? .isSelected : [])
+                        .accessibilityAddTraits(option.id == model.theme.id ? .isSelected : [])
                         .accessibilityIdentifier("theme-\(option.id)")
                 }
             }
         }
+    }
+}
+
+/// A text style's card: "Aa" in its display face, on the current colour.
+private struct StyleSwatch: View {
+    let look: ThemeStyle
+    let selected: Bool
+    @Environment(\.theme) private var current
+
+    var body: some View {
+        VStack(spacing: Space.s) {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(current.surface)
+                .overlay {
+                    Text("Aa")
+                        .font(Typo.display(look))
+                        .foregroundStyle(current.text)
+                        .accessibilityHidden(true)
+                }
+                .overlay {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .strokeBorder(selected ? current.text : current.border, lineWidth: selected ? 3 : 1)
+                }
+                .frame(height: 96)
+            Text(look.name)
+                .font(Typo.headline)
+                .foregroundStyle(current.text)
+        }
+        .frame(maxWidth: .infinity)
+        .contentShape(Rectangle())
     }
 }
 
@@ -83,6 +140,14 @@ private struct ThemeSwatch: View {
                         // A still frame of the actual scene.
                         ScenePreview(scene: scene)
                             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    }
+                }
+                .overlay(alignment: .trailing) {
+                    // A style colour's day page, as the right-hand edge.
+                    if option.followsSystem {
+                        Rectangle().fill(option.resolved(for: .light).bg)
+                            .frame(width: 44)
+                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init(bottomTrailing: 18, topTrailing: 18), style: .continuous))
                     }
                 }
                 .overlay(alignment: .bottom) {

@@ -115,7 +115,8 @@ struct ShowView: View {
                     .frame(width: 128, height: 128)
                 VStack(alignment: .leading, spacing: Space.xs) {
                     Text(show.title)
-                        .font(.system(.title2, design: .serif, weight: .bold))
+                        .font(Typo.showTitle)
+                        .textCase(Typo.titleCase)
                         .foregroundStyle(theme.text)
                         .lineLimit(typeSize.isAccessibilitySize ? nil : 4)
                         .minimumScaleFactor(0.8)
@@ -243,7 +244,7 @@ private struct YearHeader: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: Space.s) {
             Text(group.year.map(String.init) ?? "Undated")
-                .font(.system(.title3, design: .serif, weight: .bold))
+                .font(Typo.sectionTitle)
                 .foregroundStyle(theme.text)
             Text("\(group.episodes.count) episode\(group.episodes.count == 1 ? "" : "s")")
                 .font(Typo.caption)
@@ -253,8 +254,8 @@ private struct YearHeader: View {
         .padding(.top, Space.l)
         .padding(.bottom, Space.s)
         .background {
-            // Pinned over scrolling rows; a soft frosted band on the night sky.
-            if theme.hasScene {
+            // Pinned over scrolling rows; a soft frosted band over a Scene.
+            if theme.scene != nil {
                 Rectangle().fill(.ultraThinMaterial).padding(.horizontal, -Space.xl)
             } else {
                 theme.bg.padding(.horizontal, -Space.xl)

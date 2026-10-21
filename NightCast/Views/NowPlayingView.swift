@@ -9,10 +9,6 @@ struct NowPlayingView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var skipTaps = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    /// The ±5 bubble opens with Sleep, then tucks into a small pill after a
-    /// few quiet seconds (or a tap on its center); tapping the pill reopens it.
-    @State private var bubbleExpanded = true
-    @State private var collapseTask: Task<Void, Never>?
 
     var body: some View {
         let player = model.player
@@ -36,7 +32,8 @@ struct NowPlayingView: View {
                         .foregroundStyle(theme.textMuted)
                         .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
                     Text(player.episode?.title ?? "Nothing playing")
-                        .font(typeSize.isAccessibilitySize ? .system(.title2, design: .serif, weight: .bold) : .system(size: 36, weight: .bold, design: .serif))
+                        .font(typeSize.isAccessibilitySize ? Typo.showTitle : Typo.playerTitle)
+                        .textCase(Typo.titleCase)
                         .foregroundStyle(theme.text)
                         .lineLimit(typeSize.isAccessibilitySize ? 3 : 4)
                         .minimumScaleFactor(0.75)
@@ -67,7 +64,7 @@ struct NowPlayingView: View {
 
                 VStack(alignment: .trailing, spacing: Space.l) {
                     // Above the Moon: "Back to …" on the left (only while Sleep is off),
-                    // the ±5 bubble or a toast on the right. Stacked at accessibility sizes.
+                    // the Sleep chip or a toast on the right. Stacked at accessibility sizes.
                     sleepRowLayout {
                         if let marker = model.driftBackPosition {
                             DriftBackKey(position: marker) { model.jumpToDriftBack() }
@@ -78,16 +75,9 @@ struct NowPlayingView: View {
                             if model.sleepStatus != .off, let note = model.nightNote {
                                 toastLabel(note)
                             } else if model.sleepStatus != .off {
-                                if bubbleExpanded {
-                                    SleepAdjustBubble(status: model.sleepStatus, onAdjust: { minutes in
-                                        model.adjustSleep(minutes: minutes)
-                                        scheduleCollapse()
-                                    }, onCollapse: { setExpanded(false) })
-                                    .transition(bubbleTransition)
-                                } else {
-                                    CollapsedSleepPill(status: model.sleepStatus) { setExpanded(true) }
-                                        .transition(bubbleTransition)
-                                }
+                                // −5 · 17 min · +5, for as long as Sleep is on.
+                                SleepChip(status: model.sleepStatus) { model.adjustSleep(minutes: $0) }
+                                    .transition(chipTransition)
                             } else if let toast = model.toast {
                                 toastLabel(toast)
                             }
@@ -99,22 +89,18 @@ struct NowPlayingView: View {
                     MoonKey(status: model.sleepStatus) { model.toggleSleep() }
                         .disabled(player.episode == nil)
                         .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: model.sleepStatus == .off)
-                        .overlay(alignment: .bottomLeading) {
+                        .overlay(alignment: .topLeading) {
                             if model.sleepStatus != .off {
+                                // Three lines of z's rise out of the Sleep icon, in every theme.
                                 FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
-                                    .frame(width: 90, height: 150)
-                                    // Rise out of the moon well (left side of the key).
-                                    .offset(x: 18, y: -44)
+                                    // Tall, so they float well up the screen before fading out.
+                                    .frame(width: 130, height: 360)
+                                    .offset(x: 8, y: -336)
                                     .transition(.opacity)
                             }
                         }
                 }
                 .animation(.spring(response: 0.35, dampingFraction: 0.7), value: model.sleepStatus == .off)
-                .animation(.spring(response: 0.3, dampingFraction: 0.75), value: bubbleExpanded)
-                .onChange(of: model.sleepStatus == .off) { _, isOff in
-                    if !isOff { setExpanded(true) }
-                }
-                .onAppear { if model.sleepStatus != .off { setExpanded(false) } }
                 .animation(.easeOut(duration: 0.2), value: model.toast)
                 .animation(.easeOut(duration: 0.2), value: model.nightNote)
                 .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
@@ -153,22 +139,8 @@ struct NowPlayingView: View {
             .accessibilityHidden(true) // announced via UIAccessibility
     }
 
-    private var bubbleTransition: AnyTransition {
-        reduceMotion ? .opacity : .scale(scale: 0.6, anchor: .bottomTrailing).combined(with: .opacity)
-    }
-
-    private func setExpanded(_ expanded: Bool) {
-        bubbleExpanded = expanded
-        if expanded { scheduleCollapse() } else { collapseTask?.cancel() }
-    }
-
-    private func scheduleCollapse() {
-        collapseTask?.cancel()
-        collapseTask = Task {
-            try? await Task.sleep(for: .seconds(5))
-            guard !Task.isCancelled else { return }
-            bubbleExpanded = false
-        }
+    private var chipTransition: AnyTransition {
+        reduceMotion ? .opacity : .scale(scale: 0.7, anchor: .bottomTrailing).combined(with: .opacity)
     }
 
     private var transport: some View {
