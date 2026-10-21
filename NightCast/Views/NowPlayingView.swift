@@ -214,7 +214,7 @@ struct NowPlayingView: View {
     }
 }
 
-/// Drift back (exp_drift_back): after Sleep fades an episode out and pauses it, one
+/// Drift back: after Sleep fades an episode out and pauses it, one
 /// standard key under the scrubber jumps back to where the fade began. Seeks only;
 /// playback stays paused.
 private struct DriftBackKey: View {

@@ -74,7 +74,7 @@ final class AppModel {
     /// Local hour, 0-23. Replaced in Debug by `-nightHour` (TestSupport/DebugLaunch.swift).
     @ObservationIgnored var currentHour: () -> Int = { Calendar.current.component(.hour, from: Date()) }
     private(set) var sleepStatus: SleepStatus = .off
-    /// Drift back (exp_drift_back): where Sleep's fade began on an episode it then
+    /// Drift back: where Sleep's fade began on an episode it then
     /// faded out and paused. In memory only; cleared by the jump or a different episode.
     private(set) var driftBack: DriftBackMarker?
 
@@ -140,7 +140,7 @@ final class AppModel {
             self?.sleep.measuredDurationArrived(duration, episodeID: episode.id)
         }
         sleep.onFadeBegan = { [weak self] episodeID, secondsAgo in
-            guard let self, Experiments.isOn(.driftBack) else { return }
+            guard let self else { return }
             fadeBegan = DriftBackMarker(episodeID: episodeID, position: max(0, player.position - secondsAgo))
         }
         sleep.onFadedToSilence = { [weak self] episodeID in
@@ -432,7 +432,7 @@ final class AppModel {
         isPlayerPresented = true
     }
 
-    // MARK: Drift back (exp_drift_back)
+    // MARK: Drift back
 
     /// Where to offer "Back to …" on Now Playing: the loaded episode's fade start,
     /// only once Sleep has paused it and while Sleep is off.
