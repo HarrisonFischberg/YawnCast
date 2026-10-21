@@ -268,8 +268,6 @@ struct TileStyle: ButtonStyle {
 struct MiniPlayerDock: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
-    /// Cached once: the flag is read at init, not per render.
-    private let showsMoonKey = Experiments.isOn(.miniMoon)
     /// Counts taps on the mini Moon key so its haptic fires only for taps here,
     /// never for Sleep changes made from Now Playing (which has its own haptic).
     @State private var moonTaps = 0
@@ -287,15 +285,11 @@ struct MiniPlayerDock: View {
                             .font(.system(.subheadline, design: .rounded, weight: .semibold))
                             .foregroundStyle(theme.text)
                             .lineLimit(1)
-                        HStack(spacing: Space.xs) {
-                            // With the Moon key present, the key itself shows Sleep state.
-                            if sleepOn && !showsMoonKey {
-                                Image(systemName: "moon.fill").foregroundStyle(theme.accent)
-                            }
-                            Text(player.episode?.showTitle ?? "").lineLimit(1)
-                        }
-                        .font(.system(.caption, design: .rounded, weight: .medium))
-                        .foregroundStyle(theme.textMuted)
+                        // The Moon key shows Sleep state, so no glyph here.
+                        Text(player.episode?.showTitle ?? "")
+                            .lineLimit(1)
+                            .font(.system(.caption, design: .rounded, weight: .medium))
+                            .foregroundStyle(theme.textMuted)
                     }
                     Spacer(minLength: 0)
                 }
@@ -307,27 +301,25 @@ struct MiniPlayerDock: View {
             .accessibilityHint("Opens the player.")
             .accessibilityIdentifier("miniPlayer")
 
-            if showsMoonKey {
-                Button {
-                    moonTaps += 1
-                    model.toggleSleep()
-                } label: {
-                    Image(systemName: "moon.fill")
-                        .font(.system(size: 17, weight: .bold))
-                        .foregroundStyle(sleepOn ? theme.onAccent : theme.accent)
-                }
-                .buttonStyle(.roundKey(sleepOn ? .accent : .standard, depth: 3))
-                .frame(width: 44, height: 44)
-                .disabled(player.episode == nil)
-                .accessibilityLabel("Sleep")
-                .accessibilityValue(sleepOn ? "On" : "Off")
-                .accessibilityAddTraits(sleepOn ? .isSelected : [])
-                .accessibilityIdentifier("miniMoonKey")
-                .accessibilityShowsLargeContentViewer {
-                    Label("Sleep", systemImage: "moon.fill")
-                }
-                .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: moonTaps)
+            Button {
+                moonTaps += 1
+                model.toggleSleep()
+            } label: {
+                Image(systemName: "moon.fill")
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundStyle(sleepOn ? theme.onAccent : theme.accent)
             }
+            .buttonStyle(.roundKey(sleepOn ? .accent : .standard, depth: 3))
+            .frame(width: 44, height: 44)
+            .disabled(player.episode == nil)
+            .accessibilityLabel("Sleep")
+            .accessibilityValue(sleepOn ? "On" : "Off")
+            .accessibilityAddTraits(sleepOn ? .isSelected : [])
+            .accessibilityIdentifier("miniMoonKey")
+            .accessibilityShowsLargeContentViewer {
+                Label("Sleep", systemImage: "moon.fill")
+            }
+            .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: moonTaps)
 
             Button { player.togglePlayPause() } label: {
                 Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")

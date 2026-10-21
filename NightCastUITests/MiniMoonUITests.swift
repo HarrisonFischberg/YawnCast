@@ -1,13 +1,12 @@
 import XCTest
 
-/// The Moon key on the mini player (flag `exp_mini_moon`).
+/// The Moon key on the mini player.
 @MainActor
 final class MiniMoonUITests: XCTestCase {
-    private func playFixtureAndCloseNowPlaying(flagOn: Bool) -> XCUIApplication {
+    private func playFixtureAndCloseNowPlaying() -> XCUIApplication {
         continueAfterFailure = false
         let app = XCUIApplication()
         app.launchArguments = ["-uitest", "-resetStore", "-theme", "ink"]
-        if flagOn { app.launchArguments += ["-exp_mini_moon", "YES"] }
         app.launch()
         app.buttons["findPodcastKey"].tap()
         let field = app.textFields["searchField"]
@@ -23,8 +22,8 @@ final class MiniMoonUITests: XCTestCase {
         return app
     }
 
-    func testMiniMoonKeyTogglesSleepWhenFlagOn() {
-        let app = playFixtureAndCloseNowPlaying(flagOn: true)
+    func testMiniMoonKeyTogglesSleep() {
+        let app = playFixtureAndCloseNowPlaying()
         let key = app.buttons["miniMoonKey"]
         XCTAssertTrue(key.waitForExistence(timeout: 5))
         XCTAssertEqual(key.label, "Sleep")
@@ -44,11 +43,5 @@ final class MiniMoonUITests: XCTestCase {
         XCTAssertTrue(key.waitForExistence(timeout: 5))
         key.tap()
         XCTAssertTrue(waitUntil(3) { (key.value as? String) == "Off" }, "second tap turns Sleep off")
-    }
-
-    func testNoMiniMoonKeyWhenFlagOff() {
-        let app = playFixtureAndCloseNowPlaying(flagOn: false)
-        XCTAssertTrue(app.buttons["miniPlayPause"].exists)
-        XCTAssertFalse(app.buttons["miniMoonKey"].exists)
     }
 }
