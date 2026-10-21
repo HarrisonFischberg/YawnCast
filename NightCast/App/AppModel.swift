@@ -512,13 +512,24 @@ final class AppModel {
     @ObservationIgnored private var lockStatusOn = false
     /// The last Sleep line pushed to the Lock Screen; Sleep ticks only push when it changes.
     @ObservationIgnored private var lockStatusPushed: String?
+    @ObservationIgnored private var lockStatusObserver: NSObjectProtocol?
 
+    /// Reads the flag at launch and again whenever the Experiments screen changes it
+    /// (the flag is cached because Sleep changes arrive at 4 Hz).
     private func installLockStatus() {
-        lockStatusOn = Experiments.isOn(.lockStatus)
-        guard lockStatusOn else { return }
-        nowPlaying?.artistLine = { [weak self] show in
-            LockScreenSleepText.subtitle(show: show, status: self?.sleepStatus ?? .off)
+        if lockStatusObserver == nil {
+            lockStatusObserver = NotificationCenter.default.addObserver(forName: Experiments.didChange, object: nil, queue: .main) { [weak self] _ in
+                MainActor.assumeIsolated { self?.installLockStatus() }
+            }
         }
+        let on = Experiments.isOn(.lockStatus)
+        guard on != lockStatusOn || (on && nowPlaying?.artistLine == nil) else { return }
+        lockStatusOn = on
+        lockStatusPushed = nil
+        nowPlaying?.artistLine = on ? { [weak self] show in
+            LockScreenSleepText.subtitle(show: show, status: self?.sleepStatus ?? .off)
+        } : nil
+        nowPlaying?.update()
     }
 
     private func lockStatusLine() -> String? {

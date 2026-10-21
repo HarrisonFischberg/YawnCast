@@ -56,8 +56,12 @@ enum Experiments {
         return store.bool(forKey: experiment.key)
     }
 
+    /// Posted when the Experiments screen changes a switch, for flags that are cached.
+    static let didChange = Notification.Name("evolve.experiments.didChange")
+
     static func set(_ experiment: Experiment, _ on: Bool) {
         store.set(on, forKey: experiment.key)
+        NotificationCenter.default.post(name: didChange, object: nil)
     }
 
     static func setAll(_ on: Bool) {
@@ -66,5 +70,6 @@ enum Experiments {
 
     static func reset() {
         Experiment.allCases.forEach { store.removeObject(forKey: $0.key) }
+        NotificationCenter.default.post(name: didChange, object: nil)
     }
 }
