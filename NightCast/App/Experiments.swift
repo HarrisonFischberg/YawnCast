@@ -33,8 +33,10 @@ enum Experiment: String, CaseIterable, Identifiable {
 /// (`evolve.experiments`), apart from the library, so clearing them can't touch real data.
 enum Experiments {
     private static let store = UserDefaults(suiteName: "evolve.experiments")!
-    private static let arguments = ProcessInfo.processInfo.arguments
-    private static let allOnByLaunch = arguments.contains("-evolve_all")
+    /// Launch arguments like `-evolve_all YES` land in the standard defaults' argument domain,
+    /// so `NO` reads as false instead of counting as present.
+    private static let launchDefaults = UserDefaults.standard
+    private static let allOnByLaunch = launchDefaults.bool(forKey: "evolve_all")
 
     /// Debug and TestFlight/sandbox builds only. Always false from the App Store.
     static let canOverride: Bool = {
@@ -47,7 +49,10 @@ enum Experiments {
 
     static func isOn(_ experiment: Experiment) -> Bool {
         guard canOverride else { return false }
-        if allOnByLaunch || arguments.contains("-\(experiment.key)") { return true }
+        if allOnByLaunch { return true }
+        if launchDefaults.volatileDomain(forName: UserDefaults.argumentDomain)[experiment.key] != nil {
+            return launchDefaults.bool(forKey: experiment.key)
+        }
         return store.bool(forKey: experiment.key)
     }
 
