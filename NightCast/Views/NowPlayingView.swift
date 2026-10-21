@@ -73,7 +73,9 @@ struct NowPlayingView: View {
 
                 VStack(alignment: .trailing, spacing: Space.l) {
                     ZStack {
-                        if model.sleepStatus != .off {
+                        if model.sleepStatus != .off, let note = model.nightNote {
+                            toastLabel(note)
+                        } else if model.sleepStatus != .off {
                             if bubbleExpanded {
                                 SleepAdjustBubble(status: model.sleepStatus, onAdjust: { minutes in
                                     model.adjustSleep(minutes: minutes)
@@ -85,14 +87,7 @@ struct NowPlayingView: View {
                                     .transition(bubbleTransition)
                             }
                         } else if let toast = model.toast {
-                            Text(toast)
-                                .font(Typo.caption)
-                                .foregroundStyle(theme.text)
-                                .padding(.horizontal, Space.l)
-                                .padding(.vertical, Space.s)
-                                .background(Capsule().fill(theme.surface).overlay(Capsule().strokeBorder(theme.border)))
-                                .transition(.opacity)
-                                .accessibilityHidden(true) // announced via UIAccessibility
+                            toastLabel(toast)
                         }
                     }
                     .frame(minHeight: 46, alignment: .bottomTrailing)
@@ -118,6 +113,7 @@ struct NowPlayingView: View {
                 }
                 .onAppear { if model.sleepStatus != .off { setExpanded(false) } }
                 .animation(.easeOut(duration: 0.2), value: model.toast)
+                .animation(.easeOut(duration: 0.2), value: model.nightNote)
                 .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
                 .padding(.bottom, Space.l)
             }
@@ -141,6 +137,17 @@ struct NowPlayingView: View {
             }
         }
         #endif
+    }
+
+    private func toastLabel(_ message: String) -> some View {
+        Text(message)
+            .font(Typo.caption)
+            .foregroundStyle(theme.text)
+            .padding(.horizontal, Space.l)
+            .padding(.vertical, Space.s)
+            .background(Capsule().fill(theme.surface).overlay(Capsule().strokeBorder(theme.border)))
+            .transition(.opacity)
+            .accessibilityHidden(true) // announced via UIAccessibility
     }
 
     private var bubbleTransition: AnyTransition {
