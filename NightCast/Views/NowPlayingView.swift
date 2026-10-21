@@ -66,31 +66,35 @@ struct NowPlayingView: View {
                 Spacer(minLength: Space.xxl)
 
                 VStack(alignment: .trailing, spacing: Space.l) {
-                    ZStack {
-                        if model.sleepStatus != .off {
-                            if bubbleExpanded {
-                                SleepAdjustBubble(status: model.sleepStatus, onAdjust: { minutes in
-                                    model.adjustSleep(minutes: minutes)
-                                    scheduleCollapse()
-                                }, onCollapse: { setExpanded(false) })
-                                .transition(bubbleTransition)
-                            } else {
-                                CollapsedSleepPill(status: model.sleepStatus) { setExpanded(true) }
-                                    .transition(bubbleTransition)
-                            }
-                        } else if let toast = model.toast {
-                            Text(toast)
-                                .font(Typo.caption)
-                                .foregroundStyle(theme.text)
-                                .padding(.horizontal, Space.l)
-                                .padding(.vertical, Space.s)
-                                .background(Capsule().fill(theme.surface).overlay(Capsule().strokeBorder(theme.border)))
-                                .transition(.opacity)
-                                .accessibilityHidden(true) // announced via UIAccessibility
+                    // Above the Moon: "Back to …" on the left (only while Sleep is off),
+                    // the ±5 bubble or a toast on the right. Stacked at accessibility sizes.
+                    sleepRowLayout {
+                        if let marker = model.driftBackPosition {
+                            DriftBackKey(position: marker) { model.jumpToDriftBack() }
+                                .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 6)))
                         }
+                        if !typeSize.isAccessibilitySize { Spacer(minLength: 0) }
+                        ZStack {
+                            if model.sleepStatus != .off, let note = model.nightNote {
+                                toastLabel(note)
+                            } else if model.sleepStatus != .off {
+                                if bubbleExpanded {
+                                    SleepAdjustBubble(status: model.sleepStatus, onAdjust: { minutes in
+                                        model.adjustSleep(minutes: minutes)
+                                        scheduleCollapse()
+                                    }, onCollapse: { setExpanded(false) })
+                                    .transition(bubbleTransition)
+                                } else {
+                                    CollapsedSleepPill(status: model.sleepStatus) { setExpanded(true) }
+                                        .transition(bubbleTransition)
+                                }
+                            } else if let toast = model.toast {
+                                toastLabel(toast)
+                            }
+                        }
+                        .frame(minHeight: 46, alignment: .bottomTrailing)
+                        .padding(.trailing, Space.xl)
                     }
-                    .frame(minHeight: 46, alignment: .bottomTrailing)
-                    .padding(.trailing, Space.xl)
 
                     MoonKey(status: model.sleepStatus) { model.toggleSleep() }
                         .disabled(player.episode == nil)
@@ -112,9 +116,11 @@ struct NowPlayingView: View {
                 }
                 .onAppear { if model.sleepStatus != .off { setExpanded(false) } }
                 .animation(.easeOut(duration: 0.2), value: model.toast)
+                .animation(.easeOut(duration: 0.2), value: model.nightNote)
                 .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
                 .padding(.bottom, Space.l)
             }
+            .animation(reduceMotion ? .easeOut(duration: 0.2) : .spring(response: 0.3, dampingFraction: 0.8), value: model.driftBackPosition)
             .padding(.horizontal, Space.xxl)
         }
         // Swipe down anywhere (not just the chevron) to drop back into the mini player.
@@ -134,6 +140,17 @@ struct NowPlayingView: View {
             }
         }
         #endif
+    }
+
+    private func toastLabel(_ message: String) -> some View {
+        Text(message)
+            .font(Typo.caption)
+            .foregroundStyle(theme.text)
+            .padding(.horizontal, Space.l)
+            .padding(.vertical, Space.s)
+            .background(Capsule().fill(theme.surface).overlay(Capsule().strokeBorder(theme.border)))
+            .transition(.opacity)
+            .accessibilityHidden(true) // announced via UIAccessibility
     }
 
     private var bubbleTransition: AnyTransition {
@@ -197,6 +214,74 @@ struct NowPlayingView: View {
             Spacer(minLength: 0)
         }
         .sensoryFeedback(.impact(weight: .light), trigger: skipTaps)
+    }
+}
+
+/// Drift back: after Sleep fades an episode out and pauses it, one
+/// standard key under the scrubber jumps back to where the fade began. Seeks only;
+/// playback stays paused.
+extension NowPlayingView {
+    /// The row above the Moon key: side by side normally, stacked at accessibility sizes.
+    fileprivate var sleepRowLayout: AnyLayout {
+        typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .trailing, spacing: Space.m))
+            : AnyLayout(HStackLayout(alignment: .bottom, spacing: Space.m))
+    }
+}
+
+private struct DriftBackKey: View {
+    let position: TimeInterval
+    let action: () -> Void
+
+    @Environment(\.theme) private var theme
+    @Environment(\.dynamicTypeSize) private var typeSize
+    @State private var taps = 0
+
+    var body: some View {
+        Button {
+            taps += 1
+            action()
+            UIAccessibility.post(notification: .announcement, argument: "At \(TimeFormat.spoken(position))")
+        } label: {
+            HStack(spacing: Space.m) {
+                Image(systemName: "arrow.uturn.backward")
+                    .font(.system(.subheadline, design: .rounded, weight: .bold))
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Back to \(TimeFormat.clock(position))")
+                        .font(Typo.headline)
+                        .monospacedDigit()
+                    Text("where the fade began")
+                        .font(Typo.caption)
+                        .foregroundStyle(theme.textMuted)
+                }
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.leading, Space.l)
+            .padding(.trailing, Space.xl)
+            .padding(.vertical, Space.s)
+            .frame(minHeight: 44)
+        }
+        .modifier(DriftBackKeyShape(largeType: typeSize.isAccessibilitySize))
+        .fixedSize(horizontal: !typeSize.isAccessibilitySize, vertical: true)
+        .sensoryFeedback(.selection, trigger: taps)
+        .accessibilityLabel("Back to \(TimeFormat.spoken(position)), where the fade began")
+        .accessibilityHint("Moves the episode there. It stays paused.")
+        .accessibilityIdentifier("driftBackKey")
+    }
+}
+
+/// A capsule key normally; a rounded plate when accessibility text wraps the lines.
+private struct DriftBackKeyShape: ViewModifier {
+    let largeType: Bool
+
+    func body(content: Content) -> some View {
+        if largeType {
+            content.buttonStyle(KeyStyle(shape: RoundedRectangle(cornerRadius: 18, style: .continuous), depth: 3))
+        } else {
+            content.buttonStyle(.capsuleKey(depth: 3))
+        }
     }
 }
 

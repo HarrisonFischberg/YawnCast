@@ -23,6 +23,8 @@ enum DebugLaunch {
             : .standard
         let model = AppModel(store: store, directory: directory, feeds: feeds, sleepConfiguration: sleepConfiguration)
         if let theme = launch.themeID { model.theme = Theme.with(id: theme) }
+        // UI tests run at noon unless they ask for a time, so late-night Sleep can't arm by surprise.
+        if let hour = launch.nightHour ?? (launch.isUITest ? 12 : nil) { model.currentHour = { hour } }
         if launch.isDemo { DemoSeed.run(model: model, launch: launch) }
         return model
     }
@@ -44,6 +46,8 @@ struct LaunchOptions {
     var page: HomePage?
     var layout: LibraryLayout?
     var categoryName: String?
+    /// `-nightHour <0-23>`: fakes the local hour for late-night Sleep.
+    var nightHour: Int?
 
     init(arguments: [String]) {
         isDemo = arguments.contains("-demo")
@@ -61,6 +65,8 @@ struct LaunchOptions {
         if let i = arguments.firstIndex(of: "-page"), i + 1 < arguments.count {
             page = HomePage.allCases.first { $0.title.lowercased() == arguments[i + 1].lowercased() }
         }
+        if let i = arguments.firstIndex(of: "-nightHour"), i + 1 < arguments.count,
+           let hour = Int(arguments[i + 1]), (0...23).contains(hour) { nightHour = hour }
         if let i = arguments.firstIndex(of: "-theme"), i + 1 < arguments.count { themeID = arguments[i + 1] }
     }
 }

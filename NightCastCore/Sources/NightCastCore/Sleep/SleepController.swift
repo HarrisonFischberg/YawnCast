@@ -58,11 +58,23 @@ public final class SleepController {
     /// provisional duration that may still be corrected once (DECISIONS D11).
     private var activationPosition: TimeInterval = 0
     private var durationIsProvisional = false
+    /// `onFadeBegan` fires once per fade; reset when Sleep is (back to) waiting.
+    private var fadeBeganReported = false
     private let clock: PlaybackClock
     private weak var player: SleepControllable?
 
     /// Called whenever `status` may have changed.
     public var onChange: (@MainActor () -> Void)?
+
+    /// Called with the episode id once Sleep has faded to silence and paused playback
+    /// (not on cancel, not when the episode ends).
+    public var onFadedToSilence: (@MainActor (String) -> Void)?
+
+    /// Called with the episode id when the countdown runs out and the fade begins,
+    /// plus how many active seconds have already played since that moment (under one
+    /// tick), so the caller can recover the playback position where the fade began.
+    /// Fires again if "+5 min" during a fade sends Sleep back to waiting and it runs out again.
+    public var onFadeBegan: (@MainActor (_ episodeID: String, _ secondsAgo: TimeInterval) -> Void)?
 
     public init(clock: PlaybackClock = SystemPlaybackClock(), configuration: SleepConfiguration = .standard) {
         self.clock = clock
@@ -100,6 +112,7 @@ public final class SleepController {
         activationPosition = position
         self.durationIsProvisional = durationIsProvisional
         meter.reset()
+        fadeBeganReported = false
         // If a cancel glide is still running, its current gain is not the
         // user's level; use the restore target instead.
         let baseline = timer.baseline != timer.gain ? timer.baseline : player.gain
@@ -114,13 +127,19 @@ public final class SleepController {
     public func sync() {
         guard let player else { return }
         let dt = meter.sample(now: clock.now(), isActive: player.isActivelyPlaying)
+        let elapsedBefore = timer.elapsed
+        let fadeDelay = timer.fadeDelay
         let event = timer.advance(activeSeconds: dt)
+        if let elapsedBefore, elapsedBefore + dt >= fadeDelay {
+            reportFadeBegan(secondsAgo: elapsedBefore + dt - fadeDelay)
+        }
         if event == .reachedSilence {
             // Pause at zero gain first, then restore gain silently.
             player.gain = 0
             player.pauseForSleep()
             apply()
             onChange?()
+            if let episodeID { onFadedToSilence?(episodeID) }
             return
         }
         apply()
@@ -138,6 +157,7 @@ public final class SleepController {
     public func adjust(by delta: TimeInterval) -> Bool {
         sync()
         guard timer.adjust(by: delta) else { return false }
+        noteFadeState()
         apply()
         onChange?()
         return true
@@ -155,6 +175,7 @@ public final class SleepController {
         durationIsProvisional = false
         sync()
         if timer.reviseFadeDelay(remaining: max(0, duration - activationPosition)) {
+            noteFadeState()
             onChange?()
         }
     }
@@ -170,6 +191,25 @@ public final class SleepController {
         apply()
         meter.reset()
         onChange?()
+    }
+
+    /// After the fade delay moved (±5, or a corrected duration): Sleep may now be fading
+    /// already (delay clamped to now), or waiting again (+5 during a fade).
+    private func noteFadeState() {
+        switch timer.status {
+        case .fading:
+            if let elapsed = timer.elapsed { reportFadeBegan(secondsAgo: max(0, elapsed - timer.fadeDelay)) }
+        case .waiting:
+            fadeBeganReported = false
+        case .off:
+            break
+        }
+    }
+
+    private func reportFadeBegan(secondsAgo: TimeInterval) {
+        guard !fadeBeganReported, let episodeID else { return }
+        fadeBeganReported = true
+        onFadeBegan?(episodeID, secondsAgo)
     }
 
     private func apply() {

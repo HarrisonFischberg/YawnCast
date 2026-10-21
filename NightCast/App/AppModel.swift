@@ -69,13 +69,29 @@ final class AppModel {
     private(set) var interests: [PodcastCategory] = []
     /// Brief confirmation shown above the Moon key.
     private(set) var toast: String?
+    /// Note shown in the toast slot when Sleep turned itself on late at night.
+    private(set) var nightNote: String?
+    /// Local hour, 0-23. Replaced in Debug by `-nightHour` (TestSupport/DebugLaunch.swift).
+    @ObservationIgnored var currentHour: () -> Int = { Calendar.current.component(.hour, from: Date()) }
     private(set) var sleepStatus: SleepStatus = .off
+    /// Drift back: where Sleep's fade began on an episode it then
+    /// faded out and paused. In memory only; cleared by the jump or a different episode.
+    private(set) var driftBack: DriftBackMarker?
 
     @ObservationIgnored private let store: LibraryStore
     @ObservationIgnored private let sleep: SleepController
     @ObservationIgnored private var nowPlaying: NowPlayingBridge?
     @ObservationIgnored private var sleepTicker: Task<Void, Never>?
+    /// Wake extend: the episode Sleep last faded out on, and when. In memory only.
+    @ObservationIgnored private var fadedOut: (episodeID: String, at: Date)?
+    @ObservationIgnored private var wasPlaying = false
+    @ObservationIgnored private let wakeExtendWindow: TimeInterval = 10 * 60
+    /// Drift back: the fade start of the current Sleep, kept until it pauses the episode.
+    @ObservationIgnored private var fadeBegan: DriftBackMarker?
     @ObservationIgnored private var toastTask: Task<Void, Never>?
+    @ObservationIgnored private var nightNoteTask: Task<Void, Never>?
+    /// The episode load the late-night check already ran for, so turning Sleep off sticks.
+    @ObservationIgnored private var nightCheckedEpisodeID: String?
     @ObservationIgnored private var feedCache: [String: Feed] = [:]
     @ObservationIgnored private var feedTasks: [String: Task<Feed, Error>] = [:]
     /// Feeds fetched from the network this session (the disk cache may be older).
@@ -103,6 +119,7 @@ final class AppModel {
         player = PlaybackEngine()
         sleep = SleepController(clock: clock, configuration: sleepConfiguration)
         nowPlaying = NowPlayingBridge(engine: player)
+        installLockStatus()
 
         player.onProgress = { [weak self] episode, position, duration, finished in
             self?.recordProgress(episode: episode, position: position, duration: duration, finished: finished)
@@ -112,7 +129,9 @@ final class AppModel {
             sleep.sync()
             sleepStatus = sleep.status
             nowPlaying?.update()
+            lockStatusPushed = lockStatusLine()
             runSleepTicker()
+            wakeExtendIfNeeded()
         }
         player.onEnded = { [weak self] in
             self?.sleep.episodeDidEnd()
@@ -120,9 +139,21 @@ final class AppModel {
         player.onDurationMeasured = { [weak self] episode, duration in
             self?.sleep.measuredDurationArrived(duration, episodeID: episode.id)
         }
+        sleep.onFadeBegan = { [weak self] episodeID, secondsAgo in
+            guard let self else { return }
+            fadeBegan = DriftBackMarker(episodeID: episodeID, position: max(0, player.position - secondsAgo))
+        }
+        sleep.onFadedToSilence = { [weak self] episodeID in
+            guard let self else { return }
+            fadedOut = (episodeID, Date())
+            guard let began = fadeBegan, began.episodeID == episodeID else { return }
+            fadeBegan = nil
+            driftBack = began
+        }
         sleep.onChange = { [weak self] in
             guard let self else { return }
             sleepStatus = sleep.status
+            refreshLockStatus()
         }
 
         // Restore the last episode paused at its saved position. Never autoplay;
@@ -339,12 +370,44 @@ final class AppModel {
             if !player.isPlaying { player.play() }
         } else {
             sleep.episodeWillChange(to: episode.id)
+            clearDriftBack()
             let start = SeekMath.resumeTime(saved: library.positions[episode.id], duration: episode.duration)
             player.load(episode, start: start, autoplay: true)
             library.lastEpisode = episode
             persist()
+            nightCheckedEpisodeID = nil
         }
+        armSleepIfLate(for: episode)
         presentPlayer()
+    }
+
+    /// Night auto: between 22:00 and 04:59, the first deliberate play of an
+    /// episode load turns Sleep on. Runs after a different episode cancels Sleep (D07).
+    private func armSleepIfLate(for episode: Episode) {
+        guard nightCheckedEpisodeID != episode.id, Self.isLate(hour: currentHour()) else { return }
+        nightCheckedEpisodeID = episode.id
+        guard sleepStatus == .off, player.episode?.id == episode.id else { return }
+        toggleSleep(announcing: false)
+        guard case .waiting(let delay) = sleepStatus else { return }
+        showNightNote(fadeDelay: delay)
+    }
+
+    static func isLate(hour: Int) -> Bool { hour >= 22 || hour < 5 }
+
+    static let nightNoteCopy = "It’s late, so Sleep is on."
+
+    private func showNightNote(fadeDelay: TimeInterval) {
+        nightNote = Self.nightNoteCopy
+        nightNoteTask?.cancel()
+        nightNoteTask = Task { [weak self] in
+            // One message for VoiceOver, after Now Playing has taken focus.
+            try? await Task.sleep(for: .milliseconds(700))
+            guard !Task.isCancelled else { return }
+            self?.announce("\(Self.nightNoteCopy) Fade begins in \(TimeFormat.sleepDelay(fadeDelay)).")
+            try? await Task.sleep(for: .seconds(3.3))
+            guard !Task.isCancelled else { return }
+            self?.nightNote = nil
+        }
     }
 
     /// Shows for an Explore category: the genre's top 50 in chart order, or a
@@ -369,10 +432,49 @@ final class AppModel {
         isPlayerPresented = true
     }
 
+    // MARK: Drift back
+
+    /// Where to offer "Back to …" on Now Playing: the loaded episode's fade start,
+    /// only once Sleep has paused it and while Sleep is off.
+    var driftBackPosition: TimeInterval? {
+        guard let marker = driftBack, sleepStatus == .off, marker.episodeID == player.episode?.id else { return nil }
+        return marker.position
+    }
+
+    /// Seeks (paused stays paused) to where the fade began, then forgets the marker.
+    func jumpToDriftBack() {
+        guard let position = driftBackPosition else { return }
+        player.seek(to: position)
+        driftBack = nil
+    }
+
+    /// A different episode loaded: forget the drift-back marker and the wake-extend fade (D07).
+    private func clearDriftBack() {
+        fadeBegan = nil
+        fadedOut = nil
+        if driftBack != nil { driftBack = nil }
+    }
+
     // MARK: Sleep
 
-    func toggleSleep() {
+    /// Play again soon after Sleep faded the same episode out: Sleep comes back on, once.
+    private func wakeExtendIfNeeded() {
+        let playing = player.isPlaying
+        defer { wasPlaying = playing }
+        guard playing, !wasPlaying, let faded = fadedOut else { return }
+        fadedOut = nil
+        guard sleepStatus == .off,
+              player.episode?.id == faded.episodeID,
+              Date().timeIntervalSince(faded.at) <= wakeExtendWindow else { return }
+        toggleSleep(backOn: true)
+    }
+
+    func toggleSleep(backOn: Bool = false, announcing: Bool = true) {
         guard let episode = player.episode else { return }
+        if nightNote != nil {
+            nightNoteTask?.cancel()
+            nightNote = nil
+        }
         let remaining = SeekMath.remaining(position: player.position, duration: player.duration)
         if let delay = sleep.toggle(
             player: player,
@@ -382,7 +484,7 @@ final class AppModel {
             durationIsProvisional: !player.isDurationMeasured
         ) {
             // The countdown bubble shows this; VoiceOver hears it.
-            announce(SleepCopy.activated(fadeDelay: delay))
+            if announcing { announce(backOn ? SleepCopy.backOn(fadeDelay: delay) : SleepCopy.activated(fadeDelay: delay)) }
         } else {
             show(toast: SleepCopy.cancelled)
         }
@@ -402,6 +504,30 @@ final class AppModel {
             announce("Fade begins in \(TimeFormat.sleepDelay(t))")
         }
         runSleepTicker()
+    }
+
+    // MARK: Lock Screen Sleep status
+
+    /// The last Sleep line pushed to the Lock Screen; Sleep ticks only push when it changes.
+    @ObservationIgnored private var lockStatusPushed: String?
+
+    private func installLockStatus() {
+        nowPlaying?.artistLine = { [weak self] show in
+            LockScreenSleepText.subtitle(show: show, status: self?.sleepStatus ?? .off)
+        }
+    }
+
+    private func lockStatusLine() -> String {
+        LockScreenSleepText.subtitle(show: "", status: sleepStatus)
+    }
+
+    /// Called on every Sleep change (4 Hz while counting down). Pushes only when the
+    /// whole-minute text or the Sleep phase changed.
+    private func refreshLockStatus() {
+        let line = lockStatusLine()
+        guard line != lockStatusPushed else { return }
+        lockStatusPushed = line
+        nowPlaying?.update()
     }
 
     private func announce(_ message: String) {
@@ -455,6 +581,7 @@ final class AppModel {
     }
 
     func loadForDemo(_ episode: Episode, position: TimeInterval) {
+        clearDriftBack()
         player.load(episode, start: position, autoplay: false)
         library.lastEpisode = episode
         persist()
@@ -464,4 +591,10 @@ final class AppModel {
         toggleSleep()
     }
     #endif
+}
+
+/// A playback position on one episode (drift back: where Sleep's fade began).
+struct DriftBackMarker: Equatable {
+    let episodeID: String
+    let position: TimeInterval
 }
