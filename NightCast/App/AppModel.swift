@@ -153,8 +153,6 @@ final class AppModel {
         sleep.onChange = { [weak self] in
             guard let self else { return }
             sleepStatus = sleep.status
-            // A new Sleep supersedes the last drift-back marker.
-            if driftBack != nil, sleep.isActive { driftBack = nil }
             refreshLockStatus()
         }
 
@@ -450,8 +448,10 @@ final class AppModel {
         driftBack = nil
     }
 
+    /// A different episode loaded: forget the drift-back marker and the wake-extend fade (D07).
     private func clearDriftBack() {
         fadeBegan = nil
+        fadedOut = nil
         if driftBack != nil { driftBack = nil }
     }
 

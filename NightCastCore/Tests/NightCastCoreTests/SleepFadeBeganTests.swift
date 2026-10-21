@@ -70,6 +70,25 @@ struct SleepFadeBeganTests {
         #expect(began == 2)
     }
 
+    @Test("−5 min with under 5 min left starts the fade now, and still reports it")
+    func minusFiveClampedToNow() {
+        let controller = SleepController(clock: clock, configuration: .v1)
+        var began: [(String, TimeInterval)] = []
+        var silenced: [String] = []
+        controller.onFadeBegan = { id, ago in began.append((id, self.player.position - ago)) }
+        controller.onFadedToSilence = { silenced.append($0) }
+        player.position = 100
+        controller.toggle(player: player, episodeID: "e1", remaining: nil, position: 100)
+        run(controller, seconds: 1700)
+        #expect(began.isEmpty)
+        #expect(controller.adjust(by: -300))
+        #expect(began.count == 1)
+        #expect(abs((began.first?.1 ?? 0) - (100 + 1700)) < 1e-6)
+        run(controller, seconds: 4 * 180 + 10)
+        #expect(began.count == 1)
+        #expect(silenced == ["e1"])
+    }
+
     @Test("Paused time never starts the fade")
     func pausedNoFade() {
         let controller = SleepController(clock: clock, configuration: .v1)
