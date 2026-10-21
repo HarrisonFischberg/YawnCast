@@ -6,6 +6,7 @@ struct ThemesSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
     @Environment(\.dynamicTypeSize) private var typeSize
+    @State private var isExperimentsPresented = false
 
     private var columns: [GridItem] {
         Array(repeating: GridItem(.flexible(), spacing: Space.m), count: typeSize.isAccessibilitySize ? 1 : 2)
@@ -20,11 +21,26 @@ struct ThemesSheet: View {
                     .accessibilityAddTraits(.isHeader)
                 group("Scenes", subtitle: "Calm, animated night skies", themes: Theme.scenes)
                 group("Color Scapes", subtitle: "Simple and still", themes: Theme.colorScapes)
+                if Experiments.canOverride { versionLine }
             }
             .padding(Space.xxl)
         }
         .background { ScreenBackground() }
         .sensoryFeedback(.selection, trigger: model.theme)
+        .sheet(isPresented: $isExperimentsPresented) { ExperimentsView() }
+    }
+
+    /// Test builds only: long-press opens the Experiments screen.
+    private var versionLine: some View {
+        let info = Bundle.main.infoDictionary
+        let version = "\(info?["CFBundleShortVersionString"] as? String ?? "?") (\(info?["CFBundleVersion"] as? String ?? "?"))"
+        return Text("NightCast \(version)")
+            .font(Typo.caption)
+            .foregroundStyle(theme.textMuted)
+            .frame(maxWidth: .infinity)
+            .onLongPressGesture { isExperimentsPresented = true }
+            .accessibilityAction(named: "Experiments") { isExperimentsPresented = true }
+            .accessibilityIdentifier("version-line")
     }
 
     private func group(_ title: String, subtitle: String, themes: [Theme]) -> some View {
