@@ -23,7 +23,8 @@ enum DebugLaunch {
             : .standard
         let model = AppModel(store: store, directory: directory, feeds: feeds, sleepConfiguration: sleepConfiguration)
         if let theme = launch.themeID { model.theme = Theme.with(id: theme) }
-        if let hour = launch.nightHour { model.currentHour = { hour } }
+        // UI tests run at noon unless they ask for a time, so late-night Sleep can't arm by surprise.
+        if let hour = launch.nightHour ?? (launch.isUITest ? 12 : nil) { model.currentHour = { hour } }
         if launch.isDemo { DemoSeed.run(model: model, launch: launch) }
         return model
     }
@@ -45,7 +46,7 @@ struct LaunchOptions {
     var page: HomePage?
     var layout: LibraryLayout?
     var categoryName: String?
-    /// `-nightHour <0-23>`: fakes the local hour for exp_night_auto.
+    /// `-nightHour <0-23>`: fakes the local hour for late-night Sleep.
     var nightHour: Int?
 
     init(arguments: [String]) {

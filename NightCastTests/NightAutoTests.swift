@@ -3,7 +3,7 @@ import NightCastCore
 import Testing
 @testable import NightCast
 
-/// exp_night_auto: starting an episode late at night turns Sleep on, once per load.
+/// Night auto: starting an episode late at night turns Sleep on, once per load.
 @MainActor
 @Suite(.serialized)
 struct NightAutoTests {
@@ -19,10 +19,7 @@ struct NightAutoTests {
         )
     }
 
-    private func withFlag(_ on: Bool, hour: Int, _ body: (AppModel) -> Void) {
-        let previous = Experiments.isOn(.nightAuto)
-        Experiments.set(.nightAuto, on)
-        defer { Experiments.set(.nightAuto, previous) }
+    private func atHour(_ hour: Int, _ body: (AppModel) -> Void) {
         let model = AppModel(store: MemoryLibraryStore(), directory: FixtureDirectory(), feeds: FixtureFeedService())
         model.currentHour = { hour }
         body(model)
@@ -43,7 +40,7 @@ struct NightAutoTests {
     }
 
     @Test func lateStartTurnsSleepOnWithNote() {
-        withFlag(true, hour: 23) { model in
+        atHour(23) { model in
             model.play(Self.episode(1))
             #expect(model.sleepStatus != .off)
             #expect(model.nightNote == "It’s late, so Sleep is on.")
@@ -51,15 +48,7 @@ struct NightAutoTests {
     }
 
     @Test func daytimeStartLeavesSleepOff() {
-        withFlag(true, hour: 14) { model in
-            model.play(Self.episode(1))
-            #expect(model.sleepStatus == .off)
-            #expect(model.nightNote == nil)
-        }
-    }
-
-    @Test func flagOffLeavesSleepOff() {
-        withFlag(false, hour: 23) { model in
+        atHour(14) { model in
             model.play(Self.episode(1))
             #expect(model.sleepStatus == .off)
             #expect(model.nightNote == nil)
@@ -67,7 +56,7 @@ struct NightAutoTests {
     }
 
     @Test func turningSleepOffSticksForTheSameLoad() {
-        withFlag(true, hour: 23) { model in
+        atHour(23) { model in
             let episode = Self.episode(1)
             model.play(episode)
             model.toggleSleep()

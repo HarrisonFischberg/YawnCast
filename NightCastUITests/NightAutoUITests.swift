@@ -1,14 +1,13 @@
 import XCTest
 
-/// exp_night_auto: a deliberate start between 22:00 and 04:59 turns Sleep on,
+/// Night auto: a deliberate start between 22:00 and 04:59 turns Sleep on,
 /// once per episode load. `-nightHour` fakes the local hour (Debug only).
 @MainActor
 final class NightAutoUITests: XCTestCase {
-    private func startEpisode(flag: Bool, hour: Int) -> XCUIApplication {
+    private func startEpisode(hour: Int) -> XCUIApplication {
         continueAfterFailure = false
         let app = XCUIApplication()
         app.launchArguments = ["-uitest", "-resetStore", "-theme", "midnight", "-nightHour", String(hour)]
-        if flag { app.launchArguments += ["-exp_night_auto", "YES"] }
         app.launch()
         app.buttons["findPodcastKey"].tap()
         let field = app.textFields["searchField"]
@@ -29,7 +28,7 @@ final class NightAutoUITests: XCTestCase {
     }
 
     func testLateStartTurnsSleepOn() {
-        let app = startEpisode(flag: true, hour: 23)
+        let app = startEpisode(hour: 23)
         XCTAssertTrue(moonValue(app).hasPrefix("On. Fade begins in"), moonValue(app))
         let shot = XCTAttachment(screenshot: app.screenshot())
         shot.name = "night-auto-on"
@@ -38,21 +37,12 @@ final class NightAutoUITests: XCTestCase {
     }
 
     func testDaytimeStartLeavesSleepOff() {
-        let app = startEpisode(flag: true, hour: 14)
+        let app = startEpisode(hour: 14)
         XCTAssertEqual(moonValue(app), "Off")
-    }
-
-    func testFlagOffLeavesSleepOff() {
-        let app = startEpisode(flag: false, hour: 23)
-        XCTAssertEqual(moonValue(app), "Off")
-        let shot = XCTAttachment(screenshot: app.screenshot())
-        shot.name = "night-auto-off"
-        shot.lifetime = .keepAlways
-        add(shot)
     }
 
     func testTurningSleepOffSticksOnResume() {
-        let app = startEpisode(flag: true, hour: 23)
+        let app = startEpisode(hour: 23)
         let moon = app.buttons["moonKey"]
         XCTAssertTrue(moonValue(app).hasPrefix("On"), moonValue(app))
         moon.tap()

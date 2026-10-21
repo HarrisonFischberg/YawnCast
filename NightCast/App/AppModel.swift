@@ -69,7 +69,7 @@ final class AppModel {
     private(set) var interests: [PodcastCategory] = []
     /// Brief confirmation shown above the Moon key.
     private(set) var toast: String?
-    /// Note shown in the toast slot when Sleep turned itself on late at night (exp_night_auto).
+    /// Note shown in the toast slot when Sleep turned itself on late at night.
     private(set) var nightNote: String?
     /// Local hour, 0-23. Replaced in Debug by `-nightHour` (TestSupport/DebugLaunch.swift).
     @ObservationIgnored var currentHour: () -> Int = { Calendar.current.component(.hour, from: Date()) }
@@ -377,11 +377,11 @@ final class AppModel {
             persist()
             nightCheckedEpisodeID = nil
         }
-        if Experiments.isOn(.nightAuto) { armSleepIfLate(for: episode) }
+        armSleepIfLate(for: episode)
         presentPlayer()
     }
 
-    /// exp_night_auto: between 22:00 and 04:59, the first deliberate play of an
+    /// Night auto: between 22:00 and 04:59, the first deliberate play of an
     /// episode load turns Sleep on. Runs after a different episode cancels Sleep (D07).
     private func armSleepIfLate(for episode: Episode) {
         guard nightCheckedEpisodeID != episode.id, Self.isLate(hour: currentHour()) else { return }
