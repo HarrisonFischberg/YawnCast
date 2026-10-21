@@ -1,16 +1,31 @@
 import Foundation
 
 /// One case per Evolve iteration. Each is OFF for App Store users no matter what.
-enum Experiment: CaseIterable, Identifiable {
+enum Experiment: String, CaseIterable, Identifiable {
+    /// Press Play soon after Sleep pauses and Sleep turns back on.
+    case wakeExtend = "exp_wake_extend"
+    /// After Sleep, Now Playing offers a jump back to where the fade began.
+    case driftBack = "exp_drift_back"
+    /// Sleep status shows on the Lock Screen and in Control Center.
+    case lockStatus = "exp_lock_status"
+    /// A Moon key on the mini player.
+    case miniMoon = "exp_mini_moon"
+    /// Starting an episode late at night turns Sleep on.
+    case nightAuto = "exp_night_auto"
+
     var id: String { key }
 
     /// UserDefaults key and launch argument (`-<key> YES`).
-    var key: String {
-        switch self {}
-    }
+    var key: String { rawValue }
 
     var title: String {
-        switch self {}
+        switch self {
+        case .wakeExtend: "Play again turns Sleep back on"
+        case .driftBack: "Back to where you drifted off"
+        case .lockStatus: "Sleep on the Lock Screen"
+        case .miniMoon: "Moon on the mini player"
+        case .nightAuto: "Sleep turns on late at night"
+        }
     }
 }
 
