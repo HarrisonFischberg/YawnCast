@@ -60,38 +60,41 @@ struct NowPlayingView: View {
 
                 Scrubber(position: player.position, duration: player.duration) { player.seek(to: $0) }
 
-                if let marker = model.driftBackPosition {
-                    DriftBackKey(position: marker) { model.jumpToDriftBack() }
-                        .padding(.top, Space.m)
-                        .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: -6)))
-                }
-
                 transport
                     .padding(.top, Space.xxl)
 
                 Spacer(minLength: Space.xxl)
 
                 VStack(alignment: .trailing, spacing: Space.l) {
-                    ZStack {
-                        if model.sleepStatus != .off, let note = model.nightNote {
-                            toastLabel(note)
-                        } else if model.sleepStatus != .off {
-                            if bubbleExpanded {
-                                SleepAdjustBubble(status: model.sleepStatus, onAdjust: { minutes in
-                                    model.adjustSleep(minutes: minutes)
-                                    scheduleCollapse()
-                                }, onCollapse: { setExpanded(false) })
-                                .transition(bubbleTransition)
-                            } else {
-                                CollapsedSleepPill(status: model.sleepStatus) { setExpanded(true) }
-                                    .transition(bubbleTransition)
-                            }
-                        } else if let toast = model.toast {
-                            toastLabel(toast)
+                    // Above the Moon: "Back to …" on the left (only while Sleep is off),
+                    // the ±5 bubble or a toast on the right. Stacked at accessibility sizes.
+                    sleepRowLayout {
+                        if let marker = model.driftBackPosition {
+                            DriftBackKey(position: marker) { model.jumpToDriftBack() }
+                                .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 6)))
                         }
+                        if !typeSize.isAccessibilitySize { Spacer(minLength: 0) }
+                        ZStack {
+                            if model.sleepStatus != .off, let note = model.nightNote {
+                                toastLabel(note)
+                            } else if model.sleepStatus != .off {
+                                if bubbleExpanded {
+                                    SleepAdjustBubble(status: model.sleepStatus, onAdjust: { minutes in
+                                        model.adjustSleep(minutes: minutes)
+                                        scheduleCollapse()
+                                    }, onCollapse: { setExpanded(false) })
+                                    .transition(bubbleTransition)
+                                } else {
+                                    CollapsedSleepPill(status: model.sleepStatus) { setExpanded(true) }
+                                        .transition(bubbleTransition)
+                                }
+                            } else if let toast = model.toast {
+                                toastLabel(toast)
+                            }
+                        }
+                        .frame(minHeight: 46, alignment: .bottomTrailing)
+                        .padding(.trailing, Space.xl)
                     }
-                    .frame(minHeight: 46, alignment: .bottomTrailing)
-                    .padding(.trailing, Space.xl)
 
                     MoonKey(status: model.sleepStatus) { model.toggleSleep() }
                         .disabled(player.episode == nil)
@@ -217,6 +220,15 @@ struct NowPlayingView: View {
 /// Drift back: after Sleep fades an episode out and pauses it, one
 /// standard key under the scrubber jumps back to where the fade began. Seeks only;
 /// playback stays paused.
+extension NowPlayingView {
+    /// The row above the Moon key: side by side normally, stacked at accessibility sizes.
+    fileprivate var sleepRowLayout: AnyLayout {
+        typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .trailing, spacing: Space.m))
+            : AnyLayout(HStackLayout(alignment: .bottom, spacing: Space.m))
+    }
+}
+
 private struct DriftBackKey: View {
     let position: TimeInterval
     let action: () -> Void
