@@ -119,6 +119,7 @@ final class AppModel {
         player = PlaybackEngine()
         sleep = SleepController(clock: clock, configuration: sleepConfiguration)
         nowPlaying = NowPlayingBridge(engine: player)
+        installLockStatus()
 
         player.onProgress = { [weak self] episode, position, duration, finished in
             self?.recordProgress(episode: episode, position: position, duration: duration, finished: finished)
@@ -128,6 +129,7 @@ final class AppModel {
             sleep.sync()
             sleepStatus = sleep.status
             nowPlaying?.update()
+            lockStatusPushed = lockStatusLine()
             runSleepTicker()
             wakeExtendIfNeeded()
         }
@@ -153,6 +155,7 @@ final class AppModel {
             sleepStatus = sleep.status
             // A new Sleep supersedes the last drift-back marker.
             if driftBack != nil, sleep.isActive { driftBack = nil }
+            refreshLockStatus()
         }
 
         // Restore the last episode paused at its saved position. Never autoplay;
@@ -502,6 +505,34 @@ final class AppModel {
             announce("Fade begins in \(TimeFormat.sleepDelay(t))")
         }
         runSleepTicker()
+    }
+
+    // MARK: Lock Screen Sleep status (exp_lock_status)
+
+    @ObservationIgnored private var lockStatusOn = false
+    /// The last Sleep line pushed to the Lock Screen; Sleep ticks only push when it changes.
+    @ObservationIgnored private var lockStatusPushed: String?
+
+    private func installLockStatus() {
+        lockStatusOn = Experiments.isOn(.lockStatus)
+        guard lockStatusOn else { return }
+        nowPlaying?.artistLine = { [weak self] show in
+            LockScreenSleepText.subtitle(show: show, status: self?.sleepStatus ?? .off)
+        }
+    }
+
+    private func lockStatusLine() -> String? {
+        lockStatusOn ? LockScreenSleepText.subtitle(show: "", status: sleepStatus) : nil
+    }
+
+    /// Called on every Sleep change (4 Hz while counting down). Pushes only when the
+    /// whole-minute text or the Sleep phase changed.
+    private func refreshLockStatus() {
+        guard lockStatusOn else { return }
+        let line = lockStatusLine()
+        guard line != lockStatusPushed else { return }
+        lockStatusPushed = line
+        nowPlaying?.update()
     }
 
     private func announce(_ message: String) {
