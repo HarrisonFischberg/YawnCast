@@ -7,7 +7,7 @@
 
 # YawnCast
 
-A calm iPhone podcast app for falling asleep: tap the Moon, and your episode fades out gently and pauses.
+A calm iPhone podcast app for falling asleep. Tap the moon and drift off: your episode fades out gently and pauses.
 
 > "YawnCast" is a working name. It has not been trademark-cleared.
 
