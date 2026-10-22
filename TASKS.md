@@ -112,5 +112,5 @@ Priority order. `[x]` done and verified · `[~]` in progress · `[ ]` todo · `[
 - [x] Player ~15% smaller, never hides
 - [x] Swipe down to close Now Playing
 - [x] Live drag-to-reorder in Library
-- [x] Website copy edits on rarecreatures.app/apps/nightcast
+- [x] Website copy edits on rarecreatures.app/apps/yawncast
 - [x] Owner decision: Library search → one bar for both (v0.11)

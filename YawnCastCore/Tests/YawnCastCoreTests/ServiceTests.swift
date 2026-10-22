@@ -169,6 +169,21 @@ struct PersistenceTests {
         #expect(tempStore().load() == .empty)
     }
 
+    @Test func libraryFromBeforeTheRenameMovesToTheYawnCastFolder() throws {
+        let base = FileManager.default.temporaryDirectory.appending(path: "yawncast-tests-\(UUID().uuidString)")
+        let legacy = JSONLibraryStore(fileURL: base.appending(path: "Night" + "Cast/library.json"))
+        var snapshot = LibrarySnapshot()
+        snapshot.subscribe(show)
+        try legacy.save(snapshot)
+
+        let store = JSONLibraryStore.standard(in: base)
+        #expect(store.fileURL == base.appending(path: "YawnCast/library.json"))
+        #expect(store.load() == snapshot)
+        #expect(!FileManager.default.fileExists(atPath: legacy.fileURL.path))
+        // A second launch leaves the moved library alone.
+        #expect(JSONLibraryStore.standard(in: base).load() == snapshot)
+    }
+
     @Test func subscriptionsAndPositionsSurviveRelaunch() throws {
         let store = tempStore()
         var snapshot = store.load()

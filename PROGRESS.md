@@ -8,9 +8,9 @@ Newest first. Each entry: what changed, what was verified (actual output), block
   blank queries, cancel before/during a search, stale answers, case-insensitive cache, retry, error copy.
   `scripts/test.sh` runs it before the UI tests and now also prints "Testing failed"/"TEST FAILED" lines so a runner
   that dies before any test starts is visible.
-- **Verified (actual output, owner's Mac):** unit 19/19 on "NightCast iPhone" and "iPhone 17"; `scripts/test.sh` →
+- **Verified (actual output, owner's Mac):** unit 19/19 on "YawnCast iPhone" and "iPhone 17"; `scripts/test.sh` →
   core 90/90; Debug + Release BUILD SUCCEEDED; UI 19/19. One run was disturbed by another worktree's UI tests sharing
-  the "NightCast iPhone" simulator, and once by a cold simulator ("Invalid connectionUUID"); reruns passed.
+  the "YawnCast iPhone" simulator, and once by a cold simulator ("Invalid connectionUUID"); reruns passed.
 
 ## 2026-10-15 — Session 10c: website YawnCast page refreshed
 
@@ -21,7 +21,7 @@ Newest first. Each entry: what changed, what was verified (actual output), block
 
 ## 2026-10-15 — Session 10b: v0.11 Library search bar (owner choice: one bar for both)
 
-- D45, D46. **Verified (actual output, `scripts/test.sh` on "NightCast iPhone"):** core 90/90; Debug + Release
+- D45, D46. **Verified (actual output, `scripts/test.sh` on "YawnCast iPhone"):** core 90/90; Debug + Release
   BUILD SUCCEEDED; UI 19/19 (new: Library search filters saved shows and finds new ones).
 - Site edits from Session 10 confirmed live on rarecreatures.app ~1 min after push (push to main deploys).
 
