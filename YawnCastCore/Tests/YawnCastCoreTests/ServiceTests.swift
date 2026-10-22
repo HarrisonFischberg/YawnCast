@@ -169,7 +169,6 @@ struct PersistenceTests {
         #expect(tempStore().load() == .empty)
     }
 
-
     @Test func subscriptionsAndPositionsSurviveRelaunch() throws {
         let store = tempStore()
         var snapshot = store.load()
