@@ -291,7 +291,7 @@ This is a red-tinted interface, not a hardware blue-light filter; iOS Night Shif
 - Library reorder is live: `onDrag` + `DropDelegate`; entering another show's slot moves the carried show there
   immediately with a spring and a selection haptic; carried tile shows at 35% in its new slot; watchdog restores
   it if a drag ends outside the grid (iOS gives no end callback).
-- Website (studio-site `apps/nightcast/`): removed the three requested paragraphs and the "Built and tested. Not
+- Website (studio-site `apps/yawncast/`): removed the three requested paragraphs and the "Built and tested. Not
   shipped." section; "never do" list now Never/Never/Never/Yes with the owner's wording. Also removed the hero's
   "Where it's up to" button (it linked to the removed section) and updated the fade line to the 6-minute spec.
 
@@ -301,13 +301,13 @@ its search icon; a full-width bar sits under the title (hidden while the Library
 the one action). In-place search on Library shows "In your Library" (instant local title/host match) then "Find new
 shows" (directory). Explore keeps directory-only search.
 
-## D46 · 2026-10-15 · Dedicated "NightCast iPhone" simulator
-Other sessions launched apps and Settings on "iPhone 18 Pro" mid-capture. A dedicated simulator "NightCast iPhone"
+## D46 · 2026-10-15 · Dedicated "YawnCast iPhone" simulator
+Other sessions launched apps and Settings on "iPhone 18 Pro" mid-capture. A dedicated simulator "YawnCast iPhone"
 (iPhone 18 Pro, iOS 27.0) is now the default for `scripts/test.sh` and screenshots.
 
 ## D47 · 2026-10-21 · Renamed to YawnCast (owner request)
-"NightCast" is taken on the App Store. The app, Xcode project, targets, schemes, Swift package (`YawnCastCore`),
-folders, env vars and docs are now YawnCast. Deliberately unchanged: the bundle ID `com.nightcast.ktv2g3z883`
-(it is tied to the App Store Connect record and existing installs), the on-device data folder
-`Application Support/NightCast/` (so saved libraries keep loading), the "NightCast iPhone" simulator name,
-and the GitHub repo name.
+The app's pre-release name is taken on the App Store, and for trademark reasons the owner wants YawnCast
+everywhere. The app, Xcode project, targets, schemes, Swift package (`YawnCastCore`), folders, env vars, docs,
+the "YawnCast iPhone" simulator and the website (`apps/yawncast/`) all use YawnCast. The on-device library
+moved to `Application Support/YawnCast/`; `JSONLibraryStore.standard(in:)` moves a library saved by earlier
+builds once, so testers keep their shows and positions.

@@ -70,11 +70,21 @@ public struct JSONLibraryStore: LibraryStore {
         self.fileURL = fileURL
     }
 
-    /// `Application Support/NightCast/library.json`. The folder keeps the app's old name so
-    /// libraries saved before the YawnCast rename still load.
+    /// `Application Support/YawnCast/library.json`.
     public static func standard() -> JSONLibraryStore {
-        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        return JSONLibraryStore(fileURL: base.appending(path: "NightCast/library.json"))
+        standard(in: FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0])
+    }
+
+    /// Builds before the rename kept the library in a folder named after the app's
+    /// pre-release name; it is moved once so testers keep their shows and positions.
+    static func standard(in base: URL) -> JSONLibraryStore {
+        let folder = base.appending(path: "YawnCast")
+        let legacy = base.appending(path: "Night" + "Cast")
+        let fm = FileManager.default
+        if !fm.fileExists(atPath: folder.path), fm.fileExists(atPath: legacy.path) {
+            try? fm.moveItem(at: legacy, to: folder)
+        }
+        return JSONLibraryStore(fileURL: folder.appending(path: "library.json"))
     }
 
     /// Missing file → empty library. Unreadable file → moved aside to

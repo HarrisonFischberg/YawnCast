@@ -3,7 +3,7 @@
 Elapsed working time: about 1 h 25 min of the 7 h cap (91 min on the clock, minus a 6 min pause).
 **5 READY · 0 DEFERRED · 0 ABANDONED.** One visual check is missing: the Lock Screen line (card 3) could not be seen in the Simulator.
 
-Candidate branch: `evolve/001/candidate` in `~/projects/NightCast-evolve` (cut from `main` @ 9fbcc25, not pushed). All five are behind flags that are OFF in App Store builds.
+Candidate branch: `evolve/001/candidate` in `~/projects/YawnCast-evolve` (cut from `main` @ 9fbcc25, not pushed). All five are behind flags that are OFF in App Store builds.
 
 | # | Iteration | Flag | Status | What changes | Evidence |
 |---|---|---|---|---|---|
@@ -25,8 +25,8 @@ Candidate branch: `evolve/001/candidate` in `~/projects/NightCast-evolve` (cut f
 - Checked: flags-off paths match base; no saved-data, permission, dependency or analytics change; `-nightHour` is Debug only.
 
 ## How to test
-1. Open `~/projects/NightCast-evolve` (branch `evolve/001/candidate`) in Xcode, scheme **YawnCast**, run on a simulator or your iPhone. Or:
-   `xcodebuild -project YawnCast.xcodeproj -scheme YawnCast -destination 'platform=iOS Simulator,name=NightCast iPhone' build`
+1. Open `~/projects/YawnCast-evolve` (branch `evolve/001/candidate`) in Xcode, scheme **YawnCast**, run on a simulator or your iPhone. Or:
+   `xcodebuild -project YawnCast.xcodeproj -scheme YawnCast -destination 'platform=iOS Simulator,name=YawnCast iPhone' build`
 2. Turn experiments on or off: **Themes** (half-filled circle on Library) → scroll to the bottom → **long-press the "YawnCast 0.15 (15)" line** → Experiments. One switch per iteration, plus Turn all on / Reset.
 3. Or launch with `-evolve_all YES` (all on) or `-exp_<flag> YES|NO` (one).
 4. Useful: `-demo` (sample library), `-fastSleep` (short Sleep for trying the fade), `-nightHour 23` (pretend it's late, Debug only).
