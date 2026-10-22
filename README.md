@@ -197,7 +197,7 @@ Results from the last full run (2026-10-15, v0.4, iPhone 18 Pro simulator, iOS 2
 The full-fade UI test drives the real `AVPlayer.volume` through every step and checks it never rises, hits each level, then pauses with the volume restored. The sampled sequence for the v0.2 spec is in PROGRESS.md.
 
 Replica checks:
-- **Parity:** `parity.py` scores **90.7**. 9 of 11 must-haves are done. The other two, Lock Screen and background audio, are *implemented but unverified on device*. See [replica/parity.md](replica/parity.md).
+- **Parity:** `parity.py` scores **90.7**. All 11 must-haves are done: Lock Screen and background audio were the last two, and both were verified on a real iPhone on 2026-10-21 (device checks D2, D3 and D6). The score predates that and has not been recomputed. See [replica/parity.md](replica/parity.md).
 - **Brand sweep:** `sweep.py` finds nothing in `YawnCast/`, `YawnCastCore/` or `Config/`. Reference names appear only in internal research docs.
 
 ## Screenshot archive
@@ -243,19 +243,21 @@ The owner passed all eight on 2026-10-17 ([TASKS.md](TASKS.md)). Rerun them befo
 - **No downloads or offline playback:** streaming only.
 - **Search provider:** the iTunes Search API is rate-limited (about 20 requests/min, per Apple) and some shows lack feed URLs. Re-read Apple's terms before release.
 - **No app-level crash or analytics reporting.**
-- **The name** is a working name, not trademark-checked (run `/replica-skill:replica-brand` before launch).
+- **The name** was screened on 2026-10-21: no USPTO mark for "yawncast", no YAWN mark in class 9, and no App Store app of that name. A first screen, not a legal clearance.
 - **Lock Screen artwork** comes from the episode or show artwork when it can be fetched.
 
-## Signing and TestFlight (needs you)
+## Signing and TestFlight
 
-Nothing has been uploaded, signed, or changed in any developer account.
+**Build 17 (0.17) is on TestFlight**, uploaded under team `KTV2G3Z883` and bundle ID
+`com.rarecreatures.yawncast`. The bundle ID is now fixed: it can't change after the first App Store
+release.
 
-1. Signing is already set up for development: team `KTV2G3Z883`, bundle ID `com.rarecreatures.yawncast`, automatic signing. The bundle ID can't change after the first App Store release.
+1. Signing is automatic on team `KTV2G3Z883`.
 2. Keep the **Background Modes → Audio** capability. It's already in `Config/YawnCast-Info.plist`.
-3. Run on your iPhone and work through checks D1 to D8 above.
-4. Do **Product → Archive** with the **Release** configuration, then **Distribute App → App Store Connect → Upload**.
+3. ~~Run on your iPhone and work through checks D1 to D8.~~ **Done 2026-10-21 — all eight pass**, run against TestFlight build 17. See [ACCEPTANCE.md](ACCEPTANCE.md).
+4. For later builds: **Product → Archive** with the **Release** configuration, then **Distribute App → App Store Connect → Upload**.
 5. In App Store Connect, create the app record (name, privacy details: the app sends search terms to Apple and fetches feeds from publishers, but you collect nothing, so confirm that when filling in the form), add internal testers, and start TestFlight.
-6. Before any public release: a trademark-cleared name, final icon, a privacy policy URL, and a review of the iTunes Search API terms.
+6. Before any public release: a **final app icon** (the current one is an original placeholder) and a review of the iTunes Search API terms. The privacy policy and support pages are live at <https://rarecreatures.app/apps/yawncast/privacy/> and <https://rarecreatures.app/apps/yawncast/support/>, and the name has been screened.
 
 ## Privacy
 
