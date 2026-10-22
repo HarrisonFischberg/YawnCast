@@ -250,7 +250,7 @@ The owner passed all eight on 2026-10-17 ([TASKS.md](TASKS.md)). Rerun them befo
 
 Nothing has been uploaded, signed, or changed in any developer account.
 
-1. Signing is already set up for development: team `KTV2G3Z883`, bundle ID `com.nightcast.ktv2g3z883`, automatic signing. For release you may want a nicer bundle ID (it can't change after the first App Store upload).
+1. Signing is already set up for development: team `KTV2G3Z883`, bundle ID `com.rarecreatures.yawncast`, automatic signing. The bundle ID can't change after the first App Store release.
 2. Keep the **Background Modes → Audio** capability. It's already in `Config/YawnCast-Info.plist`.
 3. Run on your iPhone and work through checks D1 to D8 above.
 4. Do **Product → Archive** with the **Release** configuration, then **Distribute App → App Store Connect → Upload**.
