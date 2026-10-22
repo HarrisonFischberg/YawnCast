@@ -135,7 +135,7 @@ vertically, the Moon key wraps its subtitle and hides its ticks. The search fiel
 at `.accessibility1` because it shares a row with the close key.
 
 ## D22 · 2026-10-15 · Development signing (owner-approved)
-Team KTV2G3Z883, bundle ID `com.nightcast.ktv2g3z883`, automatic signing. Xcode created an
+Team KTV2G3Z883, bundle ID `com.rarecreatures.yawncast` (changed in D48), automatic signing. Xcode created an
 "Apple Development: Harrison Fischberg" certificate and registered device "Hphone"
 (`-allowProvisioningDeviceRegistration`). The dev build is signed with the team wildcard profile
 ("iOS Team Provisioning Profile: *"), so no explicit App ID was needed yet; App Store distribution
@@ -309,5 +309,10 @@ Other sessions launched apps and Settings on "iPhone 18 Pro" mid-capture. A dedi
 The app's pre-release name is taken on the App Store, and for trademark reasons the owner wants YawnCast
 everywhere. The app, Xcode project, targets, schemes, Swift package (`YawnCastCore`), folders, env vars, docs,
 the "YawnCast iPhone" simulator and the website (`apps/yawncast/`) all use YawnCast. The on-device library
-moved to `Application Support/YawnCast/`; `JSONLibraryStore.standard(in:)` moves a library saved by earlier
-builds once, so testers keep their shows and positions.
+lives in `Application Support/YawnCast/`. With the new bundle ID (D48) the app gets a fresh container, so no
+migration from earlier builds is needed.
+
+## D48 · 2026-10-22 · Bundle ID is com.rarecreatures.yawncast (owner choice)
+The old bundle ID carried the pre-release name. Before any App Store release the owner chose to switch to
+`com.rarecreatures.yawncast` (tests `.tests`, UI tests `.uitests`). This is a new app to iOS and App Store
+Connect: a fresh App Store Connect record, TestFlight starts over, and installs of the old ID keep their own data.
