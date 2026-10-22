@@ -34,7 +34,7 @@ it was actually run and observed passing. Simulator results never satisfy device
 | M3.4 | Subscribe/unsubscribe persists across relaunch (unit + UI test) | PASS (core + `testSubscribePersistsAcrossRelaunch`) |
 | M3.5 | Playback positions persist per episode (unit test) | PASS (core + `testPositionSurvivesRelaunch`) |
 | M3.6 | Seeking clamps to [0, duration] (unit test) | PASS (core) |
-| M3.7 | Lock-screen info + remote play/pause/±15 wired | NOT RUN (implemented in NowPlayingBridge; not observed — needs device check D2/D6) |
+| M3.7 | Lock-screen info + remote play/pause/±15 wired | PASS (observed on device via D2/D6, owner, 2026-10-21) |
 
 ## M4 — Sleep engine (spec)
 
@@ -73,14 +73,14 @@ each ramped over 2 s. After the 0.0 ramp: pause, save, end Sleep, restore B.
 
 | ID | Check | Status |
 |---|---|---|
-| D1 | Real audio streams from a real feed | NOT RUN |
-| D2 | Playback continues with screen locked | NOT RUN |
-| D3 | Sleep fade progresses and pauses with screen locked | NOT RUN |
-| D4 | Headphone disconnect pauses, does not resume on its own | NOT RUN |
-| D5 | Phone call / Siri interruption pauses; resume behaves correctly | NOT RUN |
-| D6 | Lock Screen + Control Center + AirPods play/pause/±15 work | NOT RUN |
-| D7 | No next episode ever starts automatically | NOT RUN |
-| D8 | Bedtime theme comfortable in a dark room | NOT RUN |
+| D1 | Real audio streams from a real feed | PASS (owner, 2026-10-21) |
+| D2 | Playback continues with screen locked | PASS (owner, 2026-10-21) |
+| D3 | Sleep fade progresses and pauses with screen locked | PASS (owner, 2026-10-21) |
+| D4 | Headphone disconnect pauses, does not resume on its own | PASS (owner, 2026-10-21) |
+| D5 | Phone call / Siri interruption pauses; resume behaves correctly | PASS (owner, 2026-10-21) |
+| D6 | Lock Screen + Control Center + AirPods play/pause/±15 work | PASS (owner, 2026-10-21) |
+| D7 | No next episode ever starts automatically | PASS (owner, 2026-10-21) |
+| D8 | Bedtime theme comfortable in a dark room | PASS (owner, 2026-10-21) |
 
 ## v0.2 — Home pages, persistent mini player, Explore (owner request 2026-10-15)
 
