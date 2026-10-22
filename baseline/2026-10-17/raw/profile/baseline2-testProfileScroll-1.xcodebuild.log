@@ -1,0 +1,155 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project NightCast.xcodeproj -scheme NightCast -configuration Release -destination id=5E4786AD-2A04-4FCC-A4E9-CF947DD33BBB -derivedDataPath build/DerivedData -parallel-testing-enabled NO "-only-testing:NightCastUITests/PreBuiltPerfTests/testProfileScroll" test-without-building
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  NightCastCore: /Users/harrison/projects/podcast/NightCastCore
+
+2026-10-18 16:21:58.544 xcodebuild[12492:20357612] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-10-18 16:22:01.503141-0600 NightCastUITests-Runner[12546:20358023] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-10-18 16:22:04.039.
+Test Suite 'NightCastUITests.xctest' started at 2026-10-18 16:22:04.040.
+Test Suite 'PreBuiltPerfTests' started at 2026-10-18 16:22:04.040.
+Test Case '-[NightCastUITests.PreBuiltPerfTests testProfileScroll]' started.
+    t =     0.00s Start Test at 2026-10-18 16:22:04.042
+    t =     0.03s Set Up
+    t =     0.04s Open com.nightcast.ktv2g3z883
+    t =     0.05s     Launch com.nightcast.ktv2g3z883
+2026-10-18 16:22:04.341 xcodebuild[12492:20357612] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-18 16:22:04.341 xcodebuild[12492:20357612] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     0.94s         Setting up automation session
+objc[12546]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.6xw3Fu/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x107e48398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.6xw3Fu/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x107f80310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     4.07s         Wait for com.nightcast.ktv2g3z883 to idle
+    t =     6.02s Waiting 10.0s for "Seed Show 02, Seed Studio 2" Button to exist
+    t =     7.07s     Checking `Expect predicate `existsNoRetry == 1` for object "Seed Show 02, Seed Studio 2" Button`
+    t =     7.07s         Checking existence of `"Seed Show 02, Seed Studio 2" Button`
+    t =     7.19s Swipe up Target Application 'com.nightcast.ktv2g3z883'
+    t =     7.19s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     7.20s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =     7.22s     Check for interrupting elements affecting "NightCast" Application
+    t =     7.24s     Synthesize event
+    t =     7.63s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    10.00s Swipe up Target Application 'com.nightcast.ktv2g3z883'
+    t =    10.00s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    10.01s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    10.03s     Check for interrupting elements affecting "NightCast" Application
+    t =    10.06s     Synthesize event
+    t =    10.45s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    12.73s Swipe up Target Application 'com.nightcast.ktv2g3z883'
+    t =    12.73s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    12.75s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    12.78s     Check for interrupting elements affecting "NightCast" Application
+    t =    12.81s     Synthesize event
+    t =    13.20s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    15.43s Swipe down Target Application 'com.nightcast.ktv2g3z883'
+    t =    15.43s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    15.43s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    15.45s     Check for interrupting elements affecting "NightCast" Application
+    t =    15.48s     Synthesize event
+    t =    15.87s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    18.11s Swipe down Target Application 'com.nightcast.ktv2g3z883'
+    t =    18.12s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    18.12s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    18.15s     Check for interrupting elements affecting "NightCast" Application
+    t =    18.18s     Synthesize event
+    t =    18.57s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    20.80s Swipe down Target Application 'com.nightcast.ktv2g3z883'
+    t =    20.80s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    20.81s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    20.84s     Check for interrupting elements affecting "NightCast" Application
+    t =    20.90s     Synthesize event
+    t =    21.30s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    22.75s Swipe up Target Application 'com.nightcast.ktv2g3z883'
+    t =    22.75s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    22.76s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    22.78s     Check for interrupting elements affecting "NightCast" Application
+    t =    22.79s     Synthesize event
+    t =    23.18s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    25.40s Swipe up Target Application 'com.nightcast.ktv2g3z883'
+    t =    25.40s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    25.40s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    25.43s     Check for interrupting elements affecting "NightCast" Application
+    t =    25.46s     Synthesize event
+    t =    25.85s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    28.08s Swipe up Target Application 'com.nightcast.ktv2g3z883'
+    t =    28.09s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    28.09s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    28.12s     Check for interrupting elements affecting "NightCast" Application
+    t =    28.14s     Synthesize event
+    t =    28.53s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    30.75s Swipe down Target Application 'com.nightcast.ktv2g3z883'
+    t =    30.75s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    30.76s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    30.78s     Check for interrupting elements affecting "NightCast" Application
+    t =    30.81s     Synthesize event
+    t =    31.19s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    33.43s Swipe down Target Application 'com.nightcast.ktv2g3z883'
+    t =    33.43s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    33.43s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    33.45s     Check for interrupting elements affecting "NightCast" Application
+    t =    33.48s     Synthesize event
+    t =    33.87s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    36.10s Swipe down Target Application 'com.nightcast.ktv2g3z883'
+    t =    36.10s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    36.11s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    36.13s     Check for interrupting elements affecting "NightCast" Application
+    t =    36.15s     Synthesize event
+    t =    36.54s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    38.48s Swipe up Target Application 'com.nightcast.ktv2g3z883'
+    t =    38.49s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    38.49s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    38.51s     Check for interrupting elements affecting "NightCast" Application
+    t =    38.54s     Synthesize event
+    t =    38.93s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    41.15s Swipe up Target Application 'com.nightcast.ktv2g3z883'
+    t =    41.15s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    41.15s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    41.18s     Check for interrupting elements affecting "NightCast" Application
+    t =    41.20s     Synthesize event
+    t =    41.60s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    43.82s Swipe up Target Application 'com.nightcast.ktv2g3z883'
+    t =    43.82s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    43.82s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    43.85s     Check for interrupting elements affecting "NightCast" Application
+    t =    43.88s     Synthesize event
+    t =    44.28s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    46.51s Swipe down Target Application 'com.nightcast.ktv2g3z883'
+    t =    46.51s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    46.52s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    46.54s     Check for interrupting elements affecting "NightCast" Application
+    t =    46.57s     Synthesize event
+    t =    46.96s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    49.22s Swipe down Target Application 'com.nightcast.ktv2g3z883'
+    t =    49.22s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    49.22s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    49.25s     Check for interrupting elements affecting "NightCast" Application
+    t =    49.28s     Synthesize event
+    t =    49.67s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    51.90s Swipe down Target Application 'com.nightcast.ktv2g3z883'
+    t =    51.90s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    51.90s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    51.93s     Check for interrupting elements affecting "NightCast" Application
+    t =    51.95s     Synthesize event
+    t =    52.34s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    53.78s Swipe up Target Application 'com.nightcast.ktv2g3z883'
+    t =    53.78s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    53.78s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    53.80s     Check for interrupting elements affecting "NightCast" Application
+    t =    53.82s     Synthesize event
+    t =    54.21s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    56.45s Swipe up Target Application 'com.nightcast.ktv2g3z883'
+    t =    56.45s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    56.45s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    56.47s     Check for interrupting elements affecting "NightCast" Application
+    t =    56.50s     Synthesize event
+    t =    56.90s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    59.12s Swipe up Target Application 'com.nightcast.ktv2g3z883'
+    t =    59.12s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    59.12s     Find the Target Application 'com.nightcast.ktv2g3z883'
+    t =    59.15s     Check for interrupting elements affecting "NightCast" Application
+    t =    59.18s     Synthesize event
+    t =    59.57s     Wait for com.nightcast.ktv2g3z883 to idle
+** BUILD INTERRUPTED **

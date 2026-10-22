@@ -1,0 +1,302 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project NightCast.xcodeproj -scheme NightCast -configuration Release -destination id=5E4786AD-2A04-4FCC-A4E9-CF947DD33BBB -derivedDataPath build/DerivedData -parallel-testing-enabled NO "-only-testing:NightCastUITests/PreBuiltPerfTests/testProfileOpenShow" test-without-building
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  NightCastCore: /Users/harrison/projects/podcast/NightCastCore
+
+2026-10-17 23:32:07.941 xcodebuild[51995:17621035] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-10-17 23:32:09.018873-0600 NightCastUITests-Runner[52008:17621301] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-10-17 23:32:10.892.
+Test Suite 'NightCastUITests.xctest' started at 2026-10-17 23:32:10.892.
+Test Suite 'PreBuiltPerfTests' started at 2026-10-17 23:32:10.892.
+Test Case '-[NightCastUITests.PreBuiltPerfTests testProfileOpenShow]' started.
+    t =     0.00s Start Test at 2026-10-17 23:32:10.894
+    t =     0.02s Set Up
+    t =     0.03s Open com.nightcast.ktv2g3z883
+    t =     0.03s     Launch com.nightcast.ktv2g3z883
+2026-10-17 23:32:10.972 xcodebuild[51995:17621035] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-17 23:32:10.972 xcodebuild[51995:17621035] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     0.49s         Setting up automation session
+objc[52008]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.6xw3Fu/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x1089ac398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.6xw3Fu/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x108adc310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     2.57s         Wait for com.nightcast.ktv2g3z883 to idle
+    t =     4.16s Waiting 10.0s for "Seed Show 01, Seed Studio 1" Button to exist
+    t =     5.16s     Checking `Expect predicate `existsNoRetry == 1` for object "Seed Show 01, Seed Studio 1" Button`
+    t =     5.16s         Checking existence of `"Seed Show 01, Seed Studio 1" Button`
+    t =     5.25s Tap "Seed Show 01, Seed Studio 1" Button
+    t =     5.25s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     5.25s     Find the "Seed Show 01, Seed Studio 1" Button
+    t =     5.28s     Check for interrupting elements affecting "Seed Show 01, Seed Studio 1" Button
+    t =     5.30s     Synthesize event
+    t =     5.58s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     6.02s Waiting 10.0s for Button (First Match) to exist
+    t =     7.05s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =     7.05s         Checking existence of `Button (First Match)`
+    t =     7.10s Tap Button (First Match)
+    t =     7.11s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     7.11s     Find the Button (First Match)
+    t =     7.13s     Check for interrupting elements affecting "episodeRow" Button
+    t =     7.16s     Synthesize event
+<unknown>:0: warning: -[NightCastUITests.PreBuiltPerfTests testProfileOpenShow] :     AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.
+    t =     7.45s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     7.87s Waiting 10.0s for "closePlayer" Button to exist
+    t =     8.94s     Checking `Expect predicate `existsNoRetry == 1` for object "closePlayer" Button`
+    t =     8.95s         Checking existence of `"closePlayer" Button`
+    t =     9.01s Tap "closePlayer" Button
+    t =     9.01s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     9.02s     Find the "closePlayer" Button
+    t =     9.05s     Check for interrupting elements affecting "closePlayer" Button
+    t =     9.08s     Synthesize event
+    t =     9.37s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    10.07s Tap Button (Element at index 0)
+    t =    10.07s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    10.08s     Find the Button (Element at index 0)
+    t =    10.12s     Check for interrupting elements affecting "BackButton" Button
+    t =    10.15s     Synthesize event
+    t =    10.44s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    10.77s Waiting 10.0s for "Seed Show 01, Seed Studio 1" Button to exist
+    t =    11.81s     Checking `Expect predicate `existsNoRetry == 1` for object "Seed Show 01, Seed Studio 1" Button`
+    t =    11.81s         Checking existence of `"Seed Show 01, Seed Studio 1" Button`
+    t =    11.86s Tap "Seed Show 01, Seed Studio 1" Button
+    t =    11.86s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    11.86s     Find the "Seed Show 01, Seed Studio 1" Button
+    t =    11.89s     Check for interrupting elements affecting "Seed Show 01, Seed Studio 1" Button
+    t =    11.91s     Synthesize event
+    t =    12.20s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    12.55s Waiting 10.0s for Button (First Match) to exist
+    t =    13.59s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    13.59s         Checking existence of `Button (First Match)`
+    t =    13.62s Tap Button (First Match)
+    t =    13.62s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    13.63s     Find the Button (First Match)
+    t =    13.65s     Check for interrupting elements affecting "episodeRow" Button
+    t =    13.68s     Synthesize event
+    t =    13.97s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    14.30s Waiting 10.0s for "closePlayer" Button to exist
+    t =    15.34s     Checking `Expect predicate `existsNoRetry == 1` for object "closePlayer" Button`
+    t =    15.34s         Checking existence of `"closePlayer" Button`
+    t =    15.38s Tap "closePlayer" Button
+    t =    15.38s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    15.39s     Find the "closePlayer" Button
+    t =    15.42s     Check for interrupting elements affecting "closePlayer" Button
+    t =    15.45s     Synthesize event
+    t =    15.74s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    16.45s Tap Button (Element at index 0)
+    t =    16.45s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    16.46s     Find the Button (Element at index 0)
+    t =    16.50s     Check for interrupting elements affecting "BackButton" Button
+    t =    16.53s     Synthesize event
+    t =    16.82s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    17.13s Waiting 10.0s for "Seed Show 01, Seed Studio 1" Button to exist
+    t =    18.17s     Checking `Expect predicate `existsNoRetry == 1` for object "Seed Show 01, Seed Studio 1" Button`
+    t =    18.17s         Checking existence of `"Seed Show 01, Seed Studio 1" Button`
+    t =    18.21s Tap "Seed Show 01, Seed Studio 1" Button
+    t =    18.21s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    18.21s     Find the "Seed Show 01, Seed Studio 1" Button
+    t =    18.24s     Check for interrupting elements affecting "Seed Show 01, Seed Studio 1" Button
+    t =    18.26s     Synthesize event
+    t =    18.55s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    19.02s Waiting 10.0s for Button (First Match) to exist
+    t =    20.06s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    20.06s         Checking existence of `Button (First Match)`
+    t =    20.09s Tap Button (First Match)
+    t =    20.09s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    20.10s     Find the Button (First Match)
+    t =    20.12s     Check for interrupting elements affecting "episodeRow" Button
+    t =    20.14s     Synthesize event
+    t =    20.44s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    20.75s Waiting 10.0s for "closePlayer" Button to exist
+    t =    21.78s     Checking `Expect predicate `existsNoRetry == 1` for object "closePlayer" Button`
+    t =    21.78s         Checking existence of `"closePlayer" Button`
+    t =    21.82s Tap "closePlayer" Button
+    t =    21.82s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    21.82s     Find the "closePlayer" Button
+    t =    21.86s     Check for interrupting elements affecting "closePlayer" Button
+    t =    21.88s     Synthesize event
+    t =    22.17s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    22.87s Tap Button (Element at index 0)
+    t =    22.87s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    22.88s     Find the Button (Element at index 0)
+    t =    22.92s     Check for interrupting elements affecting "BackButton" Button
+    t =    22.95s     Synthesize event
+    t =    23.24s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    23.57s Waiting 10.0s for "Seed Show 01, Seed Studio 1" Button to exist
+    t =    24.61s     Checking `Expect predicate `existsNoRetry == 1` for object "Seed Show 01, Seed Studio 1" Button`
+    t =    24.61s         Checking existence of `"Seed Show 01, Seed Studio 1" Button`
+    t =    24.64s Tap "Seed Show 01, Seed Studio 1" Button
+    t =    24.64s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    24.65s     Find the "Seed Show 01, Seed Studio 1" Button
+    t =    24.67s     Check for interrupting elements affecting "Seed Show 01, Seed Studio 1" Button
+    t =    24.69s     Synthesize event
+    t =    24.98s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    25.31s Waiting 10.0s for Button (First Match) to exist
+    t =    26.35s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    26.35s         Checking existence of `Button (First Match)`
+    t =    26.39s Tap Button (First Match)
+    t =    26.39s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    26.40s     Find the Button (First Match)
+    t =    26.43s     Check for interrupting elements affecting "episodeRow" Button
+    t =    26.46s     Synthesize event
+    t =    26.75s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    27.08s Waiting 10.0s for "closePlayer" Button to exist
+    t =    28.11s     Checking `Expect predicate `existsNoRetry == 1` for object "closePlayer" Button`
+    t =    28.11s         Checking existence of `"closePlayer" Button`
+    t =    28.18s Tap "closePlayer" Button
+    t =    28.18s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    28.18s     Find the "closePlayer" Button
+    t =    28.21s     Check for interrupting elements affecting "closePlayer" Button
+    t =    28.24s     Synthesize event
+    t =    28.53s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    29.24s Tap Button (Element at index 0)
+    t =    29.24s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    29.24s     Find the Button (Element at index 0)
+    t =    29.27s     Check for interrupting elements affecting "BackButton" Button
+    t =    29.30s     Synthesize event
+    t =    29.59s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    29.92s Waiting 10.0s for "Seed Show 01, Seed Studio 1" Button to exist
+    t =    30.95s     Checking `Expect predicate `existsNoRetry == 1` for object "Seed Show 01, Seed Studio 1" Button`
+    t =    30.95s         Checking existence of `"Seed Show 01, Seed Studio 1" Button`
+    t =    30.99s Tap "Seed Show 01, Seed Studio 1" Button
+    t =    30.99s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    30.99s     Find the "Seed Show 01, Seed Studio 1" Button
+    t =    31.02s     Check for interrupting elements affecting "Seed Show 01, Seed Studio 1" Button
+    t =    31.04s     Synthesize event
+    t =    31.33s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    31.66s Waiting 10.0s for Button (First Match) to exist
+    t =    32.70s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    32.70s         Checking existence of `Button (First Match)`
+    t =    32.75s Tap Button (First Match)
+    t =    32.75s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    32.75s     Find the Button (First Match)
+    t =    32.78s     Check for interrupting elements affecting "episodeRow" Button
+    t =    32.80s     Synthesize event
+    t =    33.10s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    33.44s Waiting 10.0s for "closePlayer" Button to exist
+    t =    34.47s     Checking `Expect predicate `existsNoRetry == 1` for object "closePlayer" Button`
+    t =    34.48s         Checking existence of `"closePlayer" Button`
+    t =    34.53s Tap "closePlayer" Button
+    t =    34.53s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    34.53s     Find the "closePlayer" Button
+    t =    34.57s     Check for interrupting elements affecting "closePlayer" Button
+    t =    34.60s     Synthesize event
+    t =    34.89s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    35.61s Tap Button (Element at index 0)
+    t =    35.61s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    35.61s     Find the Button (Element at index 0)
+    t =    35.65s     Check for interrupting elements affecting "BackButton" Button
+    t =    35.68s     Synthesize event
+    t =    35.97s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    36.30s Waiting 10.0s for "Seed Show 01, Seed Studio 1" Button to exist
+    t =    37.34s     Checking `Expect predicate `existsNoRetry == 1` for object "Seed Show 01, Seed Studio 1" Button`
+    t =    37.34s         Checking existence of `"Seed Show 01, Seed Studio 1" Button`
+    t =    37.37s Tap "Seed Show 01, Seed Studio 1" Button
+    t =    37.37s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    37.38s     Find the "Seed Show 01, Seed Studio 1" Button
+    t =    37.40s     Check for interrupting elements affecting "Seed Show 01, Seed Studio 1" Button
+    t =    37.42s     Synthesize event
+    t =    37.71s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    38.03s Waiting 10.0s for Button (First Match) to exist
+    t =    39.07s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    39.07s         Checking existence of `Button (First Match)`
+    t =    39.11s Tap Button (First Match)
+    t =    39.11s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    39.12s     Find the Button (First Match)
+    t =    39.14s     Check for interrupting elements affecting "episodeRow" Button
+    t =    39.17s     Synthesize event
+    t =    39.46s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    39.81s Waiting 10.0s for "closePlayer" Button to exist
+    t =    40.83s     Checking `Expect predicate `existsNoRetry == 1` for object "closePlayer" Button`
+    t =    40.84s         Checking existence of `"closePlayer" Button`
+    t =    40.90s Tap "closePlayer" Button
+    t =    40.90s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    40.90s     Find the "closePlayer" Button
+    t =    40.93s     Check for interrupting elements affecting "closePlayer" Button
+    t =    40.96s     Synthesize event
+    t =    41.25s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    41.95s Tap Button (Element at index 0)
+    t =    41.95s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    41.95s     Find the Button (Element at index 0)
+    t =    41.97s     Check for interrupting elements affecting "BackButton" Button
+    t =    42.00s     Synthesize event
+    t =    42.28s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    42.60s Waiting 10.0s for "Seed Show 01, Seed Studio 1" Button to exist
+    t =    43.64s     Checking `Expect predicate `existsNoRetry == 1` for object "Seed Show 01, Seed Studio 1" Button`
+    t =    43.64s         Checking existence of `"Seed Show 01, Seed Studio 1" Button`
+    t =    43.68s Tap "Seed Show 01, Seed Studio 1" Button
+    t =    43.68s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    43.69s     Find the "Seed Show 01, Seed Studio 1" Button
+    t =    43.71s     Check for interrupting elements affecting "Seed Show 01, Seed Studio 1" Button
+    t =    43.73s     Synthesize event
+    t =    44.02s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    44.35s Waiting 10.0s for Button (First Match) to exist
+    t =    45.38s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    45.38s         Checking existence of `Button (First Match)`
+    t =    45.43s Tap Button (First Match)
+    t =    45.43s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    45.43s     Find the Button (First Match)
+    t =    45.45s     Check for interrupting elements affecting "episodeRow" Button
+    t =    45.48s     Synthesize event
+    t =    45.77s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    46.10s Waiting 10.0s for "closePlayer" Button to exist
+    t =    47.13s     Checking `Expect predicate `existsNoRetry == 1` for object "closePlayer" Button`
+    t =    47.13s         Checking existence of `"closePlayer" Button`
+    t =    47.15s Tap "closePlayer" Button
+    t =    47.15s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    47.16s     Find the "closePlayer" Button
+    t =    47.19s     Check for interrupting elements affecting "closePlayer" Button
+    t =    47.21s     Synthesize event
+    t =    47.50s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    48.20s Tap Button (Element at index 0)
+    t =    48.21s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    48.21s     Find the Button (Element at index 0)
+    t =    48.25s     Check for interrupting elements affecting "BackButton" Button
+    t =    48.28s     Synthesize event
+    t =    48.56s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    48.88s Waiting 10.0s for "Seed Show 01, Seed Studio 1" Button to exist
+    t =    49.93s     Checking `Expect predicate `existsNoRetry == 1` for object "Seed Show 01, Seed Studio 1" Button`
+    t =    49.93s         Checking existence of `"Seed Show 01, Seed Studio 1" Button`
+    t =    49.96s Tap "Seed Show 01, Seed Studio 1" Button
+    t =    49.96s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    49.96s     Find the "Seed Show 01, Seed Studio 1" Button
+    t =    49.99s     Check for interrupting elements affecting "Seed Show 01, Seed Studio 1" Button
+    t =    50.01s     Synthesize event
+    t =    50.30s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    50.63s Waiting 10.0s for Button (First Match) to exist
+    t =    51.67s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    51.67s         Checking existence of `Button (First Match)`
+    t =    51.70s Tap Button (First Match)
+    t =    51.70s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    51.70s     Find the Button (First Match)
+    t =    51.74s     Check for interrupting elements affecting "episodeRow" Button
+    t =    51.76s     Synthesize event
+    t =    52.05s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    52.38s Waiting 10.0s for "closePlayer" Button to exist
+    t =    53.40s     Checking `Expect predicate `existsNoRetry == 1` for object "closePlayer" Button`
+    t =    53.40s         Checking existence of `"closePlayer" Button`
+    t =    53.46s Tap "closePlayer" Button
+    t =    53.46s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    53.47s     Find the "closePlayer" Button
+    t =    53.50s     Check for interrupting elements affecting "closePlayer" Button
+    t =    53.52s     Synthesize event
+    t =    53.81s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    54.52s Tap Button (Element at index 0)
+    t =    54.52s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    54.53s     Find the Button (Element at index 0)
+    t =    54.57s     Check for interrupting elements affecting "BackButton" Button
+    t =    54.59s     Synthesize event
+    t =    54.88s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    55.22s Waiting 10.0s for "Seed Show 01, Seed Studio 1" Button to exist
+    t =    56.25s     Checking `Expect predicate `existsNoRetry == 1` for object "Seed Show 01, Seed Studio 1" Button`
+    t =    56.25s         Checking existence of `"Seed Show 01, Seed Studio 1" Button`
+    t =    56.30s Tear Down
+Test Case '-[NightCastUITests.PreBuiltPerfTests testProfileOpenShow]' passed (56.765 seconds).
+Test Suite 'PreBuiltPerfTests' passed at 2026-10-17 23:33:07.660.
+	 Executed 1 test, with 0 failures (0 unexpected) in 56.765 (56.768) seconds
+Test Suite 'NightCastUITests.xctest' passed at 2026-10-17 23:33:07.661.
+	 Executed 1 test, with 0 failures (0 unexpected) in 56.765 (56.769) seconds
+Test Suite 'Selected tests' passed at 2026-10-17 23:33:07.662.
+	 Executed 1 test, with 0 failures (0 unexpected) in 56.765 (56.770) seconds
+** BUILD INTERRUPTED **

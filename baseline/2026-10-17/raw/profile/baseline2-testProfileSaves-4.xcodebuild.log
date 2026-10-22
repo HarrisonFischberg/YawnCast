@@ -1,0 +1,235 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project NightCast.xcodeproj -scheme NightCast -configuration Release -destination id=5E4786AD-2A04-4FCC-A4E9-CF947DD33BBB -derivedDataPath build/DerivedData -parallel-testing-enabled NO "-only-testing:NightCastUITests/PreBuiltPerfTests/testProfileSaves" test-without-building
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  NightCastCore: /Users/harrison/projects/podcast/NightCastCore
+
+2026-10-17 23:28:25.254 xcodebuild[50899:17601584] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-10-17 23:28:26.247358-0600 NightCastUITests-Runner[50902:17601787] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-10-17 23:28:27.871.
+Test Suite 'NightCastUITests.xctest' started at 2026-10-17 23:28:27.871.
+Test Suite 'PreBuiltPerfTests' started at 2026-10-17 23:28:27.872.
+Test Case '-[NightCastUITests.PreBuiltPerfTests testProfileSaves]' started.
+    t =     0.00s Start Test at 2026-10-17 23:28:27.873
+    t =     0.02s Set Up
+    t =     0.02s Open com.nightcast.ktv2g3z883
+    t =     0.02s     Launch com.nightcast.ktv2g3z883
+2026-10-17 23:28:27.934 xcodebuild[50899:17601584] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-17 23:28:27.934 xcodebuild[50899:17601584] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     0.47s         Setting up automation session
+objc[50902]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.6xw3Fu/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x106d0c398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.6xw3Fu/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x106e18310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     2.42s         Wait for com.nightcast.ktv2g3z883 to idle
+    t =     4.17s Waiting 10.0s for "Seed Show 03, Seed Studio 3" Button to exist
+    t =     5.21s     Checking `Expect predicate `existsNoRetry == 1` for object "Seed Show 03, Seed Studio 3" Button`
+    t =     5.21s         Checking existence of `"Seed Show 03, Seed Studio 3" Button`
+    t =     5.30s Tap "Seed Show 03, Seed Studio 3" Button
+    t =     5.30s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     5.31s     Find the "Seed Show 03, Seed Studio 3" Button
+    t =     5.33s     Check for interrupting elements affecting "Seed Show 03, Seed Studio 3" Button
+    t =     5.35s     Synthesize event
+    t =     5.65s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     6.12s Waiting 10.0s for Button (First Match) to exist
+    t =     7.16s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =     7.16s         Checking existence of `Button (First Match)`
+    t =     7.20s Press Button (First Match) for 1.0 seconds
+    t =     7.20s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     7.20s     Find the Button (First Match)
+    t =     7.22s     Check for interrupting elements affecting "episodeRow" Button
+    t =     7.24s     Synthesize event
+    t =     8.47s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =     9.65s Waiting 5.0s for Button (First Match) to exist
+    t =    10.68s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    10.68s         Checking existence of `Button (First Match)`
+    t =    10.73s Tap Button (First Match)
+    t =    10.73s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    10.73s     Find the Button (First Match)
+    t =    10.75s     Check for interrupting elements affecting "checkmark.circle" Button
+    t =    10.78s     Synthesize event
+    t =    11.07s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    11.88s Press "episodeRow" Button for 1.0 seconds
+    t =    11.88s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    11.89s     Find the "episodeRow" Button
+    t =    11.92s     Check for interrupting elements affecting "episodeRow" Button
+    t =    11.95s     Synthesize event
+    t =    13.18s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    14.24s Waiting 5.0s for Button (First Match) to exist
+    t =    15.27s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    15.27s         Checking existence of `Button (First Match)`
+    t =    15.31s Tap Button (First Match)
+    t =    15.31s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    15.32s     Find the Button (First Match)
+    t =    15.34s     Check for interrupting elements affecting "circle" Button
+    t =    15.37s     Synthesize event
+    t =    15.66s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    16.46s Press "episodeRow" Button for 1.0 seconds
+    t =    16.46s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    16.46s     Find the "episodeRow" Button
+    t =    16.49s     Check for interrupting elements affecting "episodeRow" Button
+    t =    16.51s     Synthesize event
+    t =    17.74s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    18.79s Waiting 5.0s for Button (First Match) to exist
+    t =    19.82s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    19.82s         Checking existence of `Button (First Match)`
+    t =    19.86s Tap Button (First Match)
+    t =    19.86s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    19.86s     Find the Button (First Match)
+    t =    19.88s     Check for interrupting elements affecting "checkmark.circle" Button
+    t =    19.91s     Synthesize event
+    t =    20.20s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    20.99s Press "episodeRow" Button for 1.0 seconds
+    t =    20.99s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    21.00s     Find the "episodeRow" Button
+    t =    21.03s     Check for interrupting elements affecting "episodeRow" Button
+    t =    21.05s     Synthesize event
+    t =    22.28s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    22.84s Waiting 5.0s for Button (First Match) to exist
+    t =    23.88s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    23.88s         Checking existence of `Button (First Match)`
+    t =    23.91s Tap Button (First Match)
+    t =    23.91s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    23.92s     Find the Button (First Match)
+    t =    23.94s     Check for interrupting elements affecting "circle" Button
+    t =    23.96s     Synthesize event
+    t =    24.25s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    25.04s Press "episodeRow" Button for 1.0 seconds
+    t =    25.04s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    25.05s     Find the "episodeRow" Button
+    t =    25.08s     Check for interrupting elements affecting "episodeRow" Button
+    t =    25.11s     Synthesize event
+    t =    26.34s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    27.39s Waiting 5.0s for Button (First Match) to exist
+    t =    28.42s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    28.42s         Checking existence of `Button (First Match)`
+    t =    28.47s Tap Button (First Match)
+    t =    28.47s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    28.47s     Find the Button (First Match)
+    t =    28.50s     Check for interrupting elements affecting "checkmark.circle" Button
+    t =    28.52s     Synthesize event
+    t =    28.82s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    29.60s Press "episodeRow" Button for 1.0 seconds
+    t =    29.60s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    29.61s     Find the "episodeRow" Button
+    t =    29.63s     Check for interrupting elements affecting "episodeRow" Button
+    t =    29.66s     Synthesize event
+    t =    30.88s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    31.92s Waiting 5.0s for Button (First Match) to exist
+    t =    32.96s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    32.96s         Checking existence of `Button (First Match)`
+    t =    33.00s Tap Button (First Match)
+    t =    33.00s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    33.00s     Find the Button (First Match)
+    t =    33.03s     Check for interrupting elements affecting "circle" Button
+    t =    33.05s     Synthesize event
+    t =    33.34s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    34.14s Press "episodeRow" Button for 1.0 seconds
+    t =    34.14s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    34.14s     Find the "episodeRow" Button
+    t =    34.17s     Check for interrupting elements affecting "episodeRow" Button
+    t =    34.19s     Synthesize event
+    t =    35.42s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    35.97s Waiting 5.0s for Button (First Match) to exist
+    t =    37.01s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    37.01s         Checking existence of `Button (First Match)`
+    t =    37.06s Tap Button (First Match)
+    t =    37.06s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    37.06s     Find the Button (First Match)
+    t =    37.08s     Check for interrupting elements affecting "checkmark.circle" Button
+    t =    37.11s     Synthesize event
+    t =    37.40s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    38.19s Press "episodeRow" Button for 1.0 seconds
+    t =    38.19s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    38.20s     Find the "episodeRow" Button
+    t =    38.23s     Check for interrupting elements affecting "episodeRow" Button
+    t =    38.25s     Synthesize event
+    t =    39.48s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    40.04s Waiting 5.0s for Button (First Match) to exist
+    t =    41.07s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    41.07s         Checking existence of `Button (First Match)`
+    t =    41.11s Tap Button (First Match)
+    t =    41.11s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    41.12s     Find the Button (First Match)
+    t =    41.15s     Check for interrupting elements affecting "circle" Button
+    t =    41.17s     Synthesize event
+    t =    41.46s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    42.26s Press "episodeRow" Button for 1.0 seconds
+    t =    42.26s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    42.26s     Find the "episodeRow" Button
+    t =    42.29s     Check for interrupting elements affecting "episodeRow" Button
+    t =    42.32s     Synthesize event
+    t =    43.54s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    44.11s Waiting 5.0s for Button (First Match) to exist
+    t =    45.14s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    45.14s         Checking existence of `Button (First Match)`
+    t =    45.18s Tap Button (First Match)
+    t =    45.18s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    45.18s     Find the Button (First Match)
+    t =    45.21s     Check for interrupting elements affecting "checkmark.circle" Button
+    t =    45.23s     Synthesize event
+    t =    45.52s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    46.30s Press "episodeRow" Button for 1.0 seconds
+    t =    46.30s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    46.30s     Find the "episodeRow" Button
+    t =    46.33s     Check for interrupting elements affecting "episodeRow" Button
+    t =    46.35s     Synthesize event
+    t =    47.58s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    48.14s Waiting 5.0s for Button (First Match) to exist
+    t =    49.18s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    49.18s         Checking existence of `Button (First Match)`
+    t =    49.22s Tap Button (First Match)
+    t =    49.22s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    49.23s     Find the Button (First Match)
+    t =    49.25s     Check for interrupting elements affecting "circle" Button
+    t =    49.28s     Synthesize event
+    t =    49.57s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    50.36s Press "episodeRow" Button for 1.0 seconds
+    t =    50.36s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    50.37s     Find the "episodeRow" Button
+    t =    50.39s     Check for interrupting elements affecting "episodeRow" Button
+    t =    50.42s     Synthesize event
+    t =    51.65s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    52.21s Waiting 5.0s for Button (First Match) to exist
+    t =    53.24s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    53.24s         Checking existence of `Button (First Match)`
+    t =    53.29s Tap Button (First Match)
+    t =    53.29s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    53.29s     Find the Button (First Match)
+    t =    53.32s     Check for interrupting elements affecting "checkmark.circle" Button
+    t =    53.34s     Synthesize event
+    t =    53.63s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    54.43s Press "episodeRow" Button for 1.0 seconds
+    t =    54.43s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    54.44s     Find the "episodeRow" Button
+    t =    54.47s     Check for interrupting elements affecting "episodeRow" Button
+    t =    54.50s     Synthesize event
+    t =    55.73s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    56.27s Waiting 5.0s for Button (First Match) to exist
+    t =    57.31s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    57.31s         Checking existence of `Button (First Match)`
+    t =    57.35s Tap Button (First Match)
+    t =    57.35s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    57.35s     Find the Button (First Match)
+    t =    57.38s     Check for interrupting elements affecting "circle" Button
+    t =    57.40s     Synthesize event
+    t =    57.69s     Wait for com.nightcast.ktv2g3z883 to idle
+    t =    58.51s Tear Down
+Test Case '-[NightCastUITests.PreBuiltPerfTests testProfileSaves]' passed (58.996 seconds).
+Test Suite 'PreBuiltPerfTests' passed at 2026-10-17 23:29:26.869.
+	 Executed 1 test, with 0 failures (0 unexpected) in 58.996 (58.998) seconds
+Test Suite 'NightCastUITests.xctest' passed at 2026-10-17 23:29:26.870.
+	 Executed 1 test, with 0 failures (0 unexpected) in 58.996 (58.998) seconds
+Test Suite 'Selected tests' passed at 2026-10-17 23:29:26.870.
+	 Executed 1 test, with 0 failures (0 unexpected) in 58.996 (58.999) seconds
+2026-10-17 23:29:27.214 xcodebuild[50899:17601584] [MT] IDETestOperationsObserverDebug: 61.932 elapsed -- Testing started completed.
+2026-10-17 23:29:27.214 xcodebuild[50899:17601584] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-17 23:29:27.214 xcodebuild[50899:17601584] [MT] IDETestOperationsObserverDebug: 61.932 sec, +61.932 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/harrison/projects/podcast/build/DerivedData/Logs/Test/Test-NightCast-2026.10.17_23-28-25--0600.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

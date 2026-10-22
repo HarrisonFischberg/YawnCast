@@ -1,0 +1,19 @@
+testColdLaunchPopulated | CPU Instructions Retired (ktv2g3z883), kI | median 51414255.736 | min 49309651.118 | max 51723831.697
+testColdLaunchPopulated | Memory Peak Physical (ktv2g3z883), kB | median 47090.112 | min 46991.832 | max 47270.336
+testColdLaunchPopulated | Duration (AppLaunch), s | median 2.558 | min 2.121 | max 2.847
+testColdLaunchPopulated | CPU Time (ktv2g3z883), s | median 4.168 | min 3.863 | max 4.718
+testColdLaunchPopulated | Memory Physical (ktv2g3z883), kB | median 46156.224 | min 46074.328 | max 46352.832
+testColdLaunchPopulated | CPU Cycles (ktv2g3z883), kC | median 16773625.149 | min 16018329.586 | max 18602949.774
+testColdLaunchPopulated | Absolute Memory Physical (ktv2g3z883), kB | median 46156.224 | min 46074.328 | max 46352.832
+testLibrarySaves | CPU Time (ktv2g3z883), s | median 4.000 | min 3.691 | max 4.056
+testLibrarySaves | Clock Monotonic Time, s | median 24.399 | min 24.367 | max 25.965
+testLibrarySaves | CPU Cycles (ktv2g3z883), kC | median 10738470.776 | min 10545006.610 | max 11313439.506
+testLibrarySaves | CPU Instructions Retired (ktv2g3z883), kI | median 14536506.252 | min 14507611.460 | max 14571192.809
+testLibraryScrollRender | CPU Time (ktv2g3z883), s | median 2.659 | min 2.635 | max 2.723
+testLibraryScrollRender | Clock Monotonic Time, s | median 15.809 | min 15.773 | max 15.831
+testLibraryScrollRender | CPU Cycles (ktv2g3z883), kC | median 5102683.015 | min 4808579.353 | max 5795591.314
+testLibraryScrollRender | CPU Instructions Retired (ktv2g3z883), kI | median 5853197.660 | min 5804617.081 | max 5988638.225
+testOpenShowPlayAndReturn | CPU Time (ktv2g3z883), s | median 1.160 | min 0.941 | max 1.198
+testOpenShowPlayAndReturn | Clock Monotonic Time, s | median 6.188 | min 6.157 | max 6.237
+testOpenShowPlayAndReturn | CPU Cycles (ktv2g3z883), kC | median 3195779.590 | min 3124741.649 | max 3263289.311
+testOpenShowPlayAndReturn | CPU Instructions Retired (ktv2g3z883), kI | median 4609400.922 | min 4437859.156 | max 4617797.523

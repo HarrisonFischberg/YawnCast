@@ -1,0 +1,12 @@
+testColdLaunchPopulated | CPU Instructions Retired, kI | n=10 | median 51400123.440 | min 49309651.118 | max 51723831.697
+testColdLaunchPopulated | CPU Time, s | n=10 | median 4.356 | min 3.732 | max 4.718
+testColdLaunchPopulated | Memory Peak Physical, kB | n=10 | median 47081.920 | min 46680.536 | max 49252.824
+testLibrarySaves | CPU Instructions Retired, kI | n=10 | median 14524608.024 | min 14468110.749 | max 14571192.809
+testLibrarySaves | CPU Time, s | n=10 | median 3.841 | min 3.691 | max 4.056
+testLibrarySaves | Clock Monotonic Time, s | n=10 | median 24.882 | min 24.367 | max 26.242
+testLibraryScrollRender | CPU Instructions Retired, kI | n=10 | median 5846598.737 | min 5752071.096 | max 5988638.225
+testLibraryScrollRender | CPU Time, s | n=10 | median 2.601 | min 2.018 | max 2.723
+testLibraryScrollRender | Clock Monotonic Time, s | n=10 | median 15.775 | min 15.297 | max 15.831
+testOpenShowPlayAndReturn | CPU Instructions Retired, kI | n=10 | median 4606359.240 | min 4400040.603 | max 4617797.523
+testOpenShowPlayAndReturn | CPU Time, s | n=10 | median 1.183 | min 0.937 | max 1.282
+testOpenShowPlayAndReturn | Clock Monotonic Time, s | n=10 | median 6.194 | min 6.149 | max 6.300

@@ -1,0 +1,55 @@
+run 1 pid 50083
+main_samples 7330
+recomputeLatestFromCache	0
+FeedDiskCache	0
+AppModel.init	0
+NightCastApp.init	0
+JSONLibraryStore.(save|load)	73
+AppModel.persist	73
+hasNewEpisode	13
+ShowModel.(init|apply|regroup)	2
+ShowView.init	2
+run 2 pid 50361
+main_samples 6668
+recomputeLatestFromCache	0
+FeedDiskCache	0
+AppModel.init	0
+NightCastApp.init	0
+JSONLibraryStore.(save|load)	72
+AppModel.persist	73
+hasNewEpisode	13
+ShowModel.(init|apply|regroup)	1
+ShowView.init	1
+run 3 pid 50625
+main_samples 7848
+recomputeLatestFromCache	0
+FeedDiskCache	0
+AppModel.init	0
+NightCastApp.init	0
+JSONLibraryStore.(save|load)	72
+AppModel.persist	72
+hasNewEpisode	11
+ShowModel.(init|apply|regroup)	6
+ShowView.init	6
+run 4 pid 50937
+main_samples 6624
+recomputeLatestFromCache	0
+FeedDiskCache	0
+AppModel.init	0
+NightCastApp.init	0
+JSONLibraryStore.(save|load)	72
+AppModel.persist	73
+hasNewEpisode	13
+ShowModel.(init|apply|regroup)	7
+ShowView.init	7
+run 5 pid 51261
+main_samples 7248
+recomputeLatestFromCache	0
+FeedDiskCache	0
+AppModel.init	0
+NightCastApp.init	0
+JSONLibraryStore.(save|load)	65
+AppModel.persist	65
+hasNewEpisode	13
+ShowModel.(init|apply|regroup)	5
+ShowView.init	6
