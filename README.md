@@ -50,7 +50,7 @@ Requirements: a Mac with **Xcode 27** (iOS 27 SDK). The app runs on **iOS 18.0**
 
 **On the simulator**
 
-1. Clone the repo: `git clone https://github.com/HarrisonFischberg/NightCast.git`
+1. Clone the repo: `git clone https://github.com/HarrisonFischberg/YawnCast.git`
 2. Open `YawnCast.xcodeproj` in Xcode.
 3. Choose the **YawnCast** scheme and an iPhone simulator, then press Run.
 
