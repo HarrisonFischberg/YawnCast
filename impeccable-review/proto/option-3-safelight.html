@@ -1,0 +1,164 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&display=block" rel="stylesheet">
+<link rel="stylesheet" href="base.css"><script src="common.js"></script>
+<style>
+/* Option 3 · Safelight: darkroom under the red lamp, an eleven-step zone ramp. No blue light at all. */
+:root{
+  /* zone ramp, 0 (black) to 10 (paper white), all warm, blue channel weakest */
+  --z0:#0A0504; --z1:#170B08; --z2:#24110C; --z3:#331A13; --z4:#4A271C; --z5:#663829; --z6:#8A4E3A; --z7:#AE6B52; --z8:#CF8C70; --z9:#E9AE93; --z10:#F7CDB8;
+  --lamp:#FF7A2E; --on-lamp:#1A0602;
+  --cond:"Barlow Condensed", -apple-system-condensed, sans-serif;
+}
+.day{ --z0:#F3F1EC; --z1:#E7E4DD; --z2:#D9D5CC; --z3:#C3BDB2; --z4:#A49D90; --z5:#857E72; --z6:#665F55; --z7:#4C463E; --z8:#38332C; --z9:#1C1915; --z10:#0B0A08; --lamp:#C2361C; --on-lamp:#FFF3EE; }
+body{ display:flex; gap:40px; padding:40px; }
+.screen{ --bg:var(--z0); --surface:var(--z1); --raise:var(--z2); --line:var(--z3); --ink:var(--z9); --muted:var(--z7); background:var(--bg); color:var(--ink); }
+.cap{ font:600 13px var(--cond); letter-spacing:1.8px; text-transform:uppercase; color:var(--muted); }
+.ramp{ display:flex; height:10px; }
+.ramp i{ flex:1; }
+.top{ position:absolute; top:54px; left:0; right:0; }
+.top .ramp{ height:4px; opacity:.9; }
+.pager{ display:flex; gap:22px; padding:14px 24px 0; }
+.pager span{ font:600 16px var(--cond); letter-spacing:1.6px; text-transform:uppercase; color:var(--muted); padding-bottom:6px; }
+.pager .on{ color:var(--ink); border-bottom:2px solid var(--ink); }
+.head{ position:absolute; top:112px; left:24px; right:24px; display:flex; justify-content:space-between; align-items:flex-end; }
+h1{ font:700 48px/0.9 var(--cond); letter-spacing:.5px; text-transform:uppercase; }
+.keys{ display:flex; gap:8px; }
+.key{ width:44px; height:44px; border-radius:8px; background:var(--surface); border:1px solid var(--line); display:grid; place-items:center; color:var(--ink); }
+.key svg{ width:19px; height:19px; }
+.search{ position:absolute; top:178px; left:24px; right:24px; height:44px; border-radius:8px; background:var(--surface); border:1px solid var(--line); display:flex; gap:10px; align-items:center; padding:0 14px; color:var(--muted); font:17px -apple-system; }
+.search svg{ width:18px; height:18px; }
+.grid{ position:absolute; top:240px; left:24px; right:24px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px 16px; }
+.sheet{ background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:8px 8px 10px; }
+.sheet .art{ border-radius:3px; }
+.sheet .t{ margin-top:9px; font:600 15px -apple-system; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sheet .b{ display:flex; justify-content:space-between; align-items:center; margin-top:3px; }
+.sheet .b .cap{ font-size:12px; letter-spacing:1.4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sheet .new{ font:700 11px var(--cond); letter-spacing:1.4px; padding:2px 6px; border-radius:3px; background:var(--ink); color:var(--bg); flex:none; }
+.fadeout{ position:absolute; left:0; right:0; bottom:0; height:180px; background:linear-gradient(to bottom, transparent, var(--bg) 50%); }
+.mini{ position:absolute; left:16px; right:16px; bottom:30px; height:68px; border-radius:10px; background:var(--raise); border:1px solid var(--line); display:flex; align-items:center; gap:12px; padding:0 10px; overflow:hidden; }
+.mini .art{ width:48px; border-radius:4px; }
+.mini .mt{ font:600 15px -apple-system; } .mini .ms{ margin-top:3px; display:flex; gap:8px; align-items:center; }
+.mini .ms .ramp{ width:66px; height:6px; }
+.mini .pp{ margin-left:auto; width:44px; height:44px; border-radius:8px; background:var(--ink); color:var(--bg); display:grid; place-items:center; }
+.mini .pp svg{ width:19px; height:19px; }
+/* show */
+.nav{ position:absolute; top:62px; left:16px; right:16px; display:flex; justify-content:space-between; }
+.sh{ position:absolute; top:120px; left:24px; right:24px; }
+.sh .row{ display:flex; gap:16px; align-items:flex-start; }
+.sh .row .sheet{ width:128px; flex:none; padding:6px; }
+.sh h2{ font:700 30px/0.98 var(--cond); text-transform:uppercase; letter-spacing:.4px; }
+.sh .sub{ margin-top:12px; display:inline-flex; gap:6px; align-items:center; height:32px; padding:0 12px; border:1px solid var(--line); border-radius:6px; font:600 14px -apple-system; }
+.sh .sub svg{ width:14px; height:14px; }
+.sh .desc{ margin-top:16px; font:15px/1.45 -apple-system; color:var(--muted); }
+.list{ position:absolute; top:368px; left:24px; right:24px; }
+.lh{ display:flex; justify-content:space-between; align-items:baseline; padding-bottom:8px; border-bottom:1px solid var(--line); }
+.lh .y{ font:700 26px var(--cond); }
+.lh .cap{ display:flex; gap:6px; align-items:center; } .lh svg{ width:13px; height:13px; }
+.row2{ display:grid; grid-template-columns:1fr 44px; gap:12px; align-items:center; padding:12px 0; border-bottom:1px solid var(--line); }
+.row2 .et{ font:600 16px/1.3 -apple-system; } .row2 .em{ margin-top:4px; display:flex; gap:10px; align-items:center; font:14px -apple-system; color:var(--muted); font-variant-numeric:tabular-nums; }
+.row2 .go{ width:44px; height:44px; border-radius:8px; border:1px solid var(--line); display:grid; place-items:center; }
+.row2 .go svg{ width:15px; height:15px; margin-left:2px; }
+.row2.played .et{ color:var(--muted); }
+.hatch{ width:80px; height:8px; border:1px solid var(--line); background: repeating-linear-gradient(135deg, var(--ink) 0 1.5px, transparent 1.5px 4px); clip-path: inset(0 56% 0 0); }
+.hatchbox{ position:relative; width:80px; height:8px; border:1px solid var(--line); }
+.hatchbox .hatch{ position:absolute; inset:-1px; border:none; }
+/* now playing */
+.np{ position:absolute; top:120px; left:28px; right:28px; }
+.np h2{ font:700 54px/0.92 var(--cond); text-transform:uppercase; letter-spacing:.3px; margin-top:8px; }
+.scrub{ position:absolute; top:300px; left:28px; right:28px; }
+.scrub .tr{ height:6px; background:var(--line); border-radius:1px; position:relative; }
+.scrub .tr::after{ content:""; position:absolute; left:0; top:0; bottom:0; width:var(--p,30%); background:var(--ink); }
+.scrub .th{ position:absolute; left:calc(var(--p,30%) - 3px); top:-9px; width:6px; height:24px; border-radius:2px; background:var(--ink); }
+.scrub .times{ display:flex; justify-content:space-between; margin-top:12px; font:600 15px -apple-system; font-variant-numeric:tabular-nums; color:var(--muted); }
+.transport{ position:absolute; top:372px; left:0; right:0; display:flex; justify-content:center; gap:26px; align-items:center; }
+.rk{ width:72px; height:72px; border-radius:12px; background:var(--surface); border:1px solid var(--line); display:grid; place-items:center; }
+.rk svg{ width:30px; height:30px; }
+.pk{ width:108px; height:108px; border-radius:16px; background:var(--ink); color:var(--bg); display:grid; place-items:center; }
+.pk svg{ width:40px; height:40px; }
+.zone{ position:absolute; left:20px; right:20px; bottom:40px; }
+.zone .labels{ display:flex; justify-content:space-between; margin-bottom:8px; }
+.zone .ramp{ height:28px; border-radius:4px; overflow:hidden; border:1px solid var(--line); }
+.zone .ramp i{ position:relative; }
+.zone .ramp i.cur{ outline:2.5px solid var(--lamp); outline-offset:-2.5px; }
+.zone .ticks{ display:flex; margin-top:6px; }
+.zone .ticks span{ flex:1; text-align:center; font:600 11px var(--cond); letter-spacing:.6px; color:var(--muted); font-variant-numeric:tabular-nums; }
+.zone .ticks span.cur{ color:var(--lamp); }
+.moonk{ margin-top:14px; height:96px; border-radius:14px; display:flex; align-items:center; gap:16px; padding:0 18px; background:var(--surface); border:1px solid var(--line); }
+.moonk.on{ background:var(--lamp); color:var(--on-lamp); border-color:var(--lamp); box-shadow:0 0 0 6px rgba(255,122,46,.12); }
+.moonk .well{ width:56px; height:56px; border-radius:10px; display:grid; place-items:center; background:rgba(0,0,0,.18); flex:none; }
+.moonk:not(.on) .well{ background:var(--raise); color:var(--lamp); }
+.moonk .well svg{ width:26px; height:26px; }
+.moonk .mt{ font:700 28px/1 var(--cond); text-transform:uppercase; letter-spacing:.6px; white-space:nowrap; }
+.moonk .ms{ font:600 15px -apple-system; margin-top:4px; opacity:.85; white-space:nowrap; }
+.moonk .adj{ margin-left:auto; display:flex; gap:8px; }
+.moonk .adj span{ width:44px; height:44px; border-radius:8px; display:grid; place-items:center; font:700 18px var(--cond); background:rgba(0,0,0,.16); }
+</style></head>
+<body>
+<script>
+function ramp(n=11){ return `<div class="ramp">${Array.from({length:n},(_,i)=>`<i style="background:var(--z${10-i})"></i>`).join("")}</div>`; }
+function zone(level){ // level 0..10 = 100%..0%
+  return `<div class="ramp">${Array.from({length:11},(_,i)=>`<i class="${i===level?'cur':''}" style="background:var(--z${10-i})"></i>`).join("")}</div>
+  <div class="ticks">${Array.from({length:11},(_,i)=>`<span class="${i===level?'cur':''}">${100-i*10}</span>`).join("")}</div>`;
+}
+</script>
+
+<section class="screen" id="a-library">
+  <script>document.write(statusBar("23:41"))</script>
+  <div class="top"><script>document.write(ramp())</script><div class="pager"><span>New</span><span class="on">Library</span><span>Explore</span></div></div>
+  <div class="head"><h1>Library</h1><div class="keys"><div class="key"><script>document.write(I.grid)</script></div><div class="key"><script>document.write(I.dots)</script></div></div></div>
+  <div class="search"><script>document.write(I.search)</script>Search</div>
+  <div class="grid"><script>
+    document.write(SHOWS.map(s=>`<div class="sheet">${art(s.id)}<div class="t">${s.title}</div><div class="b"><span class="cap">${s.by}</span>${s.isNew?'<span class="new">NEW</span>':''}</div></div>`).join(""))
+  </script></div>
+  <div class="fadeout"></div>
+  <div class="mini"><script>document.write(art("radiolab"))</script><div><div class="mt">The Smell of Hell</div><div class="ms"><span class="cap" style="font-size:12px">Fade in 17 min</span></div></div><div class="pp"><script>document.write(I.pause)</script></div></div>
+  <script>document.write(homeBar())</script>
+</section>
+
+<section class="screen" id="b-show">
+  <script>document.write(statusBar("23:41"))</script>
+  <div class="nav"><div class="key"><script>document.write(I.back)</script></div><div class="key"><script>document.write(I.dots)</script></div></div>
+  <div class="sh">
+    <div class="row"><div class="sheet"><script>document.write(art("nmh"))</script></div><div><div class="cap">Wellness Loud</div><h2>Nothing much happens</h2><div class="sub"><script>document.write(I.check)</script>Subscribed</div></div></div>
+    <div class="desc"><script>document.write(SHOW_DESC)</script></div>
+  </div>
+  <div class="list">
+    <div class="lh"><span class="y">2026</span><span class="cap"><script>document.write(I.sort)</script>85 episodes · Newest</span></div>
+    <script>
+    document.write(EPISODES.slice(0,5).map(e=>`<div class="row2 ${e.state}"><div><div class="et">${e.t}</div><div class="em"><span>${e.d}</span><span>${e.state==="progress"?e.left:e.len}</span>${e.state==="progress"?'<span class="hatchbox"><span class="hatch"></span></span>':''}${e.state==="new"?'<span class="cap" style="color:var(--lamp)">New</span>':''}${e.state==="played"?'<span class="cap">Played</span>':''}</div></div><div class="go">${e.state==="played"?I.check:I.play}</div></div>`).join(""))
+    </script>
+  </div>
+  <div class="fadeout"></div>
+  <div class="mini"><script>document.write(art("radiolab"))</script><div><div class="mt">The Smell of Hell</div><div class="ms"><span class="cap" style="font-size:12px">Fade in 17 min</span></div></div><div class="pp"><script>document.write(I.pause)</script></div></div>
+  <script>document.write(homeBar())</script>
+</section>
+
+<section class="screen" id="c-player-sleep">
+  <script>document.write(statusBar("00:06"))</script>
+  <div class="nav"><div class="key"><script>document.write(I.down)</script></div></div>
+  <div class="np"><div class="cap">Radiolab</div><h2>The Smell of Hell</h2></div>
+  <div class="scrub" style="--p:79%"><div class="tr"></div><div class="th"></div><div class="times"><span>38:10</span><span>−9:45</span></div></div>
+  <div class="transport"><div class="rk"><script>document.write(I.r15)</script></div><div class="pk"><script>document.write(I.pause)</script></div><div class="rk"><script>document.write(I.f15)</script></div></div>
+  <div class="zone">
+    <div class="labels"><span class="cap">Volume</span><span class="cap" style="color:var(--lamp)">Step 4 of 10 · 60%</span></div>
+    <script>document.write(zone(4))</script>
+    <div class="moonk on"><div class="well"><script>document.write(I.moon)</script></div><div><div class="mt">Drifting off</div><div class="ms">Pauses in 4 minutes.</div></div><div class="adj"><span>+5</span></div></div>
+  </div>
+  <script>document.write(homeBar())</script>
+</section>
+
+<section class="screen day" id="d-player-day">
+  <script>document.write(statusBar("14:10"))</script>
+  <div class="nav"><div class="key"><script>document.write(I.down)</script></div></div>
+  <div class="np"><div class="cap">Radiolab</div><h2>The Smell of Hell</h2></div>
+  <div class="scrub"><div class="tr"></div><div class="th"></div><div class="times"><span>14:22</span><span>−33:33</span></div></div>
+  <div class="transport"><div class="rk"><script>document.write(I.r15)</script></div><div class="pk"><script>document.write(I.play)</script></div><div class="rk"><script>document.write(I.f15)</script></div></div>
+  <div class="zone">
+    <div class="labels"><span class="cap">Volume</span><span class="cap">Full</span></div>
+    <script>document.write(zone(0))</script>
+    <div class="moonk"><div class="well"><script>document.write(I.moon)</script></div><div><div class="mt">Ready for bed?</div></div></div>
+  </div>
+  <script>document.write(homeBar())</script>
+</section>
+</body></html>

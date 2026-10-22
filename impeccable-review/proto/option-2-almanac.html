@@ -1,0 +1,161 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Old+Standard+TT:wght@400;700&display=block" rel="stylesheet">
+<link rel="stylesheet" href="base.css"><script src="common.js"></script>
+<style>
+/* Option 2 · Almanac: the farmer's almanac and its lunar tables. */
+:root{ --bg:#100F0C; --band:#1C180F; --ink:#EFE6CF; --muted:#A99F86; --rule:#4A4231; --acc:#F2C230; --on-acc:#17140D;
+  --slab:"Alfa Slab One", serif; --old:"Old Standard TT", ui-serif, serif; }
+.day{ --bg:#F2C230; --band:#E3B11C; --ink:#17140D; --muted:#4D4223; --rule:#17140D; --acc:#A8261B; --on-acc:#FBEFD8; }
+body{ display:flex; gap:40px; padding:40px; }
+.screen{ background:var(--bg); color:var(--ink); }
+.masthead{ position:absolute; top:54px; left:0; right:0; padding:10px 24px 0; }
+.mh-top{ display:flex; justify-content:space-between; font:700 11px/1 -apple-system; letter-spacing:1.6px; text-transform:uppercase; color:var(--muted); }
+.mh-top b{ color:var(--ink); }
+.dbl{ height:5px; border-top:1.5px solid var(--rule); border-bottom:.75px solid var(--rule); margin-top:8px; }
+.mh-title{ display:flex; align-items:flex-end; justify-content:space-between; margin-top:12px; }
+h1{ font:400 40px/1 var(--slab); letter-spacing:.2px; }
+.date{ font:italic 400 15px var(--old); color:var(--muted); margin-top:6px; }
+.tabs{ display:flex; gap:0; margin-top:14px; border-top:.75px solid var(--rule); border-bottom:1.5px solid var(--rule); }
+.tabs span{ flex:1; text-align:center; padding:10px 0; font:700 13px -apple-system; letter-spacing:1.4px; text-transform:uppercase; color:var(--muted); }
+.tabs span + span{ border-left:.75px solid var(--rule); }
+.tabs .on{ color:var(--ink); background:var(--band); }
+.keys{ display:flex; gap:8px; }
+.key{ width:44px; height:44px; border-radius:22px; border:1.5px solid var(--rule); display:grid; place-items:center; color:var(--ink); }
+.key svg{ width:19px; height:19px; }
+.search{ margin-top:14px; height:44px; border-radius:22px; border:1.5px solid var(--rule); display:flex; align-items:center; gap:10px; padding:0 16px; color:var(--muted); font:17px -apple-system; }
+.search svg{ width:18px; height:18px; }
+.grid{ position:absolute; top:312px; left:24px; right:24px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:0; border-top:1.5px solid var(--rule); }
+.cell{ padding:14px 0 16px; border-bottom:.75px solid var(--rule); }
+.cell:nth-of-type(odd){ padding-right:12px; border-right:.75px solid var(--rule); } .cell:nth-of-type(even){ padding-left:12px; }
+.cell .art{ border-radius:3px; }
+.cell .t{ margin-top:9px; font:700 17px/1.2 var(--old); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cell .b{ font:600 11px -apple-system; letter-spacing:1.2px; text-transform:uppercase; color:var(--muted); margin-top:4px; display:flex; gap:6px; align-items:center; }
+.cell .b i{ width:6px; height:6px; border-radius:50%; background:var(--ink); }
+.fadeout{ position:absolute; left:0; right:0; bottom:0; height:180px; background:linear-gradient(to bottom, transparent, var(--bg) 50%); }
+/* moon phases: a disc with a shadow ellipse */
+.ph{ width:var(--s,18px); height:var(--s,18px); border-radius:50%; background:var(--lit,var(--acc)); position:relative; overflow:hidden; flex:none; }
+.ph::after{ content:""; position:absolute; top:0; bottom:0; right:0; width:var(--w,0%); background:var(--dark,var(--band)); border-radius: var(--r,0); }
+.mini{ position:absolute; left:16px; right:16px; bottom:30px; height:66px; background:var(--band); border:1.5px solid var(--rule); border-radius:14px; display:flex; align-items:center; gap:12px; padding:0 10px; }
+.mini .art{ width:46px; border-radius:4px; }
+.mini .mt{ font:700 16px var(--old); } .mini .ms{ font:13px -apple-system; color:var(--muted); margin-top:2px; display:flex; align-items:center; gap:6px; }
+.mini .pp{ margin-left:auto; width:44px; height:44px; border-radius:50%; background:var(--ink); color:var(--bg); display:grid; place-items:center; }
+.mini .pp svg{ width:19px; height:19px; }
+/* show */
+.nav{ position:absolute; top:58px; left:16px; right:16px; display:flex; justify-content:space-between; }
+.sh{ position:absolute; top:116px; left:24px; right:24px; }
+.sh .row{ display:flex; gap:16px; }
+.sh .art{ width:120px; border-radius:3px; flex:none; }
+.sh .kick{ font:700 11px -apple-system; letter-spacing:1.4px; text-transform:uppercase; color:var(--muted); }
+.sh h2{ font:700 26px/1.12 var(--old); margin-top:2px; }
+.sh .sub{ display:inline-flex; gap:6px; align-items:center; margin-top:10px; font:600 14px -apple-system; height:32px; padding:0 12px; border:1.5px solid var(--rule); border-radius:16px; }
+.sh .sub svg{ width:14px; height:14px; }
+.sh .desc{ font:16px/1.45 var(--old); margin-top:16px; color:var(--ink); }
+.sh .desc::first-letter{ font:400 40px/0.8 var(--slab); float:left; margin:6px 6px 0 0; }
+.table{ position:absolute; top:374px; left:24px; right:24px; }
+.th{ display:flex; justify-content:space-between; align-items:baseline; border-bottom:1.5px solid var(--rule); padding-bottom:6px; }
+.th .y{ font:400 26px var(--slab); } .th .c{ font:600 12px -apple-system; letter-spacing:1px; text-transform:uppercase; color:var(--muted); display:flex; gap:5px; align-items:center; } .th svg{ width:13px; height:13px; }
+.tr{ display:grid; grid-template-columns:44px 1fr 44px; gap:10px; align-items:center; padding:11px 0; border-bottom:.75px solid var(--rule); }
+.tr .d{ font:700 13px/1.15 -apple-system; text-transform:uppercase; color:var(--muted); text-align:left; font-variant-numeric:tabular-nums; }
+.tr .d b{ display:block; font:400 22px/1 var(--slab); color:var(--ink); letter-spacing:0; }
+.tr .et{ font:700 16px/1.25 var(--old); } .tr .em{ font:13px -apple-system; color:var(--muted); margin-top:2px; }
+.tr .go{ width:40px; height:40px; border-radius:50%; border:1.5px solid var(--rule); display:grid; place-items:center; }
+.tr .go svg{ width:14px; height:14px; margin-left:2px; }
+.tr.played .et,.tr.played .d b{ color:var(--muted); }
+.tr.played .et{ text-decoration: line-through; text-decoration-thickness:1px; text-decoration-color: var(--rule); }
+.tr .pbar{ margin-top:6px; height:3px; background:var(--rule); width:140px; position:relative; } .tr .pbar::after{ content:""; position:absolute; left:0; top:0; bottom:0; width:44%; background:var(--ink); }
+/* now playing */
+.np{ position:absolute; top:116px; left:28px; right:28px; }
+.np .kick{ font:700 12px -apple-system; letter-spacing:1.6px; text-transform:uppercase; color:var(--muted); }
+.np h2{ font:700 40px/1.08 var(--old); margin-top:8px; }
+.scrub{ position:absolute; top:318px; left:28px; right:28px; }
+.scrub .tr2{ height:4px; background:var(--rule); position:relative; }
+.scrub .tr2::after{ content:""; position:absolute; left:0; width:30%; top:0; bottom:0; background:var(--ink); }
+.scrub .th2{ position:absolute; left:calc(30% - 2px); top:-10px; width:4px; height:24px; background:var(--ink); }
+.scrub .times{ display:flex; justify-content:space-between; margin-top:12px; font:600 14px -apple-system; font-variant-numeric:tabular-nums; color:var(--muted); }
+.transport{ position:absolute; top:394px; left:0; right:0; display:flex; justify-content:center; align-items:center; gap:34px; }
+.rk{ width:68px; height:68px; border-radius:50%; border:1.5px solid var(--rule); display:grid; place-items:center; }
+.rk svg{ width:30px; height:30px; }
+.pk{ width:104px; height:104px; border-radius:50%; background:var(--ink); color:var(--bg); display:grid; place-items:center; box-shadow: 0 0 0 6px var(--bg), 0 0 0 7.5px var(--rule); }
+.pk svg{ width:40px; height:40px; }
+.moon{ position:absolute; left:20px; right:20px; bottom:40px; border-radius:22px; padding:18px 20px 16px; border:1.5px solid var(--rule); background:var(--band); }
+.moon.on{ background:var(--acc); color:var(--on-acc); border-color:var(--acc); }
+.moon .row{ display:flex; align-items:center; gap:16px; }
+.moon .mt{ font:400 26px/1.05 var(--slab); display:flex; gap:8px; align-items:center; white-space:nowrap; }
+.moon .mt svg{ width:18px; height:18px; }
+.moon .ms{ font:italic 16px var(--old); margin-top:4px; opacity:.85; }
+.moon .adj{ margin-left:auto; display:flex; gap:8px; }
+.moon .adj span{ width:44px; height:44px; border-radius:50%; border:1.5px solid currentColor; display:grid; place-items:center; font:700 15px -apple-system; }
+.phases{ display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:12px; border-top:1px solid currentColor; }
+.cap{ display:flex; justify-content:space-between; font:700 10px -apple-system; letter-spacing:1.2px; text-transform:uppercase; margin-top:6px; opacity:.75; }
+.bigph{ --s:58px; }
+</style></head>
+<body>
+
+<section class="screen" id="a-library">
+  <script>document.write(statusBar("23:41"))</script>
+  <div class="masthead">
+    <div class="mh-top"><span>NightCast</span><span><b>Fade at 23:58</b></span></div>
+    <div class="dbl"></div>
+    <div class="mh-title"><div><h1>Library</h1><div class="date">Sunday, the nineteenth of October</div></div><div class="keys"><div class="key"><script>document.write(I.grid)</script></div><div class="key"><script>document.write(I.dots)</script></div></div></div>
+    <div class="tabs"><span>New</span><span class="on">Library</span><span>Explore</span></div>
+    <div class="search"><script>document.write(I.search)</script>Search</div>
+  </div>
+  <div class="grid"><script>
+    document.write(SHOWS.map(s=>`<div class="cell">${art(s.id)}<div class="t">${s.title}</div><div class="b">${s.isNew?'<i></i>':''}${s.by}</div></div>`).join(""))
+  </script></div>
+  <div class="fadeout"></div>
+  <div class="mini"><script>document.write(art("radiolab"))</script><div><div class="mt">The Smell of Hell</div><div class="ms"><script>document.write(phase(1,13,"var(--acc)","var(--rule)"))</script>Fade in 17 minutes</div></div><div class="pp"><script>document.write(I.pause)</script></div></div>
+  <script>document.write(homeBar())</script>
+</section>
+
+<section class="screen" id="b-show">
+  <script>document.write(statusBar("23:41"))</script>
+  <div class="nav"><div class="key"><script>document.write(I.back)</script></div><div class="key"><script>document.write(I.dots)</script></div></div>
+  <div class="sh">
+    <div class="row"><script>document.write(art("nmh"))</script><div><div class="kick">Wellness Loud</div><h2>Nothing much happens</h2><div class="sub"><script>document.write(I.check)</script>Subscribed</div></div></div>
+    <div class="desc"><script>document.write(SHOW_DESC)</script></div>
+  </div>
+  <div class="table">
+    <div class="th"><span class="y">2026</span><span class="c"><script>document.write(I.sort)</script>85 episodes · Newest first</span></div>
+    <script>
+    document.write(EPISODES.slice(0,5).map(e=>{const [m,dd]=e.d.split(" ");return `<div class="tr ${e.state}"><div class="d">${m}<b>${dd}</b></div><div><div class="et">${e.t}</div><div class="em">${e.state==="progress"?e.left:e.len}${e.state==="new"?" · New":""}${e.state==="played"?" · Played":""}</div>${e.state==="progress"?'<div class="pbar"></div>':''}</div><div class="go">${e.state==="played"?I.check:I.play}</div></div>`}).join(""))
+    </script>
+  </div>
+  <div class="fadeout"></div>
+  <div class="mini"><script>document.write(art("radiolab"))</script><div><div class="mt">The Smell of Hell</div><div class="ms"><script>document.write(phase(1,13,"var(--acc)","var(--rule)"))</script>Fade in 17 minutes</div></div><div class="pp"><script>document.write(I.pause)</script></div></div>
+  <script>document.write(homeBar())</script>
+</section>
+
+<section class="screen" id="c-player-sleep">
+  <script>document.write(statusBar("00:06"))</script>
+  <div class="nav"><div class="key"><script>document.write(I.down)</script></div></div>
+  <div class="np"><div class="kick">Radiolab</div><h2>The Smell of Hell</h2></div>
+  <div class="scrub"><div class="tr2"></div><div class="th2"></div><div class="times"><span>38:10</span><span>−9:45</span></div></div>
+  <div class="transport"><div class="rk"><script>document.write(I.r15)</script></div><div class="pk"><script>document.write(I.pause)</script></div><div class="rk"><script>document.write(I.f15)</script></div></div>
+  <div class="moon on">
+    <div class="row"><script>document.write(phase(.6,58,"var(--on-acc)","rgba(23,20,13,.18)"))</script><div><div class="mt">Drifting off</div><div class="ms">Volume 60%, four steps to go</div></div><div class="adj"><span>+5</span></div></div>
+    <div class="phases"><script>
+      document.write([1,.9,.8,.7,.6,.5,.4,.3,.2,.1].map((k,i)=>`<span style="opacity:${i<4?.35:1}">${phase(k,i===4?24:17,"var(--on-acc)","rgba(23,20,13,.16)",i===4?"var(--on-acc)":"")}</span>`).join(""))
+    </script></div>
+    <div class="cap"><span>100%</span><span>Pause</span></div>
+  </div>
+  <script>document.write(homeBar())</script>
+</section>
+
+<section class="screen day" id="d-player-day">
+  <script>document.write(statusBar("14:10"))</script>
+  <div class="nav"><div class="key"><script>document.write(I.down)</script></div></div>
+  <div class="np"><div class="kick">Radiolab</div><h2>The Smell of Hell</h2></div>
+  <div class="scrub"><div class="tr2"></div><div class="th2"></div><div class="times"><span>14:22</span><span>−33:33</span></div></div>
+  <div class="transport"><div class="rk"><script>document.write(I.r15)</script></div><div class="pk"><script>document.write(I.play)</script></div><div class="rk"><script>document.write(I.f15)</script></div></div>
+  <div class="moon">
+    <div class="row"><script>document.write(phase(1,58,"var(--ink)","var(--band)"))</script><div><div class="mt">Ready for bed?</div></div></div>
+    <div class="phases"><script>
+      document.write([1,.9,.8,.7,.6,.5,.4,.3,.2,.1].map(k=>`<span style="opacity:.55">${phase(k,17,"var(--ink)","rgba(23,20,13,.12)")}</span>`).join(""))
+    </script></div>
+    <div class="cap"><span>Full volume</span><span>Pause</span></div>
+  </div>
+  <script>document.write(homeBar())</script>
+</section>
+</body></html>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NightCast Refresh Options</title>
+<style>
+:root{ --bg:#F4F3F0; --card:#FFFFFF; --ink:#18171A; --muted:#5D5A62; --line:#DEDBD5; --chip:#ECEAE5; --accent:#3B2E7E; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#121114; --card:#1C1B1F; --ink:#F1EFEA; --muted:#A8A4AE; --line:#2E2C33; --chip:#262429; --accent:#B7A8FF; } }
+:root[data-theme="dark"]{ --bg:#121114; --card:#1C1B1F; --ink:#F1EFEA; --muted:#A8A4AE; --line:#2E2C33; --chip:#262429; --accent:#B7A8FF; }
+*{ box-sizing:border-box; }
+body{ margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+::selection{ background:var(--accent); color:var(--bg); }
+a{ color:var(--accent); text-underline-offset:3px; }
+.wrap{ max-width:1480px; margin:0 auto; padding:48px 32px 96px; }
+header h1{ font:700 clamp(30px,4vw,46px)/1.05 ui-serif, Georgia, serif; margin:0 0 12px; letter-spacing:-.5px; }
+header p{ max-width:72ch; color:var(--muted); margin:0 0 8px; }
+.scores{ display:flex; flex-wrap:wrap; gap:12px; margin:24px 0 8px; }
+.score{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 18px; min-width:180px; }
+.score b{ display:block; font:700 28px/1.1 -apple-system; font-variant-numeric:tabular-nums; }
+.score span{ color:var(--muted); font-size:14px; }
+.issues{ margin:28px 0 0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }
+.issues li{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; font-size:15px; }
+.issues li b{ display:block; margin-bottom:2px; }
+.sev{ display:inline-block; font:700 11px -apple-system; letter-spacing:.6px; padding:2px 7px; border-radius:6px; background:var(--chip); margin-right:6px; }
+nav.jump{ position:sticky; top:0; z-index:5; background:var(--bg); border-bottom:1px solid var(--line); margin:40px -32px 0; padding:12px 32px; display:flex; gap:8px; overflow-x:auto; }
+nav.jump a{ flex:none; text-decoration:none; color:var(--ink); background:var(--chip); padding:7px 14px; border-radius:18px; font-size:14px; font-weight:600; }
+section.opt{ margin-top:56px; scroll-margin-top:72px; }
+.kicker{ font:700 12px -apple-system; letter-spacing:1.4px; text-transform:uppercase; color:var(--muted); }
+section.opt h2{ font:700 clamp(26px,3vw,34px)/1.1 ui-serif, Georgia, serif; margin:6px 0 10px; }
+.lede{ max-width:78ch; margin:0 0 18px; }
+.cols{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-bottom:22px; }
+.box{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 18px; font-size:15px; }
+.box h3{ font:700 13px -apple-system; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin:0 0 6px; }
+.box ul{ margin:0; padding-left:18px; } .box li{ margin:3px 0; }
+.swatches{ display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+.swatches i{ width:30px; height:30px; border-radius:8px; border:1px solid var(--line); }
+.compare{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px; }
+.pair{ display:flex; flex-direction:column; gap:8px; }
+.pair figure{ margin:0; }
+.pair img{ width:100%; height:auto; display:block; border-radius:22px; border:1px solid var(--line); background:#000; }
+.pair .before img{ opacity:.96; }
+.pair figcaption{ font-size:13px; color:var(--muted); margin-top:4px; }
+.pair .lbl{ font:700 11px -apple-system; letter-spacing:1px; text-transform:uppercase; }
+.pair .before{ display:grid; grid-template-columns:72px 1fr; gap:10px; align-items:start; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:8px; }
+.pair .before img{ border-radius:10px; }
+.pair .before figcaption{ margin:0; }
+details{ margin-top:48px; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 18px; }
+summary{ cursor:pointer; font-weight:700; }
+.gallery{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; margin-top:14px; }
+.gallery figure{ margin:0; } .gallery img{ width:100%; border-radius:12px; border:1px solid var(--line); display:block; }
+.gallery figcaption{ font-size:12px; color:var(--muted); margin-top:4px; word-break:break-word; }
+.declined{ font-size:14px; color:var(--muted); }
+.declined b{ color:var(--ink); }
+footer{ margin-top:56px; color:var(--muted); font-size:14px; }
+@media (max-width:900px){ .compare{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:640px){ .wrap{ padding:28px 16px 64px; } nav.jump{ margin:28px -16px 0; padding:10px 16px; } }
+</style></head>
+<body><div class="wrap">
+
+<header>
+  <div class="kicker">NightCast · iOS · UI/UX review</div>
+  <h1>Five ways NightCast could look at bedtime</h1>
+  <p>Before shots come from the current <code>main</code> build in the iPhone 18 Pro Simulator. The options are static mockups made in separate prototype files (<code>proto/</code>); no app source was changed. Every option keeps the same screens, controls, copy rules and Sleep behaviour, and changes the visual world around them.</p>
+  <p>The full critique and audit are in <a href="review.md">review.md</a>. Product facts used for every option are in <a href="../PRODUCT.md">PRODUCT.md</a>.</p>
+  <div class="scores">
+    <div class="score"><b>27/40</b><span>Critique, Nielsen heuristics (Acceptable)</span></div>
+    <div class="score"><b>14/20</b><span>Native audit (Good)</span></div>
+    <div class="score"><b>24</b><span>Before screenshots captured</span></div>
+  </div>
+  <ul class="issues">
+    <li><span class="sev">P1</span><b>Mini player covers the last row</b>On Library, New, Show and Explore. Every option below reserves its height.</li>
+    <li><span class="sev">P1</span><b>Accent spent everywhere</b>Eight yellow interest chips outshine the Moon key. Every option gives the accent back to Sleep alone.</li>
+    <li><span class="sev">P1</span><b>Search pill balloons at AX5</b>Four-line placeholder pushes the grid off screen. Options use a one-word "Search".</li>
+    <li><span class="sev">P2</span><b>Night-sky is the category default</b>Stars and waves behind every list compete with artwork and read like any sleep app.</li>
+    <li><span class="sev">P2</span><b>Pages hidden behind dots</b>New and Explore are only three dots. Every option labels the three pages.</li>
+  </ul>
+</header>
+
+<nav class="jump" aria-label="Options">
+  <a href="#o1">1 · Boro</a><a href="#o2">2 · Almanac</a><a href="#o3">3 · Safelight</a><a href="#o4">4 · Sign-Off</a><a href="#o5">5 · Picture Book</a><a href="#all-before">All before shots</a>
+</nav>
+
+<script>
+// Each option is shown next to the same four "before" screens.
+const BEFORE = [
+  ["before/01-library-midnight.png","Library (Midnight)"],
+  ["before/04-show-midnight.png","Show detail"],
+  ["before/06-player-sleep-on-midnight.png","Now Playing, Sleep on"],
+  ["before/16-player-paper-light.png","Now Playing by day (Paper)"],
+];
+const AFTER = [["a-library","Library at night"],["b-show","Show detail at night"],["c-player-sleep","Now Playing, Sleep on"],["d-player-day","Now Playing by day, Sleep off"]];
+function compare(n){
+  return `<div class="compare">${AFTER.map(([f,cap],i)=>`<div class="pair">
+    <figure><img src="option-${n}/${f}.png" alt="Option ${n}: ${cap}" loading="lazy"><figcaption><span class="lbl">After</span> · ${cap}</figcaption></figure>
+    <figure class="before"><img src="${BEFORE[i][0]}" alt="Before: ${BEFORE[i][1]}" loading="lazy"><figcaption><span class="lbl">Before</span><br>${BEFORE[i][1]}</figcaption></figure>
+  </div>`).join("")}</div>`;
+}
+</script>
+
+<section class="opt" id="o1">
+  <div class="kicker">Option 1 · Lead direction</div>
+  <h2>Boro</h2>
+  <p class="lede">The bed itself: indigo-dyed futon cloth, mended with white sashiko running stitch. It is the most physical answer to the brief's "carefully designed listening object", and it is dark without being a night sky. The running stitch becomes the system: the scrubber is a stitched line, played episodes get a stitch through them instead of disappearing, and the Moon key is a persimmon patch whose ten stitches are the ten fade steps. Every show is a patch sewn onto the cloth at one fixed scale.</p>
+  <div class="cols">
+    <div class="box"><h3>Key changes (iOS)</h3><ul><li>Starfield and waves removed; a still woven indigo ground on every screen</li><li>Pager dots become labelled New / Library / Explore with a stitched underline</li><li>Scrubber, dividers, progress and key outlines drawn as running stitch</li><li>Moon key is a persimmon patch: "Sweet dreams" with heart, "Fade in 17 minutes.", −5 / ten stitches / +5</li><li>Display type: Shippori Mincho; UI stays SF Pro</li><li>Day mode is pale first-dip indigo, not cream or white</li></ul></div>
+    <div class="box"><h3>Stays the same</h3><ul><li>Three pages, Show, Now Playing, mini player on every screen</li><li>Physical keys with travel and haptics</li><li>Owner's Sleep copy, ±5, Sleep timing</li><li>Publisher artwork unmodified</li></ul>
+      <div class="swatches" aria-label="Palette"><i style="background:#14203A"></i><i style="background:#22355C"></i><i style="background:#ECE6D6"></i><i style="background:#E2783E"></i><i style="background:#DCE6EC"></i></div></div>
+    <div class="box"><h3>Honest risk</h3><p style="margin:0">Indigo is still blue light at bedtime, and a textile world can tip into craft-fair decoration if the stitch shows up anywhere it isn't doing a job.</p>
+      <h3 style="margin-top:12px">Raised by the declined challengers</h3><ul class="declined"><li><b>Ticket wallet:</b> nothing disappears, it cancels. Played episodes are stitched through, not hidden.</li><li><b>Botanical folio:</b> one fixed scale and ground for every show patch.</li><li><b>Timetable rack:</b> rank by weight, not size, so rows survive AX5.</li></ul></div>
+  </div>
+  <script>document.write(compare(1))</script>
+</section>
+
+<section class="opt" id="o2">
+  <div class="kicker">Option 2 · My pick</div>
+  <h2>Almanac</h2>
+  <p class="lede">The farmer's almanac: goldenrod cover, letterpress slab type, ruled tables, and a column of moon phases. The Moon key already carries the product, so this direction makes the fade literal: ten steps are ten phases, from full moon at full volume to new moon at pause. At night the page goes ink-black with goldenrod reserved for the Moon; by day the whole screen is almanac yellow. Episodes sit in a dated table, and played ones are struck through rather than removed.</p>
+  <div class="cols">
+    <div class="box"><h3>Key changes (iOS)</h3><ul><li>Masthead with the date and the live "Fade at 23:58" time</li><li>Pages as ruled tabs; Library as a ruled two-column table</li><li>Show episodes in a date column, played rows struck through</li><li>Moon key shows the current phase large and all ten phases below</li><li>Display: Alfa Slab One and Old Standard; UI stays SF Pro</li><li>Day mode is a committed goldenrod field with a red Moon</li></ul></div>
+    <div class="box"><h3>Stays the same</h3><ul><li>All screens and navigation model</li><li>Sleep timing and ±5 (only +5 shown while fading)</li><li>Owner's "Ready for bed?" copy</li><li>Artwork unmodified</li></ul>
+      <div class="swatches"><i style="background:#100F0C"></i><i style="background:#EFE6CF"></i><i style="background:#F2C230"></i><i style="background:#A8261B"></i></div></div>
+    <div class="box"><h3>Honest risk</h3><p style="margin:0">It is the most familiar of the five: a moon motif is where most sleep apps land, and it sits closest to today's Midnight theme. The day yellow is loud by design.</p></div>
+  </div>
+  <script>document.write(compare(2))</script>
+</section>
+
+<section class="opt" id="o3">
+  <div class="kicker">Option 3 · Challenger, fused</div>
+  <h2>Safelight</h2>
+  <p class="lede">A darkroom under the red safelight, where nothing on screen emits blue light. The whole palette is an eleven-step warm zone ramp, which happens to be exactly the fade: 100%, 90% … 0% in ten steps. Now Playing shows that ramp with the current step outlined in the lit amber of the Moon key, so you can read how far the fade has gone at a glance. Condensed caps carry labels and tabular figures carry time; by day the ramp turns into neutral print greys.</p>
+  <div class="cols">
+    <div class="box"><h3>Key changes (iOS)</h3><ul><li>One eleven-step zone ramp replaces ten separate themes for night</li><li>Fade shown as the ramp with "Step 4 of 10 · 60%"</li><li>Condensed caps for titles and labels (Barlow Condensed); SF Pro for reading</li><li>Square-cornered keys and sheets, no shadows</li><li>Day mode: paper greys with a deep red Moon</li></ul></div>
+    <div class="box"><h3>Stays the same</h3><ul><li>Screens, navigation, Sleep logic, ±5</li><li>Owner's Sleep copy</li><li>Artwork unmodified (it is the only blue left on screen)</li></ul>
+      <div class="swatches"><i style="background:#0A0504"></i><i style="background:#4A271C"></i><i style="background:#AE6B52"></i><i style="background:#E9AE93"></i><i style="background:#FF7A2E"></i></div></div>
+    <div class="box"><h3>Honest risk</h3><p style="margin:0">Few listeners know a darkroom, so the zone ramp has to be legible as "volume" on its own. Today's Red Light theme already lives near here; this makes it the whole product.</p><p class="declined" style="margin:8px 0 0">Verdict: competitive. It wins on product clarity (the ramp is the fade) and trails on audience recognition.</p></div>
+  </div>
+  <script>document.write(compare(3))</script>
+</section>
+
+<section class="opt" id="o4">
+  <div class="kicker">Option 4 · Grounded alternate</div>
+  <h2>Sign-Off</h2>
+  <p class="lede">Late-night radio, where podcasts come from: deep after-hours plum, QSL-card show tiles, wide heavy call-letter type, and a red on-air lamp for the Moon. Sleep is the station signing off for the night: ten broadcast colour bars go dark one at a time as the volume falls. The scrubber becomes a tuning scale with a red needle. Day mode is a pale lilac studio with the same lamp.</p>
+  <div class="cols">
+    <div class="box"><h3>Key changes (iOS)</h3><ul><li>Pages become a native segmented control</li><li>Shows as QSL cards with a caption band</li><li>Moon key is an on-air lamp with −5, ten colour bars, +5</li><li>Scrubber drawn as a tuning ruler with a red needle</li><li>Display: Archivo Expanded; UI stays SF Pro</li></ul></div>
+    <div class="box"><h3>Stays the same</h3><ul><li>Screens, Sleep logic, owner's copy on the key</li><li>Mini player on every screen (now a capsule)</li><li>Artwork unmodified</li></ul>
+      <div class="swatches"><i style="background:#1F1029"></i><i style="background:#37204A"></i><i style="background:#F7EEE6"></i><i style="background:#FF5A47"></i><i style="background:#EDE4F2"></i></div></div>
+    <div class="box"><h3>Honest risk</h3><p style="margin:0">The colour bars bring cyan and blue into a bedtime screen, and the wide caps are loud for a half-asleep reader. Copy like "Signs off in 17 min" changes the app's voice.</p></div>
+  </div>
+  <script>document.write(compare(4))</script>
+</section>
+
+<section class="opt" id="o5">
+  <div class="kicker">Option 5 · Grounded alternate</div>
+  <h2>Picture Book</h2>
+  <p class="lede">The bedtime story's painted room: flat gouache greens, a red curtain, a yellow lamp, cut-paper shapes with slightly uneven corners. Now Playing gets a small painted window and lamp, and the fade is the lamp's glow shrinking step by step until the room is dark and the episode pauses. Shows sit on painted mats in red, mustard and blue. By day the green brightens and the window shows the sun.</p>
+  <div class="cols">
+    <div class="box"><h3>Key changes (iOS)</h3><ul><li>Deep bedroom green replaces navy; no stars</li><li>Painted window and lamp on Now Playing that dims with each step</li><li>Coloured mats behind artwork, star marks new episodes</li><li>Soft, uneven "cut paper" corners on keys and rows</li><li>Display: Young Serif; UI stays SF Pro</li></ul></div>
+    <div class="box"><h3>Stays the same</h3><ul><li>Screens, navigation, Sleep timing, ±5</li><li>Owner's "Ready for bed?" copy</li><li>Artwork unmodified; no large episode art on Now Playing</li></ul>
+      <div class="swatches"><i style="background:#10261B"></i><i style="background:#24493A"></i><i style="background:#B5483A"></i><i style="background:#F2B640"></i><i style="background:#3B7A4C"></i></div></div>
+    <div class="box"><h3>Honest risk</h3><p style="margin:0">It can read as a children's app, which matters for listeners of history and true-crime shows. The illustration adds the one large drawn element the brief otherwise keeps off Now Playing.</p></div>
+  </div>
+  <script>document.write(compare(5))</script>
+</section>
+
+<details id="all-before"><summary>All 24 before screenshots</summary>
+  <div class="gallery"><script>
+    ["01-library-midnight","02-new-midnight","03-explore-midnight","04-show-midnight","05-player-midnight","06-player-sleep-on-midnight","07-search-results-midnight","08-themes-sheet","09-category-loading","10-category-sports","11-library-list","12-empty-library","13-search-error","14-search-no-results","15-library-paper-light","16-player-paper-light","17-show-paper-light","18-new-paper-light","19-player-ember-sleep","20-library-ink","21-player-opening-transition","22-library-AX5","23-player-AX5","24-library-system-light-appearance"]
+      .forEach(n=>document.write(`<figure><a href="before/${n}.png"><img src="before/${n}.png" alt="${n}" loading="lazy"></a><figcaption>${n}</figcaption></figure>`));
+  </script></div>
+</details>
+
+<details><summary>Challengers considered and set aside</summary>
+  <ul class="declined">
+    <li><b>Jet-age ticket wallet</b> (declined): kept its rule that used things cancel rather than vanish, now in Boro's stitched-through episodes.</li>
+    <li><b>Botanical folio</b> (declined): kept its fixed scale and ground for every plate, now Boro's equal show patches.</li>
+    <li><b>Timetable slide rack</b> (declined): kept rank-by-weight-not-size, which helps the AX5 layouts.</li>
+    <li><b>Convention catalog grid</b> (declined): its whole-cell grid repacking is already how the Small layout works.</li>
+    <li><b>Record-sleeve catalog</b> (competitive, held back): matte black and one plot owning the field; Safelight covers the same darkness more usefully.</li>
+  </ul>
+</details>
+
+<footer>Mockups are HTML rendered in WebKit at iPhone 18 Pro size (402 × 874 pt, 3×) with SF Pro; display faces are Google Fonts (OFL) that would be bundled in the app. Content is the six real shows from the app's demo mode. Generated 2026-10-19.</footer>
+</div></body></html>

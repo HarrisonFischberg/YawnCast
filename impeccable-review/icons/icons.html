@@ -1,0 +1,71 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  body { margin: 0; background: #555; display: flex; flex-wrap: wrap; gap: 40px; padding: 40px; }
+  .icon { width: 1024px; height: 1024px; }
+</style></head>
+<body>
+<script>
+// Waning moon: dark disc, lit part on the left. k = lit fraction.
+function moon(cx, cy, r, k, lit, dark, ring, ringW) {
+  const rx = Math.abs(1 - 2 * k) * r, sweep = k > 0.5 ? 0 : 1;
+  if (k > 0.99) return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${lit}"/>` + (ring ? `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${ring}" stroke-width="${ringW}"/>` : "");
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${dark}"/>
+    <path d="M${cx} ${cy - r} A${r} ${r} 0 0 0 ${cx} ${cy + r} A${rx} ${r} 0 0 ${sweep} ${cx} ${cy - r} Z" fill="${lit}"/>
+    ${ring ? `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${ring}" stroke-width="${ringW}"/>` : ""}`;
+}
+const icons = {
+  // Almanac: goldenrod cover, a large waning moon in ink, the ten phases ruled beneath.
+  "almanac": `<svg class="icon" id="almanac" viewBox="0 0 1024 1024">
+    <rect width="1024" height="1024" fill="#F2C230"/>
+    <rect x="120" y="120" width="784" height="784" fill="none" stroke="#17140D" stroke-width="10"/>
+    <rect x="140" y="140" width="744" height="744" fill="none" stroke="#17140D" stroke-width="4"/>
+    ${moon(512, 440, 220, 0.62, "#FFF6DF", "#17140D", "#17140D", 14)}
+    <line x1="200" y1="728" x2="824" y2="728" stroke="#17140D" stroke-width="6"/>
+    ${[1, .8, .6, .4, .2].map((k, i) => moon(272 + i * 120, 800, 30, k, "#FFF6DF", "#17140D", "#17140D", 5)).join("")}
+  </svg>`,
+  // Boro: indigo cloth, a persimmon moon patch with a stitched edge, running stitch across.
+  "boro": `<svg class="icon" id="boro" viewBox="0 0 1024 1024">
+    <defs><pattern id="weave" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#14203A"/><rect width="8" height="2" fill="#18264A"/><rect width="2" height="8" fill="#101A30"/></pattern></defs>
+    <rect width="1024" height="1024" fill="url(#weave)"/>
+    <rect x="0" y="600" width="1024" height="424" fill="#1B2A4A" opacity=".85"/>
+    ${[680, 760, 840, 920].map(y => `<line x1="40" y1="${y}" x2="984" y2="${y}" stroke="#ECE6D6" stroke-width="10" stroke-linecap="round" stroke-dasharray="44 30" opacity=".55"/>`).join("")}
+    <circle cx="512" cy="430" r="230" fill="#E2783E"/>
+    <circle cx="610" cy="370" r="200" fill="#14203A"/>
+    <circle cx="512" cy="430" r="200" fill="none" stroke="#ECE6D6" stroke-width="10" stroke-linecap="round" stroke-dasharray="40 28" opacity=".9"/>
+  </svg>`,
+  // Safelight: the darkroom lamp, one warm glow on black, the zone ramp along the foot.
+  "safelight": `<svg class="icon" id="safelight" viewBox="0 0 1024 1024">
+    <defs><radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FF7A2E" stop-opacity=".55"/><stop offset=".45" stop-color="#FF7A2E" stop-opacity=".16"/><stop offset="1" stop-color="#FF7A2E" stop-opacity="0"/></radialGradient></defs>
+    <rect width="1024" height="1024" fill="#0A0504"/>
+    <circle cx="512" cy="450" r="380" fill="url(#glow)"/>
+    <circle cx="512" cy="450" r="150" fill="#FF7A2E"/>
+    <circle cx="512" cy="450" r="150" fill="none" stroke="#FFB27A" stroke-width="6" opacity=".6"/>
+    ${Array.from({ length: 11 }, (_, i) => { const t = (10 - i) / 10; const c = `rgb(${Math.round(255*(0.04+0.93*t))},${Math.round(255*(0.02+0.78*t))},${Math.round(255*(0.016+0.70*t))})`; return `<rect x="${172 + i * 62}" y="790" width="62" height="70" fill="${c}"/>`; }).join("")}
+    <rect x="172" y="790" width="682" height="70" fill="none" stroke="#4A271C" stroke-width="4"/>
+  </svg>`,
+  // Sign-Off: the on-air lamp lit red on plum, colour bars going dark beneath it.
+  "signoff": `<svg class="icon" id="signoff" viewBox="0 0 1024 1024">
+    <defs><radialGradient id="lamp" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FF5A47" stop-opacity=".5"/><stop offset="1" stop-color="#FF5A47" stop-opacity="0"/></radialGradient></defs>
+    <rect width="1024" height="1024" fill="#1F1029"/>
+    <circle cx="512" cy="420" r="330" fill="url(#lamp)"/>
+    <rect x="262" y="290" width="500" height="260" rx="130" fill="#FF5A47"/>
+    <rect x="262" y="290" width="500" height="260" rx="130" fill="none" stroke="#FFB0A5" stroke-width="8" opacity=".6"/>
+    ${moon(512, 420, 74, 0.3, "#FFF2EF", "#FF5A47", null, 0)}
+    ${["#F1F1F1","#E9D44A","#53C8D8","#5DC461","#C858C4","#DB4A3C","#3D53CC"].map((c, i) => `<rect x="${212 + i * 86}" y="700" width="78" height="120" rx="8" fill="${i < 4 ? c : "#37204A"}"/>`).join("")}
+  </svg>`,
+  // Picture Book: a painted window with a crescent moon, red curtains, a mustard pelmet.
+  "picturebook": `<svg class="icon" id="picturebook" viewBox="0 0 1024 1024">
+    <rect width="1024" height="1024" fill="#10261B"/>
+    <rect x="262" y="230" width="500" height="560" rx="34" fill="#14234A"/>
+    <circle cx="590" cy="380" r="78" fill="#F6E7B8"/><circle cx="560" cy="360" r="70" fill="#14234A"/>
+    ${[[330,330],[420,560],[650,640],[360,690],[690,470]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r="9" fill="#F6E7B8"/>`).join("")}
+    <rect x="503" y="230" width="18" height="560" fill="#10261B"/><rect x="262" y="500" width="500" height="18" fill="#10261B"/>
+    <path d="M200 190 h170 c-26 200 -10 420 30 650 h-200 Z" fill="#B5483A"/>
+    <path d="M824 190 h-170 c26 200 10 420 -30 650 h200 Z" fill="#B5483A"/>
+    <rect x="170" y="168" width="684" height="46" rx="23" fill="#F2B640"/>
+  </svg>`,
+};
+document.write(Object.values(icons).join(""));
+</script>
+</body></html>

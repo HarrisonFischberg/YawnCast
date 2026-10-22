@@ -1,0 +1,13 @@
+/* Phone frame primitives shared by every mockup. 402 x 874 pt = iPhone 18 Pro. */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #777; }
+body { font-family: -apple-system, "SF Pro Text", system-ui; -webkit-font-smoothing: antialiased; }
+.screen { width: 402px; height: 874px; position: relative; overflow: hidden; }
+.sb { position: absolute; top: 0; left: 0; right: 0; height: 54px; display: flex; align-items: center; justify-content: space-between; padding: 6px 30px 0 52px; z-index: 50; font: 600 17px -apple-system; letter-spacing: -.2px; }
+.sb-right { display: flex; gap: 7px; align-items: center; }
+.island { position: absolute; top: 11px; left: 50%; width: 124px; height: 36px; margin-left: -62px; border-radius: 20px; background: #000; z-index: 51; }
+.hb { position: absolute; bottom: 8px; left: 50%; width: 140px; margin-left: -70px; height: 5px; border-radius: 3px; background: currentColor; opacity: .55; z-index: 60; }
+.art { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+svg { display: block; }
+.ic { width: 22px; height: 22px; }
+.tnum { font-variant-numeric: tabular-nums; }

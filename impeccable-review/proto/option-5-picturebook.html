@@ -1,0 +1,170 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&display=block" rel="stylesheet">
+<link rel="stylesheet" href="base.css"><script src="common.js"></script>
+<style>
+/* Option 5 · Picture Book: the bedtime story's painted room, flat gouache, cut-paper shapes. */
+.screen{ --bg:#10261B; --panel:#1B3A2A; --panel2:#24493A; --ink:#F4EBD8; --muted:#B5C4A6; --lamp:#F2B640; --on-lamp:#2A1A02;
+  --red:#B5483A; --blue:#27406B; --mustard:#B8892E; --serif:"Young Serif", ui-serif, serif; background:var(--bg); color:var(--ink); }
+.screen.day{ --bg:#3B7A4C; --panel:#468A58; --panel2:#529865; --ink:#FFFFFF; --muted:#E2F0D9; --lamp:#F7C844; --on-lamp:#2A1A02; --red:#D2533F; --blue:#2F5596; --mustard:#E0A93A; }
+body{ display:flex; gap:40px; padding:40px; }
+.pager{ position:absolute; top:62px; left:0; right:0; display:flex; justify-content:center; gap:8px; }
+.pager span{ padding:7px 14px; border-radius:16px 14px 17px 13px; font:600 15px -apple-system; color:var(--muted); }
+.pager .on{ background:var(--panel2); color:var(--ink); }
+.head{ position:absolute; top:110px; left:24px; right:24px; display:flex; justify-content:space-between; align-items:center; }
+h1{ font:400 40px/1 var(--serif); }
+.keys{ display:flex; gap:8px; }
+.key{ width:44px; height:44px; border-radius:15px 13px 16px 12px; background:var(--panel); display:grid; place-items:center; color:var(--ink); }
+.key svg{ width:19px; height:19px; }
+.search{ position:absolute; top:168px; left:24px; right:24px; height:46px; border-radius:18px 15px 19px 14px; background:var(--panel); display:flex; gap:10px; align-items:center; padding:0 16px; font:17px -apple-system; color:var(--muted); }
+.search svg{ width:18px; height:18px; }
+.grid{ position:absolute; top:232px; left:24px; right:24px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px 16px; }
+.mat{ padding:9px; border-radius:16px 12px 18px 13px; }
+.mat .art{ border-radius:6px; }
+.c0{ background:var(--red); } .c1{ background:var(--mustard); } .c2{ background:var(--blue); } .c3{ background:var(--panel2); }
+.tile .t{ margin-top:9px; font:400 17px/1.2 var(--serif); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tile .b{ font:13px -apple-system; color:var(--muted); margin-top:3px; }
+.tile{ position:relative; }
+.tile .star{ position:absolute; top:-6px; right:-6px; width:22px; height:22px; color:var(--ink); }
+.fadeout{ position:absolute; left:0; right:0; bottom:0; height:180px; background:linear-gradient(to bottom, transparent, var(--bg) 50%); }
+.mini{ position:absolute; left:16px; right:16px; bottom:30px; height:70px; border-radius:22px 18px 24px 17px; background:var(--panel2); display:flex; align-items:center; gap:12px; padding:0 11px; box-shadow:0 10px 24px rgba(0,0,0,.35); }
+.mini .art{ width:48px; border-radius:10px; }
+.mini .mt{ font:400 16px var(--serif); } .mini .ms{ font:13px -apple-system; color:var(--muted); margin-top:3px; display:flex; gap:6px; align-items:center; }
+.mini .ms svg{ width:12px; height:12px; color:var(--lamp); }
+.mini .pp{ margin-left:auto; width:46px; height:46px; border-radius:17px 15px 18px 14px; background:var(--ink); color:var(--bg); display:grid; place-items:center; }
+.mini .pp svg{ width:19px; height:19px; }
+/* show */
+.nav{ position:absolute; top:58px; left:16px; right:16px; display:flex; justify-content:space-between; }
+.sh{ position:absolute; top:114px; left:24px; right:24px; }
+.sh .row{ display:flex; gap:16px; align-items:center; }
+.sh .mat{ width:136px; flex:none; transform:rotate(-2deg); }
+.sh h2{ font:400 25px/1.12 var(--serif); }
+.sh .by{ font:14px -apple-system; color:var(--muted); margin-top:5px; }
+.sh .sub{ margin-top:12px; display:inline-flex; gap:6px; align-items:center; height:34px; padding:0 13px; border-radius:15px 13px 16px 12px; background:var(--panel); font:600 14px -apple-system; }
+.sh .sub svg{ width:14px; height:14px; }
+.sh .desc{ margin-top:18px; font:15px/1.45 -apple-system; color:var(--muted); }
+.list{ position:absolute; top:384px; left:24px; right:24px; }
+.lh{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px; }
+.lh .y{ font:400 26px var(--serif); } .lh .c{ font:600 13px -apple-system; color:var(--muted); display:flex; gap:6px; align-items:center; } .lh svg{ width:14px; height:14px; }
+.ep{ display:flex; align-items:center; gap:14px; padding:10px 12px; margin:0 -12px; border-radius:16px 13px 17px 12px; }
+.ep:nth-of-type(odd){ background:var(--panel); }
+.ep .et{ font:600 16px/1.3 -apple-system; } .ep .em{ font:13px -apple-system; color:var(--muted); margin-top:3px; }
+.ep .go{ margin-left:auto; flex:none; width:42px; height:42px; border-radius:15px 13px 16px 12px; background:var(--panel2); display:grid; place-items:center; }
+.ep:nth-of-type(odd) .go{ background:var(--bg); }
+.ep .go svg{ width:14px; height:14px; margin-left:2px; }
+.ep.played .et{ color:var(--muted); }
+.pbar{ margin-top:7px; width:130px; height:4px; border-radius:2px; background:rgba(255,255,255,.15); position:relative; } .pbar::after{ content:""; position:absolute; left:0; top:0; bottom:0; width:44%; border-radius:2px; background:var(--ink); }
+/* now playing */
+.np{ position:absolute; top:116px; left:28px; right:28px; }
+.np .by{ font:600 15px -apple-system; color:var(--muted); }
+.np h2{ font:400 38px/1.08 var(--serif); margin-top:8px; }
+.room{ position:absolute; top:218px; left:28px; right:28px; height:150px; }
+.scrub{ position:absolute; top:394px; left:28px; right:28px; }
+.scrub .tr{ height:8px; border-radius:4px; background:var(--panel2); position:relative; }
+.scrub .tr::after{ content:""; position:absolute; left:0; top:0; bottom:0; width:30%; border-radius:4px; background:var(--ink); }
+.scrub .th{ position:absolute; left:calc(30% - 12px); top:-8px; width:24px; height:24px; border-radius:11px 9px 12px 9px; background:var(--ink); }
+.scrub .times{ display:flex; justify-content:space-between; margin-top:12px; font:600 14px -apple-system; font-variant-numeric:tabular-nums; color:var(--muted); }
+.transport{ position:absolute; top:462px; left:0; right:0; display:flex; justify-content:center; align-items:center; gap:28px; }
+.rk{ width:70px; height:70px; border-radius:24px 20px 26px 19px; background:var(--panel); display:grid; place-items:center; }
+.rk svg{ width:30px; height:30px; }
+.pk{ width:104px; height:104px; border-radius:36px 30px 38px 29px; background:var(--ink); color:var(--bg); display:grid; place-items:center; }
+.pk svg{ width:40px; height:40px; }
+.moon{ position:absolute; left:20px; right:20px; bottom:40px; border-radius:28px 22px 30px 21px; padding:18px 20px; background:var(--panel); }
+.moon.on{ background:var(--lamp); color:var(--on-lamp); }
+.moon .row{ display:flex; align-items:center; gap:14px; }
+.moon .well{ width:54px; height:54px; border-radius:19px 16px 20px 15px; display:grid; place-items:center; background:rgba(0,0,0,.12); flex:none; }
+.moon:not(.on) .well{ background:var(--panel2); color:var(--lamp); }
+.moon .well svg{ width:26px; height:26px; }
+.moon .txt{ flex:1; min-width:0; }
+.moon .mt{ font:400 22px/1.1 var(--serif); white-space:nowrap; display:flex; gap:7px; align-items:center; } .moon .mt svg{ width:17px; height:17px; }
+.moon .ms{ font:600 15px -apple-system; margin-top:4px; opacity:.85; white-space:nowrap; }
+.moon .adj{ display:flex; gap:8px; }
+.moon .adj span{ width:44px; height:44px; border-radius:15px 13px 16px 12px; display:grid; place-items:center; font:700 15px -apple-system; background:rgba(0,0,0,.12); }
+.pages{ display:flex; gap:6px; margin-top:14px; }
+.pages i{ flex:1; height:6px; border-radius:3px; background:currentColor; opacity:.85; }
+.pages i.off{ opacity:.2; }
+</style></head>
+<body>
+<script>
+// The painted room behind the window: lamp glow scales with volume (1 = full).
+function room(glow, night){
+  const sky = night ? "#14234A" : "#7FB6E0";
+  const g = Math.max(0, glow);
+  return `<svg viewBox="0 0 346 150" width="346" height="150">
+    <rect x="0" y="0" width="346" height="150" rx="18" fill="var(--panel)"/>
+    <rect x="22" y="16" width="128" height="118" rx="10" fill="${sky}"/>
+    ${night ? `<circle cx="112" cy="50" r="18" fill="#F6E7B8"/><circle cx="104" cy="45" r="16" fill="${sky}"/>
+      <circle cx="48" cy="40" r="2" fill="#F6E7B8"/><circle cx="70" cy="74" r="1.6" fill="#F6E7B8"/><circle cx="132" cy="96" r="1.8" fill="#F6E7B8"/><circle cx="40" cy="104" r="1.4" fill="#F6E7B8"/>`
+      : `<circle cx="112" cy="46" r="15" fill="#FBE29A"/><ellipse cx="58" cy="92" rx="26" ry="10" fill="#fff" opacity=".85"/>`}
+    <rect x="84" y="16" width="4" height="118" fill="var(--panel)"/><rect x="22" y="73" width="128" height="4" fill="var(--panel)"/>
+    <path d="M14 10 h40 c-6 40 -2 80 6 130 h-46 Z" fill="var(--red)"/><path d="M158 10 h-40 c6 40 2 80 -6 130 h46 Z" fill="var(--red)"/>
+    <rect x="10" y="6" width="152" height="8" rx="4" fill="var(--mustard)"/>
+    <ellipse cx="262" cy="104" rx="${54*g+6}" ry="${40*g+4}" fill="var(--lamp)" opacity="${.32*g}"/>
+    <path d="M236 78 h52 l-10 -30 h-32 Z" fill="${g>0? 'var(--lamp)' : 'var(--mustard)'}" opacity="${g>0?1:.5}"/>
+    <rect x="259" y="78" width="6" height="40" fill="var(--blue)"/><rect x="242" y="118" width="40" height="8" rx="4" fill="var(--blue)"/>
+    <rect x="186" y="126" width="146" height="10" rx="5" fill="var(--panel2)"/>
+  </svg>`;
+}
+const heart = '<svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.9c0 5.4-7.5 10-7.5 10Z" fill="currentColor"/></svg>';
+const star = '<svg viewBox="0 0 24 24"><path d="M12 2.5l2.6 6.2 6.7.5-5.1 4.4 1.6 6.5L12 16.6l-5.8 3.5 1.6-6.5L2.7 9.2l6.7-.5Z" fill="currentColor"/></svg>';
+</script>
+
+<section class="screen" id="a-library">
+  <script>document.write(statusBar("23:41"))</script>
+  <div class="pager"><span>New</span><span class="on">Library</span><span>Explore</span></div>
+  <div class="head"><h1>Library</h1><div class="keys"><div class="key"><script>document.write(I.grid)</script></div><div class="key"><script>document.write(I.dots)</script></div></div></div>
+  <div class="search"><script>document.write(I.search)</script>Search</div>
+  <div class="grid"><script>
+    document.write(SHOWS.map((s,i)=>`<div class="tile"><div class="mat c${i%4}">${art(s.id)}</div>${s.isNew?`<span class="star">${star}</span>`:''}<div class="t">${s.title}</div><div class="b">${s.by}</div></div>`).join(""))
+  </script></div>
+  <div class="fadeout"></div>
+  <div class="mini"><script>document.write(art("radiolab"))</script><div><div class="mt">The Smell of Hell</div><div class="ms"><script>document.write(I.moon)</script>Fade in 17 minutes</div></div><div class="pp"><script>document.write(I.pause)</script></div></div>
+  <script>document.write(homeBar())</script>
+</section>
+
+<section class="screen" id="b-show">
+  <script>document.write(statusBar("23:41"))</script>
+  <div class="nav"><div class="key"><script>document.write(I.back)</script></div><div class="key"><script>document.write(I.dots)</script></div></div>
+  <div class="sh">
+    <div class="row"><div class="mat c2"><script>document.write(art("nmh"))</script></div><div><h2>Nothing much happens</h2><div class="by">Wellness Loud</div><div class="sub"><script>document.write(I.check)</script>Subscribed</div></div></div>
+    <div class="desc"><script>document.write(SHOW_DESC)</script></div>
+  </div>
+  <div class="list">
+    <div class="lh"><span class="y">2026</span><span class="c"><script>document.write(I.sort)</script>85 episodes · Newest first</span></div>
+    <script>
+    document.write(EPISODES.slice(0,5).map(e=>`<div class="ep ${e.state}"><div><div class="et">${e.t}</div><div class="em">${e.d} · ${e.state==="progress"?e.left:e.len}${e.state==="played"?" · Played":""}${e.state==="new"?" · New":""}</div>${e.state==="progress"?'<div class="pbar"></div>':''}</div><div class="go">${e.state==="played"?I.check:I.play}</div></div>`).join(""))
+    </script>
+  </div>
+  <div class="fadeout"></div>
+  <div class="mini"><script>document.write(art("radiolab"))</script><div><div class="mt">The Smell of Hell</div><div class="ms"><script>document.write(I.moon)</script>Fade in 17 minutes</div></div><div class="pp"><script>document.write(I.pause)</script></div></div>
+  <script>document.write(homeBar())</script>
+</section>
+
+<section class="screen" id="c-player-sleep">
+  <script>document.write(statusBar("00:06"))</script>
+  <div class="nav"><div class="key"><script>document.write(I.down)</script></div></div>
+  <div class="np"><div class="by">Radiolab</div><h2>The Smell of Hell</h2></div>
+  <div class="room"><script>document.write(room(.6,true))</script></div>
+  <div class="scrub"><div class="tr"></div><div class="th"></div><div class="times"><span>38:10</span><span>−9:45</span></div></div>
+  <div class="transport"><div class="rk"><script>document.write(I.r15)</script></div><div class="pk"><script>document.write(I.pause)</script></div><div class="rk"><script>document.write(I.f15)</script></div></div>
+  <div class="moon on">
+    <div class="row"><div class="well"><script>document.write(I.moon)</script></div><div class="txt"><div class="mt">Lights going down</div><div class="ms">Volume 60%, 4 min to go</div></div><div class="adj"><span>+5</span></div></div>
+    <div class="pages"><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+  <script>document.write(homeBar())</script>
+</section>
+
+<section class="screen day" id="d-player-day">
+  <script>document.write(statusBar("14:10"))</script>
+  <div class="nav"><div class="key"><script>document.write(I.down)</script></div></div>
+  <div class="np"><div class="by">Radiolab</div><h2>The Smell of Hell</h2></div>
+  <div class="room"><script>document.write(room(0,false))</script></div>
+  <div class="scrub"><div class="tr"></div><div class="th"></div><div class="times"><span>14:22</span><span>−33:33</span></div></div>
+  <div class="transport"><div class="rk"><script>document.write(I.r15)</script></div><div class="pk"><script>document.write(I.play)</script></div><div class="rk"><script>document.write(I.f15)</script></div></div>
+  <div class="moon">
+    <div class="row"><div class="well"><script>document.write(I.moon)</script></div><div class="txt"><div class="mt">Ready for bed?</div></div></div>
+    <div class="pages"><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></div>
+  </div>
+  <script>document.write(homeBar())</script>
+</section>
+</body></html>
