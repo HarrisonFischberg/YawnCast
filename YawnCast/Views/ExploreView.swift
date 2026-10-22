@@ -301,6 +301,12 @@ struct CategoryView: View {
 }
 
 /// Wraps chips onto as many lines as needed.
+///
+/// Sizing and placing share one line-breaking pass at the same width. They
+/// used to break separately, sizing at the proposed width but placing within
+/// `bounds`, which is only as wide as the widest line and pixel-rounded. A
+/// hair of rounding could push a chip onto an extra line that was never
+/// measured, so it drew over the section below ("Top picks for you").
 struct FlowLayout: Layout {
     var spacing: CGFloat = 8
 
@@ -310,34 +316,37 @@ struct FlowLayout: Layout {
 
     nonisolated func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
         let width = proposal.width ?? .infinity
-        var x: CGFloat = 0, y: CGFloat = 0, rowHeight: CGFloat = 0, widest: CGFloat = 0
+        let placed = frames(for: subviews, width: width)
+        let widest = placed.map(\.maxX).max() ?? 0
+        let height = placed.map(\.maxY).max() ?? 0
+        // Take the whole offered width, so placement breaks lines at the width we measured.
+        return CGSize(width: width.isFinite ? width : widest, height: height)
+    }
+
+    nonisolated func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let width = proposal.width ?? bounds.width
+        for (subview, frame) in zip(subviews, frames(for: subviews, width: width)) {
+            subview.place(at: CGPoint(x: bounds.minX + frame.minX, y: bounds.minY + frame.minY), proposal: ProposedViewSize(frame.size))
+        }
+    }
+
+    /// Each chip's frame, wrapping to a new line when the next one won't fit.
+    private nonisolated func frames(for subviews: Subviews, width: CGFloat) -> [CGRect] {
+        var frames: [CGRect] = []
+        var x: CGFloat = 0, y: CGFloat = 0, rowHeight: CGFloat = 0
         for subview in subviews {
             let size = subview.sizeThatFits(.unspecified)
-            if x > 0, x + size.width > width {
+            // Half a point of slack, so float rounding never forces a wrap.
+            if x > 0, x + size.width > width + 0.5 {
                 y += rowHeight + spacing
                 x = 0
                 rowHeight = 0
             }
-            x += size.width + spacing
-            rowHeight = max(rowHeight, size.height)
-            widest = max(widest, x - spacing)
-        }
-        return CGSize(width: min(widest, width), height: y + rowHeight)
-    }
-
-    nonisolated func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        var x = bounds.minX, y = bounds.minY, rowHeight: CGFloat = 0
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-            if x > bounds.minX, x + size.width > bounds.maxX {
-                y += rowHeight + spacing
-                x = bounds.minX
-                rowHeight = 0
-            }
-            subview.place(at: CGPoint(x: x, y: y), proposal: ProposedViewSize(size))
+            frames.append(CGRect(origin: CGPoint(x: x, y: y), size: size))
             x += size.width + spacing
             rowHeight = max(rowHeight, size.height)
         }
+        return frames
     }
 }
 
