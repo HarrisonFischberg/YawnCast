@@ -316,3 +316,10 @@ migration from earlier builds is needed.
 The old bundle ID carried the pre-release name. Before any App Store release the owner chose to switch to
 `com.rarecreatures.yawncast` (tests `.tests`, UI tests `.uitests`). This is a new app to iOS and App Store
 Connect: a fresh App Store Connect record, TestFlight starts over, and installs of the old ID keep their own data.
+
+## D49 · 2026-10-23 · Row tap opens Now Playing; late-night Sleep on any play (owner request)
+Tapping an episode row (show page, New) loads it paused at its saved spot and opens Now Playing; the
+listener presses Play. The long-press menu's Play still starts it at once. Late-night Sleep (22:00–04:59) now
+arms on any start of playback (mini player, Now Playing, Lock Screen, headphones, a relaunch's restored
+episode), not just a row tap. Turning Sleep off by hand still sticks for that load; Sleep finishing on its own
+lets the next late play arm it again.

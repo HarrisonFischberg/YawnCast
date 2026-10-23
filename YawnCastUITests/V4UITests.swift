@@ -34,6 +34,8 @@ final class V4UITests: XCTestCase {
         subscribeQuietHours(app)
         app.buttons["Fixture Episode 2"].tap()
         let playPause = app.buttons["playPause"]
+        XCTAssertTrue(playPause.waitForExistence(timeout: 8))
+        playPause.tap()
         XCTAssertTrue(waitUntil(8) { playPause.label == "Pause" })
         app.buttons["closePlayer"].tap()
 
@@ -71,6 +73,8 @@ final class V4UITests: XCTestCase {
         subscribeQuietHours(app)
         app.buttons["Fixture Episode 3"].tap()
         let playPause = app.buttons["playPause"]
+        XCTAssertTrue(playPause.waitForExistence(timeout: 8))
+        playPause.tap()
         XCTAssertTrue(waitUntil(8) { playPause.label == "Pause" })
         app.buttons["moonKey"].tap()
 

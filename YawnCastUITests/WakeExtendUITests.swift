@@ -19,6 +19,8 @@ final class WakeExtendUITests: XCTestCase {
         episode.tap()
         let playPause = app.buttons["playPause"]
         XCTAssertTrue(playPause.waitForExistence(timeout: 8))
+        XCTAssertEqual(playPause.label, "Play", "a row tap opens Now Playing without playing")
+        playPause.tap()
         XCTAssertTrue(waitUntil(8) { playPause.label == "Pause" }, "playing")
 
         let moon = app.buttons["moonKey"]

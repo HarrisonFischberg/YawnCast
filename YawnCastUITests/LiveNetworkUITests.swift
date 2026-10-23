@@ -38,6 +38,7 @@ final class LiveNetworkUITests: XCTestCase {
 
         let playPause = app.buttons["playPause"]
         XCTAssertTrue(playPause.waitForExistence(timeout: 10))
+        playPause.tap()
         XCTAssertTrue(waitUntil(30) { playPause.label == "Pause" && (playPause.value as? String ?? "") != "Loading" }, "stream started")
         let scrubber = app.descendants(matching: .any)["scrubber"]
         let before = scrubber.value as? String ?? ""

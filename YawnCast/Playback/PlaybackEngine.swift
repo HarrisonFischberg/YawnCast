@@ -84,6 +84,8 @@ final class PlaybackEngine: SleepControllable {
         let item = AVPlayerItem(url: episode.audioURL)
         item.preferredForwardBufferDuration = 60
         observe(item)
+        // AVPlayer keeps its rate across items, so a paused load must stop the old one.
+        if !autoplay { player.pause() }
         player.replaceCurrentItem(with: item)
         if start > 0 {
             player.seek(to: CMTime(seconds: start, preferredTimescale: 600), toleranceBefore: .zero, toleranceAfter: .zero)

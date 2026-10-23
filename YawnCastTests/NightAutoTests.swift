@@ -70,4 +70,27 @@ struct NightAutoTests {
             #expect(model.sleepStatus != .off)
         }
     }
+    @Test func openingAnEpisodeLoadsItPausedWithSleepOff() {
+        atHour(23) { model in
+            model.open(Self.episode(1))
+            #expect(model.player.episode?.id == "night-1")
+            #expect(model.isPlayerPresented)
+            #expect(model.sleepStatus == .off, "Sleep waits for Play")
+            #expect(model.nightNote == nil)
+        }
+    }
+
+    /// Any play (mini player, Now Playing, Lock Screen) arms Sleep, not just a row tap.
+    @Test func lateTransportPlayTurnsSleepOn() async {
+        let model = AppModel(store: MemoryLibraryStore(), directory: FixtureDirectory(), feeds: FixtureFeedService())
+        model.currentHour = { 23 }
+        model.open(Self.episode(1))
+        model.player.togglePlayPause()
+        for _ in 0..<40 where model.sleepStatus == .off {
+            try? await Task.sleep(for: .milliseconds(100))
+        }
+        #expect(model.sleepStatus != .off)
+        #expect(model.nightNote == "It’s late, so Sleep is on.")
+        model.player.pause()
+    }
 }
