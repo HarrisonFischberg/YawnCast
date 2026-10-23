@@ -147,7 +147,11 @@ final class AppModel {
             nowPlaying?.update()
             lockStatusPushed = lockStatusLine()
             runSleepTicker()
+            let started = player.isPlaying && !wasPlaying
             wakeExtendIfNeeded()
+            // Night auto covers every way playback starts: mini player, Now Playing,
+            // Lock Screen, headphones, and a relaunch's restored episode.
+            if started, let episode = player.episode { armSleepIfLate(for: episode) }
         }
         player.onEnded = { [weak self] in
             self?.sleep.episodeDidEnd()
@@ -162,6 +166,9 @@ final class AppModel {
         sleep.onFadedToSilence = { [weak self] episodeID in
             guard let self else { return }
             fadedOut = (episodeID, Date())
+            // Sleep finished on its own, so a later late-night play arms it again.
+            // Only turning Sleep off by hand sticks for the load.
+            if nightCheckedEpisodeID == episodeID { nightCheckedEpisodeID = nil }
             guard let began = fadeBegan, began.episodeID == episodeID else { return }
             fadeBegan = nil
             driftBack = began
@@ -380,25 +387,36 @@ final class AppModel {
 
     // MARK: Playback
 
-    /// Deliberate tap on an episode: start or resume it. A different episode cancels Sleep.
+    /// Tap on an episode row: load it paused at its saved spot and show Now Playing,
+    /// where the listener presses Play. The loaded episode is left as it is.
+    func open(_ episode: Episode) {
+        if player.episode?.id != episode.id { load(episode, autoplay: false) }
+        presentPlayer()
+    }
+
+    /// The menu's Play: start or resume an episode. A different episode cancels Sleep.
     func play(_ episode: Episode) {
         if player.episode?.id == episode.id {
             if !player.isPlaying { player.play() }
         } else {
-            sleep.episodeWillChange(to: episode.id)
-            clearDriftBack()
-            let start = SeekMath.resumeTime(saved: library.positions[episode.id], duration: episode.duration)
-            player.load(episode, start: start, autoplay: true)
-            library.lastEpisode = episode
-            persist()
-            nightCheckedEpisodeID = nil
+            load(episode, autoplay: true)
         }
         armSleepIfLate(for: episode)
         presentPlayer()
     }
 
-    /// Night auto: between 22:00 and 04:59, the first deliberate play of an
-    /// episode load turns Sleep on. Runs after a different episode cancels Sleep (D07).
+    private func load(_ episode: Episode, autoplay: Bool) {
+        sleep.episodeWillChange(to: episode.id)
+        clearDriftBack()
+        let start = SeekMath.resumeTime(saved: library.positions[episode.id], duration: episode.duration)
+        player.load(episode, start: start, autoplay: autoplay)
+        library.lastEpisode = episode
+        persist()
+        nightCheckedEpisodeID = nil
+    }
+
+    /// Night auto: between 22:00 and 04:59, the first play of an episode load turns
+    /// Sleep on, wherever it starts. Runs after a different episode cancels Sleep (D07).
     private func armSleepIfLate(for episode: Episode) {
         guard nightCheckedEpisodeID != episode.id, Self.isLate(hour: currentHour()) else { return }
         nightCheckedEpisodeID = episode.id

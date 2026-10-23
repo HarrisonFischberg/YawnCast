@@ -15,6 +15,9 @@ final class MiniMoonUITests: XCTestCase {
         app.buttons["Quiet Hours, Fixture Studio"].tap()
         XCTAssertTrue(app.buttons["subscribeKey"].waitForExistence(timeout: 5))
         app.buttons["Fixture Episode 3"].tap()
+        let playPause = app.buttons["playPause"]
+        XCTAssertTrue(playPause.waitForExistence(timeout: 8))
+        playPause.tap()
         let close = app.buttons["closePlayer"]
         XCTAssertTrue(close.waitForExistence(timeout: 8))
         close.tap()

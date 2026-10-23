@@ -113,7 +113,7 @@ struct NewEpisodesView: View {
                     .padding(.bottom, Space.xs)
                     .accessibilityAddTraits(.isHeader)
                 ForEach(group.episodes) { episode in
-                    Button { model.play(episode) } label: {
+                    Button { model.open(episode) } label: {
                         LatestRow(
                             episode: episode,
                             position: model.position(for: episode),

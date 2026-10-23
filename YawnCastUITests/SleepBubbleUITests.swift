@@ -22,6 +22,7 @@ final class SleepBubbleUITests: XCTestCase {
         app.buttons["Fixture Episode 3"].tap()
         let playPause = app.buttons["playPause"]
         XCTAssertTrue(playPause.waitForExistence(timeout: 8))
+        playPause.tap()
         XCTAssertTrue(waitUntil(8) { playPause.label == "Pause" })
 
         let countdown = app.descendants(matching: .any)["sleepCountdown"]

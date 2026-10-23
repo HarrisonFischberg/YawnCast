@@ -214,7 +214,7 @@ struct ShowView: View {
             ForEach(model.groups) { group in
                 Section {
                     ForEach(group.episodes) { episode in
-                        Button { app.play(episode) } label: {
+                        Button { app.open(episode) } label: {
                             EpisodeRow(
                                 episode: episode,
                                 position: app.position(for: episode),
@@ -296,7 +296,7 @@ struct EpisodeRow: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(episode.title)
         .accessibilityValue(meta)
-        .accessibilityHint(isPlaying ? "Playing." : (position.map { $0.seconds > 0 && !$0.completed } == true ? "Resumes playback." : "Starts playback."))
+        .accessibilityHint(isPlaying ? "Playing. Opens Now Playing." : "Opens Now Playing.")
         .accessibilityAddTraits(.isButton)
     }
 

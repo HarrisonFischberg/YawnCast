@@ -73,6 +73,8 @@ final class CoreFlowUITests: XCTestCase {
         let playPause = app.buttons["playPause"]
         XCTAssertTrue(playPause.waitForExistence(timeout: 8), "Now Playing opened")
         XCTAssertTrue(app.staticTexts["Fixture Episode 3"].exists)
+        XCTAssertEqual(playPause.label, "Play", "a row tap opens Now Playing without playing")
+        playPause.tap()
         XCTAssertTrue(waitUntil(8) { playPause.label == "Pause" }, "playing")
 
         let scrubber = app.otherElements["scrubber"].exists ? app.otherElements["scrubber"] : app.descendants(matching: .any)["scrubber"]
@@ -100,6 +102,7 @@ final class CoreFlowUITests: XCTestCase {
         app.buttons["Fixture Episode 2"].tap()
         let playPause = app.buttons["playPause"]
         XCTAssertTrue(playPause.waitForExistence(timeout: 8))
+        playPause.tap()
         app.buttons["Forward 15 seconds"].tap()
         app.buttons["Forward 15 seconds"].tap()
         sleep(1)
