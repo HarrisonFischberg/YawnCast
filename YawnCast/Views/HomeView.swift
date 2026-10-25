@@ -6,6 +6,23 @@ import SwiftUI
 struct HomeView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
+    /// First launch only; installing the app counts as step 1.
+    @AppStorage("didOnboard") private var didOnboard = false
+
+    static let onboarding = [
+        OnboardingPage(
+            systemImage: "moon.zzz.fill",
+            title: "Fall asleep, not stay up",
+            message: "Tap the moon while you listen. Later, YawnCast slowly fades the episode out and pauses, so it never plays all night. In the morning it takes you back to where the fade began.",
+            buttonTitle: "Next"
+        ),
+        OnboardingPage(
+            systemImage: "magnifyingglass",
+            title: "Pick a show to drift off to",
+            message: "Search for any podcast. It lives in your Library, and its new episodes show up in New.",
+            buttonTitle: "Find a podcast"
+        ),
+    ]
 
     var body: some View {
         @Bindable var model = model
@@ -27,6 +44,13 @@ struct HomeView: View {
             }
         }
         .background { ScreenBackground() }
+        .fullScreenCover(isPresented: Binding(get: { !didOnboard && model.library.subscriptions.isEmpty }, set: { if !$0 { didOnboard = true } })) {
+            OnboardingFlow(pages: Self.onboarding) { findShow in
+                didOnboard = true
+                if findShow { model.openSearch() }
+            }
+            .environment(\.theme, theme)
+        }
         .sensoryFeedback(.selection, trigger: model.homePage)
         // Leaving a page ends its in-place search.
         .onChange(of: model.homePage) { _, page in
@@ -87,12 +111,8 @@ struct NewEpisodesView: View {
         if groups.isEmpty {
             switch model.latestPhase {
             case .idle, .loading:
-                HStack(spacing: Space.m) {
-                    ProgressView().tint(theme.text)
-                    Text("Checking your shows…").font(Typo.caption).foregroundStyle(theme.textMuted)
-                }
-                .padding(.top, Space.xl)
-                .accessibilityElement(children: .combine)
+                StagedProgress(title: "Checking your shows", done: model.latestChecked, total: model.library.subscriptions.count)
+                    .padding(.top, Space.xl)
             case .failed(let message):
                 StateMessage(title: "Couldn’t load new episodes", message: message, systemImage: "wifi.exclamationmark", actionTitle: "Try again") {
                     Task { await model.refreshLatest(force: true) }

@@ -28,6 +28,12 @@ enum DebugLaunch {
         if let look = launch.lookID.flatMap(ThemeStyle.init(rawValue:)) { model.look = look }
         // UI tests run at noon unless they ask for a time, so late-night Sleep can't arm by surprise.
         if let hour = launch.nightHour ?? (launch.isUITest ? 12 : nil) { model.currentHour = { hour } }
+        // UI tests skip the first-run intro and first-show sheet unless they ask for them.
+        if launch.isUITest {
+            let firstRun = arguments.contains("-firstRun")
+            UserDefaults.standard.set(!firstRun, forKey: "didOnboard")
+            UserDefaults.standard.set(!firstRun, forKey: "celebratedFirstShow")
+        }
         if launch.isDemo { DemoSeed.run(model: model, launch: launch) }
         return model
     }

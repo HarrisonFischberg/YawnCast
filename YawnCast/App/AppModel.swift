@@ -73,6 +73,8 @@ final class AppModel {
     /// "New" page: recent episodes from Library shows, newest first.
     private(set) var latest: [Episode] = []
     private(set) var latestPhase: LoadPhase = .idle
+    /// Library feeds checked so far in the current New refresh.
+    private(set) var latestChecked = 0
     /// "Explore" page: suggestions grouped by the Library's top genres.
     private(set) var explore: [ExploreSection] = []
     private(set) var explorePhase: LoadPhase = .idle
@@ -317,6 +319,7 @@ final class AppModel {
         if latest.isEmpty { latestPhase = .loading }
         var failures = 0
         var index = 0
+        latestChecked = 0
         while index < shows.count {
             let batch = shows[index..<min(shows.count, index + 4)]
             index += batch.count
@@ -325,7 +328,10 @@ final class AppModel {
             let tasks = batch.map { show in
                 Task { (try? await self.feed(for: show, force: force)) != nil }
             }
-            for task in tasks where !(await task.value) { failures += 1 }
+            for task in tasks {
+                if !(await task.value) { failures += 1 }
+                latestChecked += 1
+            }
             recomputeLatestFromCache()
         }
         if failures == shows.count && latest.isEmpty {
