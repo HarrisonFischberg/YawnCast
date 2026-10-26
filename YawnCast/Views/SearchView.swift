@@ -169,6 +169,7 @@ struct InlineSearchBar: View {
                 .frame(minHeight: 44)
                 .accessibilityIdentifier("closeSearch")
         }
+        .onChange(of: search.query) { _, query in UserDefaults.standard.set(query, forKey: "lastSearch") }
         .onChange(of: isActive) { _, active in
             if active { focusIfRequested() } else { focused = false }
         }
@@ -275,10 +276,25 @@ struct SearchResultsView: View {
         case .results(let results):
             LazyVStack(spacing: Space.xs) {
                 ForEach(results) { result in
-                    NavigationLink(value: Route.show(result.show)) {
-                        SearchRow(result: result, subscribed: app.isSubscribed(result.show))
+                    let subscribed = app.isSubscribed(result.show)
+                    HStack(spacing: 0) {
+                        NavigationLink(value: Route.show(result.show)) {
+                            SearchRow(result: result, subscribed: subscribed)
+                        }
+                        .buttonStyle(RowStyle())
+                        // One tap adds it; removing still happens on the show page.
+                        if !subscribed {
+                            Button { app.toggleSubscription(result.show) } label: {
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.system(size: 26))
+                                    .foregroundStyle(theme.text)
+                                    .frame(width: 44, height: 44)
+                            }
+                            .accessibilityLabel("Add \(result.title) to Library")
+                            .accessibilityIdentifier("addShow")
+                        }
                     }
-                    .buttonStyle(RowStyle())
+                    .sensoryFeedback(trigger: subscribed) { _, added in added ? .success : nil }
                 }
             }
             .padding(.horizontal, -Space.s)

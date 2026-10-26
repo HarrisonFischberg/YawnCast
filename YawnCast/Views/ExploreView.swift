@@ -209,6 +209,22 @@ struct CategoryView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var shows: [DirectoryResult] = []
     @State private var phase: LoadPhase = .idle
+    @State private var sort = CategorySort.popular
+
+    /// Sorts the data supports: chart order, newest episode date, the chart's
+    /// quieter end (as "Hidden gems"), and title.
+    enum CategorySort: String, CaseIterable {
+        case popular = "Most Popular", newest = "Newest", hiddenGems = "Hidden Gems", title = "A–Z"
+    }
+
+    private var sorted: [DirectoryResult] {
+        switch sort {
+        case .popular: shows
+        case .newest: shows.sorted { ($0.latestRelease ?? .distantPast) > ($1.latestRelease ?? .distantPast) }
+        case .hiddenGems: shows.reversed()
+        case .title: shows.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
+        }
+    }
 
     private var columns: [GridItem] {
         Array(repeating: GridItem(.flexible(), spacing: Space.xl, alignment: .top), count: typeSize.isAccessibilitySize ? 1 : 2)
@@ -229,6 +245,12 @@ struct CategoryView: View {
                         .minimumScaleFactor(0.7)
                         .accessibilityAddTraits(.isHeader)
                 }
+                Picker("Sort", selection: $sort) {
+                    ForEach(CategorySort.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                }
+                .pickerStyle(.menu)
+                .tint(theme.text)
+                .accessibilityIdentifier("categorySort")
                 content
             }
             // Fill the width from the first frame (the loading state alone is narrow).
@@ -267,7 +289,7 @@ struct CategoryView: View {
                     .padding(.horizontal, -Space.xxl)
             } else {
                 LazyVGrid(columns: columns, alignment: .leading, spacing: Space.xxl) {
-                    ForEach(shows) { result in
+                    ForEach(sorted) { result in
                         NavigationLink(value: Route.show(result.show)) {
                             ShowTile(show: result.show)
                                 .overlay(alignment: .topLeading) {

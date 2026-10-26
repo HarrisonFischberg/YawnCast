@@ -6,21 +6,16 @@ import SwiftUI
 struct HomeView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
-    /// First launch only; installing the app counts as step 1.
+    /// First launch only; installing the app counts as step 1, picking shows is step 3.
     @AppStorage("didOnboard") private var didOnboard = false
+    @State private var pickingShows = false
 
     static let onboarding = [
         OnboardingPage(
             systemImage: "moon.zzz.fill",
             title: "Fall asleep, not stay up",
             message: "Tap the moon while you listen. Later, YawnCast slowly fades the episode out and pauses, so it never plays all night. In the morning it takes you back to where the fade began.",
-            buttonTitle: "Next"
-        ),
-        OnboardingPage(
-            systemImage: "magnifyingglass",
-            title: "Pick a show to drift off to",
-            message: "Search for any podcast. It lives in your Library, and its new episodes show up in New.",
-            buttonTitle: "Find a podcast"
+            buttonTitle: "Pick your shows"
         ),
     ]
 
@@ -45,10 +40,14 @@ struct HomeView: View {
         }
         .background { ScreenBackground() }
         .fullScreenCover(isPresented: Binding(get: { !didOnboard && model.library.subscriptions.isEmpty }, set: { if !$0 { didOnboard = true } })) {
-            OnboardingFlow(pages: Self.onboarding) { findShow in
-                didOnboard = true
-                if findShow { model.openSearch() }
+            Group {
+                if pickingShows {
+                    PickShowsView { didOnboard = true }
+                } else {
+                    OnboardingFlow(pages: Self.onboarding, stepsAfter: 1) { _ in pickingShows = true }
+                }
             }
+            .environment(model)
             .environment(\.theme, theme)
         }
         .sensoryFeedback(.selection, trigger: model.homePage)

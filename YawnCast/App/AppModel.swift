@@ -121,12 +121,18 @@ final class AppModel {
         search = SearchModel(directory: directory)
         var snapshot = store.load()
         // v0.17: a colour (a Scene or one of four flat colours) and a text style (Picture
-        // Book or Sign-Off). Retired colours move to the nearest one; a new install
-        // starts on Almanac with Picture Book text.
+        // Book or Sign-Off). Retired colours move to the nearest one; text starts as Picture Book.
         if (snapshot.appearanceVersion ?? 0) < 8 {
             snapshot.themeID = Theme.migrated(from: snapshot.themeID).id
             if ThemeStyle(rawValue: snapshot.lookID ?? "") == nil { snapshot.lookID = ThemeStyle.pictureBook.rawValue }
             snapshot.appearanceVersion = 8
+            try? store.save(snapshot)
+        }
+        // v0.18: everyone starts on the Midnight scene once (new installs and existing
+        // ones); a colour picked after that sticks.
+        if (snapshot.appearanceVersion ?? 0) < 9 {
+            snapshot.themeID = Theme.midnight.id
+            snapshot.appearanceVersion = 9
             try? store.save(snapshot)
         }
         library = snapshot
@@ -232,18 +238,16 @@ final class AppModel {
     /// Search in place on the current home page: its content glides away and results appear.
     func openSearch() {
         let page = library.subscriptions.isEmpty ? HomePage.library : homePage
+        // Pick up where the last search left off, even across launches.
+        if search.query.isEmpty { search.query = UserDefaults.standard.string(forKey: "lastSearch") ?? "" }
         focusSearchOnAppear = true
         withAnimation(.smooth(duration: 0.42)) { searchingOn = page }
     }
 
     func endSearch() {
         search.cancel()
+        // The query stays, so reopening search shows the last one.
         withAnimation(.smooth(duration: 0.42)) { searchingOn = nil }
-        // Clear after the fade so results don't blink out mid-animation.
-        Task { [weak self] in
-            try? await Task.sleep(for: .milliseconds(450))
-            if self?.searchingOn == nil { self?.search.query = "" }
-        }
     }
 
     /// Marks an episode played or unplayed without playing it.

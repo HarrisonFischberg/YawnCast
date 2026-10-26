@@ -15,6 +15,8 @@ struct OnboardingPage {
 struct OnboardingFlow: View {
     let pages: [OnboardingPage]
     var stepsDone = 1
+    /// Steps that follow the intro (e.g. picking shows), counted in the total.
+    var stepsAfter = 0
     /// `true` when the last page's button was pressed, `false` on Skip.
     let onFinish: (Bool) -> Void
 
@@ -24,7 +26,7 @@ struct OnboardingFlow: View {
 
     var body: some View {
         let page = pages[index]
-        let total = pages.count + stepsDone
+        let total = pages.count + stepsDone + stepsAfter
         let step = index + stepsDone + 1
         VStack(alignment: .leading, spacing: Space.xl) {
             HStack {
