@@ -8,16 +8,19 @@ public struct DirectoryResult: Hashable, Identifiable, Sendable {
     public var feedURL: URL
     /// Directory genres, primary first, excluding the catch-all "Podcasts" genre.
     public var genres: [Genre]
+    /// When the newest episode came out, if the directory says.
+    public var latestRelease: Date?
 
     public var id: String { FeedURL.key(feedURL) }
 
-    public init(directoryID: Int, title: String, author: String?, artworkURL: URL?, feedURL: URL, genres: [Genre] = []) {
+    public init(directoryID: Int, title: String, author: String?, artworkURL: URL?, feedURL: URL, genres: [Genre] = [], latestRelease: Date? = nil) {
         self.directoryID = directoryID
         self.title = title
         self.author = author
         self.artworkURL = artworkURL
         self.feedURL = feedURL
         self.genres = genres
+        self.latestRelease = latestRelease
     }
 
     public var show: Show {
@@ -180,6 +183,7 @@ public struct ITunesDirectory: DirectoryService {
                 var artworkUrl100: String?
                 var genreIds: [String]?
                 var genres: [String]?
+                var releaseDate: String?
             }
             var results: [Item]
         }
@@ -203,7 +207,8 @@ public struct ITunesDirectory: DirectoryService {
                 feedURL: feed,
                 genres: zip(item.genreIds ?? [], item.genres ?? [])
                     .filter { $0.0 != Genre.umbrellaID }
-                    .map { Genre(id: $0.0, name: $0.1) }
+                    .map { Genre(id: $0.0, name: $0.1) },
+                latestRelease: item.releaseDate.flatMap { ISO8601DateFormatter().date(from: $0) }
             )
         }
         return DirectoryResult.deduplicated(results)

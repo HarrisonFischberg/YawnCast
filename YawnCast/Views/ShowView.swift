@@ -77,6 +77,9 @@ struct ShowView: View {
     @State private var model: ShowModel
     @State private var expanded = false
     @Environment(\.dynamicTypeSize) private var typeSize
+    /// The first show ever saved gets a success sheet; later ones just the haptic.
+    @AppStorage("celebratedFirstShow") private var celebratedFirstShow = false
+    @State private var celebrating = false
 
     init(show: Show, app: AppModel) {
         _model = State(initialValue: ShowModel(show: show, app: app))
@@ -98,6 +101,16 @@ struct ShowView: View {
         .refreshable { await model.load(force: true) }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background { ScreenBackground() }
+        .sheet(isPresented: $celebrating) {
+            SuccessView(
+                systemImage: "moon.stars.fill",
+                title: "On your nightstand",
+                message: "\(model.show.title) is in your Library, and its new episodes will show up in New. Pick one, tap the moon, and drift off.",
+                actionTitle: "Pick an episode"
+            ) { celebrating = false }
+            .environment(\.theme, theme)
+            .presentationDetents([.medium, .large])
+        }
         .task { await model.load() }
         .toolbarBackground(theme.bg, for: .navigationBar)
         .navigationBarTitleDisplayMode(.inline)
@@ -133,7 +146,12 @@ struct ShowView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             Button {
+                let first = !subscribed && !celebratedFirstShow && app.library.subscriptions.isEmpty
                 app.toggleSubscription(show)
+                if first {
+                    celebratedFirstShow = true
+                    celebrating = true
+                }
             } label: {
                 Label(subscribed ? "Subscribed" : "Subscribe", systemImage: subscribed ? "checkmark" : "plus")
                     .font(Typo.headline)
@@ -254,8 +272,13 @@ private struct YearHeader: View {
         .padding(.top, Space.l)
         .padding(.bottom, Space.s)
         .background {
-            // Pinned over scrolling rows; a soft frosted band over a Scene.
-            if theme.scene != nil {
+            // Pinned over scrolling rows: a glass band on iOS 26, else a soft frosted band over a Scene.
+            if #available(iOS 26, *) {
+                Color.clear
+                    .nightGlass(in: Capsule()) {}
+                    .padding(.top, Space.s)
+                    .padding(.horizontal, -Space.m)
+            } else if theme.scene != nil {
                 Rectangle().fill(.ultraThinMaterial).padding(.horizontal, -Space.xl)
             } else {
                 theme.bg.padding(.horizontal, -Space.xl)

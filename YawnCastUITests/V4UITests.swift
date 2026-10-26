@@ -157,12 +157,14 @@ final class V4UITests: XCTestCase {
         bar.tap()
         let field = app.textFields["searchField"]
         XCTAssertTrue(field.waitForExistence(timeout: 5))
-        field.typeText("quiet")
+        field.clearAndType("quiet") // search remembers the earlier query
         XCTAssertTrue(app.staticTexts["In your Library"].waitForExistence(timeout: 3) || app.staticTexts["IN YOUR LIBRARY"].exists)
         XCTAssertTrue(app.buttons["libraryMatch"].waitForExistence(timeout: 3), "saved show matches instantly")
         XCTAssertTrue(app.descendants(matching: .any)["searchResults"].waitForExistence(timeout: 5), "new shows from the directory too")
         field.clearAndType("zzzz")
         XCTAssertTrue(app.staticTexts["No saved shows match “zzzz”."].waitForExistence(timeout: 3))
+        // Clear it, or reopening restores "zzzz" and its result row sits where the blank tap lands.
+        app.buttons["Clear search"].tap()
         app.buttons["closeSearch"].tap()
         XCTAssertTrue(bar.waitForExistence(timeout: 3))
 

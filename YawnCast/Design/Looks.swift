@@ -41,6 +41,9 @@ struct LookTabs: View {
                 .modifier(TabAccessibility(page: page, selected: on))
             }
         }
+        // iOS 26: the three tabs float as one glass pill over the Scene.
+        .padding(.horizontal, Space.xs)
+        .nightGlass(in: Capsule()) {}
         .frame(maxWidth: .infinity)
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Pages")
@@ -106,7 +109,15 @@ struct LookMoonKey: View {
         .padding(.horizontal, Space.xl)
         .padding(.vertical, Space.l)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background { face }
+        // iOS 26: a lens of accent glass while Sleep is on, clear glass while off.
+        .nightGlass(in: faceShape, tint: isOn ? theme.accent.opacity(0.85) : nil) { face }
+    }
+
+    private var faceShape: AnyShape {
+        switch theme.style {
+        case .pictureBook: AnyShape(PaperShape(seed: 2))
+        case .signOff: AnyShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        }
     }
 
     private var toggle: some View {

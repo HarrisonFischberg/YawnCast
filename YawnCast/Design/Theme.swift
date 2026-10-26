@@ -116,6 +116,26 @@ struct Theme: Identifiable, Equatable {
         edge: Color(hex: 0x245634), highlight: .white.opacity(0.12), shadowOpacity: 0.3
     )
 
+    /// Dream: night indigo with a dream-violet Moon (UI/UX Pro Max's sleep palette, v0.18).
+    static let dream = Theme(
+        id: "dream", name: "Dream", blurb: "Night indigo, dream violet",
+        colorScheme: .dark,
+        bg: Color(hex: 0x0F172A), surface: Color(hex: 0x192134), raised: Color(hex: 0x232D45),
+        border: Color(hex: 0x334166), text: Color(hex: 0xF8FAFC), textMuted: Color(hex: 0x94A3B8),
+        accent: Color(hex: 0x818CF8), onAccent: Color(hex: 0x0F172A), danger: Color(hex: 0xFCA5A5),
+        edge: Color(hex: 0x080D1A), highlight: .white.opacity(0.08), shadowOpacity: 0.55,
+        dayVariant: "dreamday"
+    )
+
+    static let dreamDay = Theme(
+        id: "dreamday", name: "Dream", blurb: "Night indigo, dream violet",
+        colorScheme: .light,
+        bg: Color(hex: 0xFAF5FF), surface: Color(hex: 0xF1E9FC), raised: Color(hex: 0xFFFFFF),
+        border: Color(hex: 0xD8C9F2), text: Color(hex: 0x0F172A), textMuted: Color(hex: 0x475569),
+        accent: Color(hex: 0x5B21B6), onAccent: Color(hex: 0xFFFFFF), danger: Color(hex: 0xB91C1C),
+        edge: Color(hex: 0xE4D8F7), highlight: .white.opacity(0.8), shadowOpacity: 0.12
+    )
+
     // MARK: Scenes and Color Scapes (v0.5 to v0.16), back as colours in v0.17 so they
     // can be worn with any style's type.
 
@@ -186,11 +206,11 @@ struct Theme: Identifiable, Equatable {
 
 
     /// Flat colours, in the order the Themes sheet shows them (ids kept from v0.17's looks).
-    static let colours: [Theme] = [.almanac, .ember, .plum, .meadow]
+    static let colours: [Theme] = [.almanac, .ember, .plum, .meadow, .dream]
     /// Animated colours, all calm and night-time.
     static let scenes: [Theme] = [.midnight, .mountain, .beach, .rainforest, .ocean, .city]
     static let all: [Theme] = scenes + colours
-    private static let dayPages: [Theme] = [.almanacDay, .emberDay, .plumDay, .meadowDay]
+    private static let dayPages: [Theme] = [.almanacDay, .emberDay, .plumDay, .meadowDay, .dreamDay]
 
     static func with(id: String?) -> Theme {
         all.first { $0.id == id } ?? .almanac

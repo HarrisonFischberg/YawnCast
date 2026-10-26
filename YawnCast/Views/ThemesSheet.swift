@@ -27,7 +27,10 @@ struct ThemesSheet: View {
             }
             .padding(Space.xxl)
         }
-        .background { ScreenBackground() }
+        .background {
+            // iOS 26: the sheet is system glass, so the live Scene shows through as you pick.
+            if #available(iOS 26, *) {} else { ScreenBackground() }
+        }
         .sensoryFeedback(.selection, trigger: model.theme)
         .sensoryFeedback(.selection, trigger: model.look)
     }
