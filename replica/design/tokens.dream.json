@@ -1,0 +1,58 @@
+{
+  "_about": "YawnCast look 'dream'",
+  "color": {
+    "bg": "#0F172A",
+    "surface": "#192134",
+    "raised": "#232D45",
+    "border": "#334166",
+    "border-input": "#334166",
+    "text": "#F8FAFC",
+    "text-muted": "#94A3B8",
+    "accent": "#818CF8",
+    "on-accent": "#0F172A",
+    "danger": "#FCA5A5"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "accent",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "danger",
+      "bg"
+    ],
+    [
+      "border-input",
+      "bg",
+      "ui"
+    ]
+  ]
+}

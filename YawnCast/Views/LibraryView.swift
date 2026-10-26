@@ -383,9 +383,8 @@ struct MiniPlayerDock: View {
             .sensoryFeedback(.impact(weight: .medium), trigger: player.isPlaying)
         }
         .padding(10)
-        .background {
-            let r = theme.style.cardRadius
-            RoundedRectangle(cornerRadius: r, style: .continuous)
+        .nightGlass(in: RoundedRectangle(cornerRadius: theme.style.cardRadius, style: .continuous)) {
+            RoundedRectangle(cornerRadius: theme.style.cardRadius, style: .continuous)
                 .fill(theme.raised)
                 .shadow(color: .black.opacity(theme.shadowOpacity), radius: 12, y: 6)
         }

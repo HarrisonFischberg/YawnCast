@@ -27,7 +27,8 @@ struct KeyStyle<S: InsettableShape>: ButtonStyle {
         return configuration.label
             .foregroundStyle(foreground)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background { shape.fill(face) }
+            // Standard keys turn to glass on iOS 26; primary and accent stay solid, the one bright key.
+            .nightGlass(in: shape, interactive: true, enabled: role == .standard) { shape.fill(face) }
             .scaleEffect(pressed ? 0.96 : 1)
             .opacity(isEnabled ? (pressed ? 0.75 : 1) : 0.45)
             .contentShape(shape)
@@ -74,7 +75,9 @@ struct OutlineKeyStyle: ButtonStyle {
         configuration.label
             .foregroundStyle(theme.text)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Circle().fill(theme.bg.opacity(0.35)).overlay(Circle().strokeBorder(theme.text.opacity(0.55), lineWidth: 1.5)))
+            .nightGlass(in: Circle(), interactive: true) {
+                Circle().fill(theme.bg.opacity(0.35)).overlay(Circle().strokeBorder(theme.text.opacity(0.55), lineWidth: 1.5))
+            }
             .scaleEffect(configuration.isPressed ? 0.94 : 1)
             .opacity(isEnabled ? (configuration.isPressed ? 0.75 : 1) : 0.45)
             .contentShape(Circle())
@@ -100,5 +103,38 @@ struct IconKey: View {
         .accessibilityShowsLargeContentViewer {
             Label(label, systemImage: systemName)
         }
+    }
+}
+
+/// Liquid Glass behind a view on iOS 26, else the given solid face. Glass blurs what is
+/// behind it, so the Scenes keep moving underneath. Reduce Transparency is handled by
+/// the system glass itself.
+struct NightGlass<S: Shape, Fallback: View>: ViewModifier {
+    let shape: S
+    var tint: Color?
+    var interactive = false
+    var enabled = true
+    let fallback: Fallback
+    @Environment(\.theme) private var theme
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(iOS 26, *) {
+            if enabled {
+                // Ember promises no blue light, so its glass is always warm-tinted.
+                content.glassEffect(.regular.tint(tint ?? (theme.warmOnly ? theme.accent.opacity(0.18) : nil)).interactive(interactive), in: shape)
+            } else {
+                content.background { fallback }
+            }
+        } else {
+            content.background { fallback }
+        }
+    }
+}
+
+extension View {
+    func nightGlass<S: Shape, F: View>(in shape: S, tint: Color? = nil, interactive: Bool = false, enabled: Bool = true,
+                                       @ViewBuilder otherwise fallback: () -> F) -> some View {
+        modifier(NightGlass(shape: shape, tint: tint, interactive: interactive, enabled: enabled, fallback: fallback()))
     }
 }

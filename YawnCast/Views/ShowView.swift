@@ -272,8 +272,13 @@ private struct YearHeader: View {
         .padding(.top, Space.l)
         .padding(.bottom, Space.s)
         .background {
-            // Pinned over scrolling rows; a soft frosted band over a Scene.
-            if theme.scene != nil {
+            // Pinned over scrolling rows: a glass band on iOS 26, else a soft frosted band over a Scene.
+            if #available(iOS 26, *) {
+                Color.clear
+                    .nightGlass(in: Capsule()) {}
+                    .padding(.top, Space.s)
+                    .padding(.horizontal, -Space.m)
+            } else if theme.scene != nil {
                 Rectangle().fill(.ultraThinMaterial).padding(.horizontal, -Space.xl)
             } else {
                 theme.bg.padding(.horizontal, -Space.xl)

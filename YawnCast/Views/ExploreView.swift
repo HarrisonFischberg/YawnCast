@@ -133,8 +133,9 @@ struct SearchCapsule: View {
             .foregroundStyle(theme.textMuted)
             .padding(.horizontal, Space.l)
             .frame(minHeight: 52)
-            .background(Capsule().fill(theme.surface.opacity(0.85)))
-            .overlay(Capsule().strokeBorder(theme.border, lineWidth: 1))
+            .nightGlass(in: Capsule(), interactive: true) {
+                Capsule().fill(theme.surface.opacity(0.85)).overlay(Capsule().strokeBorder(theme.border, lineWidth: 1))
+            }
             .contentShape(Capsule())
         }
         .buttonStyle(.plain)
@@ -158,7 +159,7 @@ private struct InterestChip: View {
         .padding(.horizontal, Space.l)
         .frame(minHeight: 44)
         // The accent belongs to the Moon key; chips are quietly filled.
-        .background(Capsule().fill(theme.surface))
+        .nightGlass(in: Capsule(), interactive: true) { Capsule().fill(theme.surface) }
         .accessibilityElement(children: .combine)
     }
 }
