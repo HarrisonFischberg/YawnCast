@@ -30,7 +30,7 @@ struct SleepChip: View {
             StepKey(minutes: 5) { step(5) }
         }
         .padding(.horizontal, 4)
-        .background {
+        .nightGlass(in: Capsule()) {
             Capsule()
                 .fill(theme.raised.opacity(0.92))
                 .shadow(color: .black.opacity(theme.shadowOpacity * 0.6), radius: 10, y: 4)

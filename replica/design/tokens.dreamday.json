@@ -1,0 +1,58 @@
+{
+  "_about": "YawnCast look 'dreamday'",
+  "color": {
+    "bg": "#FAF5FF",
+    "surface": "#F1E9FC",
+    "raised": "#FFFFFF",
+    "border": "#D8C9F2",
+    "border-input": "#D8C9F2",
+    "text": "#0F172A",
+    "text-muted": "#475569",
+    "accent": "#5B21B6",
+    "on-accent": "#FFFFFF",
+    "danger": "#B91C1C"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "accent",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "danger",
+      "bg"
+    ],
+    [
+      "border-input",
+      "bg",
+      "ui"
+    ]
+  ]
+}
