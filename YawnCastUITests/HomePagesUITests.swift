@@ -44,6 +44,7 @@ final class HomePagesUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Slow Rivers, Fixture Studio"].exists)
         XCTAssertTrue(app.buttons["Lantern Tales, Fixture Studio"].exists)
         XCTAssertFalse(app.buttons["Loud Laughs, Fixture Studio"].exists, "no shared genre → not suggested")
+        XCTAssertTrue(app.buttons["Add Slow Rivers to Library"].exists, "Explore tiles have a quick-add +")
 
         // Swipe right twice → New: newest episodes, today first.
         app.swipeRight()

@@ -103,8 +103,31 @@ struct ExploreView: View {
                             ShowTile(show: recommendation.result.show)
                         }
                         .buttonStyle(TileStyle())
+                        .modifier(QuickAdd(show: recommendation.result.show))
                     }
                 }
+            }
+        }
+    }
+}
+
+/// A + in the tile's corner that saves the show in one tap (hidden once saved).
+struct QuickAdd: ViewModifier {
+    let show: Show
+    @Environment(AppModel.self) private var model
+    @Environment(\.theme) private var theme
+
+    func body(content: Content) -> some View {
+        content.overlay(alignment: .topTrailing) {
+            if !model.isSubscribed(show) {
+                Button { model.add(show) } label: {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.system(size: 26))
+                        .foregroundStyle(theme.onAccent, theme.accent)
+                        .frame(width: 44, height: 44)
+                }
+                .accessibilityLabel("Add \(show.title) to Library")
+                .accessibilityIdentifier("addShow")
             }
         }
     }
@@ -304,18 +327,7 @@ struct CategoryView: View {
                                 }
                         }
                         .buttonStyle(TileStyle())
-                        .overlay(alignment: .topTrailing) {
-                            if !model.isSubscribed(result.show) {
-                                Button { model.add(result.show) } label: {
-                                    Image(systemName: "plus.circle.fill")
-                                        .font(.system(size: 26))
-                                        .foregroundStyle(theme.onAccent, theme.accent)
-                                        .frame(width: 44, height: 44)
-                                }
-                                .accessibilityLabel("Add \(result.title) to Library")
-                                .accessibilityIdentifier("addShow")
-                            }
-                        }
+                        .modifier(QuickAdd(show: result.show))
                     }
                 }
             }
