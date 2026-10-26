@@ -107,6 +107,7 @@ struct SearchablePage<Content: View>: View {
     @State private var resultsHeight: CGFloat = 0
 
     private var isSearching: Bool { app.searchingOn == page }
+    private var libraryOnly: Bool { page == .library && !app.searchFindsNew }
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -122,11 +123,11 @@ struct SearchablePage<Content: View>: View {
                 .accessibilityHidden(isSearching)
 
             VStack(alignment: .leading, spacing: Space.l) {
-                InlineSearchBar(isActive: isSearching, placeholder: page == .library ? "Your shows or new ones" : "Shows, hosts, topics")
+                InlineSearchBar(isActive: isSearching, placeholder: libraryOnly ? "Your shows" : "Shows, hosts, topics")
                     .padding(.horizontal, Space.xl)
                     .padding(.top, Space.s)
                 ScrollView {
-                    SearchResultsView(includeLibrary: page == .library)
+                    SearchResultsView(libraryOnly: libraryOnly)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, Space.xl)
                         .padding(.bottom, Space.xxxl)
@@ -188,9 +189,9 @@ struct InlineSearchBar: View {
 }
 
 /// Search states and results, laid out inside the page's own scroll view.
-/// On Library: matching saved shows first ("In your Library"), then new shows from the directory.
+/// On Library (once it has shows): only matching saved shows. New shows are found from Explore.
 struct SearchResultsView: View {
-    var includeLibrary = false
+    var libraryOnly = false
     @Environment(AppModel.self) private var app
     @Environment(\.theme) private var theme
 
@@ -198,7 +199,7 @@ struct SearchResultsView: View {
 
     /// Saved shows whose title or host contains the query (instant, no network).
     private var libraryMatches: [Show] {
-        guard includeLibrary, !term.isEmpty else { return [] }
+        guard libraryOnly, !term.isEmpty else { return [] }
         return app.library.subscriptions.filter {
             $0.title.localizedCaseInsensitiveContains(term) || ($0.author?.localizedCaseInsensitiveContains(term) ?? false)
         }
@@ -206,9 +207,13 @@ struct SearchResultsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Space.s) {
-            if includeLibrary, !term.isEmpty {
-                sectionHeader("In your Library")
-                if libraryMatches.isEmpty {
+            if libraryOnly {
+                if term.isEmpty {
+                    Text("Type to filter your shows.")
+                        .font(Typo.caption)
+                        .foregroundStyle(theme.textMuted)
+                        .padding(.top, Space.xs)
+                } else if libraryMatches.isEmpty {
                     Text("No saved shows match “\(term)”.")
                         .font(Typo.caption)
                         .foregroundStyle(theme.textMuted)
@@ -220,13 +225,12 @@ struct SearchResultsView: View {
                             .accessibilityIdentifier("libraryMatch")
                     }
                 }
-                sectionHeader("Find new shows")
-                    .padding(.top, Space.l)
+            } else {
+                directory
             }
-            directory
         }
         .onChange(of: app.search.state) { _, state in
-            guard let message = Self.announcement(for: state) else { return }
+            guard !libraryOnly, let message = Self.announcement(for: state) else { return }
             AccessibilityNotification.Announcement(message).post()
         }
     }
@@ -241,19 +245,12 @@ struct SearchResultsView: View {
         }
     }
 
-    private func sectionHeader(_ title: String) -> some View {
-        Text(title)
-            .font(Typo.eyebrow).tracking(1.2).textCase(.uppercase)
-            .foregroundStyle(theme.textMuted)
-            .accessibilityAddTraits(.isHeader)
-    }
-
     @ViewBuilder
     private var directory: some View {
         let model = app.search
         switch model.state {
         case .idle:
-            Text(includeLibrary ? "Type to filter your shows and find new ones." : "Search by show name, host, or topic.")
+            Text("Search by show name, host, or topic.")
                 .font(Typo.caption)
                 .foregroundStyle(theme.textMuted)
                 .padding(.top, Space.xs)
@@ -284,7 +281,7 @@ struct SearchResultsView: View {
                         .buttonStyle(RowStyle())
                         // One tap adds it; removing still happens on the show page.
                         if !subscribed {
-                            Button { app.toggleSubscription(result.show) } label: {
+                            Button { app.add(result.show) } label: {
                                 Image(systemName: "plus.circle.fill")
                                     .font(.system(size: 26))
                                     .foregroundStyle(theme.text)

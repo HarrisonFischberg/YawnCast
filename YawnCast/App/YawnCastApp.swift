@@ -73,6 +73,21 @@ struct RootView: View {
             }
         }
         .animation(.smooth(duration: 0.38), value: model.player.episode == nil)
+        .overlay(alignment: .top) {
+            if let note = model.addedNote {
+                Text(note)
+                    .font(Typo.caption)
+                    .foregroundStyle(theme.text)
+                    .padding(.horizontal, Space.l)
+                    .padding(.vertical, Space.s)
+                    .background(Capsule().fill(theme.surface).overlay(Capsule().strokeBorder(theme.border)))
+                    .padding(.top, Space.s)
+                    .transition(.opacity.combined(with: .offset(y: -8)))
+                    .allowsHitTesting(false)
+                    .accessibilityIdentifier("addedToast")
+            }
+        }
+        .animation(.easeOut(duration: 0.2), value: model.addedNote)
         .fullScreenCover(isPresented: $model.isPlayerPresented) {
             NowPlayingView()
                 .environment(\.theme, theme)

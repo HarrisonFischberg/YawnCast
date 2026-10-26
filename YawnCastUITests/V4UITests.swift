@@ -146,7 +146,7 @@ final class V4UITests: XCTestCase {
         XCTAssertTrue(beach.exists ? beach.isSelected : true, "the colour stays when the text changes")
     }
 
-    func testLibrarySearchFiltersShowsAndFindsNewOnes() {
+    func testLibrarySearchFiltersSavedShowsOnly() {
         let app = launch()
         XCTAssertFalse(app.buttons["librarySearch"].exists, "empty Library keeps one action: Find a podcast")
         subscribeQuietHours(app)
@@ -158,9 +158,8 @@ final class V4UITests: XCTestCase {
         let field = app.textFields["searchField"]
         XCTAssertTrue(field.waitForExistence(timeout: 5))
         field.clearAndType("quiet") // search remembers the earlier query
-        XCTAssertTrue(app.staticTexts["In your Library"].waitForExistence(timeout: 3) || app.staticTexts["IN YOUR LIBRARY"].exists)
         XCTAssertTrue(app.buttons["libraryMatch"].waitForExistence(timeout: 3), "saved show matches instantly")
-        XCTAssertTrue(app.descendants(matching: .any)["searchResults"].waitForExistence(timeout: 5), "new shows from the directory too")
+        XCTAssertFalse(app.descendants(matching: .any)["searchResults"].waitForExistence(timeout: 2), "no directory results on Library")
         field.clearAndType("zzzz")
         XCTAssertTrue(app.staticTexts["No saved shows match “zzzz”."].waitForExistence(timeout: 3))
         // Clear it, or reopening restores "zzzz" and its result row sits where the blank tap lands.
@@ -185,6 +184,11 @@ final class V4UITests: XCTestCase {
         XCTAssertTrue(app.buttons["interest-Fiction"].waitForExistence(timeout: 8), "interest from the saved show's genre")
         app.buttons["category-Comedy"].tap()
         XCTAssertTrue(app.buttons["Loud Laughs, Fixture Studio"].waitForExistence(timeout: 8), "category page lists its shows")
+        let add = app.buttons["Add Loud Laughs to Library"]
+        XCTAssertTrue(add.exists, "category shows have a +")
+        add.tap()
+        XCTAssertTrue(app.staticTexts["addedToast"].waitForExistence(timeout: 3), "Added to your library")
+        XCTAssertTrue(waitUntil(5) { !add.exists }, "+ goes away once added")
         app.navigationBars.buttons.element(boundBy: 0).tap()
 
         app.buttons["exploreSearch"].tap()
