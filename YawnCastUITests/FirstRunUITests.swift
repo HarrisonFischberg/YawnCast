@@ -37,7 +37,9 @@ final class FirstRunUITests: XCTestCase {
         let add = app.buttons["addShow"]
         XCTAssertTrue(add.waitForExistence(timeout: 5))
         add.tap()
+        XCTAssertTrue(app.staticTexts["addedToast"].waitForExistence(timeout: 3), "Added to your library")
         XCTAssertTrue(waitUntil(5) { !app.buttons["addShow"].exists }, "+ goes away once the show is in the Library")
+        XCTAssertTrue(field.exists, "search stays open after adding")
 
         app.terminate()
         app.launchArguments = ["-uitest", "-theme", "almanac"]

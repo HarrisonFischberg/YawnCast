@@ -82,6 +82,10 @@ final class AppModel {
     private(set) var interests: [PodcastCategory] = []
     /// Brief confirmation shown above the Moon key.
     private(set) var toast: String?
+    /// "Added to your library" pill at the top of the screen after a + tap.
+    private(set) var addedNote: String?
+    /// Search opened on an empty Library finds new shows; otherwise Library search only filters saved ones.
+    private(set) var searchFindsNew = false
     /// Note shown in the toast slot when Sleep turned itself on late at night.
     private(set) var nightNote: String?
     /// Local hour, 0-23. Replaced in Debug by `-nightHour` (TestSupport/DebugLaunch.swift).
@@ -102,6 +106,7 @@ final class AppModel {
     /// Drift back: the fade start of the current Sleep, kept until it pauses the episode.
     @ObservationIgnored private var fadeBegan: DriftBackMarker?
     @ObservationIgnored private var toastTask: Task<Void, Never>?
+    @ObservationIgnored private var addedNoteTask: Task<Void, Never>?
     @ObservationIgnored private var nightNoteTask: Task<Void, Never>?
     /// The episode load the late-night check already ran for, so turning Sleep off sticks.
     @ObservationIgnored private var nightCheckedEpisodeID: String?
@@ -204,6 +209,21 @@ final class AppModel {
         recomputeLatestFromCache()
     }
 
+    /// The + on a search or category row: saves the show and confirms briefly.
+    func add(_ show: Show) {
+        guard !isSubscribed(show) else { return }
+        toggleSubscription(show)
+        let note = "Added to your library"
+        addedNote = note
+        UIAccessibility.post(notification: .announcement, argument: note)
+        addedNoteTask?.cancel()
+        addedNoteTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(2))
+            guard !Task.isCancelled else { return }
+            self?.addedNote = nil
+        }
+    }
+
     /// Large / Small / List. Saved with the Library.
     var libraryLayout: LibraryLayout {
         get { library.libraryLayout ?? .large }
@@ -238,6 +258,7 @@ final class AppModel {
     /// Search in place on the current home page: its content glides away and results appear.
     func openSearch() {
         let page = library.subscriptions.isEmpty ? HomePage.library : homePage
+        searchFindsNew = page != .library || library.subscriptions.isEmpty
         // Pick up where the last search left off, even across launches.
         if search.query.isEmpty { search.query = UserDefaults.standard.string(forKey: "lastSearch") ?? "" }
         focusSearchOnAppear = true
@@ -247,7 +268,7 @@ final class AppModel {
     func endSearch() {
         search.cancel()
         // The query stays, so reopening search shows the last one.
-        withAnimation(.smooth(duration: 0.42)) { searchingOn = nil }
+        withAnimation(.smooth(duration: 0.42)) { searchingOn = nil; searchFindsNew = false }
     }
 
     /// Marks an episode played or unplayed without playing it.

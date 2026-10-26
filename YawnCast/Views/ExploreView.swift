@@ -304,6 +304,18 @@ struct CategoryView: View {
                                 }
                         }
                         .buttonStyle(TileStyle())
+                        .overlay(alignment: .topTrailing) {
+                            if !model.isSubscribed(result.show) {
+                                Button { model.add(result.show) } label: {
+                                    Image(systemName: "plus.circle.fill")
+                                        .font(.system(size: 26))
+                                        .foregroundStyle(theme.onAccent, theme.accent)
+                                        .frame(width: 44, height: 44)
+                                }
+                                .accessibilityLabel("Add \(result.title) to Library")
+                                .accessibilityIdentifier("addShow")
+                            }
+                        }
                     }
                 }
             }

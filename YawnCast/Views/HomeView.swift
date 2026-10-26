@@ -22,7 +22,8 @@ struct HomeView: View {
     var body: some View {
         @Bindable var model = model
         VStack(spacing: 0) {
-            if model.library.subscriptions.isEmpty {
+            // Stay on the single Library page while a first-launch search adds shows.
+            if model.library.subscriptions.isEmpty || (model.searchingOn == .library && model.searchFindsNew) {
                 LibraryView()
             } else {
                 VStack(spacing: Space.m) {

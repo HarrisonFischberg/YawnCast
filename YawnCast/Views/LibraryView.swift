@@ -31,8 +31,8 @@ struct LibraryView: View {
             VStack(alignment: .leading, spacing: Space.xxl) {
                 header
                 if !model.library.subscriptions.isEmpty {
-                    // One bar for both: filters your shows and finds new ones.
-                    SearchCapsule(placeholder: "Search your shows or find new ones", identifier: "librarySearch") {
+                    // Filters saved shows only; new shows are found from Explore.
+                    SearchCapsule(placeholder: "Search your shows", identifier: "librarySearch") {
                         model.openSearch()
                     }
                     .padding(.top, -Space.s)
@@ -121,7 +121,7 @@ struct LibraryView: View {
             Spacer()
             HStack(spacing: Space.m) {
                 if !model.library.subscriptions.isEmpty {
-                    IconKey(systemName: model.libraryLayout.next.symbol, label: "Layout: \(model.libraryLayout.title). Switch to \(model.libraryLayout.next.title)") {
+                    IconKey(systemName: model.libraryLayout.symbol, label: "Layout: \(model.libraryLayout.title). Switch to \(model.libraryLayout.next.title)") {
                         withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { model.libraryLayout = model.libraryLayout.next }
                     }
                     .accessibilityIdentifier("layoutKey")
