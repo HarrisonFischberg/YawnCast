@@ -33,7 +33,7 @@ enum DebugLaunch {
             let firstRun = arguments.contains("-firstRun")
             UserDefaults.standard.set(!firstRun, forKey: "didOnboard")
             UserDefaults.standard.set(!firstRun, forKey: "celebratedFirstShow")
-            UserDefaults.standard.removeObject(forKey: "lastSearch")
+            if launch.resetStore { UserDefaults.standard.removeObject(forKey: "lastSearch") }
         }
         if launch.isDemo { DemoSeed.run(model: model, launch: launch) }
         return model
