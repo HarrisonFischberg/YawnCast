@@ -40,7 +40,6 @@ final class PlaybackEngine: SleepControllable {
     @ObservationIgnored private var itemObservations: [NSKeyValueObservation] = []
     @ObservationIgnored private var notificationTasks: [Task<Void, Never>] = []
     @ObservationIgnored private var lastSavedAt: TimeInterval = 0
-    @ObservationIgnored private var pendingStart: TimeInterval = 0
     @ObservationIgnored private var wasPlayingBeforeInterruption = false
 
     init() {
@@ -78,7 +77,6 @@ final class PlaybackEngine: SleepControllable {
         duration = episode.duration
         isDurationMeasured = false
         loadState = .loading
-        pendingStart = start
         isBuffering = autoplay
 
         let item = AVPlayerItem(url: episode.audioURL)

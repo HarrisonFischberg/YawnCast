@@ -100,7 +100,7 @@ public enum RSSParser {
             switch name {
             case "channel":
                 sawChannel = true
-            case "item", "entry":
+            case "item":
                 current = ItemFields()
             case "enclosure":
                 if current != nil, current?.enclosureURL == nil {
@@ -142,7 +142,7 @@ public enum RSSParser {
                 case "description": item.description = text
                 case "itunes:summary", "content:encoded": if item.summary.isEmpty { item.summary = text }
                 case "itunes:duration": item.duration = text
-                case "item", "entry":
+                case "item":
                     items.append(item)
                     current = nil
                     return
@@ -193,14 +193,20 @@ enum RSSDate {
         "yyyy-MM-dd",
     ]
 
-    static func parse(_ raw: String) -> Date? {
-        let s = raw.trimmed
-        guard !s.isEmpty else { return nil }
+    /// Built once: a formatter per episode made big feeds slow to parse. DateFormatter
+    /// is thread-safe for parsing, so sharing them across fetches is fine.
+    nonisolated(unsafe) private static let formatters: [DateFormatter] = formats.map { format in
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.timeZone = TimeZone(identifier: "UTC")
-        for format in formats {
-            formatter.dateFormat = format
+        formatter.dateFormat = format
+        return formatter
+    }
+
+    static func parse(_ raw: String) -> Date? {
+        let s = raw.trimmed
+        guard !s.isEmpty else { return nil }
+        for formatter in formatters {
             if let date = formatter.date(from: s) { return date }
         }
         return nil

@@ -160,15 +160,7 @@ public struct ITunesDirectory: DirectoryService {
     public func search(_ term: String) async throws -> [DirectoryResult] {
         let trimmed = term.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty, let url = searchURL(for: trimmed) else { return [] }
-        let (data, response) = try await session.data(for: URLRequest(url: url, timeoutInterval: 15))
-        if let http = response as? HTTPURLResponse {
-            switch http.statusCode {
-            case 200..<300: break
-            case 403, 429: throw DirectoryError.rateLimited
-            default: throw DirectoryError.http(status: http.statusCode)
-            }
-        }
-        return try Self.decode(data)
+        return try Self.decode(try await get(url))
     }
 
     /// Decodes a search response. Entries without a usable feed URL are dropped.
@@ -193,6 +185,7 @@ public struct ITunesDirectory: DirectoryService {
         } catch {
             throw DirectoryError.badResponse
         }
+        let iso = ISO8601DateFormatter()
         let results = response.results.compactMap { item -> DirectoryResult? in
             guard let id = item.collectionId,
                   let feed = item.feedUrl.flatMap(URL.init(string:)),
@@ -208,7 +201,7 @@ public struct ITunesDirectory: DirectoryService {
                 genres: zip(item.genreIds ?? [], item.genres ?? [])
                     .filter { $0.0 != Genre.umbrellaID }
                     .map { Genre(id: $0.0, name: $0.1) },
-                latestRelease: item.releaseDate.flatMap { ISO8601DateFormatter().date(from: $0) }
+                latestRelease: item.releaseDate.flatMap { iso.date(from: $0) }
             )
         }
         return DirectoryResult.deduplicated(results)

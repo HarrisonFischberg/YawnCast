@@ -1,7 +1,15 @@
 import Foundation
 
 public protocol FeedService: Sendable {
-    func fetch(_ feedURL: URL) async throws -> Feed
+    /// Follows up to `maxPages` pages of a paged feed. When that limit cuts the history
+    /// short, `nextPageURL` is the first page left out; otherwise it is nil.
+    func fetch(_ feedURL: URL, maxPages: Int) async throws -> Feed
+}
+
+extension FeedService {
+    public func fetch(_ feedURL: URL) async throws -> Feed {
+        try await fetch(feedURL, maxPages: HTTPFeedService.maxPages)
+    }
 }
 
 public struct HTTPFeedService: FeedService {
@@ -14,17 +22,17 @@ public struct HTTPFeedService: FeedService {
     /// Most pages followed for a paged feed (`atom:link rel="next"`).
     public static let maxPages = 40
 
-    /// Fetches the feed and, when the publisher pages its history, every
-    /// following page (up to `maxPages`), so the episode list runs from the
-    /// first episode to the latest. A failing later page keeps what loaded.
-    public func fetch(_ feedURL: URL) async throws -> Feed {
+    /// Fetches the feed and, when the publisher pages its history, the following
+    /// pages (up to `maxPages`), so the episode list runs from the first episode to
+    /// the latest. A failing later page keeps what loaded.
+    public func fetch(_ feedURL: URL, maxPages: Int) async throws -> Feed {
         // Keep the subscribed URL as identity even if the server redirected.
         var feed = try RSSParser.parse(try await page(feedURL), feedURL: feedURL)
         var episodes = feed.episodes
         var seenPages: Set<URL> = [feedURL]
         var seenEpisodes = Set(episodes.map(\.id))
         var next = feed.nextPageURL
-        while let url = next, seenPages.count < Self.maxPages, seenPages.insert(url).inserted {
+        while let url = next, seenPages.count < maxPages, seenPages.insert(url).inserted {
             try Task.checkCancellation()
             guard let data = try? await page(url),
                   let more = try? RSSParser.parse(data, feedURL: feedURL) else { break }
@@ -34,7 +42,7 @@ public struct HTTPFeedService: FeedService {
             next = more.nextPageURL
         }
         feed.episodes = Feed.sortedNewestFirst(episodes)
-        feed.nextPageURL = nil
+        feed.nextPageURL = seenPages.count >= maxPages ? next : nil
         return feed
     }
 

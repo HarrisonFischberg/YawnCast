@@ -4,14 +4,6 @@ import SwiftUI
 // Shared pieces: the labelled page tabs, the Moon key with its progress bar,
 // icon and floating z's.
 
-/// Fade step 0...9 the fade is on, or nil before it starts.
-extension SleepStatus {
-    var fadeStep: Int? {
-        guard case .fading(let level) = self else { return nil }
-        return min(9, max(0, Int((10 * (1 - level)).rounded())))
-    }
-}
-
 // MARK: - Page tabs
 
 /// New · Library · Explore as named tabs, in place of the v0.2 dots. Every style

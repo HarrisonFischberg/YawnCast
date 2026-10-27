@@ -3,8 +3,9 @@ import Foundation
 import YawnCastCore
 
 /// Last fetched copy of each feed, so the New page and show pages appear
-/// instantly (and offline) before the network refresh finishes.
-struct FeedDiskCache {
+/// instantly (and offline) before the network refresh finishes. Nonisolated so the
+/// multi-MB JSON is read and written off the main thread.
+nonisolated struct FeedDiskCache: Sendable {
     private let directory: URL
 
     init() {
