@@ -112,15 +112,22 @@ struct ThemesSheet: View {
                     .accessibilityAddTraits(.isHeader)
                 Text(subtitle).font(Typo.caption).foregroundStyle(theme.textMuted)
             }
-            LazyVGrid(columns: columns, spacing: Space.l) {
-                ForEach(themes) { option in
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.35)) { model.theme = option }
-                    } label: { ThemeSwatch(option: option, selected: option.id == model.theme.id) }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel("\(option.name), \(option.blurb)")
-                        .accessibilityAddTraits(option.id == model.theme.id ? .isSelected : [])
-                        .accessibilityIdentifier("theme-\(option.id)")
+            // Not lazy: every swatch exists even below the fold, for VoiceOver and the UI tests.
+            let perRow = columns.count
+            VStack(spacing: Space.l) {
+                ForEach(Array(stride(from: 0, to: themes.count, by: perRow)), id: \.self) { start in
+                    HStack(alignment: .top, spacing: Space.m) {
+                        ForEach(themes[start..<min(start + perRow, themes.count)]) { option in
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.35)) { model.theme = option }
+                            } label: { ThemeSwatch(option: option, selected: option.id == model.theme.id) }
+                                .buttonStyle(.plain)
+                                .accessibilityLabel("\(option.name), \(option.blurb)")
+                                .accessibilityAddTraits(option.id == model.theme.id ? .isSelected : [])
+                                .accessibilityIdentifier("theme-\(option.id)")
+                        }
+                        if themes.count - start < perRow { Color.clear.frame(maxWidth: .infinity) }
+                    }
                 }
             }
         }
