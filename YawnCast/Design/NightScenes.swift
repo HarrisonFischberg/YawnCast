@@ -42,7 +42,7 @@ extension SceneRenderer {
     /// The theme's page colour, which each scene fades into.
     static func pageColor(_ scene: SceneKind) -> UInt32 {
         switch scene {
-        case .blueHour, .blueHourPhoto: 0x0B1224
+        case .blueHour: 0x0B1224
         case .fernlight: 0x0A1A16
         case .emberLodge: 0x160D0A
         case .tidalInk: 0x0A1521
@@ -100,21 +100,6 @@ extension SceneRenderer {
         }
         ripples(&c, x: deck.x, from: deck.y + 8, depth: h * 0.3, t: t, color: hex(0xFFC772), cycle: 18)
         ripples(&c, x: w * 0.84, from: shore + 8, depth: h * 0.3, t: t, color: hex(0xF3CF8E), cycle: 24)
-        self.veil(&c, size, from: veil, color: 0x0B1224)
-    }
-
-    /// Trial: the Blue Hour photo (Daniel Scicchitano on Unsplash), cropped to fill, then veiled.
-    /// The photo has its own moon, so the drawn crescent is left out.
-    static func blueHourPhoto(_ c: inout GraphicsContext, _ size: CGSize, _ t: Double, _ veil: Double) {
-        let photo = c.resolve(Image("BlueHourPhoto"))
-        let scale = max(size.width / max(photo.size.width, 1), size.height / max(photo.size.height, 1))
-        let drawn = CGSize(width: photo.size.width * scale, height: photo.size.height * scale)
-        // Keep the right of centre (moon and boathouse light) in frame.
-        let origin = CGPoint(x: (size.width - drawn.width) * 0.6, y: (size.height - drawn.height) * 0.5)
-        c.drawLayer { layer in
-            layer.clip(to: Path(CGRect(origin: .zero, size: size)))
-            layer.draw(photo, in: CGRect(origin: origin, size: drawn))
-        }
         self.veil(&c, size, from: veil, color: 0x0B1224)
     }
 

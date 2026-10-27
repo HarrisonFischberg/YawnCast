@@ -50,17 +50,6 @@ struct Theme: Identifiable, Equatable {
         scene: .blueHour, zColor: Color(hex: 0xF4A3C4)
     )
 
-    /// Trial twin of Blue Hour drawn from a photo (Daniel Scicchitano, Unsplash).
-    static let blueHourPhoto = Theme(
-        id: "bluehour-photo", name: "Blue Hour Photo", blurb: "Photo trial: moon over a lit boathouse",
-        colorScheme: .dark,
-        bg: Color(hex: 0x0B1224), surface: Color(hex: 0x151F38), raised: Color(hex: 0x1D2A47),
-        border: Color(hex: 0x2E3D60), text: Color(hex: 0xF2E8D5), textMuted: Color(hex: 0xAAB3C9),
-        accent: Color(hex: 0xF3CF8E), onAccent: Color(hex: 0x1A1408), danger: Color(hex: 0xFF9A8A),
-        edge: Color(hex: 0x070C1A), highlight: .white.opacity(0.08), shadowOpacity: 0.6,
-        scene: .blueHourPhoto, zColor: Color(hex: 0xF4A3C4)
-    )
-
     static let fernlight = Theme(
         id: "fernlight", name: "Fernlight", blurb: "Deep green clearing, fireflies",
         colorScheme: .dark,
@@ -282,7 +271,7 @@ struct Theme: Identifiable, Equatable {
     /// Animated colours, all calm and night-time.
     static let scenes: [Theme] = [.midnight, .mountain, .beach, .rainforest, .ocean, .city]
     /// The 0.19 bedtime scenes, shown first in Themes; the rest sit in the "older themes" drawer.
-    static let nights: [Theme] = [.blueHour, .blueHourPhoto, .fernlight, .emberLodge, .tidalInk, .afterHours]
+    static let nights: [Theme] = [.blueHour, .fernlight, .emberLodge, .tidalInk, .afterHours]
     static let all: [Theme] = nights + scenes + colours
     private static let dayPages: [Theme] = [.almanacDay, .emberDay, .plumDay, .meadowDay, .dreamDay]
 

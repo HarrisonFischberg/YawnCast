@@ -6,12 +6,10 @@ enum SceneKind: String, CaseIterable {
     case midnight, mountain, beach, rainforest, ocean, city
     // v0.19 bedtime scenes: still landscapes with one moving layer each (NightScenes.swift).
     case blueHour, fernlight, emberLodge, tidalInk, afterHours
-    /// Trial: Blue Hour as an Unsplash photo, to compare against the painted one.
-    case blueHourPhoto
 
     var isNight: Bool {
         switch self {
-        case .blueHour, .fernlight, .emberLodge, .tidalInk, .afterHours, .blueHourPhoto: true
+        case .blueHour, .fernlight, .emberLodge, .tidalInk, .afterHours: true
         default: false
         }
     }
@@ -72,12 +70,6 @@ enum SceneRenderer {
     static func draw(_ scene: SceneKind, in canvas: inout GraphicsContext, size: CGSize, t: Double, player: Bool = false, moon: Bool = true) {
         // Night scenes on a page: the landscape in the top 70%, veiled from 45% of that.
         let veil = player ? 0.56 : 0.45
-        if scene == .blueHourPhoto {
-            // A photo can't be squeezed like the drawn scenes, so it's cropped into the top 70%.
-            canvas.fill(Path(CGRect(origin: .zero, size: size)), with: .color(hex(SceneRenderer.pageColor(scene))))
-            blueHourPhoto(&canvas, CGSize(width: size.width, height: size.height * (player ? 1 : 0.7)), t, veil)
-            return
-        }
         if scene.isNight, !player {
             canvas.fill(Path(CGRect(origin: .zero, size: size)), with: .color(hex(SceneRenderer.pageColor(scene))))
             canvas.scaleBy(x: 1, y: 0.7)
@@ -98,7 +90,6 @@ enum SceneRenderer {
         case .emberLodge: emberLodge(&canvas, size, t, veil, moon)
         case .tidalInk: tidalInk(&canvas, size, t, veil, moon)
         case .afterHours: afterHours(&canvas, size, t, veil, moon)
-        case .blueHourPhoto: blueHourPhoto(&canvas, size, t, veil)
         }
     }
 
