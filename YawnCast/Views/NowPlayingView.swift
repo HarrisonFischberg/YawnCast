@@ -15,7 +15,7 @@ struct NowPlayingView: View {
     var body: some View {
         let player = model.player
         ZStack {
-            ScreenBackground(veil: 0.56)
+            ScreenBackground(player: true)
 
             VStack(alignment: .leading, spacing: 0) {
                 HStack {
@@ -60,9 +60,8 @@ struct NowPlayingView: View {
                 Scrubber(position: player.position, duration: player.duration) { player.seek(to: $0) }
 
                 transport
-                    .padding(.top, Space.xxl)
-
-                Spacer(minLength: Space.xxl)
+                    .padding(.top, Space.l)
+                    .padding(.bottom, Space.xl)
 
                 VStack(alignment: .trailing, spacing: Space.l) {
                     // Above the panel: "Back to …" on the left (only while Sleep is off),
@@ -158,7 +157,7 @@ struct NowPlayingView: View {
                 }
             }
             .buttonStyle(.roundKey(.outlined, depth: 6))
-            .frame(width: 104, height: 104)
+            .frame(width: 96, height: 96)
             .disabled(player.episode == nil)
             .accessibilityLabel(player.isPlaying ? "Pause" : "Play")
             .accessibilityValue(player.isBuffering ? "Loading" : "")

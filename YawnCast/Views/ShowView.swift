@@ -100,7 +100,7 @@ struct ShowView: View {
         .dockAware()
         .refreshable { await model.load(force: true) }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background { ScreenBackground() }
+        .background { ScreenBackground(moon: false) }
         .sheet(isPresented: $celebrating) {
             SuccessView(
                 systemImage: "moon.stars.fill",

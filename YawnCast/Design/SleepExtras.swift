@@ -69,6 +69,7 @@ struct SleepReadout: View {
                 .opacity(0.8)
         }
         .lineLimit(1)
+        .minimumScaleFactor(0.6)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(spoken)
         .accessibilityIdentifier("sleepCountdown")

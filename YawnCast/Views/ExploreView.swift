@@ -285,7 +285,7 @@ struct CategoryView: View {
         .scrollIndicators(.hidden)
         .dockAware()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background { ScreenBackground() }
+        .background { ScreenBackground(moon: false) }
         .refreshable { await load(force: true) }
         .task { await load(force: false) }
         .navigationBarTitleDisplayMode(.inline)

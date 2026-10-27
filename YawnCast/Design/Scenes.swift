@@ -17,15 +17,18 @@ enum SceneKind: String, CaseIterable {
 
 struct SceneBackground: View {
     let scene: SceneKind
-    /// Night scenes go quiet (fade to the page colour) from this fraction of the height down.
-    var veil = 0.3
+    /// Now Playing shows the whole landscape; other screens squeeze it into the header
+    /// and go quiet (fade to the page colour) sooner. Older scenes ignore this.
+    var player = false
+    /// Off on pages whose title runs under the Moon's spot (a show's name).
+    var moon = true
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 15, paused: reduceMotion)) { context in
             Canvas(opaque: true) { canvas, size in
                 let t = reduceMotion ? 1_000 : context.date.timeIntervalSinceReferenceDate
-                SceneRenderer.draw(scene, in: &canvas, size: size, t: t, veil: veil)
+                SceneRenderer.draw(scene, in: &canvas, size: size, t: t, player: player, moon: moon)
             }
         }
         .ignoresSafeArea()
@@ -47,13 +50,14 @@ struct ScenePreview: View {
 
 /// Full-screen background for a screen: the theme's scene, or its flat color.
 struct ScreenBackground: View {
-    /// See `SceneBackground.veil`: Now Playing shows more scenery than the home pages.
-    var veil = 0.3
+    /// See `SceneBackground.player` and `.moon`.
+    var player = false
+    var moon = true
     @Environment(\.theme) private var theme
 
     var body: some View {
         if let scene = theme.scene {
-            SceneBackground(scene: scene, veil: veil)
+            SceneBackground(scene: scene, player: player, moon: moon)
         } else {
             theme.bg.ignoresSafeArea()
         }
@@ -63,7 +67,17 @@ struct ScreenBackground: View {
 // MARK: - Rendering
 
 enum SceneRenderer {
-    static func draw(_ scene: SceneKind, in canvas: inout GraphicsContext, size: CGSize, t: Double, veil: Double = 0.3) {
+    static func draw(_ scene: SceneKind, in canvas: inout GraphicsContext, size: CGSize, t: Double, player: Bool = false, moon: Bool = true) {
+        // Night scenes on a page: the landscape in the top 70%, veiled from 45% of that.
+        let veil = player ? 0.5 : 0.45
+        if scene.isNight, !player {
+            canvas.fill(Path(CGRect(origin: .zero, size: size)), with: .color(hex(SceneRenderer.pageColor(scene))))
+            canvas.scaleBy(x: 1, y: 0.7)
+        }
+        draw(scene, in: &canvas, size: size, t: t, veil: veil, moon: moon)
+    }
+
+    private static func draw(_ scene: SceneKind, in canvas: inout GraphicsContext, size: CGSize, t: Double, veil: Double, moon: Bool) {
         switch scene {
         case .midnight: midnight(&canvas, size, t)
         case .mountain: mountain(&canvas, size, t)
@@ -71,11 +85,11 @@ enum SceneRenderer {
         case .rainforest: rainforest(&canvas, size, t)
         case .ocean: ocean(&canvas, size, t)
         case .city: city(&canvas, size, t)
-        case .blueHour: blueHour(&canvas, size, t, veil)
-        case .fernlight: fernlight(&canvas, size, t, veil)
-        case .emberLodge: emberLodge(&canvas, size, t, veil)
-        case .tidalInk: tidalInk(&canvas, size, t, veil)
-        case .afterHours: afterHours(&canvas, size, t, veil)
+        case .blueHour: blueHour(&canvas, size, t, veil, moon)
+        case .fernlight: fernlight(&canvas, size, t, veil, moon)
+        case .emberLodge: emberLodge(&canvas, size, t, veil, moon)
+        case .tidalInk: tidalInk(&canvas, size, t, veil, moon)
+        case .afterHours: afterHours(&canvas, size, t, veil, moon)
         }
     }
 

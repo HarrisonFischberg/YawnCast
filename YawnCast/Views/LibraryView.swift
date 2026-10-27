@@ -260,10 +260,11 @@ struct ArtworkMat: ViewModifier {
 
     func body(content: Content) -> some View {
         let pad: CGFloat = compact ? 4 : 7
-        switch theme.style {
+        // The bedtime scenes show covers plain, as in the boards, in either text style.
+        switch theme.isNight ? .signOff : theme.style {
         case .signOff:
             content
-                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 .shadow(color: .black.opacity(theme.shadowOpacity * 0.6), radius: 8, y: 5)
         case .pictureBook:
             content
@@ -336,10 +337,14 @@ struct MiniPlayerDock: View {
                 moonTaps += 1
                 model.toggleSleep()
             } label: {
-                SleepGlyphView()
-                    .font(.system(size: 17, weight: .bold))
-                    .foregroundStyle(sleepOn ? theme.onAccent : theme.accent)
-                    .frame(width: 20, height: 20)
+                Group {
+                    if theme.isNight {
+                        CrescentShape(scene: theme.scene).frame(width: 20, height: 20)
+                    } else {
+                        Image(systemName: "moon.fill").font(.system(size: 17, weight: .bold))
+                    }
+                }
+                .foregroundStyle(sleepOn ? theme.onAccent : theme.accent)
             }
             .buttonStyle(.roundKey(sleepOn ? .accent : .standard, depth: 3))
             .frame(width: 44, height: 44)
@@ -352,18 +357,6 @@ struct MiniPlayerDock: View {
                 Label("Sleep", systemImage: "moon.fill")
             }
             .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: moonTaps)
-            .overlay(alignment: .topLeading) {
-                if sleepOn {
-                    // The same z's as the Sleep panel, smaller, drifting up off the mini player.
-                    FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }(),
-                               paused: !player.isPlaying, level: model.sleepStatus.moonLit, activatedAt: sleepActivatedAt)
-                        .frame(width: 112, height: 84)
-                        .scaleEffect(0.7, anchor: .bottomLeading)
-                        .offset(x: -8, y: -50)
-                        .transition(.opacity)
-                }
-            }
-            .animation(.easeOut(duration: 0.3), value: sleepOn)
             .onChange(of: sleepOn) { _, on in if on { sleepActivatedAt = .now } }
 
             Button { player.togglePlayPause() } label: {
@@ -386,6 +379,19 @@ struct MiniPlayerDock: View {
                 .fill(theme.raised)
                 .shadow(color: .black.opacity(theme.shadowOpacity), radius: 12, y: 6)
         }
+        // The same z's as the Sleep panel, smaller, drifting up off the mini Moon key
+        // (outside the glass, which would clip them).
+        .overlay(alignment: .bottomTrailing) {
+            if sleepOn {
+                FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }(),
+                           paused: !player.isPlaying, level: model.sleepStatus.moonLit, activatedAt: sleepActivatedAt)
+                    .frame(width: 112, height: 84)
+                    .scaleEffect(0.7, anchor: .bottomTrailing)
+                    .offset(x: -54, y: -36)
+                    .transition(.opacity)
+            }
+        }
+        .animation(.easeOut(duration: 0.3), value: sleepOn)
     }
 }
 
