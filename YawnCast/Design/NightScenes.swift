@@ -42,7 +42,7 @@ extension SceneRenderer {
     /// The theme's page colour, which each scene fades into.
     static func pageColor(_ scene: SceneKind) -> UInt32 {
         switch scene {
-        case .blueHour: 0x0B1224
+        case .blueHour, .blueHourPhoto: 0x0B1224
         case .fernlight: 0x0A1A16
         case .emberLodge: 0x160D0A
         case .tidalInk: 0x0A1521
@@ -51,52 +51,78 @@ extension SceneRenderer {
         }
     }
 
-    // MARK: Blue Hour — ink-blue lake, layered hills, cottage window; slow ripples
+    // MARK: Blue Hour — ink-blue lake, far treeline, boathouse on stilts, framing trees; slow ripples
 
     static func blueHour(_ c: inout GraphicsContext, _ size: CGSize, _ t: Double, _ veil: Double, _ moon: Bool) {
         let w = size.width, h = size.height
-        gradient(&c, size, [0x070C1E, 0x0F1A3A, 0x1E3160, 0x2B3F70])
-        // Dusk glow low on the horizon.
-        glow(&c, at: CGPoint(x: w * 0.55, y: h * 0.48), rx: w * 0.9, ry: h * 0.14, color: hex(0x3454A8), strength: 0.45)
+        gradient(&c, size, [0x060B1C, 0x0E1A3C, 0x1C3062, 0x30467C])
+        // Last light low on the horizon.
+        glow(&c, at: CGPoint(x: w * 0.5, y: h * 0.47), rx: w * 0.95, ry: h * 0.12, color: hex(0x4A68B8), strength: 0.5)
         stars(&c, size, Array(Layouts.stars.prefix(28)), t, yScale: 0.36, maxOpacity: 0.45)
-        if moon { crescent(&c, size, .blueHour, color: hex(0xF3CF8E)) }
-        // Hills in four depths, each hazier and bluer the farther back it sits.
-        shaded(&c, hillsPath(size, base: 0.40, amp: 40, k: 1.3, phase: 0.6), top: 0x3A4C84, bottom: 0x1F2E5C, haze: 0x2B3F70, hazeOpacity: 0.35)
-        shaded(&c, hillsPath(size, base: 0.44, amp: 34, k: 2.1, phase: 2.4), top: 0x26376A, bottom: 0x162450, haze: 0x2B3F70, hazeOpacity: 0.18)
-        shaded(&c, hillsPath(size, base: 0.475, amp: 26, k: 2.9, phase: 4.0), top: 0x182852, bottom: 0x0E1A3C)
+        if moon {
+            // A wider halo than the other scenes: the moon is the lamp of this one.
+            let center = CGPoint(x: w - 58, y: h * 0.3)
+            c.fill(Path(ellipseIn: CGRect(x: center.x - 150, y: center.y - 150, width: 300, height: 300)),
+                   with: .radialGradient(Gradient(colors: [hex(0xF3CF8E).opacity(0.14), .clear]), center: center, startRadius: 20, endRadius: 150))
+            crescent(&c, size, .blueHour, color: hex(0xF3CF8E))
+        }
         let shore = h * 0.5
-        // The lake: sky colour mirrored, darkening toward the viewer.
+        // One low, hazy far shore, then a dark treeline with a few lights in it.
+        shaded(&c, hillsPath(size, base: 0.47, amp: 18, k: 1.4, phase: 0.6), top: 0x2A3C70, bottom: 0x1A2A58, haze: 0x30467C, hazeOpacity: 0.35)
+        conifers(&c, size, base: 0.5, height: 0.05, spacing: 0.035, seed: 11, top: 0x0E1838, bottom: 0x080F28)
+        for (x, a) in [(0.18, 0.7), (0.27, 0.5), (0.61, 0.6), (0.9, 0.45)] {
+            glowDot(&c, at: CGPoint(x: w * x, y: shore - 3), r: 1.3, color: hex(0xFFC772), glow: 7, strength: a)
+        }
+        // The lake: sky mirrored, darkening toward the viewer.
         c.fill(Path(CGRect(x: 0, y: shore, width: w, height: h - shore)),
-               with: .linearGradient(Gradient(colors: [hex(0x1C2C5A), hex(0x0E1A3C), hex(0x070C1E)]), startPoint: CGPoint(x: 0, y: shore), endPoint: CGPoint(x: 0, y: h)))
-        // Soft mirror of the hills on the water.
+               with: .linearGradient(Gradient(colors: [hex(0x22366A), hex(0x0F1C40), hex(0x060B1C)]), startPoint: CGPoint(x: 0, y: shore), endPoint: CGPoint(x: 0, y: h)))
         c.drawLayer { mirror in
             mirror.clip(to: Path(CGRect(x: 0, y: shore, width: w, height: h - shore)))
             mirror.addFilter(.blur(radius: 6))
-            mirror.opacity = 0.35
+            mirror.opacity = 0.4
             mirror.translateBy(x: 0, y: shore * 2)
             mirror.scaleBy(x: 1, y: -1)
-            mirror.fill(hillsPath(size, base: 0.475, amp: 26, k: 2.9, phase: 4.0), with: .color(hex(0x0A1330)))
+            conifers(&mirror, size, base: 0.5, height: 0.05, spacing: 0.035, seed: 11, top: 0x080F28, bottom: 0x080F28)
         }
-        // Near headland on the right with cypresses and the cottage.
-        var head = Path()
-        head.move(to: CGPoint(x: w, y: shore + 40)); head.addLine(to: CGPoint(x: w, y: shore - 10))
-        head.addQuadCurve(to: CGPoint(x: w * 0.5, y: shore + 2), control: CGPoint(x: w * 0.72, y: shore - 14))
-        head.addQuadCurve(to: CGPoint(x: w * 0.58, y: shore + 40), control: CGPoint(x: w * 0.44, y: shore + 24))
-        head.closeSubpath()
-        shaded(&c, head, top: 0x101B3E, bottom: 0x070C1E)
-        for (x, height, width) in [(0.56, 56.0, 11.0), (0.60, 74.0, 13.0), (0.635, 50.0, 10.0), (0.79, 64.0, 12.0), (0.82, 46.0, 9.0), (0.93, 70.0, 13.0)] {
-            cypress(&c, at: CGPoint(x: w * x, y: shore + 2), height: height, width: width, color: 0x060B1E)
-        }
-        house(&c, at: CGPoint(x: w * 0.70, y: shore - 2), scale: 1.1, wall: 0x080F2A, window: 0xFFC772, glow: 1)
-        // Ripples: reflections of the window and the Moon, widening and wobbling slowly.
+        // Boathouse on stilts out on the water, both windows lit.
+        let deck = CGPoint(x: w * 0.42, y: shore + 22)
+        var stilts = Path()
+        for dx in [-26.0, -9, 9, 26] { stilts.addRect(CGRect(x: deck.x + dx - 1, y: deck.y, width: 2, height: 12)) }
+        c.fill(stilts, with: .color(hex(0x050918)))
+        c.fill(Path(CGRect(x: deck.x - 34, y: deck.y - 3, width: 68, height: 4)), with: .color(hex(0x050918)))
+        house(&c, at: CGPoint(x: deck.x - 6, y: deck.y - 3), scale: 1.25, wall: 0x070D24, window: 0xFFC772, glow: 1)
+        c.fill(Path(CGRect(x: deck.x + 5, y: deck.y - 15, width: 6, height: 7)), with: .color(hex(0xFFC772).opacity(0.85)))
+        // Ripples: the boathouse windows and the Moon, widening and wobbling slowly.
         c.drawLayer { soft in
             soft.addFilter(.blur(radius: 3))
-            ripples(&soft, x: w * 0.70, from: shore + 8, depth: h * 0.24, t: t, color: hex(0xFFC772), cycle: 18)
+            ripples(&soft, x: deck.x, from: deck.y + 8, depth: h * 0.3, t: t, color: hex(0xFFC772), cycle: 18)
             ripples(&soft, x: w * 0.84, from: shore + 8, depth: h * 0.3, t: t, color: hex(0xF3CF8E), cycle: 24)
         }
-        ripples(&c, x: w * 0.70, from: shore + 8, depth: h * 0.24, t: t, color: hex(0xFFC772), cycle: 18)
+        ripples(&c, x: deck.x, from: deck.y + 8, depth: h * 0.3, t: t, color: hex(0xFFC772), cycle: 18)
         ripples(&c, x: w * 0.84, from: shore + 8, depth: h * 0.3, t: t, color: hex(0xF3CF8E), cycle: 24)
-        shaded(&c, wavePath(size, base: 0.76, amp: 9, k: 1.1, t: 0, speed: 0), top: 0x0B1330, bottom: 0x05091A)
+        // Near trees framing both edges, as if seen from the shore through branches.
+        var frame = Path()
+        for (x, y, r) in [(-0.04, 0.12, 0.09), (0.02, 0.22, 0.07), (-0.02, 0.33, 0.1), (0.04, 0.44, 0.07), (-0.03, 0.55, 0.09),
+                          (1.03, 0.04, 0.08), (0.97, 0.1, 0.05), (1.04, 0.5, 0.07), (0.99, 0.58, 0.06)] {
+            frame.addEllipse(in: CGRect(x: w * x - w * r, y: h * y - w * r, width: 2 * w * r, height: 2 * w * r))
+        }
+        frame.addRect(CGRect(x: 0, y: h * 0.1, width: w * 0.02, height: h * 0.6))
+        c.fill(frame, with: .color(hex(0x03060F)))
+        self.veil(&c, size, from: veil, color: 0x0B1224)
+    }
+
+    /// Trial: the Blue Hour photo (Daniel Scicchitano on Unsplash), cropped to fill, then veiled.
+    /// The photo has its own moon, so the drawn crescent is left out.
+    static func blueHourPhoto(_ c: inout GraphicsContext, _ size: CGSize, _ t: Double, _ veil: Double) {
+        let photo = c.resolve(Image("BlueHourPhoto"))
+        let scale = max(size.width / max(photo.size.width, 1), size.height / max(photo.size.height, 1))
+        let drawn = CGSize(width: photo.size.width * scale, height: photo.size.height * scale)
+        // Keep the right of centre (moon and boathouse light) in frame.
+        let origin = CGPoint(x: (size.width - drawn.width) * 0.6, y: (size.height - drawn.height) * 0.5)
+        c.drawLayer { layer in
+            layer.clip(to: Path(CGRect(origin: .zero, size: size)))
+            layer.draw(photo, in: CGRect(origin: origin, size: drawn))
+        }
         self.veil(&c, size, from: veil, color: 0x0B1224)
     }
 
