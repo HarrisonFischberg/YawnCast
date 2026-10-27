@@ -124,10 +124,11 @@ final class V4UITests: XCTestCase {
         layoutKey.tap()
         XCTAssertTrue(waitUntil(3) { abs(rivers.frame.width - large) < 1 }, "one click cycles back to large")
 
-        // Themes: Scenes first, then four flat colours, then the text style.
+        // Themes: Scenes first, then five flat Colors, then the text style.
         app.buttons["themesKey"].tap()
         let beach = app.buttons["theme-beach"]
         XCTAssertTrue(beach.waitForExistence(timeout: 3))
+        XCTAssertTrue(app.staticTexts["Colors"].exists, "US spelling")
         for id in ["midnight", "mountain", "rainforest", "ocean", "city"] {
             XCTAssertTrue(app.buttons["theme-\(id)"].exists, id)
         }
@@ -143,7 +144,7 @@ final class V4UITests: XCTestCase {
         XCTAssertTrue(app.buttons["look-picturebook"].exists)
         signOff.tap()
         XCTAssertTrue(waitUntil(3) { signOff.isSelected })
-        XCTAssertTrue(beach.exists ? beach.isSelected : true, "the colour stays when the text changes")
+        XCTAssertTrue(beach.exists ? beach.isSelected : true, "the color stays when the text changes")
     }
 
     func testLibrarySearchFiltersSavedShowsOnly() {

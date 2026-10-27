@@ -1,7 +1,7 @@
 import YawnCastCore
 import SwiftUI
 
-/// Themes: a colour (a Scene or one of four flat colours) and the text style
+/// Themes: a color (a Scene or one of five flat colors) and the text style
 /// (Picture Book or Sign-Off), chosen separately. One tap applies.
 struct ThemesSheet: View {
     @Environment(AppModel.self) private var model
@@ -21,7 +21,7 @@ struct ThemesSheet: View {
                     .foregroundStyle(theme.text)
                     .accessibilityAddTraits(.isHeader)
                 group("Scenes", subtitle: "Calm, animated night skies", themes: Theme.scenes)
-                group("Colours", subtitle: "Simple and still, with a day page that follows your phone", themes: Theme.colours)
+                group("Colors", subtitle: "Simple and still, with a day page that follows your phone", themes: Theme.colours)
                 textStyles
                 versionLine
             }
