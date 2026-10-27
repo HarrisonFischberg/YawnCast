@@ -72,6 +72,8 @@ final class AppModel {
 
     /// "New" page: recent episodes from Library shows, newest first.
     private(set) var latest: [Episode] = []
+    /// `latest` by show id, so each Library tile's "new" dot doesn't re-key every episode.
+    private(set) var latestByShow: [String: [Episode]] = [:]
     private(set) var latestPhase: LoadPhase = .idle
     /// Library feeds checked so far in the current New refresh.
     private(set) var latestChecked = 0
@@ -115,6 +117,8 @@ final class AppModel {
     /// Feeds fetched from the network this session (the disk cache may be older).
     @ObservationIgnored private var freshFeeds: Set<String> = []
     @ObservationIgnored private let feedDisk = FeedDiskCache()
+    /// The launch read of the disk copies; the New refresh waits for it so it merges onto them.
+    @ObservationIgnored private var diskLoad: Task<Void, Never>?
     /// Library shows (by id) that the current Explore results were computed from.
     @ObservationIgnored private var exploreBasis: [String] = []
     @ObservationIgnored private var categoryCache: [String: [DirectoryResult]] = [:]
@@ -195,9 +199,9 @@ final class AppModel {
         // Restore the last episode paused at its saved position. Never autoplay;
         // never restore Sleep.
         if let last = snapshot.lastEpisode {
-            player.load(last, start: SeekMath.resumeTime(saved: snapshot.positions[last.id], duration: last.duration), autoplay: false)
+            player.load(last, start: SeekMath.resumeTime(saved: snapshot.position(for: last), duration: last.duration), autoplay: false)
         }
-        recomputeLatestFromCache()
+        loadDiskFeeds(snapshot.subscriptions)
     }
 
     // MARK: Library
@@ -273,22 +277,20 @@ final class AppModel {
 
     /// Marks an episode played or unplayed without playing it.
     func setPlayed(_ episode: Episode, _ played: Bool) {
-        let duration = library.positions[episode.id]?.duration ?? episode.duration
-        library.positions[episode.id] = PlaybackPosition(seconds: played ? (duration ?? 0) : 0, duration: duration, completed: played)
+        let duration = library.position(for: episode)?.duration ?? episode.duration
+        library.setPosition(PlaybackPosition(seconds: played ? (duration ?? 0) : 0, duration: duration, completed: played), for: episode)
         persist()
     }
 
     /// True when the show has an unplayed episode from the last 7 days.
     func hasNewEpisode(_ show: Show) -> Bool {
         let weekAgo = Date().addingTimeInterval(-7 * 86_400)
-        return latest.contains { episode in
-            FeedURL.key(episode.showFeedURL) == show.id
-                && (episode.published ?? .distantPast) >= weekAgo
-                && library.positions[episode.id] == nil
-        }
+        return latestByShow[show.id]?.contains { episode in
+            (episode.published ?? .distantPast) >= weekAgo && library.position(for: episode) == nil
+        } ?? false
     }
 
-    func position(for episode: Episode) -> PlaybackPosition? { library.positions[episode.id] }
+    func position(for episode: Episode) -> PlaybackPosition? { library.position(for: episode) }
 
     /// Updates stored metadata (title, artwork, summary) for a subscribed show.
     func refreshSubscription(_ show: Show) {
@@ -300,27 +302,46 @@ final class AppModel {
 
     // MARK: Feeds
 
-    /// Last known feed: from this session, or from the disk cache of an earlier one.
-    func cachedFeed(for show: Show) -> Feed? {
-        if let feed = feedCache[show.id] { return feed }
-        guard let feed = feedDisk.load(show.feedURL) else { return nil }
-        feedCache[show.id] = feed
-        return feed
+    /// Last known feed: from this session, or from the disk cache of an earlier one
+    /// (Library shows only, loaded in the background at launch).
+    func cachedFeed(for show: Show) -> Feed? { feedCache[show.id] }
+
+    /// Reads Library shows' disk copies off the main thread, then fills in the New page.
+    private func loadDiskFeeds(_ shows: [Show]) {
+        let disk = feedDisk
+        let urls = shows.map(\.feedURL)
+        diskLoad = Task { [weak self] in
+            let loaded = await Task.detached { urls.compactMap { disk.load($0) } }.value
+            guard let self else { return }
+            // A network fetch that finished first is newer; keep it.
+            for feed in loaded where feedCache[feed.show.id] == nil { feedCache[feed.show.id] = feed }
+            recomputeLatestFromCache()
+        }
     }
 
     /// Fetches a feed from the network once per session (or again when forced),
     /// sharing in-flight requests. Successful fetches are saved to disk.
-    func feed(for show: Show, force: Bool = false) async throws -> Feed {
+    /// `firstPageOnly` (the New page) skips the older pages of a paged feed and keeps
+    /// the cached history under the fresh page; the show page then still fetches it all.
+    func feed(for show: Show, force: Bool = false, firstPageOnly: Bool = false) async throws -> Feed {
         if !force, freshFeeds.contains(show.id), let cached = feedCache[show.id] { return cached }
         if let running = feedTasks[show.id] { return try await running.value }
         let feeds = self.feeds
-        let task = Task { try await feeds.fetch(show.feedURL) }
+        let task = Task { try await feeds.fetch(show.feedURL, maxPages: firstPageOnly ? 1 : HTTPFeedService.maxPages) }
         feedTasks[show.id] = task
         defer { feedTasks[show.id] = nil }
-        let feed = try await task.value
+        var feed = try await task.value
+        if firstPageOnly, feed.nextPageURL != nil {
+            if let old = feedCache[show.id] {
+                let ids = Set(feed.episodes.map(\.id))
+                feed.episodes = Feed.sortedNewestFirst(feed.episodes + old.episodes.filter { !ids.contains($0.id) })
+            }
+        } else {
+            freshFeeds.insert(show.id)
+        }
         feedCache[show.id] = feed
-        freshFeeds.insert(show.id)
-        feedDisk.save(feed)
+        let disk = feedDisk
+        Task.detached { [feed] in disk.save(feed) }
         return feed
     }
 
@@ -331,10 +352,12 @@ final class AppModel {
     private func recomputeLatestFromCache() {
         let feeds = library.subscriptions.compactMap { cachedFeed(for: $0) }
         latest = LatestEpisodes.collect(from: feeds, since: Date().addingTimeInterval(-Self.latestWindow))
+        latestByShow = Dictionary(grouping: latest) { FeedURL.key($0.showFeedURL) }
     }
 
     /// Shows cached episodes at once, then refreshes every Library feed (4 at a time).
     func refreshLatest(force: Bool = false) async {
+        await diskLoad?.value
         recomputeLatestFromCache()
         let shows = library.subscriptions
         guard !shows.isEmpty else {
@@ -351,7 +374,7 @@ final class AppModel {
             // Unstructured child tasks inherit the main actor; the network
             // waits overlap, so a batch fetches concurrently.
             let tasks = batch.map { show in
-                Task { (try? await self.feed(for: show, force: force)) != nil }
+                Task { (try? await self.feed(for: show, force: force, firstPageOnly: true)) != nil }
             }
             for task in tasks {
                 if !(await task.value) { failures += 1 }
@@ -439,7 +462,7 @@ final class AppModel {
     private func load(_ episode: Episode, autoplay: Bool) {
         sleep.episodeWillChange(to: episode.id)
         clearDriftBack()
-        let start = SeekMath.resumeTime(saved: library.positions[episode.id], duration: episode.duration)
+        let start = SeekMath.resumeTime(saved: library.position(for: episode), duration: episode.duration)
         player.load(episode, start: start, autoplay: autoplay)
         library.lastEpisode = episode
         persist()
@@ -631,7 +654,7 @@ final class AppModel {
     // MARK: Persistence
 
     private func recordProgress(episode: Episode, position: TimeInterval, duration: TimeInterval?, finished: Bool) {
-        library.positions[episode.id] = PlaybackPosition(seconds: position, duration: duration, completed: finished)
+        library.setPosition(PlaybackPosition(seconds: position, duration: duration, completed: finished), for: episode)
         persist()
     }
 

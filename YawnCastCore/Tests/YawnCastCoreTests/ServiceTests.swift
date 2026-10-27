@@ -139,6 +139,20 @@ struct NetworkServiceTests {
         #expect(feed.nextPageURL == nil)
     }
 
+    @Test func firstPageOnlySaysMoreRemain() async throws {
+        StubURLProtocol.respond(status: 404, body: Data())
+        StubURLProtocol.route([
+            "https://feeds.example.com/quiet": (200, Self.page([101, 102], next: "/quiet?page=2")),
+            "https://feeds.example.com/quiet?page=2": (200, Self.page([3, 4], next: nil)),
+        ])
+        let first = try await HTTPFeedService(session: .stubbed).fetch(feedURL, maxPages: 1)
+        #expect(first.episodes.map(\.id) == ["e101", "e102"])
+        #expect(first.nextPageURL?.absoluteString == "https://feeds.example.com/quiet?page=2")
+        let all = try await HTTPFeedService(session: .stubbed).fetch(feedURL)
+        #expect(all.episodes.count == 4)
+        #expect(all.nextPageURL == nil)
+    }
+
     @Test func pagedFeedKeepsFirstPageWhenALaterPageFails() async throws {
         StubURLProtocol.respond(status: 500, body: Data())
         StubURLProtocol.route(["https://feeds.example.com/quiet": (200, Self.page([101], next: "/quiet?page=2"))])
@@ -201,6 +215,31 @@ struct PersistenceTests {
         #expect(store.load() == .empty)
         let aside = store.fileURL.deletingPathExtension().appendingPathExtension("corrupt.json")
         #expect(FileManager.default.fileExists(atPath: aside.path))
+    }
+
+    @Test func unreadableFileIsNeverOverwritten() throws {
+        let store = tempStore()
+        // A folder where the file should be: it exists but can't be read as data.
+        try FileManager.default.createDirectory(at: store.fileURL, withIntermediateDirectories: true)
+        #expect(store.load() == .empty)
+        #expect(throws: (any Error).self) { try store.save(.empty) }
+        var isFolder: ObjCBool = false
+        #expect(FileManager.default.fileExists(atPath: store.fileURL.path, isDirectory: &isFolder) && isFolder.boolValue)
+    }
+
+    @Test func savedSpotsAreKeptPerShow() {
+        func episode(_ show: String) -> Episode {
+            Episode(id: "1", showFeedURL: URL(string: "https://\(show).example.com/feed")!, showTitle: show, title: "One", audioURL: URL(string: "https://cdn.example.com/\(show)/1.mp3")!)
+        }
+        let a = episode("a"), b = episode("b")
+        var snapshot = LibrarySnapshot()
+        // A spot saved before 0.18 (id alone) still resumes, and moves to the new key on the next save.
+        snapshot.positions["1"] = PlaybackPosition(seconds: 60, duration: 600)
+        #expect(snapshot.position(for: a)?.seconds == 60)
+        snapshot.setPosition(PlaybackPosition(seconds: 120, duration: 600), for: a)
+        #expect(snapshot.positions["1"] == nil)
+        #expect(snapshot.position(for: a)?.seconds == 120)
+        #expect(snapshot.position(for: b) == nil, "same guid in another show is a different episode")
     }
 }
 

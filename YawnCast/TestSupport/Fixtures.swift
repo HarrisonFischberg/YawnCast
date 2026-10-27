@@ -48,7 +48,7 @@ struct FixtureDirectory: DirectoryService {
 
 /// Feed fake whose episodes play a bundled 90-second tone.
 struct FixtureFeedService: FeedService {
-    func fetch(_ feedURL: URL) async throws -> Feed {
+    func fetch(_ feedURL: URL, maxPages: Int) async throws -> Feed {
         try await Task.sleep(for: .milliseconds(150))
         guard let audio = Bundle.main.url(forResource: "fixture-tone", withExtension: "m4a") else {
             throw FeedError.noEpisodes

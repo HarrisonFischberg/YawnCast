@@ -4,7 +4,7 @@ import Foundation
 /// must never resume after a relaunch.
 public struct LibrarySnapshot: Codable, Equatable, Sendable {
     public var subscriptions: [Show]
-    /// Keyed by `Episode.id`.
+    /// Keyed by show + episode id; read and write through `position(for:)` / `setPosition`.
     public var positions: [String: PlaybackPosition]
     /// Last episode loaded into the player, for the mini-player after relaunch.
     public var lastEpisode: Episode?
@@ -44,6 +44,22 @@ public struct LibrarySnapshot: Codable, Equatable, Sendable {
         subscriptions.removeAll { $0.id == show.id }
     }
 
+    /// Saved spot for an episode. Keyed by show + episode id, because an RSS guid only
+    /// has to be unique inside its own feed. Falls back to the old key (id alone) so
+    /// spots saved before 0.18 carry over.
+    public func position(for episode: Episode) -> PlaybackPosition? {
+        positions[Self.positionKey(episode)] ?? positions[episode.id]
+    }
+
+    public mutating func setPosition(_ position: PlaybackPosition, for episode: Episode) {
+        positions[episode.id] = nil
+        positions[Self.positionKey(episode)] = position
+    }
+
+    static func positionKey(_ episode: Episode) -> String {
+        FeedURL.key(episode.showFeedURL) + "|" + episode.id
+    }
+
     /// Drag-to-reorder: moves the show with `id` into the slot of `targetID`
     /// (before it when moving up, after it when moving down). Returns true if moved.
     @discardableResult
@@ -63,8 +79,12 @@ public protocol LibraryStore: Sendable {
 }
 
 /// Stores the snapshot as one JSON file, written atomically.
-public struct JSONLibraryStore: LibraryStore {
+public final class JSONLibraryStore: LibraryStore, @unchecked Sendable {
     public let fileURL: URL
+    private let lock = NSLock()
+    /// The file exists but could not be read (e.g. still locked before the first unlock
+    /// after a restart). Saving would replace it with the empty library, so saves stop.
+    private var readFailed = false
 
     public init(fileURL: URL) {
         self.fileURL = fileURL
@@ -76,10 +96,17 @@ public struct JSONLibraryStore: LibraryStore {
         return JSONLibraryStore(fileURL: base.appending(path: "YawnCast/library.json"))
     }
 
-    /// Missing file → empty library. Unreadable file → moved aside to
-    /// `library.corrupt.json` so it is not overwritten, then empty library.
+    /// Missing file → empty library. File that can't be read → empty library and no
+    /// saves this run. Undecodable file → moved aside to `library.corrupt.json` so it
+    /// is not overwritten, then empty library.
     public func load() -> LibrarySnapshot {
-        guard let data = try? Data(contentsOf: fileURL) else { return .empty }
+        let data: Data
+        do {
+            data = try Data(contentsOf: fileURL)
+        } catch {
+            if (error as? CocoaError)?.code != .fileReadNoSuchFile { lock.withLock { readFailed = true } }
+            return .empty
+        }
         do {
             return try JSONDecoder.library.decode(LibrarySnapshot.self, from: data)
         } catch {
@@ -91,6 +118,7 @@ public struct JSONLibraryStore: LibraryStore {
     }
 
     public func save(_ snapshot: LibrarySnapshot) throws {
+        if lock.withLock({ readFailed }) { throw CocoaError(.fileWriteNoPermission, userInfo: [NSFilePathErrorKey: fileURL.path]) }
         try FileManager.default.createDirectory(at: fileURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         let data = try JSONEncoder.library.encode(snapshot)
         try data.write(to: fileURL, options: [.atomic])

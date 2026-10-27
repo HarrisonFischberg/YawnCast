@@ -1,8 +1,6 @@
 import Foundation
 
 public enum SeekMath {
-    public static let skipInterval: TimeInterval = 15
-
     /// Clamps a target time into `0...duration` (upper bound only when duration is known).
     public static func clamp(_ time: TimeInterval, duration: TimeInterval?) -> TimeInterval {
         guard time.isFinite else { return 0 }
