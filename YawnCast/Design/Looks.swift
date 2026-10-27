@@ -29,11 +29,13 @@ struct LookTabs: View {
                     withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) { selection = page }
                 } label: {
                     Text(page.title)
-                        .font(.system(.subheadline, weight: .semibold))
-                        .foregroundStyle(on ? theme.text : theme.textMuted)
+                        // The current page is a filled accent pill in bold, so it reads at a glance in every theme.
+                        .font(.system(.subheadline, weight: on ? .bold : .medium))
+                        .foregroundStyle(on ? theme.onAccent : theme.textMuted)
+                        .lineLimit(1)
                         .padding(.horizontal, Space.l)
                         .padding(.vertical, 7)
-                        .background(on ? PaperShape(seed: 1).fill(theme.raised) : nil)
+                        .background(on ? PaperShape(seed: 1).fill(theme.accent) : nil)
                         .frame(minHeight: 44)
                         .contentShape(Rectangle())
                 }
