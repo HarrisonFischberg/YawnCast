@@ -7,6 +7,8 @@ struct ThemesSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
     @Environment(\.dynamicTypeSize) private var typeSize
+    /// The older Scenes and Colours sit in a drawer, open when one of them is worn.
+    @State private var showOlder = false
 
     private var columns: [GridItem] {
         Array(repeating: GridItem(.flexible(), spacing: Space.m), count: typeSize.isAccessibilitySize ? 1 : 2)
@@ -20,8 +22,8 @@ struct ThemesSheet: View {
                     .textCase(Typo.titleCase)
                     .foregroundStyle(theme.text)
                     .accessibilityAddTraits(.isHeader)
-                group("Scenes", subtitle: "Calm, animated night skies", themes: Theme.scenes)
-                group("Colours", subtitle: "Simple and still, with a day page that follows your phone", themes: Theme.colours)
+                group("Scenes", subtitle: "Five bedtime landscapes, each with its own moon", themes: Theme.nights)
+                olderDrawer
                 textStyles
                 versionLine
             }
@@ -33,6 +35,38 @@ struct ThemesSheet: View {
         }
         .sensoryFeedback(.selection, trigger: model.theme)
         .sensoryFeedback(.selection, trigger: model.look)
+        .onAppear { showOlder = !model.theme.isNight }
+    }
+
+    /// "Older themes": the six classic Scenes and five Colours, kept as they were.
+    private var olderDrawer: some View {
+        VStack(alignment: .leading, spacing: Space.xl) {
+            Button {
+                withAnimation(.easeInOut(duration: 0.25)) { showOlder.toggle() }
+            } label: {
+                HStack {
+                    Text("Older themes")
+                        .font(Typo.headline)
+                        .foregroundStyle(theme.text)
+                    Spacer()
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(theme.textMuted)
+                        .rotationEffect(.degrees(showOlder ? 180 : 0))
+                }
+                .padding(.vertical, Space.m)
+                .padding(.horizontal, Space.l)
+                .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(theme.surface))
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityValue(showOlder ? "Expanded" : "Collapsed")
+            .accessibilityIdentifier("olderThemes")
+            if showOlder {
+                group("Classic scenes", subtitle: "Calm, animated night skies", themes: Theme.scenes)
+                group("Colours", subtitle: "Simple and still, with a day page that follows your phone", themes: Theme.colours)
+            }
+        }
     }
 
     /// The version, at the bottom.

@@ -29,6 +29,67 @@ struct Theme: Identifiable, Equatable {
     var style: ThemeStyle = .pictureBook
     /// Night page whose day partner is drawn when the phone is in light mode.
     var dayVariant: String?
+    /// The Sleep z's and brand z's; the accent when nil.
+    var zColor: Color?
+
+    /// The pink z of the brand mark; warm-only pages use their accent instead.
+    var brandPink: Color { warmOnly ? accent : Color(hex: 0xF48FB1) }
+    /// One of the 0.19 bedtime scenes (Blue Hour … After Hours).
+    var isNight: Bool { scene?.isNight ?? false }
+
+    // MARK: Bedtime scenes (v0.19): five candidate landscapes, none chosen yet. Midnight
+    // stays the default until a product decision maps it.
+
+    static let blueHour = Theme(
+        id: "bluehour", name: "Blue Hour", blurb: "Ink-blue lake, a cottage window",
+        colorScheme: .dark,
+        bg: Color(hex: 0x0B1224), surface: Color(hex: 0x151F38), raised: Color(hex: 0x1D2A47),
+        border: Color(hex: 0x2E3D60), text: Color(hex: 0xF2E8D5), textMuted: Color(hex: 0xAAB3C9),
+        accent: Color(hex: 0xF3CF8E), onAccent: Color(hex: 0x1A1408), danger: Color(hex: 0xFF9A8A),
+        edge: Color(hex: 0x070C1A), highlight: .white.opacity(0.08), shadowOpacity: 0.6,
+        scene: .blueHour, zColor: Color(hex: 0xF4A3C4)
+    )
+
+    static let fernlight = Theme(
+        id: "fernlight", name: "Fernlight", blurb: "Deep green clearing, fireflies",
+        colorScheme: .dark,
+        bg: Color(hex: 0x0A1A16), surface: Color(hex: 0x12261F), raised: Color(hex: 0x183128),
+        border: Color(hex: 0x274539), text: Color(hex: 0xF1E9D2), textMuted: Color(hex: 0xA7BDAF),
+        accent: Color(hex: 0xF2D08C), onAccent: Color(hex: 0x1A1408), danger: Color(hex: 0xFF9A8A),
+        edge: Color(hex: 0x050E0B), highlight: .white.opacity(0.07), shadowOpacity: 0.6,
+        scene: .fernlight, zColor: Color(hex: 0xF2D08C)
+    )
+
+    /// Warm-only like Ember: no blue in any app-owned paint.
+    static let emberLodge = Theme(
+        id: "emberlodge", name: "Ember Lodge", blurb: "Copper mountains, chimney smoke",
+        colorScheme: .dark,
+        bg: Color(hex: 0x160D0A), surface: Color(hex: 0x22150F), raised: Color(hex: 0x2E1D15),
+        border: Color(hex: 0x4A2F22), text: Color(hex: 0xF2DFC8), textMuted: Color(hex: 0xC19B82),
+        accent: Color(hex: 0xF0B070), onAccent: Color(hex: 0x1A0A04), danger: Color(hex: 0xFFB27A),
+        edge: Color(hex: 0x0A0503), highlight: Color(hex: 0xF2DFC8).opacity(0.08), shadowOpacity: 0.7,
+        scene: .emberLodge, warmOnly: true, zColor: Color(hex: 0xF5B87A)
+    )
+
+    static let tidalInk = Theme(
+        id: "tidalink", name: "Tidal Ink", blurb: "Lighthouse over broad waves",
+        colorScheme: .dark,
+        bg: Color(hex: 0x0A1521), surface: Color(hex: 0x122032), raised: Color(hex: 0x192B40),
+        border: Color(hex: 0x2A4057), text: Color(hex: 0xEDE9DC), textMuted: Color(hex: 0xA4B3C2),
+        accent: Color(hex: 0xF1D6A0), onAccent: Color(hex: 0x161008), danger: Color(hex: 0xFF9A8A),
+        edge: Color(hex: 0x060D16), highlight: .white.opacity(0.08), shadowOpacity: 0.6,
+        scene: .tidalInk, zColor: Color(hex: 0xF4A6C0)
+    )
+
+    static let afterHours = Theme(
+        id: "afterhours", name: "After Hours", blurb: "Plum city, canal, a bookshop",
+        colorScheme: .dark,
+        bg: Color(hex: 0x160F1C), surface: Color(hex: 0x211829), raised: Color(hex: 0x2C2136),
+        border: Color(hex: 0x463652), text: Color(hex: 0xF4E7DA), textMuted: Color(hex: 0xBBA7C0),
+        accent: Color(hex: 0xF3C98B), onAccent: Color(hex: 0x1A1008), danger: Color(hex: 0xFF9A8A),
+        edge: Color(hex: 0x0B0710), highlight: .white.opacity(0.08), shadowOpacity: 0.6,
+        scene: .afterHours, zColor: Color(hex: 0xE8A0B4)
+    )
 
     // MARK: Colours (v0.17): four flat palettes, each with a night and a day page that
     // follow the phone. They merge the earlier Color Scapes: Almanac takes over from
@@ -209,7 +270,9 @@ struct Theme: Identifiable, Equatable {
     static let colours: [Theme] = [.almanac, .ember, .plum, .meadow, .dream]
     /// Animated colours, all calm and night-time.
     static let scenes: [Theme] = [.midnight, .mountain, .beach, .rainforest, .ocean, .city]
-    static let all: [Theme] = scenes + colours
+    /// The 0.19 bedtime scenes, shown first in Themes; the rest sit in the "older themes" drawer.
+    static let nights: [Theme] = [.blueHour, .fernlight, .emberLodge, .tidalInk, .afterHours]
+    static let all: [Theme] = nights + scenes + colours
     private static let dayPages: [Theme] = [.almanacDay, .emberDay, .plumDay, .meadowDay, .dreamDay]
 
     static func with(id: String?) -> Theme {

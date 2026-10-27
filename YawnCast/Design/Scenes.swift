@@ -4,17 +4,28 @@ import SwiftUI
 /// slow, softly sparkling. Drawn with Canvas at ~15 fps; still under Reduce Motion.
 enum SceneKind: String, CaseIterable {
     case midnight, mountain, beach, rainforest, ocean, city
+    // v0.19 bedtime scenes: still landscapes with one moving layer each (NightScenes.swift).
+    case blueHour, fernlight, emberLodge, tidalInk, afterHours
+
+    var isNight: Bool {
+        switch self {
+        case .blueHour, .fernlight, .emberLodge, .tidalInk, .afterHours: true
+        default: false
+        }
+    }
 }
 
 struct SceneBackground: View {
     let scene: SceneKind
+    /// Night scenes go quiet (fade to the page colour) from this fraction of the height down.
+    var veil = 0.3
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 15, paused: reduceMotion)) { context in
             Canvas(opaque: true) { canvas, size in
                 let t = reduceMotion ? 1_000 : context.date.timeIntervalSinceReferenceDate
-                SceneRenderer.draw(scene, in: &canvas, size: size, t: t)
+                SceneRenderer.draw(scene, in: &canvas, size: size, t: t, veil: veil)
             }
         }
         .ignoresSafeArea()
@@ -36,11 +47,13 @@ struct ScenePreview: View {
 
 /// Full-screen background for a screen: the theme's scene, or its flat color.
 struct ScreenBackground: View {
+    /// See `SceneBackground.veil`: Now Playing shows more scenery than the home pages.
+    var veil = 0.3
     @Environment(\.theme) private var theme
 
     var body: some View {
         if let scene = theme.scene {
-            SceneBackground(scene: scene)
+            SceneBackground(scene: scene, veil: veil)
         } else {
             theme.bg.ignoresSafeArea()
         }
@@ -50,7 +63,7 @@ struct ScreenBackground: View {
 // MARK: - Rendering
 
 enum SceneRenderer {
-    static func draw(_ scene: SceneKind, in canvas: inout GraphicsContext, size: CGSize, t: Double) {
+    static func draw(_ scene: SceneKind, in canvas: inout GraphicsContext, size: CGSize, t: Double, veil: Double = 0.3) {
         switch scene {
         case .midnight: midnight(&canvas, size, t)
         case .mountain: mountain(&canvas, size, t)
@@ -58,6 +71,11 @@ enum SceneRenderer {
         case .rainforest: rainforest(&canvas, size, t)
         case .ocean: ocean(&canvas, size, t)
         case .city: city(&canvas, size, t)
+        case .blueHour: blueHour(&canvas, size, t, veil)
+        case .fernlight: fernlight(&canvas, size, t, veil)
+        case .emberLodge: emberLodge(&canvas, size, t, veil)
+        case .tidalInk: tidalInk(&canvas, size, t, veil)
+        case .afterHours: afterHours(&canvas, size, t, veil)
         }
     }
 
@@ -294,12 +312,12 @@ enum SceneRenderer {
 
     // MARK: Shared pieces
 
-    private static func gradient(_ c: inout GraphicsContext, _ size: CGSize, _ colors: [UInt32]) {
+    static func gradient(_ c: inout GraphicsContext, _ size: CGSize, _ colors: [UInt32]) {
         c.fill(Path(CGRect(origin: .zero, size: size)),
                with: .linearGradient(Gradient(colors: colors.map(hex)), startPoint: .zero, endPoint: CGPoint(x: 0, y: size.height)))
     }
 
-    private static func stars(_ c: inout GraphicsContext, _ size: CGSize, _ stars: [Layouts.Star], _ t: Double, yScale: Double, maxOpacity: Double) {
+    static func stars(_ c: inout GraphicsContext, _ size: CGSize, _ stars: [Layouts.Star], _ t: Double, yScale: Double, maxOpacity: Double) {
         for star in stars {
             let twinkle = 0.35 + 0.65 * (0.5 + 0.5 * sin(t * star.speed + star.phase))
             let center = CGPoint(x: star.x * size.width, y: star.y * yScale * size.height)
@@ -316,14 +334,14 @@ enum SceneRenderer {
         }
     }
 
-    private static func moon(_ c: inout GraphicsContext, center: CGPoint, radius: CGFloat, color: Color) {
+    static func moon(_ c: inout GraphicsContext, center: CGPoint, radius: CGFloat, color: Color) {
         c.fill(Path(ellipseIn: CGRect(x: center.x - radius * 4, y: center.y - radius * 4, width: radius * 8, height: radius * 8)),
                with: .radialGradient(Gradient(colors: [color.opacity(0.18), .clear]), center: center, startRadius: radius, endRadius: radius * 4))
         c.fill(Path(ellipseIn: CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2)), with: .color(color))
     }
 
     /// Smooth rolling wave across the width at `base` (fraction of height).
-    private static func wavePath(_ size: CGSize, base: Double, amp: Double, k: Double, t: Double, speed: Double, closed: Bool = true) -> Path {
+    static func wavePath(_ size: CGSize, base: Double, amp: Double, k: Double, t: Double, speed: Double, closed: Bool = true) -> Path {
         var path = Path()
         var x: CGFloat = 0
         var first = true
@@ -346,7 +364,7 @@ enum SceneRenderer {
     }
 
     /// Mountain range: sharp-ish peaks from summed rectified sines.
-    private static func peaksPath(_ size: CGSize, base: Double, amp: Double, k: Double, phase: Double) -> Path {
+    static func peaksPath(_ size: CGSize, base: Double, amp: Double, k: Double, phase: Double) -> Path {
         var path = Path()
         path.move(to: CGPoint(x: 0, y: size.height))
         var x: CGFloat = 0
@@ -362,7 +380,7 @@ enum SceneRenderer {
     }
 
     /// Tree canopy: bumpy top line that sways slightly.
-    private static func canopyPath(_ size: CGSize, base: Double, t: Double, seed: Double) -> Path {
+    static func canopyPath(_ size: CGSize, base: Double, t: Double, seed: Double) -> Path {
         var path = Path()
         path.move(to: CGPoint(x: 0, y: size.height))
         var x: CGFloat = 0
@@ -377,10 +395,10 @@ enum SceneRenderer {
         return path
     }
 
-    private static func hex(_ value: UInt32) -> Color { Color(hex: value) }
+    static func hex(_ value: UInt32) -> Color { Color(hex: value) }
 
     /// Stable pseudo-random 0…1 for a seed.
-    private static func hash(_ seed: Double) -> Double {
+    static func hash(_ seed: Double) -> Double {
         let v = sin(seed * 12.9898) * 43758.5453
         return v - v.rounded(.down)
     }

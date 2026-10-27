@@ -8,6 +8,8 @@ enum KeyRole {
     case primary
     /// Accent face, reserved for the Moon when Sleep is on.
     case accent
+    /// Dark face with a thin light ring: the Play/Pause key (v0.19).
+    case outlined
 }
 
 /// A printed key: a filled face with no edge; pressing dims and settles.
@@ -29,6 +31,7 @@ struct KeyStyle<S: InsettableShape>: ButtonStyle {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             // Standard keys turn to glass on iOS 26; primary and accent stay solid, the one bright key.
             .nightGlass(in: shape, interactive: true, enabled: role == .standard) { shape.fill(face) }
+            .overlay(shape.strokeBorder(theme.text.opacity(role == .outlined ? 0.5 : 0), lineWidth: 1.5))
             .scaleEffect(pressed ? 0.96 : 1)
             .opacity(isEnabled ? (pressed ? 0.75 : 1) : 0.45)
             .contentShape(shape)
@@ -40,12 +43,13 @@ struct KeyStyle<S: InsettableShape>: ButtonStyle {
         case .standard: theme.surface
         case .primary: theme.text
         case .accent: theme.accent
+        case .outlined: theme.surface.opacity(0.8)
         }
     }
 
     private var foreground: Color {
         switch role {
-        case .standard: theme.text
+        case .standard, .outlined: theme.text
         case .primary: theme.bg
         case .accent: theme.onAccent
         }

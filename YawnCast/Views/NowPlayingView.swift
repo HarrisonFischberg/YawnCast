@@ -8,12 +8,14 @@ struct NowPlayingView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var skipTaps = 0
+    /// When Sleep was switched on while this screen was up: the panel blooms once.
+    @State private var sleepActivatedAt: Date?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         let player = model.player
         ZStack {
-            ScreenBackground()
+            ScreenBackground(veil: 0.56)
 
             VStack(alignment: .leading, spacing: 0) {
                 HStack {
@@ -63,8 +65,8 @@ struct NowPlayingView: View {
                 Spacer(minLength: Space.xxl)
 
                 VStack(alignment: .trailing, spacing: Space.l) {
-                    // Above the Moon: "Back to …" on the left (only while Sleep is off),
-                    // the Sleep chip or a toast on the right. Stacked at accessibility sizes.
+                    // Above the panel: "Back to …" on the left (only while Sleep is off),
+                    // a toast or the night note on the right. Stacked at accessibility sizes.
                     sleepRowLayout {
                         if let marker = model.driftBackPosition {
                             DriftBackKey(position: marker) { model.jumpToDriftBack() }
@@ -74,11 +76,7 @@ struct NowPlayingView: View {
                         ZStack {
                             if model.sleepStatus != .off, let note = model.nightNote {
                                 toastLabel(note)
-                            } else if model.sleepStatus != .off {
-                                // −5 · 17 min · +5, for as long as Sleep is on.
-                                SleepChip(status: model.sleepStatus) { model.adjustSleep(minutes: $0) }
-                                    .transition(chipTransition)
-                            } else if let toast = model.toast {
+                            } else if model.sleepStatus == .off, let toast = model.toast {
                                 toastLabel(toast)
                             }
                         }
@@ -86,18 +84,12 @@ struct NowPlayingView: View {
                         .padding(.trailing, Space.xl)
                     }
 
-                    MoonKey(status: model.sleepStatus) { model.toggleSleep() }
+                    MoonKey(status: model.sleepStatus, paused: !player.isPlaying, activatedAt: sleepActivatedAt,
+                            onAdjust: { model.adjustSleep(minutes: $0) }) { model.toggleSleep() }
                         .disabled(player.episode == nil)
                         .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: model.sleepStatus == .off)
-                        .overlay(alignment: .topLeading) {
-                            if model.sleepStatus != .off {
-                                // Three lines of z's rise out of the Sleep icon, in every theme.
-                                FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
-                                    // Tall, so they float well up the screen before fading out.
-                                    .frame(width: 130, height: 360)
-                                    .offset(x: 8, y: -336)
-                                    .transition(.opacity)
-                            }
+                        .onChange(of: model.sleepStatus == .off) { _, off in
+                            if !off { sleepActivatedAt = .now }
                         }
                 }
                 .animation(.spring(response: 0.35, dampingFraction: 0.7), value: model.sleepStatus == .off)
@@ -139,19 +131,17 @@ struct NowPlayingView: View {
             .accessibilityHidden(true) // announced via UIAccessibility
     }
 
-    private var chipTransition: AnyTransition {
-        reduceMotion ? .opacity : .scale(scale: 0.7, anchor: .bottomTrailing).combined(with: .opacity)
-    }
-
     private var transport: some View {
         let player = model.player
         return HStack(spacing: 0) {
             Spacer(minLength: 0)
             Button { player.skip(by: -15); skipTaps += 1 } label: {
-                Image(systemName: "gobackward.15").font(.system(size: 26, weight: .semibold))
+                Image(systemName: "gobackward.15").font(.system(size: 30, weight: .regular))
+                    .foregroundStyle(theme.text)
+                    .frame(width: 76, height: 76)
+                    .contentShape(Circle())
             }
-            .buttonStyle(.roundKey())
-            .frame(width: 76, height: 76)
+            .buttonStyle(PressDim())
             .accessibilityLabel("Back 15 seconds")
 
             Spacer(minLength: Space.l)
@@ -159,16 +149,16 @@ struct NowPlayingView: View {
             Button { player.togglePlayPause() } label: {
                 ZStack {
                     if player.isBuffering {
-                        ProgressView().tint(theme.bg).controlSize(.large)
+                        ProgressView().tint(theme.text).controlSize(.large)
                     } else {
                         Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
-                            .font(.system(size: 40, weight: .bold))
+                            .font(.system(size: 36, weight: .bold))
                             .contentTransition(.symbolEffect(.replace))
                     }
                 }
             }
-            .buttonStyle(.roundKey(.primary, depth: 6))
-            .frame(width: 112, height: 112)
+            .buttonStyle(.roundKey(.outlined, depth: 6))
+            .frame(width: 104, height: 104)
             .disabled(player.episode == nil)
             .accessibilityLabel(player.isPlaying ? "Pause" : "Play")
             .accessibilityValue(player.isBuffering ? "Loading" : "")
@@ -178,10 +168,12 @@ struct NowPlayingView: View {
             Spacer(minLength: Space.l)
 
             Button { player.skip(by: 15); skipTaps += 1 } label: {
-                Image(systemName: "goforward.15").font(.system(size: 26, weight: .semibold))
+                Image(systemName: "goforward.15").font(.system(size: 30, weight: .regular))
+                    .foregroundStyle(theme.text)
+                    .frame(width: 76, height: 76)
+                    .contentShape(Circle())
             }
-            .buttonStyle(.roundKey())
-            .frame(width: 76, height: 76)
+            .buttonStyle(PressDim())
             .accessibilityLabel("Forward 15 seconds")
             Spacer(minLength: 0)
         }

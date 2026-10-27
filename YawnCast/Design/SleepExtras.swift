@@ -1,10 +1,10 @@
 import YawnCastCore
 import SwiftUI
 
-/// The chip above the Moon key while Sleep is on: −5 · 17 min · +5.
-/// While fading it shows the volume, −5 is off, and +5 pauses the fade (volume
-/// glides back up). It stays put; nothing tucks away. Each tap floats a small
-/// "+5 min" / "−5 min" up from the chip so the step size is never a guess.
+/// The row inside the Sleep panel while Sleep is on: −5 · 17 min · +5, three keys
+/// of equal width. While fading it shows the volume, −5 is off, and +5 pauses the
+/// fade (volume glides back up). Each tap floats a small "+5 min" / "−5 min" up
+/// from the row so the step size is never a guess.
 struct SleepChip: View {
     let status: SleepStatus
     let onAdjust: (Int) -> Void
@@ -20,20 +20,15 @@ struct SleepChip: View {
     }
 
     var body: some View {
-        HStack(spacing: 2) {
+        HStack(spacing: Space.s) {
             StepKey(minutes: -5) { step(-5) }
                 .disabled(isFading)
                 .opacity(isFading ? 0.35 : 1)
             SleepReadout(status: status)
                 .foregroundStyle(theme.text)
-                .frame(minWidth: 74)
+                .frame(maxWidth: .infinity, minHeight: 48)
+                .background(StepKey.shape.fill(theme.raised))
             StepKey(minutes: 5) { step(5) }
-        }
-        .padding(.horizontal, 4)
-        .nightGlass(in: Capsule()) {
-            Capsule()
-                .fill(theme.raised.opacity(0.92))
-                .shadow(color: .black.opacity(theme.shadowOpacity * 0.6), radius: 10, y: 4)
         }
         .overlay(alignment: .top) {
             if let echo {
@@ -100,21 +95,21 @@ struct SleepReadout: View {
     }
 }
 
-/// A round "−5" / "+5" key in the text style's face, 44 pt to tap.
+/// A "−5" / "+5" key on a raised plate, 48 pt tall.
 struct StepKey: View {
     let minutes: Int
     let action: () -> Void
     @Environment(\.theme) private var theme
+    static let shape = RoundedRectangle(cornerRadius: 14, style: .continuous)
 
     var body: some View {
         Button(action: action) {
             Text(minutes > 0 ? "+5" : "−5")
                 .font(Typo.bubbleKey.monospacedDigit())
                 .foregroundStyle(theme.text)
-                .frame(width: 40, height: 40)
-                .background(Circle().fill(theme.surface))
-                .frame(width: 44, height: 44)
-                .contentShape(Circle())
+                .frame(maxWidth: .infinity, minHeight: 48)
+                .background(Self.shape.fill(theme.raised))
+                .contentShape(Self.shape)
         }
         .buttonStyle(PressDim())
         .accessibilityLabel(minutes > 0 ? "Add 5 minutes" : "Remove 5 minutes")

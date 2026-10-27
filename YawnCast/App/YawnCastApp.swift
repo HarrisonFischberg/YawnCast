@@ -41,6 +41,11 @@ struct ThemedRoot: View {
 struct RootView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
+    /// The mini player's measured height and the screen's bottom inset: together
+    /// they tell scroll views exactly how much to clear (no guessed constant).
+    @State private var dockHeight: CGFloat = 0
+    @State private var bottomInset: CGFloat = 0
+    private static let dockLift: CGFloat = 28
 
     var body: some View {
         @Bindable var model = model
@@ -57,6 +62,9 @@ struct RootView: View {
                 }
         }
         .tint(theme.text)
+        .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.bottom } action: { bottomInset = $0 }
+        // Scroll content clears the dock, its lift and a gap, counting the system inset once.
+        .environment(\.dockInset, model.player.episode == nil ? 0 : max(0, dockHeight + Self.dockLift + Space.m - bottomInset))
         // Once something is loaded, the player floats over every screen and stays there.
         .overlay(alignment: .bottom) {
             if model.player.episode != nil {
@@ -64,9 +72,10 @@ struct RootView: View {
                 // it keeps above the keyboard (which still pushes it up: only the container
                 // inset is ignored).
                 MiniPlayerDock()
+                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { dockHeight = $0 }
                     .padding(.horizontal, 30)
                     // Clears the home indicator with room to spare.
-                    .padding(.bottom, 28)
+                    .padding(.bottom, Self.dockLift)
                     .frame(maxWidth: .infinity)
                     .ignoresSafeArea(.container, edges: .bottom)
                     .transition(.move(edge: .bottom).combined(with: .opacity))

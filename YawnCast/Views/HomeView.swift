@@ -27,6 +27,7 @@ struct HomeView: View {
                 LibraryView()
             } else {
                 VStack(spacing: Space.m) {
+                    BrandMark()
                     LookTabs(selection: $model.homePage)
                 }
                 .padding(.horizontal, Space.xl)
@@ -56,6 +57,33 @@ struct HomeView: View {
         .onChange(of: model.homePage) { _, page in
             if let searching = model.searchingOn, searching != page { model.endSearch() }
         }
+    }
+}
+
+/// "YawnCast" with the crescent and its two pink z's, above the page tabs.
+struct BrandMark: View {
+    @Environment(\.theme) private var theme
+
+    var body: some View {
+        HStack(alignment: .center, spacing: Space.s) {
+            Text("YawnCast")
+                .font(Typo.title)
+                .foregroundStyle(theme.text)
+            CrescentShape(scene: theme.scene)
+                .fill(theme.accent)
+                .frame(width: 18, height: 18)
+                .overlay(alignment: .topTrailing) {
+                    HStack(alignment: .bottom, spacing: 0) {
+                        Text("z").font(.system(size: 9, weight: .heavy, design: .rounded))
+                        Text("z").font(.system(size: 7, weight: .heavy, design: .rounded)).offset(y: -4)
+                    }
+                    .foregroundStyle(theme.brandPink)
+                    .offset(x: 12, y: -6)
+                }
+            Spacer()
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("YawnCast")
     }
 }
 

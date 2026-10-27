@@ -30,13 +30,22 @@ struct LibraryView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Space.xxl) {
                 header
-                if !model.library.subscriptions.isEmpty {
-                    // Filters saved shows only; new shows are found from Explore.
-                    SearchCapsule(placeholder: "Search your shows", identifier: "librarySearch") {
-                        model.openSearch()
+                HStack(spacing: Space.m) {
+                    if !model.library.subscriptions.isEmpty {
+                        // Filters saved shows only; new shows are found from Explore.
+                        SearchCapsule(placeholder: "Search your shows", identifier: "librarySearch") {
+                            model.openSearch()
+                        }
+                        IconKey(systemName: model.libraryLayout.symbol, label: "Layout: \(model.libraryLayout.title). Switch to \(model.libraryLayout.next.title)") {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { model.libraryLayout = model.libraryLayout.next }
+                        }
+                        .accessibilityIdentifier("layoutKey")
+                        .sensoryFeedback(.selection, trigger: model.libraryLayout)
                     }
-                    .padding(.top, -Space.s)
+                    IconKey(systemName: "circle.lefthalf.filled", label: "Themes") { model.isThemesPresented = true }
+                        .accessibilityIdentifier("themesKey")
                 }
+                .padding(.top, -Space.s)
                 if model.library.subscriptions.isEmpty {
                     emptyState
                 } else {
@@ -110,28 +119,12 @@ struct LibraryView: View {
     }
 
     private var header: some View {
-        HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: Space.xs) {
-                Text("Library")
-                    .font(Typo.display)
-                    .textCase(Typo.titleCase)
-                    .foregroundStyle(theme.text)
-                    .accessibilityAddTraits(.isHeader)
-            }
-            Spacer()
-            HStack(spacing: Space.m) {
-                if !model.library.subscriptions.isEmpty {
-                    IconKey(systemName: model.libraryLayout.symbol, label: "Layout: \(model.libraryLayout.title). Switch to \(model.libraryLayout.next.title)") {
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { model.libraryLayout = model.libraryLayout.next }
-                    }
-                    .accessibilityIdentifier("layoutKey")
-                    .sensoryFeedback(.selection, trigger: model.libraryLayout)
-                }
-                IconKey(systemName: "circle.lefthalf.filled", label: "Themes") { model.isThemesPresented = true }
-                    .accessibilityIdentifier("themesKey")
-            }
-        }
-        .padding(.top, Space.s)
+        Text("Library")
+            .font(Typo.display)
+            .textCase(Typo.titleCase)
+            .foregroundStyle(theme.text)
+            .accessibilityAddTraits(.isHeader)
+            .padding(.top, Space.s)
     }
 
     private var emptyState: some View {
@@ -279,12 +272,13 @@ struct ArtworkMat: ViewModifier {
         }
     }
 
-    /// Painted mats: curtain red, mustard, night blue, leaf.
+    /// Painted mats: curtain red, mustard, night blue, leaf. Warm-only pages skip the blue.
     private static func paint(_ theme: Theme, _ seed: Int) -> Color {
         let night = theme.colorScheme == .dark
-        let colors: [Color] = night
+        var colors: [Color] = night
             ? [Color(hex: 0xB5483A), Color(hex: 0xB8892E), Color(hex: 0x27406B), theme.raised]
             : [Color(hex: 0xD2533F), Color(hex: 0xE0A93A), Color(hex: 0x2F5596), theme.raised]
+        if theme.warmOnly { colors.remove(at: 2) }
         return colors[abs(seed) % colors.count]
     }
 }
@@ -307,6 +301,7 @@ struct MiniPlayerDock: View {
     /// Counts taps on the mini Moon key so its haptic fires only for taps here,
     /// never for Sleep changes made from Now Playing (which has its own haptic).
     @State private var moonTaps = 0
+    @State private var sleepActivatedAt: Date?
 
     var body: some View {
         let player = model.player
@@ -341,9 +336,10 @@ struct MiniPlayerDock: View {
                 moonTaps += 1
                 model.toggleSleep()
             } label: {
-                Image(systemName: "moon.fill")
+                SleepGlyphView()
                     .font(.system(size: 17, weight: .bold))
                     .foregroundStyle(sleepOn ? theme.onAccent : theme.accent)
+                    .frame(width: 20, height: 20)
             }
             .buttonStyle(.roundKey(sleepOn ? .accent : .standard, depth: 3))
             .frame(width: 44, height: 44)
@@ -358,15 +354,17 @@ struct MiniPlayerDock: View {
             .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: moonTaps)
             .overlay(alignment: .topLeading) {
                 if sleepOn {
-                    // The same z's as the big Moon key, smaller, drifting up off the mini player.
-                    FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
-                        .frame(width: 130, height: 300)
+                    // The same z's as the Sleep panel, smaller, drifting up off the mini player.
+                    FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }(),
+                               paused: !player.isPlaying, level: model.sleepStatus.moonLit, activatedAt: sleepActivatedAt)
+                        .frame(width: 112, height: 84)
                         .scaleEffect(0.7, anchor: .bottomLeading)
-                        .offset(x: 2, y: -286)
+                        .offset(x: -8, y: -50)
                         .transition(.opacity)
                 }
             }
             .animation(.easeOut(duration: 0.3), value: sleepOn)
+            .onChange(of: sleepOn) { _, on in if on { sleepActivatedAt = .now } }
 
             Button { player.togglePlayPause() } label: {
                 Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
@@ -396,10 +394,23 @@ extension View {
     func dockAware() -> some View { modifier(DockInset()) }
 }
 
+/// Measured room the floating player needs under scroll content (RootView sets it;
+/// 0 while nothing is loaded).
+struct DockInsetKey: EnvironmentKey {
+    static let defaultValue: CGFloat = 0
+}
+
+extension EnvironmentValues {
+    var dockInset: CGFloat {
+        get { self[DockInsetKey.self] }
+        set { self[DockInsetKey.self] = newValue }
+    }
+}
+
 private struct DockInset: ViewModifier {
-    @Environment(AppModel.self) private var model
+    @Environment(\.dockInset) private var inset
     func body(content: Content) -> some View {
-        content.contentMargins(.bottom, model.player.episode == nil ? 0 : 72, for: .scrollContent)
+        content.contentMargins(.bottom, inset, for: .scrollContent)
     }
 }
 
