@@ -69,7 +69,7 @@ struct ScreenBackground: View {
 enum SceneRenderer {
     static func draw(_ scene: SceneKind, in canvas: inout GraphicsContext, size: CGSize, t: Double, player: Bool = false, moon: Bool = true) {
         // Night scenes on a page: the landscape in the top 70%, veiled from 45% of that.
-        let veil = player ? 0.5 : 0.45
+        let veil = player ? 0.56 : 0.45
         if scene.isNight, !player {
             canvas.fill(Path(CGRect(origin: .zero, size: size)), with: .color(hex(SceneRenderer.pageColor(scene))))
             canvas.scaleBy(x: 1, y: 0.7)
