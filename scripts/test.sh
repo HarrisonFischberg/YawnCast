@@ -22,13 +22,14 @@ done
 
 # run_tests <log> <finished-pattern> <xcodebuild args...>
 UI_DONE="Test Suite '(All tests|Selected tests)' (passed|failed)|TEST (FAILED|SUCCEEDED)|BUILD FAILED"
-UNIT_DONE="Test run with .* (passed|failed)|$UI_DONE"
+# Not $UI_DONE: XCTest's empty "All tests" summary prints before the Swift Testing unit tests run.
+UNIT_DONE="Test run with .* (passed|failed)|TEST FAILED|BUILD FAILED"
 run_tests() {
   local log=$1 finished=$2; shift 2
   xcodebuild -project YawnCast.xcodeproj -scheme YawnCast -destination "$DEST" \
     -derivedDataPath build/DerivedData -parallel-testing-enabled NO "$@" test > "$log" 2>&1 &
   local pid=$!
-  for _ in $(seq 1 180); do
+  for _ in $(seq 1 360); do
     sleep 5
     grep -qE "$finished" "$log" && break
   done
