@@ -1,0 +1,52 @@
+{
+  "_about": "YawnCast theme 'fernlight' (v0.19 bedtime scene: deep green clearing, conifers, fireflies). Scenery is veiled to bg behind text and controls.",
+  "color": {
+    "bg": "#0A1A16",
+    "surface": "#12261F",
+    "raised": "#183128",
+    "border": "#274539",
+    "text": "#F1E9D2",
+    "text-muted": "#A7BDAF",
+    "accent": "#F2D08C",
+    "on-accent": "#1A1408",
+    "danger": "#FF9A8A"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "raised"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "danger",
+      "bg"
+    ]
+  ]
+}

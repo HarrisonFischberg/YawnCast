@@ -1,0 +1,52 @@
+{
+  "_about": "YawnCast theme 'tidalink' (v0.19 bedtime scene: Prussian-blue headlands, lighthouse, waves). Scenery is veiled to bg behind text and controls.",
+  "color": {
+    "bg": "#0A1521",
+    "surface": "#122032",
+    "raised": "#192B40",
+    "border": "#2A4057",
+    "text": "#EDE9DC",
+    "text-muted": "#A4B3C2",
+    "accent": "#F1D6A0",
+    "on-accent": "#161008",
+    "danger": "#FF9A8A"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "raised"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "danger",
+      "bg"
+    ]
+  ]
+}

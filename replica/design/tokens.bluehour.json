@@ -1,0 +1,52 @@
+{
+  "_about": "YawnCast theme 'bluehour' (v0.19 bedtime scene: ink-blue lake, layered hills, cottage window). Scenery is veiled to bg behind text and controls.",
+  "color": {
+    "bg": "#0B1224",
+    "surface": "#151F38",
+    "raised": "#1D2A47",
+    "border": "#2E3D60",
+    "text": "#F2E8D5",
+    "text-muted": "#AAB3C9",
+    "accent": "#F3CF8E",
+    "on-accent": "#1A1408",
+    "danger": "#FF9A8A"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "raised"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "danger",
+      "bg"
+    ]
+  ]
+}

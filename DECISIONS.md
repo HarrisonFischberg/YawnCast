@@ -323,3 +323,13 @@ listener presses Play. The long-press menu's Play still starts it at once. Late-
 arms on any start of playback (mini player, Now Playing, Lock Screen, headphones, a relaunch's restored
 episode), not just a row tap. Turning Sleep off by hand still sticks for that load; Sleep finishing on its own
 lets the next late play arm it again.
+
+## D50 · 2026-10-27 · v0.19 bedtime scenes and Sleep panel (owner handoff)
+Five candidate scene themes (Blue Hour, Fernlight, Ember Lodge, Tidal Ink, After Hours) from the
+YawnCast-Builder-Handoff, none chosen: Midnight stays the default and every older Scene and Colour keeps its
+id, now in an "Older themes" drawer under the new five. Each scene is Canvas-drawn (NightScenes.swift): broad
+silhouettes, one lit building, the Moon top right, one quiet moving layer; pages squeeze it into the top 70%
+and veil it to the page colour, Now Playing shows all of it with the controls on the dark. The Sleep key is one
+dark panel for every theme, with the ±5 row inside while on; z's are bounded to the panel, burst once on
+activation, hold while audio is paused, thin with the real fade and stand still under Reduce Motion. Nothing in
+SleepTimer or AppModel changed. The dock inset is measured, not the old 72 pt.

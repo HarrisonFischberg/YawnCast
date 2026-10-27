@@ -1,0 +1,52 @@
+{
+  "_about": "YawnCast theme 'afterhours' (v0.19 bedtime scene: plum city, canal, bookshop window). Scenery is veiled to bg behind text and controls.",
+  "color": {
+    "bg": "#160F1C",
+    "surface": "#211829",
+    "raised": "#2C2136",
+    "border": "#463652",
+    "text": "#F4E7DA",
+    "text-muted": "#BBA7C0",
+    "accent": "#F3C98B",
+    "on-accent": "#1A1008",
+    "danger": "#FF9A8A"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "raised"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "danger",
+      "bg"
+    ]
+  ]
+}

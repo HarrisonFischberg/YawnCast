@@ -1,0 +1,52 @@
+{
+  "_about": "YawnCast theme 'emberlodge' (v0.19 bedtime scene: copper mountains, cabin, chimney smoke (warm-only)). Scenery is veiled to bg behind text and controls.",
+  "color": {
+    "bg": "#160D0A",
+    "surface": "#22150F",
+    "raised": "#2E1D15",
+    "border": "#4A2F22",
+    "text": "#F2DFC8",
+    "text-muted": "#C19B82",
+    "accent": "#F0B070",
+    "on-accent": "#1A0A04",
+    "danger": "#FFB27A"
+  },
+  "pairs": [
+    [
+      "text",
+      "bg"
+    ],
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "text",
+      "raised"
+    ],
+    [
+      "text-muted",
+      "bg"
+    ],
+    [
+      "text-muted",
+      "surface"
+    ],
+    [
+      "text-muted",
+      "raised"
+    ],
+    [
+      "on-accent",
+      "accent"
+    ],
+    [
+      "accent",
+      "bg"
+    ],
+    [
+      "danger",
+      "bg"
+    ]
+  ]
+}
