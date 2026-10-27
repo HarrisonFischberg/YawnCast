@@ -85,7 +85,7 @@ extension SceneRenderer {
             conifers(&mirror, size, base: 0.5, height: 0.05, spacing: 0.035, seed: 11, top: 0x080F28, bottom: 0x080F28)
         }
         // Boathouse on stilts out on the water, both windows lit.
-        let deck = CGPoint(x: w * 0.42, y: shore + 22)
+        let deck = CGPoint(x: w * 0.42, y: shore + 8)
         var stilts = Path()
         for dx in [-26.0, -9, 9, 26] { stilts.addRect(CGRect(x: deck.x + dx - 1, y: deck.y, width: 2, height: 12)) }
         c.fill(stilts, with: .color(hex(0x050918)))
@@ -100,14 +100,6 @@ extension SceneRenderer {
         }
         ripples(&c, x: deck.x, from: deck.y + 8, depth: h * 0.3, t: t, color: hex(0xFFC772), cycle: 18)
         ripples(&c, x: w * 0.84, from: shore + 8, depth: h * 0.3, t: t, color: hex(0xF3CF8E), cycle: 24)
-        // Near trees framing both edges, as if seen from the shore through branches.
-        var frame = Path()
-        for (x, y, r) in [(-0.04, 0.12, 0.09), (0.02, 0.22, 0.07), (-0.02, 0.33, 0.1), (0.04, 0.44, 0.07), (-0.03, 0.55, 0.09),
-                          (1.03, 0.04, 0.08), (0.97, 0.1, 0.05), (1.04, 0.5, 0.07), (0.99, 0.58, 0.06)] {
-            frame.addEllipse(in: CGRect(x: w * x - w * r, y: h * y - w * r, width: 2 * w * r, height: 2 * w * r))
-        }
-        frame.addRect(CGRect(x: 0, y: h * 0.1, width: w * 0.02, height: h * 0.6))
-        c.fill(frame, with: .color(hex(0x03060F)))
         self.veil(&c, size, from: veil, color: 0x0B1224)
     }
 
