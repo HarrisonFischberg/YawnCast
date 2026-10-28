@@ -12,6 +12,8 @@ struct NowPlayingView: View {
 
     var body: some View {
         let player = model.player
+        let preview = model.preview
+        let episode = preview ?? player.episode
         ZStack {
             ScreenBackground()
 
@@ -26,12 +28,12 @@ struct NowPlayingView: View {
                 Spacer(minLength: Space.xxl)
 
                 VStack(alignment: .leading, spacing: Space.m) {
-                    Text(player.episode?.showTitle.uppercased() ?? "")
+                    Text(episode?.showTitle.uppercased() ?? "")
                         .font(Typo.eyebrow)
                         .tracking(1.2)
                         .foregroundStyle(theme.textMuted)
                         .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
-                    Text(player.episode?.title ?? "Nothing playing")
+                    Text(episode?.title ?? "Nothing playing")
                         .font(typeSize.isAccessibilitySize ? Typo.showTitle : Typo.playerTitle)
                         .textCase(Typo.titleCase)
                         .foregroundStyle(theme.text)
@@ -40,7 +42,7 @@ struct NowPlayingView: View {
                         .accessibilityAddTraits(.isHeader)
                 }
 
-                if case .failed(let message) = player.loadState {
+                if preview == nil, case .failed(let message) = player.loadState {
                     HStack(spacing: Space.m) {
                         Image(systemName: "exclamationmark.triangle.fill")
                         Text(message).lineLimit(2)
@@ -55,7 +57,12 @@ struct NowPlayingView: View {
 
                 Spacer(minLength: Space.xxl)
 
-                Scrubber(position: player.position, duration: player.duration) { player.seek(to: $0) }
+                if let preview {
+                    Scrubber(position: model.position(for: preview)?.seconds ?? 0, duration: preview.duration) { _ in }
+                        .disabled(true)
+                } else {
+                    Scrubber(position: player.position, duration: player.duration) { player.seek(to: $0) }
+                }
 
                 transport
                     .padding(.top, Space.xxl)
@@ -66,7 +73,7 @@ struct NowPlayingView: View {
                     // Above the Moon: "Back to …" on the left (only while Sleep is off),
                     // the Sleep chip or a toast on the right. Stacked at accessibility sizes.
                     sleepRowLayout {
-                        if let marker = model.driftBackPosition {
+                        if preview == nil, let marker = model.driftBackPosition {
                             DriftBackKey(position: marker) { model.jumpToDriftBack() }
                                 .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 6)))
                         }
@@ -87,7 +94,7 @@ struct NowPlayingView: View {
                     }
 
                     MoonKey(status: model.sleepStatus) { model.toggleSleep() }
-                        .disabled(player.episode == nil)
+                        .disabled(player.episode == nil || preview != nil)
                         .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: model.sleepStatus == .off)
                         .overlay(alignment: .topLeading) {
                             if model.sleepStatus != .off {
@@ -145,6 +152,9 @@ struct NowPlayingView: View {
 
     private var transport: some View {
         let player = model.player
+        let preview = model.preview
+        // Previewing: Play starts the previewed episode; the rest waits for it.
+        let playing = preview == nil && player.isPlaying
         return HStack(spacing: 0) {
             Spacer(minLength: 0)
             Button { player.skip(by: -15); skipTaps += 1 } label: {
@@ -152,16 +162,19 @@ struct NowPlayingView: View {
             }
             .buttonStyle(.roundKey())
             .frame(width: 76, height: 76)
+            .disabled(preview != nil)
             .accessibilityLabel("Back 15 seconds")
 
             Spacer(minLength: Space.l)
 
-            Button { player.togglePlayPause() } label: {
+            Button {
+                if let preview { model.play(preview) } else { player.togglePlayPause() }
+            } label: {
                 ZStack {
-                    if player.isBuffering {
+                    if preview == nil && player.isBuffering {
                         ProgressView().tint(theme.bg).controlSize(.large)
                     } else {
-                        Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
+                        Image(systemName: playing ? "pause.fill" : "play.fill")
                             .font(.system(size: 40, weight: .bold))
                             .contentTransition(.symbolEffect(.replace))
                     }
@@ -170,10 +183,10 @@ struct NowPlayingView: View {
             .buttonStyle(.roundKey(.primary, depth: 6))
             .frame(width: 112, height: 112)
             .disabled(player.episode == nil)
-            .accessibilityLabel(player.isPlaying ? "Pause" : "Play")
-            .accessibilityValue(player.isBuffering ? "Loading" : "")
+            .accessibilityLabel(playing ? "Pause" : "Play")
+            .accessibilityValue(preview == nil && player.isBuffering ? "Loading" : "")
             .accessibilityIdentifier("playPause")
-            .sensoryFeedback(.impact(weight: .medium), trigger: player.isPlaying)
+            .sensoryFeedback(.impact(weight: .medium), trigger: playing)
 
             Spacer(minLength: Space.l)
 
@@ -182,6 +195,7 @@ struct NowPlayingView: View {
             }
             .buttonStyle(.roundKey())
             .frame(width: 76, height: 76)
+            .disabled(preview != nil)
             .accessibilityLabel("Forward 15 seconds")
             Spacer(minLength: 0)
         }
