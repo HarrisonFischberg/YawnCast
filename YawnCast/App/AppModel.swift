@@ -57,7 +57,12 @@ final class AppModel {
     }
 
 
-    var isPlayerPresented = false
+    var isPlayerPresented = false {
+        didSet { if !isPlayerPresented { preview = nil } }
+    }
+    /// An episode opened while another plays: Now Playing shows it, and the
+    /// current one keeps playing until Play is pressed here. Cleared on close.
+    private(set) var preview: Episode?
     var isThemesPresented = false
     /// Main navigation stack (show detail, search).
     var path: [Route] = []
@@ -443,8 +448,12 @@ final class AppModel {
 
     /// Tap on an episode row: load it paused at its saved spot and show Now Playing,
     /// where the listener presses Play. The loaded episode is left as it is.
+    /// While something else plays, it only previews, so the audio isn't cut off.
     func open(_ episode: Episode) {
-        if player.episode?.id != episode.id { load(episode, autoplay: false) }
+        preview = nil
+        if player.episode?.id != episode.id {
+            if player.isPlaying || player.isBuffering { preview = episode } else { load(episode, autoplay: false) }
+        }
         presentPlayer()
     }
 
@@ -460,6 +469,7 @@ final class AppModel {
     }
 
     private func load(_ episode: Episode, autoplay: Bool) {
+        preview = nil
         sleep.episodeWillChange(to: episode.id)
         clearDriftBack()
         let start = SeekMath.resumeTime(saved: library.position(for: episode), duration: episode.duration)

@@ -70,6 +70,24 @@ struct NightAutoTests {
             #expect(model.sleepStatus != .off)
         }
     }
+    @Test func openingAnotherEpisodeWhilePlayingKeepsTheCurrentOneGoing() {
+        atHour(14) { model in
+            model.play(Self.episode(1))
+            model.isPlayerPresented = false
+            model.open(Self.episode(2))
+            #expect(model.player.episode?.id == "night-1", "current episode not replaced")
+            #expect(model.player.isPlaying || model.player.isBuffering, "and not paused")
+            #expect(model.preview?.id == "night-2")
+            #expect(model.isPlayerPresented)
+            model.isPlayerPresented = false
+            #expect(model.preview == nil, "closing drops the preview")
+            model.open(Self.episode(2))
+            model.play(Self.episode(2))
+            #expect(model.player.episode?.id == "night-2")
+            #expect(model.preview == nil)
+        }
+    }
+
     @Test func openingAnEpisodeLoadsItPausedWithSleepOff() {
         atHour(23) { model in
             model.open(Self.episode(1))
