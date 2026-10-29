@@ -7,7 +7,7 @@ import SwiftUI
 // MARK: - Page tabs
 
 /// New · Library · Explore as named tabs, in place of the v0.2 dots. Every style
-/// uses Picture Book's: plain labels, the current page on a cut-paper tab.
+/// uses plain labels, the current page on an accent capsule.
 struct LookTabs: View {
     @Binding var selection: HomePage
     @Environment(\.theme) private var theme
@@ -27,7 +27,7 @@ struct LookTabs: View {
                         .lineLimit(1)
                         .padding(.horizontal, Space.l)
                         .padding(.vertical, 7)
-                        .background(on ? PaperShape(seed: 1).fill(theme.accent) : nil)
+                        .background(on ? Capsule().fill(theme.accent) : nil)
                         .frame(minHeight: 44)
                         .contentShape(Rectangle())
                 }
