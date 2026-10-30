@@ -1,0 +1,30 @@
+O YawnCast é um player de podcasts feito para pegar no sono.
+
+Coloque um programa, toque na Lua e feche os olhos. Um tempo depois, o volume começa a baixar aos poucos até o episódio pausar em silêncio. O ponto onde você parou fica salvo, então amanhã à noite você continua exatamente de onde dormiu.
+
+DORMIR COM UM TOQUE
+• Toque na Lua para ativar o Sono. O fade começa mais tarde e dura cerca de seis minutos, devagar o bastante para não te acordar.
+• Quer mais tempo ou menos? Ajuste o fade em cinco minutos para cada lado.
+• O YawnCast nunca começa o próximo episódio sozinho. Quando para, continua parado.
+• Tarde da noite, o Sono liga sozinho, e a Tela Bloqueada mostra quando o fade começa.
+• Acordou de madrugada? Um toque te leva de volta para onde você dormiu.
+
+SEUS PODCASTS, COM CALMA
+• Novos: os episódios mais recentes dos seus programas, por dia.
+• Biblioteca: seus programas em grade ou lista, na ordem que você escolher.
+• Explorar: programas escolhidos pelos seus interesses e pelas paradas da Apple.
+• Uma só barra de busca encontra seus programas e novos enquanto você digita.
+• Um pequeno player te acompanha em todas as telas.
+
+FEITO PARA O ESCURO
+• Onze visuais: seis cenas noturnas animadas (Midnight, Mountain Vista, Beach, Rainforest, Underwater, City Scape) e cinco cores tranquilas (Almanac, Ember, Plum, Meadow, Dream).
+• Ember é um vermelho quente, sem luz azul.
+• As cores seguem o modo claro ou escuro do iPhone, e os botões grandes são fáceis de tocar mesmo com sono.
+
+NADA DE CADASTRO
+• Sem conta, sem anúncios, sem rastreamento.
+• Sua biblioteca fica no seu iPhone. Os programas vêm direto dos produtores, e a busca usa o diretório público de podcasts da Apple.
+
+O app está em inglês.
+
+Bons sonhos.

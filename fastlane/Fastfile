@@ -12,6 +12,7 @@
 #
 # Lanes:
 #   fastlane metadata   push listing text + screenshots in fastlane/ (no build, no submit)
+#                       (rebuild screenshots first with: python3 fastlane/frame_screenshots.py)
 #   fastlane beta       archive and upload to TestFlight
 #   fastlane release    archive, upload, push listing, and submit for review
 #
