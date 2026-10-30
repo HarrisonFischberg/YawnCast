@@ -1,0 +1,30 @@
+YawnCast est un lecteur de podcasts conçu pour s'endormir.
+
+Lancez une émission, touchez la lune et fermez les yeux. Un peu plus tard, le volume baisse petit à petit jusqu'à ce que l'épisode se mette tranquillement en pause. Votre position est enregistrée : demain soir, vous reprenez exactement là où vous vous êtes endormi.
+
+LE SOMMEIL EN UN GESTE
+• Touchez la lune pour activer Sommeil. Le fondu commence plus tard et dure environ six minutes, assez lentement pour ne pas vous réveiller.
+• Plus de temps, ou moins ? Décalez le fondu de cinq minutes dans un sens ou dans l'autre.
+• YawnCast ne lance jamais l'épisode suivant tout seul. Quand il s'arrête, il reste arrêté.
+• Tard le soir, Sommeil s'active tout seul, et l'écran verrouillé indique quand le fondu commence.
+• Réveillé en pleine nuit ? Un geste vous ramène là où vous vous êtes endormi.
+
+VOS PODCASTS, EN DOUCEUR
+• Nouveautés : les derniers épisodes de vos émissions, jour par jour.
+• Bibliothèque : vos émissions en grille ou en liste, dans l'ordre de votre choix.
+• Explorer : des émissions choisies selon vos centres d'intérêt et les classements d'Apple.
+• Une seule barre de recherche trouve vos émissions et de nouvelles pendant la saisie.
+• Un petit lecteur vous suit sur chaque écran.
+
+PENSÉ POUR LA NUIT
+• Onze styles : six scènes nocturnes animées (Midnight, Mountain Vista, Beach, Rainforest, Underwater, City Scape) et cinq couleurs apaisantes (Almanac, Ember, Plum, Meadow, Dream).
+• Ember est un rouge chaud, sans lumière bleue.
+• Les couleurs suivent le mode clair ou sombre de votre iPhone, et les grands boutons se touchent facilement, même à moitié endormi.
+
+AUCUNE INSCRIPTION
+• Pas de compte, pas de publicité, pas de pistage.
+• Votre bibliothèque reste sur votre iPhone. Les émissions viennent directement de leurs éditeurs, et la recherche utilise l'annuaire public de podcasts d'Apple.
+
+L'app est en anglais.
+
+Faites de beaux rêves.

@@ -1,0 +1,30 @@
+YawnCast es un reproductor de podcasts hecho para quedarte dormido.
+
+Pon un programa, toca la Luna y cierra los ojos. Un rato después, el volumen empieza a bajar poco a poco hasta que el episodio se pausa en silencio. Tu posición se guarda, así que mañana por la noche sigues justo donde te quedaste dormido.
+
+DORMIR, CON UN TOQUE
+• Toca la Luna para activar Dormir. El desvanecimiento empieza más tarde y dura unos seis minutos, tan lento que no te despierta.
+• ¿Más tiempo o menos? Mueve el desvanecimiento cinco minutos en cualquier sentido.
+• YawnCast nunca empieza el siguiente episodio por su cuenta. Cuando se detiene, se queda detenido.
+• Tarde por la noche, Dormir se activa solo, y la pantalla bloqueada muestra cuándo empieza el desvanecimiento.
+• ¿Te despiertas de madrugada? Un toque te devuelve a donde te quedaste dormido.
+
+TUS PODCASTS, CON CALMA
+• Nuevo: los últimos episodios de tus programas, por día.
+• Biblioteca: tus programas en cuadrícula o lista, en el orden que elijas.
+• Explorar: programas elegidos según tus intereses y las listas de éxitos de Apple.
+• Una sola barra de búsqueda encuentra tus programas y otros nuevos mientras escribes.
+• Un pequeño reproductor te acompaña en cada pantalla.
+
+HECHO PARA LA OSCURIDAD
+• Once estilos: seis escenas nocturnas animadas (Midnight, Mountain Vista, Beach, Rainforest, Underwater, City Scape) y cinco colores tranquilos (Almanac, Ember, Plum, Meadow, Dream).
+• Ember es un rojo cálido sin luz azul.
+• Los colores siguen el modo claro u oscuro de tu iPhone, y los botones grandes son fáciles de tocar medio dormido.
+
+NADA QUE REGISTRAR
+• Sin cuenta, sin anuncios, sin rastreo.
+• Tu biblioteca vive en tu iPhone. Los programas llegan directamente de sus editores y la búsqueda usa el directorio público de podcasts de Apple.
+
+La app está en inglés.
+
+Dulces sueños.
