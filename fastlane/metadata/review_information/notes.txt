@@ -1,1 +1,15 @@
-YawnCast is a podcast player for falling asleep. No account or sign-in is needed. Search for any public podcast (search uses Apple's iTunes Search API) or pick one in Explore, open an episode, press Play, then tap the Moon to turn on Sleep. Sleep fades the volume down over about six minutes and pauses. Audio streams directly from each podcast's publisher; the app has no servers, ads, or analytics. Background audio is used only to keep the podcast playing while the phone is locked.
+Hello, and thank you for reviewing YawnCast. The screen recording, made on an iPhone running the latest iOS, is attached. Our answers to each question are below.
+
+1. Screen recording: attached. It starts with launching the app and shows the typical flow: choosing a show, playing an episode, turning on Sleep, and the fade-out. YawnCast has no accounts, no login, no user-generated content, and no paid content or in-app purchases, so none of those flows exist.
+
+2. Purpose and audience: YawnCast is a podcast player for people who fall asleep listening to podcasts. Ordinary players keep playing after you fall asleep, so you lose your place and wake up to the wrong episode. YawnCast's Sleep mode (tap the Moon) slowly fades the volume down over about six minutes, pauses, and saves the exact spot. It never auto-plays the next episode. Late at night Sleep turns on by itself, and a single tap goes back to where you drifted off. It is for adults and teens who use podcasts to fall asleep.
+
+3. How to use it: no setup, login, or sample files are needed. Open the app. Pick a show in Explore, or search for any podcast (for example "99% Invisible") and tap Subscribe. Tap an episode, then Play. Tap the Moon to turn on Sleep. The fade start can be nudged earlier or later by five minutes on the Now Playing screen. Shows and progress appear under New and Library.
+
+4. External services: (a) Apple's iTunes Search API and the Apple Podcasts top charts feed (itunes.apple.com), used for search and Explore; (b) each podcast's public RSS feed, artwork, and audio, which load directly from the publisher's own servers. There are no other services: no servers of our own, no accounts or authentication, no analytics, no ads, no payment processors, and no AI services. All user data (followed shows and playback positions) stays on the device.
+
+5. Regional differences: the app works the same in every region. The only difference is that search results and Explore's top charts come from Apple's podcast directory for the user's country or region, so the suggested shows differ by country.
+
+6. Regulated industry or protected material: not applicable. YawnCast is not in a regulated industry. Like other podcast players, it plays publicly distributed podcast RSS feeds directly from their publishers and does not host, download, re-distribute, or modify any content.
+
+Thank you!
