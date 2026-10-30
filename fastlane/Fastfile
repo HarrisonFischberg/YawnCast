@@ -1,0 +1,53 @@
+# App Store releases without clicking through App Store Connect.
+#
+# One-time setup on the Mac:
+#   1. App Store Connect → Users and Access → Integrations → Team Keys → "+" (Admin access).
+#      Download the AuthKey_XXXX.p8 file (Apple only lets you download it once).
+#   2. mkdir -p ~/.appstoreconnect && mv ~/Downloads/AuthKey_*.p8 ~/.appstoreconnect/
+#   3. Add to ~/.zshrc:
+#        export ASC_KEY_ID=XXXX            # the key's ID
+#        export ASC_ISSUER_ID=xxxxxxxx-... # shown above the keys list
+#        export ASC_KEY_PATH=~/.appstoreconnect/AuthKey_XXXX.p8
+#   4. brew install fastlane
+#
+# Lanes:
+#   fastlane metadata   push listing text + screenshots in fastlane/ (no build, no submit)
+#   fastlane beta       archive and upload to TestFlight
+#   fastlane release    archive, upload, push listing, and submit for review
+#
+# Bump MARKETING_VERSION / CURRENT_PROJECT_VERSION in the project first, and add
+# fastlane/metadata/en-US/release_notes.txt for every version after 1.0.
+# App Privacy answers can't be set through the API; they persist between versions.
+
+default_platform(:ios)
+
+platform :ios do
+  before_all do
+    app_store_connect_api_key(
+      key_id: ENV.fetch("ASC_KEY_ID"),
+      issuer_id: ENV.fetch("ASC_ISSUER_ID"),
+      key_filepath: File.expand_path(ENV.fetch("ASC_KEY_PATH"))
+    )
+  end
+
+  lane :metadata do
+    deliver(skip_binary_upload: true, overwrite_screenshots: true, force: true, precheck_include_in_app_purchases: false)
+  end
+
+  lane :beta do
+    build_app(scheme: "YawnCast", export_method: "app-store", output_directory: "build")
+    upload_to_testflight(skip_waiting_for_build_processing: true)
+  end
+
+  lane :release do
+    build_app(scheme: "YawnCast", export_method: "app-store", output_directory: "build")
+    deliver(
+      submit_for_review: true,
+      automatic_release: true,
+      overwrite_screenshots: true,
+      force: true,
+      precheck_include_in_app_purchases: false,
+      submission_information: { add_id_info_uses_idfa: false }
+    )
+  end
+end

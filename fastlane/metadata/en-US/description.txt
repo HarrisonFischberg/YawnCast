@@ -1,0 +1,28 @@
+YawnCast is a podcast player made for falling asleep.
+
+Put on a show, tap the Moon, and close your eyes. A while later the volume starts stepping down, a little at a time, until the episode quietly pauses. Your place is saved, so tomorrow night you can pick up right where you drifted off.
+
+SLEEP, IN ONE TAP
+• Tap the Moon to turn Sleep on. The fade starts later and takes about six minutes, slow enough that it won't wake you.
+• Want more time, or less? Nudge the fade by five minutes either way.
+• YawnCast never starts the next episode on its own. When it stops, it stays stopped.
+• Late at night, Sleep switches itself on, and the Lock Screen shows when the fade begins.
+• Wake up in the night? One tap takes you back to where you drifted off.
+
+YOUR PODCASTS, CALMLY
+• New: the latest episodes from your shows, by day.
+• Library: your shows as a grid or a list, in the order you choose.
+• Explore: shows picked from your interests and Apple's top charts.
+• One search bar finds your shows and new ones as you type.
+• A small player follows you on every screen.
+
+MADE FOR THE DARK
+• Ten themes: six animated night Scenes (Midnight, Mountain Vista, Beach, Rainforest, Underwater, City Scape) and four calm colors (Paper, Ember, Ink, Red Light).
+• Red Light keeps blue light out of the screen entirely.
+• Dark by default, with big, easy-to-hit buttons for sleepy thumbs.
+
+NOTHING TO SIGN UP FOR
+• No account, no ads, no tracking.
+• Your library lives on your iPhone. Shows come straight from their publishers, and search uses Apple's public podcast directory.
+
+Sweet dreams.

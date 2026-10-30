@@ -8,3 +8,5 @@ screenshots/raw/
 .claude/ralph-loop.local.md
 build/
 __pycache__/
+fastlane/report.xml
+fastlane/README.md
