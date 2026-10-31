@@ -95,6 +95,8 @@ final class PlaybackEngine: SleepControllable {
     func play() {
         guard episode != nil else { return }
         activateSession()
+        // Play at the very end starts the episode over.
+        if let duration, duration > 0, position >= duration - 1 { seek(to: 0) }
         player.play()
     }
 
