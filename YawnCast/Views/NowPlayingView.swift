@@ -8,6 +8,7 @@ struct NowPlayingView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var skipTaps = 0
+    @State private var showingAbout = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -40,6 +41,32 @@ struct NowPlayingView: View {
                         .lineLimit(typeSize.isAccessibilitySize ? 3 : 4)
                         .minimumScaleFactor(0.75)
                         .accessibilityAddTraits(.isHeader)
+                        .accessibilityAction(named: "About this episode") { if episode?.summary?.isEmpty == false { showingAbout = true } }
+                }
+                // Tap the title to read what the episode is about.
+                .contentShape(Rectangle())
+                .onTapGesture { if episode?.summary?.isEmpty == false { showingAbout = true } }
+                .sheet(isPresented: $showingAbout) {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: Space.l) {
+                            Text(episode?.title ?? "")
+                                .font(Typo.title)
+                                .textCase(Typo.titleCase)
+                                .foregroundStyle(theme.text)
+                                .accessibilityAddTraits(.isHeader)
+                            Text(episode?.summary ?? "")
+                                .font(Typo.body)
+                                .foregroundStyle(theme.textMuted)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(Space.xxl)
+                    }
+                    .background {
+                        if #available(iOS 26, *) {} else { ScreenBackground() }
+                    }
+                    .environment(\.theme, theme)
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.visible)
                 }
 
                 if preview == nil, case .failed(let message) = player.loadState {
