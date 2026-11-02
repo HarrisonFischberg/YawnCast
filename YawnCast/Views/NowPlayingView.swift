@@ -61,10 +61,10 @@ struct NowPlayingView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(Space.xxl)
                     }
-                    .background {
-                        if #available(iOS 26, *) {} else { ScreenBackground() }
-                    }
                     .environment(\.theme, theme)
+                    // Same frosted see-through at every height. The default iOS 26 glass
+                    // turns opaque (and picks up a green cast) once the sheet is pulled tall.
+                    .presentationBackground(.thinMaterial)
                     .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.visible)
                 }
