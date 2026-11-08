@@ -10,14 +10,20 @@
 #        export ASC_KEY_PATH=~/.appstoreconnect/AuthKey_XXXX.p8
 #   4. brew install fastlane
 #
+# Normally run through ../release.sh (dry run unless --live).
 # Lanes:
-#   fastlane metadata   push listing text + screenshots in fastlane/ (no build, no submit)
-#                       (rebuild screenshots first with: python3 fastlane/frame_screenshots.py)
-#   fastlane beta       archive and upload to TestFlight
-#   fastlane release    archive, upload, push listing, and submit for review
+#   fastlane metadata               push listing text + screenshots in fastlane/ (no build, no submit)
+#                                   (rebuild screenshots first with: python3 fastlane/frame_screenshots.py)
+#   fastlane beta live:true         next build number, archive, upload to TestFlight
+#   fastlane release live:true      same, then push listing and submit for review (automatic release)
+#   live:false (default)            archive only
 #
-# Bump MARKETING_VERSION / CURRENT_PROJECT_VERSION in the project first, and add
-# fastlane/metadata/en-US/release_notes.txt for every version after 1.0.
+# Signing: archive with the Apple Development identity, then export with
+# Config/ExportOptions-AppStore.plist and -allowProvisioningUpdates plus the API key, so Xcode
+# uses a cloud-managed distribution certificate (this Mac has no iOS Distribution certificate,
+# which is why build_app's export failed). Build number: one above the higher of the project's
+# CURRENT_PROJECT_VERSION and the latest TestFlight build, passed to xcodebuild (not committed). Version: release.sh --app_version_string X.Y.
+# Add release_notes.txt to every locale in fastlane/metadata for every app_version_string after 1.0.
 # App Privacy answers can't be set through the API; they persist between versions.
 
 default_platform(:ios)
@@ -35,14 +41,23 @@ platform :ios do
     deliver(skip_binary_upload: true, overwrite_screenshots: true, force: true, precheck_include_in_app_purchases: false)
   end
 
-  lane :beta do
-    build_app(scheme: "YawnCast", export_method: "app-store", output_directory: "build")
-    upload_to_testflight(skip_waiting_for_build_processing: true)
+  lane :beta do |options|
+    n = archive_and_upload(options[:live].to_s == "true")
+    UI.success("TestFlight: https://appstoreconnect.apple.com/apps/#{asc_app.id}/testflight (build #{n})") if options[:live].to_s == "true"
   end
 
-  lane :release do
-    build_app(scheme: "YawnCast", export_method: "app-store", output_directory: "build")
+  lane :release do |options|
+    live = options[:live].to_s == "true"
+    n = archive_and_upload(live)
+    next UI.message("dry run: would submit #{app_version_string} (#{n}) with the listing in fastlane/metadata") unless live
+    FastlaneCore::BuildWatcher.wait_for_build_processing_to_be_complete(
+      app_id: asc_app.id, platform: "IOS", app_version: app_version_string, build_version: n.to_s, poll_interval: 30,
+      return_spaceship_testflight_build: false # the legacy TestFlight object needs an Apple ID login, not an API key
+    )
     deliver(
+      app_version: app_version_string,
+      build_number: n.to_s,
+      skip_binary_upload: true,
       submit_for_review: true,
       automatic_release: true,
       overwrite_screenshots: true,
@@ -50,5 +65,35 @@ platform :ios do
       precheck_include_in_app_purchases: false,
       submission_information: { add_id_info_uses_idfa: false }
     )
+    UI.success("#{app_version_string} (#{n}) is waiting for review: https://appstoreconnect.apple.com/apps/#{asc_app.id}/distribution, " \
+               "live at https://apps.apple.com/app/id#{asc_app.id} once approved")
   end
+end
+
+ROOT = File.expand_path("..", __dir__)
+PBXPROJ = "#{ROOT}/YawnCast.xcodeproj/project.pbxproj"
+
+def asc_app
+  Spaceship::ConnectAPI::App.find(CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier))
+end
+
+def app_version_string
+  File.read(PBXPROJ)[/MARKETING_VERSION = ([\d.]+);/, 1]
+end
+
+# Archives with the next build number (passed to xcodebuild, the project file is left alone) and uploads unless upload is false.
+def archive_and_upload(upload)
+  n = [File.read(PBXPROJ).scan(/CURRENT_PROJECT_VERSION = (\d+);/).flatten.map(&:to_i).max,
+       latest_testflight_build_number(initial_build_number: 0).to_i].max + 1
+  auth = ["-allowProvisioningUpdates", "-authenticationKeyPath", File.expand_path(ENV.fetch("ASC_KEY_PATH")),
+          "-authenticationKeyID", ENV.fetch("ASC_KEY_ID"), "-authenticationKeyIssuerID", ENV.fetch("ASC_ISSUER_ID")]
+  archive = "#{ROOT}/build/YawnCast-#{app_version_string}-#{n}.xcarchive"
+  sh("xcodebuild", "-project", "#{ROOT}/YawnCast.xcodeproj", "-scheme", "YawnCast", "-configuration", "Release",
+     "-destination", "generic/platform=iOS", "-archivePath", archive, *auth, "CURRENT_PROJECT_VERSION=#{n}", "archive", "-quiet")
+  UI.success("archived #{app_version_string} (#{n}): #{archive}")
+  return n unless upload
+  sh("xcodebuild", "-exportArchive", "-archivePath", archive, "-exportPath", "#{ROOT}/build/export-#{n}",
+     "-exportOptionsPlist", "#{ROOT}/Config/ExportOptions-AppStore.plist", *auth)
+  UI.success("uploaded #{app_version_string} (#{n})")
+  n
 end

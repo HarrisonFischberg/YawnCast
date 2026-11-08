@@ -255,7 +255,7 @@ release.
 1. Signing is automatic on team `KTV2G3Z883`.
 2. Keep the **Background Modes → Audio** capability. It's already in `Config/YawnCast-Info.plist`.
 3. ~~Run on your iPhone and work through checks D1 to D8.~~ **Done 2026-10-21 — all eight pass**, run against TestFlight build 17. See [ACCEPTANCE.md](ACCEPTANCE.md).
-4. For later builds: **Product → Archive** with the **Release** configuration, then **Distribute App → App Store Connect → Upload**.
+4. For later builds: `./release.sh --live` (TestFlight) or `./release.sh --live --track production --version X.Y` (App Store review). Without `--live` it only archives. Lanes and signing notes: `fastlane/Fastfile`.
 5. In App Store Connect, create the app record (name, privacy details: the app sends search terms to Apple and fetches feeds from publishers, but you collect nothing, so confirm that when filling in the form), add internal testers, and start TestFlight.
 6. Before any public release: a **final app icon** (the current one is an original placeholder) and a review of the iTunes Search API terms. The privacy policy and support pages are live at <https://rarecreatures.app/apps/yawncast/privacy/> and <https://rarecreatures.app/apps/yawncast/support/>, and the name has been screened.
 
