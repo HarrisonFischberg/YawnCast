@@ -7,6 +7,10 @@ struct ThemesSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
     @Environment(\.dynamicTypeSize) private var typeSize
+    /// Send Debug Logs: the note typed so far, kept if the sheet closes.
+    @AppStorage("supportDraft") private var problem = ""
+    @State private var sending = false
+    @State private var sendFailed = false
 
     private var columns: [GridItem] {
         Array(repeating: GridItem(.flexible(), spacing: Space.m), count: typeSize.isAccessibilitySize ? 1 : 2)
@@ -23,6 +27,7 @@ struct ThemesSheet: View {
                 group("Scenes", subtitle: "Calm, animated night skies", themes: Theme.scenes)
                 group("Colors", subtitle: "Simple and still, with a day page that follows your phone", themes: Theme.colours)
                 textStyles
+                sendDebugLogs
                 versionLine
             }
             .padding(Space.xxl)
@@ -33,6 +38,46 @@ struct ThemesSheet: View {
         }
         .sensoryFeedback(.selection, trigger: model.theme)
         .sensoryFeedback(.selection, trigger: model.look)
+    }
+
+    /// Send Debug Logs: a draft to support in the user's email app (SupportMail.swift); the user taps Send there.
+    private var sendDebugLogs: some View {
+        VStack(alignment: .leading, spacing: Space.m) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Send Debug Logs to \(SupportMail.address)")
+                    .font(Typo.eyebrow).tracking(0.6)
+                    .foregroundStyle(theme.textMuted)
+                    .accessibilityAddTraits(.isHeader)
+                Text("Opens your email app with what you wrote, the app version, your device and this session's error logs. Nothing is sent until you tap Send.")
+                    .font(Typo.caption).foregroundStyle(theme.textMuted)
+            }
+            TextField("", text: $problem, prompt: Text("What went wrong?").foregroundStyle(theme.textMuted), axis: .vertical)
+                .lineLimit(3...8)
+                .font(Typo.body)
+                .foregroundStyle(theme.text)
+                .padding(Space.l)
+                .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(theme.surface))
+                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(theme.border, lineWidth: 1))
+                .accessibilityLabel("What went wrong?")
+                .accessibilityIdentifier("support-problem")
+            Button {
+                Task {
+                    sending = true
+                    sendFailed = !(await SupportMail.send(problem: problem))
+                    if !sendFailed { problem = "" }
+                    sending = false
+                }
+            } label: {
+                Text(sending ? "Gathering logs…" : "Send Debug Logs").font(Typo.headline).frame(maxWidth: .infinity, minHeight: 52)
+            }
+            .buttonStyle(.capsuleKey())
+            .disabled(sending || problem.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            .accessibilityIdentifier("support-send")
+            if sendFailed {
+                Text("No email app opened. The report is copied: paste it into an email to \(SupportMail.address).")
+                    .font(Typo.caption).foregroundStyle(theme.textMuted)
+            }
+        }
     }
 
     /// The version, at the bottom.
