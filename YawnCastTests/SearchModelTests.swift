@@ -293,3 +293,23 @@ struct SearchMessageTests {
         #expect(SearchModel.message(for: error) == expected)
     }
 }
+
+@MainActor
+struct SearchReopenTests {
+    /// Cancel while a search is in flight, then open search again: the kept query is searched
+    /// again rather than left on "Searching…".
+    @Test func reopeningSearchAfterCancellingMidRequestSearchesAgain() async {
+        let directory = StubDirectory()
+        directory.hold("quiet")
+        directory.answer("quiet", with: .success([show(1, "Quiet Hours")]))
+        let model = AppModel(store: MemoryLibraryStore(), directory: directory, feeds: FixtureFeedService())
+        model.openSearch()
+        model.search.query = "quiet"
+        await waitUntil { model.search.state == .loading }
+        model.endSearch()
+        directory.release("quiet")
+        await settle()
+        model.openSearch()
+        await waitUntil { model.search.state == .results([show(1, "Quiet Hours")]) }
+    }
+}

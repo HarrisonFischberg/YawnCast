@@ -270,6 +270,8 @@ final class AppModel {
         searchFindsNew = page != .library || library.subscriptions.isEmpty
         // Pick up where the last search left off, even across launches.
         if search.query.isEmpty { search.query = UserDefaults.standard.string(forKey: "lastSearch") ?? "" }
+        // Closing search mid-request cancels it; ask again so the kept query isn't left "Searching…".
+        if searchFindsNew { search.retry() }
         focusSearchOnAppear = true
         withAnimation(.smooth(duration: 0.42)) { searchingOn = page }
     }
