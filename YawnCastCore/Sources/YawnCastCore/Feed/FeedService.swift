@@ -47,7 +47,7 @@ public struct HTTPFeedService: FeedService {
     }
 
     private func page(_ url: URL) async throws -> Data {
-        var request = URLRequest(url: url, timeoutInterval: 20)
+        var request = URLRequest(url: url.httpsUpgraded, timeoutInterval: 20)
         request.setValue("application/rss+xml, application/xml;q=0.9, */*;q=0.8", forHTTPHeaderField: "Accept")
         let (data, response) = try await session.data(for: request)
         if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {

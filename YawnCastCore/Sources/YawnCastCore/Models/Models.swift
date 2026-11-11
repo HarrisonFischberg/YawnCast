@@ -131,3 +131,15 @@ public enum FeedURL {
         return key
     }
 }
+
+extension URL {
+    /// The `https` form of a plain `http` URL. iOS refuses plain-http loads (App Transport
+    /// Security), so feeds, audio and artwork published as `http://` are asked for over https.
+    /// Stored URLs and ids keep the published form.
+    public var httpsUpgraded: URL {
+        guard scheme?.lowercased() == "http", var components = URLComponents(url: self, resolvingAgainstBaseURL: true) else { return self }
+        components.scheme = "https"
+        if components.port == 80 { components.port = nil }
+        return components.url ?? self
+    }
+}

@@ -1,4 +1,5 @@
 import CryptoKit
+import YawnCastCore
 import SwiftUI
 import UIKit
 
@@ -26,7 +27,7 @@ actor ArtworkCache {
         let session = self.session
         let task = Task<UIImage?, Never> {
             if let data = try? Data(contentsOf: file), let image = Self.decode(data) { return image }
-            guard let (data, response) = try? await session.data(from: url),
+            guard let (data, response) = try? await session.data(from: url.httpsUpgraded),
                   (response as? HTTPURLResponse).map({ (200..<300).contains($0.statusCode) }) ?? true,
                   let image = Self.decode(data) else { return nil }
             try? data.write(to: file, options: .atomic)

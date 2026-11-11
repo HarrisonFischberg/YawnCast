@@ -79,7 +79,7 @@ final class PlaybackEngine: SleepControllable {
         loadState = .loading
         isBuffering = autoplay
 
-        let item = AVPlayerItem(url: episode.audioURL)
+        let item = AVPlayerItem(url: episode.audioURL.httpsUpgraded)
         item.preferredForwardBufferDuration = 60
         observe(item)
         // AVPlayer keeps its rate across items, so a paused load must stop the old one.
