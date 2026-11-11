@@ -306,8 +306,12 @@ enum Motion {
     static let move = Animation.spring(response: 0.35, dampingFraction: 0.85)
     /// State changes in place: toasts, a fade mark going dark.
     static let fade = Animation.easeOut(duration: 0.2)
-    /// One fade mark going out: slow enough to notice from the pillow.
+    /// One light going out: slow enough to notice from the pillow.
     static let lightsOut = Animation.easeOut(duration: 0.6)
+    /// The page pill's thumb: no bounce.
+    static let slide = Animation.smooth(duration: 0.3)
+    /// The Sleep bubble popping up: the one springy moment in the app.
+    static let pop = Animation.spring(response: 0.35, dampingFraction: 0.7)
     /// `move` for code with no view environment (the model, drop delegates); nothing under Reduce Motion.
     static var moveUnlessReduced: Animation? { UIAccessibility.isReduceMotionEnabled ? nil : move }
     /// How long an Undo toast stays; longer with VoiceOver, which needs time to reach it.

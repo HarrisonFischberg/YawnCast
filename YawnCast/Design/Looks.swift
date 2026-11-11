@@ -1,42 +1,47 @@
 import YawnCastCore
 import SwiftUI
 
-// Shared pieces: the page tabs, the cut-paper shape and the Moon key.
+// Shared pieces: the page tabs, the cut-paper shape and the Moon bar.
 
 // MARK: - Page tabs
 
-/// New · Library · Explore as paper tags. They are also the page's title: the
-/// current page is the bright tag, so no page repeats its name underneath.
+/// New · Library · Explore in one pill. The bright thumb slides to the current page, which
+/// is also the page's title, so no page repeats its name underneath.
 struct LookTabs: View {
     @Binding var selection: HomePage
     @Environment(\.theme) private var theme
-    @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Namespace private var thumb
 
     var body: some View {
-        HStack(spacing: Space.s) {
-            ForEach(Array(HomePage.allCases.enumerated()), id: \.element) { index, page in
+        HStack(spacing: 0) {
+            ForEach(HomePage.allCases, id: \.self) { page in
                 let on = page == selection
                 Button {
-                    withAnimation(reduceMotion ? nil : Motion.move) { selection = page }
+                    withAnimation(reduceMotion ? nil : Motion.slide) { selection = page }
                 } label: {
                     Text(page.title)
                         .font(Typo.headline)
                         .foregroundStyle(on ? theme.bg : theme.text)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
-                        .padding(.horizontal, typeSize.isAccessibilitySize ? Space.m : Space.xl)
-                        .frame(minHeight: 44)
-                        .paper(seed: index, fill: on ? theme.text : theme.surface)
+                        .padding(.horizontal, Space.s)
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .background {
+                            if on { Capsule().fill(theme.text).matchedGeometryEffect(id: "thumb", in: thumb) }
+                        }
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(PressDim())
                 .accessibilityShowsLargeContentViewer { Text(page.title) }
                 .modifier(TabAccessibility(page: page, selected: on))
             }
-            Spacer(minLength: 0)
         }
-        // Three tabs share one row; past this size they would truncate, so they stop
+        .padding(Space.xs)
+        .background { Capsule().fill(theme.surface) }
+        // Also when the page was changed by a swipe: the thumb follows as the page lands.
+        .animation(reduceMotion ? nil : Motion.slide, value: selection)
+        // Three segments share one row; past this size they would truncate, so they stop
         // growing and a long press shows the name large.
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .accessibilityElement(children: .contain)
