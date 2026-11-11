@@ -3,8 +3,8 @@
 Branch `interaction/polish`, on top of Lights Out. A bedtime app: motion is slow and sparse, haptics are
 few, and nothing here changes audio, Sleep timing or background behaviour.
 
-Tokens live in `YawnCast/Design/Theme.swift`: `Motion` (`press`, `move`, `fade`, `lightsOut`,
-`moveUnlessReduced`, `undoLife`) and `Haptic` (`moon`, `transport`, `skip`; picker changes use the system
+Tokens live in `YawnCast/Design/Theme.swift`: `Motion` (`press`, `move`, `slide`, `pop`, `fade`,
+`lightsOut`, `moveUnlessReduced`, `undoLife`) and `Haptic` (`moon`, `transport`, `skip`; picker changes use the system
 `.selection`, a confirmed save `.success`). Press styles: `KeyStyle`, `OutlineKeyStyle`, `TileStyle`,
 `PressDim`, `RowStyle`. Reduce Motion drops `press` and `move`, keeps `fade`.
 
@@ -23,11 +23,12 @@ Priority: P1 broken or missing fundamental, P2 polish, P3 nice to have.
 | "Now playing" row glyph | Shows which episode plays | Speaker waves loop | n/a | none | RM: static speaker (loop was not gated) | P2 | done |
 | Themes sheet note field | Type a problem report | Native field | Drag the sheet's list to put the keyboard away (Return is a new line) | none | Draft autosaved (`supportDraft`); Send disabled while gathering | P2 | done |
 | Pick-shows tiles | Pick up to 10 | Check fades in; others dim at the limit | Tap; selected trait | `.selection` per pick | RM: fade kept | P3 | done |
-| Moon key / Moon bar | Sleep on, off, ±5 | Bar turns accent, keys fade in, "+5 min" echo floats up, icon cross-fades | Tap; VoiceOver value and hint; countdown is its own element | `Haptic.moon` on toggle, `.selection` on ±5 | −5 disabled in the fade. RM: echo fades in place | — | there |
-| Fade marks | Watch the fade | One mark goes dark per step over 0.6 s; marks drift at 15 fps | n/a; one VoiceOver element with a value | none | RM: still, cross-fade only | — | there |
+| Moon bar | Sleep on or off | Largest control on Now Playing; turns accent, icon cross-fades | Tap the 68 pt moon or the words; VoiceOver value and hint; countdown is its own element | `Haptic.moon` on toggle | Disabled with nothing loaded or while previewing | P1 | done |
+| Sleep bubble (−5 · 17 min · +5) | Move the fade | Pops up from the bar's right end (`Motion.pop`); "+5 min" floats up out of it per tap | 48 pt keys with spoken labels; AppModel announces the new time | `.selection` on ±5 | −5 disabled in the fade; gives way to the late-night note. RM: fades, echo stays in place | P1 | done |
+| Scene life | Ambient; thins with the fade | Fireflies, jellyfish, stars, sky lanterns, moonlight discs drift and breathe; one goes per fade step | None (decoration, hidden from VoiceOver; the bar and bubble carry the value) | none | Out while playing or Sleep waits, none at lights out; never behind the title; stops when the app is not in front. RM: still, fade only | P2 | done |
 | Play / pause / ±15 | Transport | Symbol replace, buffering spinner in the key | Tap; labels | `Haptic.transport` when playback actually changes; `Haptic.skip` | Disabled while previewing; error row with Retry | — | there |
 | Now Playing dismissal | Close the player | Page follows the finger, shrinks slightly, springs back or closes | Pull down; Close key; VoiceOver escape | none | Cancelled drag resets. RM: no shrink | — | there |
-| Page tabs + pages | New / Library / Explore | Bright tag moves; native paging | Swipe or tap a tab; selected trait | `.selection` on page change | RM: instant tab | — | there |
+| Page menu + pages | New / Library / Explore | One pill; the bright thumb slides (`Motion.slide`, no bounce), also after a swipe lands | Swipe or tap a 44 pt segment; selected trait | `.selection` on page change | Stops growing at AX1 with a large-content viewer. RM: thumb jumps | P1 | done |
 | Search in place | Find or filter shows | Page drifts away, results fade in a beat later; exit is quicker than entry | Tap field, Cancel, tap blank space; keyboard dismisses on scroll; Search return key | none | 350 ms debounce, stale searches cancelled, last query kept, empty/error with retry, VoiceOver result count. RM: cross-fade | — | there |
 | Episode rows | Open, play, mark played | Row presses to 0.97; progress ring | Tap; long-press menu (Play, Mark as Played); same as VoiceOver actions | none | Played rows mute | — | there |
 | Pull to refresh | New, Explore, Show, Category | Native | Native | native | Real counted progress ("2 of 5"); no fake delay | — | there |
