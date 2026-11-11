@@ -65,7 +65,8 @@ struct FixtureFeedService: FeedService {
                 showFeedURL: feedURL,
                 showTitle: show.title,
                 title: "Fixture Episode \(n)",
-                published: Date().addingTimeInterval(-Double(3 - n) * 86_400 - 3_600), // ep 3 today, 2 yesterday, 1 two days ago
+                // ep 3 today, 2 yesterday, 1 two days ago; from the start of today, so it holds just after midnight
+                published: Calendar.current.date(byAdding: .day, value: n - 3, to: Calendar.current.startOfDay(for: Date())),
                 duration: 90,
                 audioURL: audio
             )
