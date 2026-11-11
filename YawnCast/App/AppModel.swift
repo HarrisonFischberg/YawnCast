@@ -330,11 +330,14 @@ final class AppModel {
     /// the cached history under the fresh page; the show page then still fetches it all.
     func feed(for show: Show, force: Bool = false, firstPageOnly: Bool = false) async throws -> Feed {
         if !force, freshFeeds.contains(show.id), let cached = feedCache[show.id] { return cached }
-        if let running = feedTasks[show.id] { return try await running.value }
+        // A first-page fetch must not answer a caller that wants the whole history.
+        let firstPageKey = show.id + "|first"
+        if let running = feedTasks[show.id] ?? (firstPageOnly ? feedTasks[firstPageKey] : nil) { return try await running.value }
         let feeds = self.feeds
         let task = Task { try await feeds.fetch(show.feedURL, maxPages: firstPageOnly ? 1 : HTTPFeedService.maxPages) }
-        feedTasks[show.id] = task
-        defer { feedTasks[show.id] = nil }
+        let taskKey = firstPageOnly ? firstPageKey : show.id
+        feedTasks[taskKey] = task
+        defer { feedTasks[taskKey] = nil }
         var feed = try await task.value
         if firstPageOnly, feed.nextPageURL != nil {
             if let old = feedCache[show.id] {
