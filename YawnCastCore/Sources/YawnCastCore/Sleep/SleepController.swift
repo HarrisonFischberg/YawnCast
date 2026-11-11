@@ -163,9 +163,6 @@ public final class SleepController {
         return true
     }
 
-    /// Active seconds until Sleep pauses playback, while on.
-    public var timeUntilSilence: TimeInterval? { timer.timeUntilSilence }
-
     /// The stream reported its real duration. If Sleep was activated with a
     /// provisional duration and is still waiting, recompute R from the
     /// activation position and correct the fade delay once.
