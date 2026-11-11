@@ -151,27 +151,40 @@ struct NowPlayingView: View {
 
                 transport
 
-                // "Back to …" on the left (only while Sleep is off), a toast on the right.
-                // Stacked at accessibility sizes; the row is gone when both are.
-                let note = model.sleepStatus != .off ? model.nightNote : model.toast
-                let marker = preview == nil ? model.driftBackPosition : nil
-                if marker != nil || note != nil {
-                    sleepRowLayout {
-                        if let marker {
-                            DriftBackKey(position: marker) { model.jumpToDriftBack() }
+                // Sleep, the point of the app, is the biggest thing here. Above the Moon bar:
+                // "Back to …" on the left (only while Sleep is off); on the right the Sleep
+                // bubble while Sleep is on, or a toast. Stacked at accessibility sizes; the
+                // row is gone when it is empty.
+                VStack(spacing: Space.s) {
+                    let sleepOn = model.sleepStatus != .off
+                    let note = sleepOn ? model.nightNote : model.toast
+                    let marker = preview == nil ? model.driftBackPosition : nil
+                    if marker != nil || note != nil || sleepOn {
+                        sleepRowLayout {
+                            if let marker {
+                                DriftBackKey(position: marker) { model.jumpToDriftBack() }
+                            }
+                            if !typeSize.isAccessibilitySize { Spacer(minLength: 0) }
+                            if let note {
+                                toastLabel(note)
+                            } else if sleepOn {
+                                // −5 · 17 min · +5, for as long as Sleep is on.
+                                SleepBubble(status: model.sleepStatus) { model.adjustSleep(minutes: $0) }
+                                    .transition(reduceMotion ? .opacity : .scale(scale: 0.7, anchor: .bottomTrailing).combined(with: .opacity))
+                            }
                         }
-                        if !typeSize.isAccessibilitySize { Spacer(minLength: 0) }
-                        if let note { toastLabel(note) }
+                        .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 6)))
                     }
-                    .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 6)))
-                }
 
-                MoonKey(status: model.sleepStatus, action: { model.toggleSleep() }, onAdjust: { model.adjustSleep(minutes: $0) })
-                    .disabled(player.episode == nil || preview != nil)
-                    .sensoryFeedback(Haptic.moon, trigger: model.sleepStatus == .off)
-                    .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
+                    MoonKey(status: model.sleepStatus) { model.toggleSleep() }
+                        .disabled(player.episode == nil || preview != nil)
+                        .sensoryFeedback(Haptic.moon, trigger: model.sleepStatus == .off)
+                        .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
+                }
+                // A wider gap than inside either group, so transport and Sleep read as two groups.
+                .padding(.top, Space.s)
             }
-            .animation(reduceMotion ? Motion.fade : Motion.move, value: model.sleepStatus == .off)
+            .animation(reduceMotion ? Motion.fade : Motion.pop, value: model.sleepStatus == .off)
             .animation(Motion.fade, value: model.toast)
             .animation(Motion.fade, value: model.nightNote)
             .animation(reduceMotion ? Motion.fade : Motion.move, value: model.driftBackPosition)
@@ -204,12 +217,12 @@ struct NowPlayingView: View {
         let preview = model.preview
         // Previewing: Play starts the previewed episode; the rest waits for it.
         let playing = preview == nil && player.isPlaying
-        return HStack(spacing: Space.xl) {
+        return HStack(spacing: Space.l) {
             Button { player.skip(by: -15); skipTaps += 1 } label: {
-                Image(systemName: "gobackward.15").font(.system(size: 24, weight: .semibold))
+                Image(systemName: "gobackward.15").font(.system(size: 21, weight: .semibold))
             }
             .buttonStyle(.roundKey())
-            .frame(width: 64, height: 64)
+            .frame(width: 56, height: 52)
             .disabled(preview != nil)
             .accessibilityLabel("Back 15 seconds")
 
@@ -218,16 +231,16 @@ struct NowPlayingView: View {
             } label: {
                 ZStack {
                     if preview == nil && player.isBuffering {
-                        ProgressView().tint(theme.bg).controlSize(.large)
+                        ProgressView().tint(theme.bg)
                     } else {
                         Image(systemName: playing ? "pause.fill" : "play.fill")
-                            .font(.system(size: 30, weight: .bold))
+                            .font(.system(size: 22, weight: .bold))
                             .contentTransition(.symbolEffect(.replace))
                     }
                 }
             }
             .buttonStyle(.roundKey(.primary, depth: 6))
-            .frame(width: 104, height: 76)
+            .frame(width: 80, height: 52)
             .disabled(player.episode == nil)
             .accessibilityLabel(playing ? "Pause" : "Play")
             .accessibilityValue(preview == nil && player.isBuffering ? "Loading" : "")
@@ -235,10 +248,10 @@ struct NowPlayingView: View {
             .sensoryFeedback(Haptic.transport, trigger: playing)
 
             Button { player.skip(by: 15); skipTaps += 1 } label: {
-                Image(systemName: "goforward.15").font(.system(size: 24, weight: .semibold))
+                Image(systemName: "goforward.15").font(.system(size: 21, weight: .semibold))
             }
             .buttonStyle(.roundKey())
-            .frame(width: 64, height: 64)
+            .frame(width: 56, height: 52)
             .disabled(preview != nil)
             .accessibilityLabel("Forward 15 seconds")
         }
