@@ -9,7 +9,7 @@ struct ExploreView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
 
     private var showColumns: [GridItem] {
-        Array(repeating: GridItem(.flexible(), spacing: Space.xl, alignment: .top), count: typeSize.isAccessibilitySize ? 1 : 2)
+        Array(repeating: GridItem(.flexible(), spacing: Space.m, alignment: .top), count: typeSize.isAccessibilitySize ? 1 : 2)
     }
 
     private var cardColumns: [GridItem] {
@@ -20,10 +20,8 @@ struct ExploreView: View {
         SearchablePage(page: .explore) {
         ScrollView {
             VStack(alignment: .leading, spacing: Space.xxl) {
-                PageTitle(title: "Explore", subtitle: "Find shows for every interest")
-                    .padding(.top, Space.s)
-
                 SearchCapsule { model.openSearch() }
+                    .padding(.top, Space.s)
 
                 if !model.interests.isEmpty {
                     section("Your interests") {
@@ -97,7 +95,7 @@ struct ExploreView: View {
         }
         ForEach(sections) { row in
             section(row.genre.id == Recommender.topPicksID ? "Top picks for you" : "Because you like \(row.genre.name)") {
-                LazyVGrid(columns: showColumns, alignment: .leading, spacing: Space.xxl) {
+                LazyVGrid(columns: showColumns, alignment: .leading, spacing: Space.m) {
                     ForEach(row.shows) { recommendation in
                         NavigationLink(value: Route.show(recommendation.result.show)) {
                             ShowTile(show: recommendation.result.show)
@@ -144,7 +142,7 @@ struct SearchCapsule: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: Space.s) {
-                Image(systemName: "magnifyingglass").font(.system(size: 17, weight: .bold))
+                Image(systemName: "magnifyingglass").font(.system(size: 15, weight: .semibold))
                 // One line always; at accessibility sizes just "Search", so the bar
                 // doesn't grow into a four-line pill (review 2026-10-19, P1).
                 Text(typeSize.isAccessibilitySize ? "Search" : placeholder)
@@ -152,14 +150,12 @@ struct SearchCapsule: View {
                     .minimumScaleFactor(0.85)
                 Spacer()
             }
-            .font(.system(.body, weight: .medium))
+            .font(.system(.body))
             .foregroundStyle(theme.textMuted)
             .padding(.horizontal, Space.l)
-            .frame(minHeight: 52)
-            .nightGlass(in: Capsule(), interactive: true) {
-                Capsule().fill(theme.surface.opacity(0.85)).overlay(Capsule().strokeBorder(theme.border, lineWidth: 1))
-            }
-            .contentShape(Capsule())
+            .frame(minHeight: 44)
+            .paper(seed: 1, fill: theme.surface)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityLabel(placeholder)
@@ -167,7 +163,7 @@ struct SearchCapsule: View {
     }
 }
 
-/// Rounded chip for an interest.
+/// Paper tag for an interest.
 private struct InterestChip: View {
     let category: PodcastCategory
     @Environment(\.theme) private var theme
@@ -182,12 +178,12 @@ private struct InterestChip: View {
         .padding(.horizontal, Space.l)
         .frame(minHeight: 44)
         // The accent belongs to the Moon key; chips are quietly filled.
-        .nightGlass(in: Capsule(), interactive: true) { Capsule().fill(theme.surface) }
+        .paper(seed: category.name.count, fill: theme.surface)
         .accessibilityElement(children: .combine)
     }
 }
 
-/// Browse card: icon and name on a softly tinted plate.
+/// Browse card: icon and name on a paper card.
 struct CategoryCard: View {
     let category: PodcastCategory
     let index: Int
@@ -203,7 +199,7 @@ struct CategoryCard: View {
             Image(systemName: category.symbol)
                 .font(.system(size: 20, weight: .semibold))
                 .frame(width: 40, height: 40)
-                .background(Circle().fill(tint.opacity(0.45)))
+                .paper(seed: index + 1, fill: tint.opacity(0.4))
             Text(category.name)
                 .font(Typo.headline)
                 .lineLimit(2)
@@ -214,11 +210,7 @@ struct CategoryCard: View {
         .foregroundStyle(theme.text)
         .padding(Space.m)
         .frame(maxWidth: .infinity, minHeight: 68, alignment: .leading)
-        .background {
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(LinearGradient(colors: [tint.opacity(0.28), theme.surface.opacity(0.85)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(theme.border, lineWidth: 1))
-        }
+        .paper(seed: index, fill: theme.surface)
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isButton)
     }
@@ -251,7 +243,7 @@ struct CategoryView: View {
     }
 
     private var columns: [GridItem] {
-        Array(repeating: GridItem(.flexible(), spacing: Space.xl, alignment: .top), count: typeSize.isAccessibilitySize ? 1 : 2)
+        Array(repeating: GridItem(.flexible(), spacing: Space.m, alignment: .top), count: typeSize.isAccessibilitySize ? 1 : 2)
     }
 
     var body: some View {
@@ -297,7 +289,7 @@ struct CategoryView: View {
         switch phase {
         case .idle, .loading:
             // Placeholder tiles in the final layout, so nothing jumps when shows arrive.
-            LazyVGrid(columns: columns, alignment: .leading, spacing: Space.xxl) {
+            LazyVGrid(columns: columns, alignment: .leading, spacing: Space.m) {
                 ForEach(0..<6, id: \.self) { _ in PlaceholderTile() }
             }
             .accessibilityElement(children: .ignore)
@@ -312,7 +304,7 @@ struct CategoryView: View {
                 StateMessage(title: "Nothing here yet", message: "Try Search for something more specific.", systemImage: "tray")
                     .padding(.horizontal, -Space.xxl)
             } else {
-                LazyVGrid(columns: columns, alignment: .leading, spacing: Space.xxl) {
+                LazyVGrid(columns: columns, alignment: .leading, spacing: Space.m) {
                     ForEach(sorted) { result in
                         NavigationLink(value: Route.show(result.show)) {
                             ShowTile(show: result.show)
@@ -404,13 +396,17 @@ struct PlaceholderTile: View {
     @State private var dim = false
 
     var body: some View {
+        // The same shape as a ShowTile, so nothing jumps when shows arrive.
         VStack(alignment: .leading, spacing: Space.s) {
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(theme.surface.opacity(0.8))
+            RoundedRectangle(cornerRadius: Radius.artwork, style: .continuous)
+                .fill(theme.raised)
                 .aspectRatio(1, contentMode: .fit)
-            Capsule().fill(theme.surface.opacity(0.8)).frame(height: 12)
-            Capsule().fill(theme.surface.opacity(0.6)).frame(width: 80, height: 10)
+            Capsule().fill(theme.raised).frame(height: 12)
+            Capsule().fill(theme.raised).frame(width: 80, height: 10)
+                .padding(.bottom, Space.xl)
         }
+        .padding(Space.s)
+        .paper(fill: theme.surface)
         .opacity(dim ? 0.55 : 1)
         .onAppear {
             guard !reduceMotion else { return }

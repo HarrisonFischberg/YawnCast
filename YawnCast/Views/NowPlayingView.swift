@@ -1,7 +1,7 @@
 import YawnCastCore
 import SwiftUI
 
-/// Only: title, scrubber, −15 / play-pause / +15, Moon, and a way out.
+/// Only: the cover and title, the fade marks, scrubber, −15 / play-pause / +15, Moon, and a way out.
 struct NowPlayingView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
@@ -15,34 +15,40 @@ struct NowPlayingView: View {
         let player = model.player
         let preview = model.preview
         let episode = preview ?? player.episode
-        ZStack {
-            ScreenBackground()
-
-            VStack(alignment: .leading, spacing: 0) {
+        VStack(spacing: 0) {
+            // Over the Scene: the way out, the show's cover in a paper mat, the title.
+            VStack(spacing: 0) {
                 HStack {
                     IconKey(systemName: "chevron.down", label: "Close player") { dismiss() }
                         .accessibilityIdentifier("closePlayer")
                     Spacer()
                 }
-                .padding(.top, Space.s)
-
-                Spacer(minLength: Space.xxl)
-
-                VStack(alignment: .leading, spacing: Space.m) {
-                    Text(episode?.showTitle.uppercased() ?? "")
-                        .font(Typo.eyebrow)
-                        .tracking(1.2)
-                        .foregroundStyle(theme.textMuted)
-                        .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
+                Spacer(minLength: Space.s)
+                if !typeSize.isAccessibilitySize {
+                    ArtworkView(url: episode?.artworkURL, cornerRadius: Radius.artwork, title: episode?.showTitle ?? "")
+                        .frame(minWidth: 64, maxWidth: 148, minHeight: 64, maxHeight: 148)
+                        .padding(Space.s)
+                        .paper(seed: 1, fill: theme.raised)
+                        .rotationEffect(.degrees(-2))
+                        .layoutPriority(-1)
+                }
+                VStack(spacing: Space.xs) {
                     Text(episode?.title ?? "Nothing playing")
                         .font(typeSize.isAccessibilitySize ? Typo.showTitle : Typo.playerTitle)
                         .textCase(Typo.titleCase)
                         .foregroundStyle(theme.text)
-                        .lineLimit(typeSize.isAccessibilitySize ? 3 : 4)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(3)
                         .minimumScaleFactor(0.75)
                         .accessibilityAddTraits(.isHeader)
                         .accessibilityAction(named: "About this episode") { if episode?.summary?.isEmpty == false { showingAbout = true } }
+                    Text(episode?.showTitle ?? "")
+                        .font(Typo.caption)
+                        .foregroundStyle(theme.textMuted)
+                        .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
                 }
+                .frame(maxWidth: .infinity)
+                .padding(.top, Space.l)
                 // Tap the title to read what the episode is about.
                 .contentShape(Rectangle())
                 .onTapGesture { if episode?.summary?.isEmpty == false { showingAbout = true } }
@@ -61,12 +67,8 @@ struct NowPlayingView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(Space.xxl)
                     }
-                    .background {
-                        if #available(iOS 26, *) {} else { ScreenBackground() }
-                    }
+                    .background(theme.bg)
                     .environment(\.theme, theme)
-                    // Tall, but short of .large: at full height iOS 26 swaps the see-through
-                    // glass for an opaque (greenish) fill, so stay just below it.
                     .presentationDetents([.medium, .fraction(0.92)])
                     .presentationDragIndicator(.visible)
                 }
@@ -78,14 +80,26 @@ struct NowPlayingView: View {
                         Spacer()
                         Button("Retry") { player.retry() }
                             .font(Typo.headline)
+                            .frame(minHeight: 44)
                     }
                     .font(Typo.caption)
                     .foregroundStyle(theme.danger)
-                    .padding(.top, Space.l)
+                    .padding(.horizontal, Space.m)
+                    .padding(.vertical, Space.xs)
+                    .paper(seed: 1, fill: theme.surface)
+                    .padding(.top, Space.m)
                 }
+                Spacer(minLength: Space.s)
+            }
+            .padding(.horizontal, Space.xxl)
+            .padding(.top, Space.s)
 
-                Spacer(minLength: Space.xxl)
+            // The ten fade steps, drawn from the Scene, across the full width.
+            FadeMarks(status: model.sleepStatus)
+                .padding(.bottom, Space.xxl)
 
+            // On the cut-paper ground: everything you touch.
+            VStack(spacing: Space.l) {
                 if let preview {
                     Scrubber(position: model.position(for: preview)?.seconds ?? 0, duration: preview.duration) { _ in }
                         .disabled(true)
@@ -94,57 +108,43 @@ struct NowPlayingView: View {
                 }
 
                 transport
-                    .padding(.top, Space.xxl)
 
-                Spacer(minLength: Space.xxl)
-
-                VStack(alignment: .trailing, spacing: Space.l) {
-                    // Above the Moon: "Back to …" on the left (only while Sleep is off),
-                    // the Sleep chip or a toast on the right. Stacked at accessibility sizes.
+                // "Back to …" on the left (only while Sleep is off), a toast on the right.
+                // Stacked at accessibility sizes; the row is gone when both are.
+                let note = model.sleepStatus != .off ? model.nightNote : model.toast
+                let marker = preview == nil ? model.driftBackPosition : nil
+                if marker != nil || note != nil {
                     sleepRowLayout {
-                        if preview == nil, let marker = model.driftBackPosition {
+                        if let marker {
                             DriftBackKey(position: marker) { model.jumpToDriftBack() }
-                                .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 6)))
                         }
                         if !typeSize.isAccessibilitySize { Spacer(minLength: 0) }
-                        ZStack {
-                            if model.sleepStatus != .off, let note = model.nightNote {
-                                toastLabel(note)
-                            } else if model.sleepStatus != .off {
-                                // −5 · 17 min · +5, for as long as Sleep is on.
-                                SleepChip(status: model.sleepStatus) { model.adjustSleep(minutes: $0) }
-                                    .transition(chipTransition)
-                            } else if let toast = model.toast {
-                                toastLabel(toast)
-                            }
-                        }
-                        .frame(minHeight: 46, alignment: .bottomTrailing)
-                        .padding(.trailing, Space.xl)
+                        if let note { toastLabel(note) }
                     }
-
-                    MoonKey(status: model.sleepStatus) { model.toggleSleep() }
-                        .disabled(player.episode == nil || preview != nil)
-                        .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: model.sleepStatus == .off)
-                        .overlay(alignment: .topLeading) {
-                            if model.sleepStatus != .off {
-                                // Three lines of z's rise out of the Sleep icon, in every theme.
-                                FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
-                                    // Tall, so they float well up the screen before fading out.
-                                    .frame(width: 130, height: 360)
-                                    .offset(x: 8, y: -336)
-                                    .transition(.opacity)
-                            }
-                        }
+                    .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 6)))
                 }
-                .animation(.spring(response: 0.35, dampingFraction: 0.7), value: model.sleepStatus == .off)
-                .animation(.easeOut(duration: 0.2), value: model.toast)
-                .animation(.easeOut(duration: 0.2), value: model.nightNote)
-                .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
-                .padding(.bottom, Space.l)
+
+                MoonKey(status: model.sleepStatus, action: { model.toggleSleep() }, onAdjust: { model.adjustSleep(minutes: $0) })
+                    .disabled(player.episode == nil || preview != nil)
+                    .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: model.sleepStatus == .off)
+                    .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
             }
-            .animation(reduceMotion ? .easeOut(duration: 0.2) : .spring(response: 0.3, dampingFraction: 0.8), value: model.driftBackPosition)
+            .animation(reduceMotion ? Motion.fade : Motion.move, value: model.sleepStatus == .off)
+            .animation(Motion.fade, value: model.toast)
+            .animation(Motion.fade, value: model.nightNote)
+            .animation(reduceMotion ? Motion.fade : Motion.move, value: model.driftBackPosition)
             .padding(.horizontal, Space.xxl)
+            .padding(.top, Space.xxl)
+            .padding(.bottom, Space.m)
+            .background {
+                ZStack {
+                    GroundShape(lift: 14).fill(theme.raised)
+                    GroundShape().fill(theme.bg)
+                }
+                .ignoresSafeArea(edges: .bottom)
+            }
         }
+        .background { ScreenBackground() }
         // Swipe down anywhere (not just the chevron) to drop back into the mini player.
         .modifier(PullDownToDismiss { dismiss() })
         // VoiceOver can't use the swipe; the two-finger scrub (escape) closes it too.
@@ -170,13 +170,9 @@ struct NowPlayingView: View {
             .foregroundStyle(theme.text)
             .padding(.horizontal, Space.l)
             .padding(.vertical, Space.s)
-            .background(Capsule().fill(theme.surface).overlay(Capsule().strokeBorder(theme.border)))
+            .paper(seed: 1, fill: theme.surface)
             .transition(.opacity)
             .accessibilityHidden(true) // announced via UIAccessibility
-    }
-
-    private var chipTransition: AnyTransition {
-        reduceMotion ? .opacity : .scale(scale: 0.7, anchor: .bottomTrailing).combined(with: .opacity)
     }
 
     private var transport: some View {
@@ -184,17 +180,14 @@ struct NowPlayingView: View {
         let preview = model.preview
         // Previewing: Play starts the previewed episode; the rest waits for it.
         let playing = preview == nil && player.isPlaying
-        return HStack(spacing: 0) {
-            Spacer(minLength: 0)
+        return HStack(spacing: Space.xl) {
             Button { player.skip(by: -15); skipTaps += 1 } label: {
-                Image(systemName: "gobackward.15").font(.system(size: 26, weight: .semibold))
+                Image(systemName: "gobackward.15").font(.system(size: 24, weight: .semibold))
             }
             .buttonStyle(.roundKey())
-            .frame(width: 76, height: 76)
+            .frame(width: 64, height: 64)
             .disabled(preview != nil)
             .accessibilityLabel("Back 15 seconds")
-
-            Spacer(minLength: Space.l)
 
             Button {
                 if let preview { model.play(preview) } else { player.togglePlayPause() }
@@ -204,30 +197,28 @@ struct NowPlayingView: View {
                         ProgressView().tint(theme.bg).controlSize(.large)
                     } else {
                         Image(systemName: playing ? "pause.fill" : "play.fill")
-                            .font(.system(size: 40, weight: .bold))
+                            .font(.system(size: 30, weight: .bold))
                             .contentTransition(.symbolEffect(.replace))
                     }
                 }
             }
             .buttonStyle(.roundKey(.primary, depth: 6))
-            .frame(width: 112, height: 112)
+            .frame(width: 104, height: 76)
             .disabled(player.episode == nil)
             .accessibilityLabel(playing ? "Pause" : "Play")
             .accessibilityValue(preview == nil && player.isBuffering ? "Loading" : "")
             .accessibilityIdentifier("playPause")
             .sensoryFeedback(.impact(weight: .medium), trigger: playing)
 
-            Spacer(minLength: Space.l)
-
             Button { player.skip(by: 15); skipTaps += 1 } label: {
-                Image(systemName: "goforward.15").font(.system(size: 26, weight: .semibold))
+                Image(systemName: "goforward.15").font(.system(size: 24, weight: .semibold))
             }
             .buttonStyle(.roundKey())
-            .frame(width: 76, height: 76)
+            .frame(width: 64, height: 64)
             .disabled(preview != nil)
             .accessibilityLabel("Forward 15 seconds")
-            Spacer(minLength: 0)
         }
+        .frame(maxWidth: .infinity)
         .sensoryFeedback(.impact(weight: .light), trigger: skipTaps)
     }
 }
@@ -278,7 +269,7 @@ private struct DriftBackKey: View {
             .padding(.vertical, Space.s)
             .frame(minHeight: 44)
         }
-        .modifier(DriftBackKeyShape(largeType: typeSize.isAccessibilitySize))
+        .buttonStyle(.capsuleKey(depth: 3))
         .fixedSize(horizontal: !typeSize.isAccessibilitySize, vertical: true)
         .sensoryFeedback(.selection, trigger: taps)
         .accessibilityLabel("Back to \(TimeFormat.spoken(position)), where the fade began")
@@ -287,16 +278,20 @@ private struct DriftBackKey: View {
     }
 }
 
-/// A capsule key normally; a rounded plate when accessibility text wraps the lines.
-private struct DriftBackKeyShape: ViewModifier {
-    let largeType: Bool
+/// The cut-paper ground the controls stand on; two layers (`lift` raises the back one)
+/// with hand-cut top edges, in the theme's own dark tones.
+private nonisolated struct GroundShape: Shape {
+    var lift: CGFloat = 0
 
-    func body(content: Content) -> some View {
-        if largeType {
-            content.buttonStyle(KeyStyle(shape: RoundedRectangle(cornerRadius: 18, style: .continuous), depth: 3))
-        } else {
-            content.buttonStyle(.capsuleKey(depth: 3))
-        }
+    func path(in rect: CGRect) -> Path {
+        var p = Path()
+        p.move(to: CGPoint(x: 0, y: 26 - lift))
+        p.addCurve(to: CGPoint(x: rect.maxX, y: 14 - lift),
+                   control1: CGPoint(x: rect.maxX * 0.3, y: -14 - lift), control2: CGPoint(x: rect.maxX * 0.68, y: 34 - lift))
+        p.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        p.addLine(to: CGPoint(x: 0, y: rect.maxY))
+        p.closeSubpath()
+        return p
     }
 }
 

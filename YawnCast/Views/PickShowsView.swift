@@ -125,7 +125,7 @@ private struct TopicShelf: View {
             if isPicked { picked.removeAll { $0 == show } } else if picked.count < PickShowsView.limit { picked.append(show) }
         } label: {
             VStack(alignment: .leading, spacing: Space.xs) {
-                ArtworkView(url: show.artworkURL, cornerRadius: 12, title: show.title)
+                ArtworkView(url: show.artworkURL, cornerRadius: Radius.artwork, title: show.title)
                     .frame(width: 112, height: 112)
                     .opacity(isPicked || picked.count < PickShowsView.limit ? 1 : 0.4)
                     .overlay(alignment: .topTrailing) {
@@ -143,6 +143,8 @@ private struct TopicShelf: View {
                     .multilineTextAlignment(.leading)
             }
             .frame(width: 112, alignment: .leading)
+            .padding(6)
+            .paper(seed: show.title.count, fill: theme.surface)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(show.title)

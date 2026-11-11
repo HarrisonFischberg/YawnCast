@@ -64,7 +64,7 @@ struct RootView: View {
                 // it keeps above the keyboard (which still pushes it up: only the container
                 // inset is ignored).
                 MiniPlayerDock()
-                    .padding(.horizontal, 30)
+                    .padding(.horizontal, Space.xl)
                     // Clears the home indicator with room to spare.
                     .padding(.bottom, 28)
                     .frame(maxWidth: .infinity)
@@ -80,7 +80,7 @@ struct RootView: View {
                     .foregroundStyle(theme.text)
                     .padding(.horizontal, Space.l)
                     .padding(.vertical, Space.s)
-                    .background(Capsule().fill(theme.surface).overlay(Capsule().strokeBorder(theme.border)))
+                    .paper(seed: 1, fill: theme.surface)
                     .padding(.top, Space.s)
                     .transition(.opacity.combined(with: .offset(y: -8)))
                     .allowsHitTesting(false)

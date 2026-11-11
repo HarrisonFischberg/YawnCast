@@ -56,8 +56,7 @@ struct ThemesSheet: View {
                 .font(Typo.body)
                 .foregroundStyle(theme.text)
                 .padding(Space.l)
-                .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(theme.surface))
-                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(theme.border, lineWidth: 1))
+                .paper(seed: 1, fill: theme.surface)
                 .accessibilityLabel("What went wrong?")
                 .accessibilityIdentifier("support-problem")
             Button {
@@ -146,7 +145,7 @@ private struct StyleSwatch: View {
 
     var body: some View {
         VStack(spacing: Space.s) {
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
+            PaperShape(seed: 1)
                 .fill(current.surface)
                 .overlay {
                     Text("Aa")
@@ -155,7 +154,7 @@ private struct StyleSwatch: View {
                         .accessibilityHidden(true)
                 }
                 .overlay {
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    PaperShape(seed: 1)
                         .strokeBorder(selected ? current.text : current.border, lineWidth: selected ? 3 : 1)
                 }
                 .frame(height: 96)
@@ -177,13 +176,13 @@ private struct ThemeSwatch: View {
 
     var body: some View {
         VStack(spacing: Space.s) {
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
+            PaperShape(seed: 1)
                 .fill(option.bg)
                 .overlay {
                     if let scene = option.scene {
                         // A still frame of the actual scene.
                         ScenePreview(scene: scene)
-                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .clipShape(PaperShape(seed: 1))
                     }
                 }
                 .overlay(alignment: .trailing) {
@@ -191,11 +190,10 @@ private struct ThemeSwatch: View {
                     if option.followsSystem {
                         Rectangle().fill(option.resolved(for: .light).bg)
                             .frame(width: 44)
-                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init(bottomTrailing: 18, topTrailing: 18), style: .continuous))
                     }
                 }
                 .overlay(alignment: .bottom) {
-                    Capsule()
+                    PaperShape(seed: 2)
                         .fill(option.accent)
                         .frame(height: 22)
                         .overlay(Image(systemName: "moon.fill").font(.system(size: 11, weight: .bold)).foregroundStyle(option.onAccent))
@@ -208,8 +206,9 @@ private struct ThemeSwatch: View {
                     }
                     .padding(12)
                 }
+                .clipShape(PaperShape(seed: 1))
                 .overlay {
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    PaperShape(seed: 1)
                         .strokeBorder(selected ? current.text : current.border, lineWidth: selected ? 3 : 1)
                 }
                 .frame(height: 120)
