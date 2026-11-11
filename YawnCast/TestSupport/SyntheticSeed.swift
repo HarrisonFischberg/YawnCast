@@ -2,24 +2,12 @@
 import SwiftUI
 import YawnCastCore
 
-// Design exploration (branch design/explore): `-design base|A|B|C` seeds a synthetic
-// library with drawn covers, and A/B/C restyle Now Playing, Library and the dock.
-// Debug builds only; nothing here ships.
+// `-synthetic`: an in-memory library of eight invented shows with covers drawn in code and
+// one invented episode loaded, for screenshots that need no network and show no real
+// publisher's artwork. Debug builds only. Combine with `-theme`, `-page`, `-layout`,
+// `-openPlayer`, and `-autoplay -sleepOn -fastSleep` to reach a real fade.
 
-enum DesignOption: String {
-    case base, A, B, C
-
-    static let current: DesignOption? = {
-        let args = ProcessInfo.processInfo.arguments
-        guard let i = args.firstIndex(of: "-design"), i + 1 < args.count else { return nil }
-        return DesignOption(rawValue: args[i + 1])
-    }()
-
-    /// A, B or C; nil for the baseline UI (with or without the synthetic seed).
-    static var restyle: DesignOption? { current == .base ? nil : current }
-}
-
-nonisolated enum DesignSeed {
+nonisolated enum SyntheticSeed {
     struct Spec {
         let slug: String, title: String, author: String, cover: String
         let bg: UInt32, fg: UInt32, ink: UInt32
@@ -41,14 +29,14 @@ nonisolated enum DesignSeed {
     static func spec(_ slug: String) -> Spec { specs.first { $0.slug == slug } ?? specs[0] }
 
     static let shows: [Show] = specs.map {
-        Show(feedURL: URL(string: "design://feed/\($0.slug)")!, title: $0.title, author: $0.author,
-             artworkURL: URL(string: "design://cover/\($0.slug)"))
+        Show(feedURL: URL(string: "synthetic://feed/\($0.slug)")!, title: $0.title, author: $0.author,
+             artworkURL: URL(string: "synthetic://cover/\($0.slug)"))
     }
 
-    /// `-designAudio <path>`: a long silent file on the Mac, so the scrubber shows a real length.
+    /// `-syntheticAudio <path>`: a long silent file on the Mac, so the scrubber shows a real length.
     static var audioURL: URL {
         let args = ProcessInfo.processInfo.arguments
-        if let i = args.firstIndex(of: "-designAudio"), i + 1 < args.count { return URL(fileURLWithPath: args[i + 1]) }
+        if let i = args.firstIndex(of: "-syntheticAudio"), i + 1 < args.count { return URL(fileURLWithPath: args[i + 1]) }
         return Bundle.main.url(forResource: "fixture-tone", withExtension: "m4a")!
     }
 
@@ -66,40 +54,41 @@ nonisolated enum DesignSeed {
         }
     }
 
-    @MainActor static func run(model: AppModel, launch: LaunchOptions, arguments: [String]) {
+    @MainActor static func run(model: AppModel, launch: LaunchOptions) {
         UserDefaults.standard.set(true, forKey: "didOnboard")
         UserDefaults.standard.set(true, forKey: "celebratedFirstShow")
         model.seedForDemo(shows)
         if let page = launch.page { model.homePage = page }
         if let layout = launch.layout { model.libraryLayout = layout }
-        model.loadForDemo(episodes(for: shows[2])[0], position: 14 * 60 + 22)
+        let episode = episodes(for: shows[2])[0]
+        model.loadForDemo(episode, position: 14 * 60 + 22)
+        if launch.autoplay { model.play(episode) }
         if launch.openPlayer { model.isPlayerPresented = true }
-        Task { await model.refreshLatest() } // fills the "new episode" pips
-        guard let i = arguments.firstIndex(of: "-designSleep"), i + 1 < arguments.count else { return }
-        let status: SleepStatus = arguments[i + 1] == "fade" ? .fading(level: 0.6) : .waiting(untilFade: 19 * 60)
-        // The real controller resets the status when the player settles, so pin it for a few seconds.
-        Task { @MainActor in
-            for _ in 0..<40 {
-                model.setSleepStatusForDesign(status)
-                try? await Task.sleep(for: .milliseconds(250))
+        if launch.openShow { model.path = [.show(shows[0])] }
+        if ProcessInfo.processInfo.arguments.contains("-themes") { model.isThemesPresented = true }
+        Task {
+            await model.refreshLatest() // fills the "new episode" pips
+            if launch.sleepOn {
+                try? await Task.sleep(for: .seconds(1)) // let the player settle, as DemoSeed does
+                model.activateSleepForDemo()
             }
         }
     }
 }
 
-struct DesignFeedService: FeedService {
+struct SyntheticFeedService: FeedService {
     func fetch(_ feedURL: URL, maxPages: Int) async throws -> Feed {
-        guard let show = DesignSeed.shows.first(where: { $0.feedURL == feedURL }) else { throw FeedError.noEpisodes }
-        return Feed(show: show, episodes: DesignSeed.episodes(for: show))
+        guard let show = SyntheticSeed.shows.first(where: { $0.feedURL == feedURL }) else { throw FeedError.noEpisodes }
+        return Feed(show: show, episodes: SyntheticSeed.episodes(for: show))
     }
 }
 
 /// Drawn stand-in for podcast artwork: a flat field, one motif, the show's name.
-struct DesignCover: View {
+struct SyntheticCover: View {
     let slug: String
 
     var body: some View {
-        let spec = DesignSeed.spec(slug)
+        let spec = SyntheticSeed.spec(slug)
         GeometryReader { geo in
             let w = geo.size.width
             ZStack(alignment: .bottomLeading) {
@@ -119,7 +108,7 @@ struct DesignCover: View {
         }
     }
 
-    private static func draw(_ spec: DesignSeed.Spec, _ c: inout GraphicsContext, _ s: CGSize) {
+    private static func draw(_ spec: SyntheticSeed.Spec, _ c: inout GraphicsContext, _ s: CGSize) {
         let w = s.width, h = s.height
         let ink = Color(hex: spec.ink), fg = Color(hex: spec.fg)
         switch spec.motif {

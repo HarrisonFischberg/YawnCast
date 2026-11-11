@@ -14,9 +14,9 @@ enum DebugLaunch {
             directory = FixtureDirectory()
             feeds = FixtureFeedService()
         } else {
-            store = (launch.isDemo || launch.isLiveTest) ? MemoryLibraryStore() : JSONLibraryStore.standard()
+            store = (launch.isDemo || launch.isLiveTest || launch.isSynthetic) ? MemoryLibraryStore() : JSONLibraryStore.standard()
             directory = ITunesDirectory()
-            feeds = HTTPFeedService()
+            feeds = launch.isSynthetic ? SyntheticFeedService() : HTTPFeedService()
         }
         let sleepConfiguration = launch.fastSleep
             ? SleepConfiguration(maxFadeDelay: 4, stepInterval: 3, stepRamp: 1, cancelRamp: 0.5)
@@ -36,12 +36,15 @@ enum DebugLaunch {
             if launch.resetStore { UserDefaults.standard.removeObject(forKey: "lastSearch") }
         }
         if launch.isDemo { DemoSeed.run(model: model, launch: launch) }
+        if launch.isSynthetic { SyntheticSeed.run(model: model, launch: launch) }
         return model
     }
 }
 
 struct LaunchOptions {
     var isDemo = false
+    /// `-synthetic`: invented shows with drawn covers, no network (SyntheticSeed.swift).
+    var isSynthetic = false
     var themeID: String?
     /// `-look <style>`: the style, independent of `-theme` (the colour).
     var lookID: String?
@@ -63,6 +66,7 @@ struct LaunchOptions {
 
     init(arguments: [String]) {
         isDemo = arguments.contains("-demo")
+        isSynthetic = arguments.contains("-synthetic")
         openPlayer = arguments.contains("-openPlayer")
         sleepOn = arguments.contains("-sleepOn")
         fastSleep = arguments.contains("-fastSleep")
