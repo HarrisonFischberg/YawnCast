@@ -146,7 +146,8 @@ private struct TopicShelf: View {
             .padding(6)
             .paper(seed: show.title.count, fill: theme.surface)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressDim())
+        .animation(Motion.fade, value: isPicked)
         .accessibilityLabel(show.title)
         .accessibilityAddTraits(isPicked ? .isSelected : [])
         .accessibilityIdentifier("pickShow")

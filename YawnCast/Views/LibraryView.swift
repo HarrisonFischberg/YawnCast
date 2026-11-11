@@ -12,6 +12,7 @@ struct LibraryView: View {
     @State private var draggingID: String?
     /// Last time a drag moved over the grid; a drag dropped outside never reports its end.
     @State private var lastDragActivity = Date()
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var columns: [GridItem] {
         let count: Int
@@ -43,9 +44,10 @@ struct LibraryView: View {
                         }
                     }
                     .onDrop(of: [.text], isTargeted: nil) { _ in draggingID = nil; return true }
-                    .animation(.spring(response: 0.35, dampingFraction: 0.8), value: model.library.subscriptions.map(\.id))
-                    .sensoryFeedback(.selection, trigger: model.library.subscriptions.map(\.id))
-                    .animation(.spring(response: 0.35, dampingFraction: 0.85), value: model.libraryLayout)
+                    .animation(reduceMotion ? nil : Motion.move, value: model.library.subscriptions.map(\.id))
+                    // A tick per slot while reordering; adding or removing a show has its own feedback.
+                    .sensoryFeedback(trigger: model.library.subscriptions.map(\.id)) { old, new in old.count == new.count ? .selection : nil }
+                    .animation(reduceMotion ? nil : Motion.move, value: model.libraryLayout)
                 }
             }
             .padding(.horizontal, Space.xl)
@@ -113,7 +115,7 @@ struct LibraryView: View {
                     model.openSearch()
                 }
                 IconKey(systemName: model.libraryLayout.symbol, label: "Layout: \(model.libraryLayout.title). Switch to \(model.libraryLayout.next.title)") {
-                    withAnimation(Motion.move) { model.libraryLayout = model.libraryLayout.next }
+                    withAnimation(reduceMotion ? nil : Motion.move) { model.libraryLayout = model.libraryLayout.next }
                 }
                 .accessibilityIdentifier("layoutKey")
                 .sensoryFeedback(.selection, trigger: model.libraryLayout)
@@ -316,7 +318,7 @@ struct MiniPlayerDock: View {
                 .dynamicTypeSize(...DynamicTypeSize.accessibility1)
                 .contentShape(Rectangle())
             }
-            .buttonStyle(.plain)
+            .buttonStyle(PressDim())
             .accessibilityLabel("Now playing: \(player.episode?.title ?? "")")
             .accessibilityValue(model.sleepStatus == .off ? (player.episode?.showTitle ?? "") : "\(player.episode?.showTitle ?? ""), Sleep on")
             .accessibilityHint("Opens the player.")
@@ -340,7 +342,7 @@ struct MiniPlayerDock: View {
             .accessibilityShowsLargeContentViewer {
                 Label("Sleep", systemImage: "moon.fill")
             }
-            .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: moonTaps)
+            .sensoryFeedback(Haptic.moon, trigger: moonTaps)
 
             Button { player.togglePlayPause() } label: {
                 Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
@@ -354,7 +356,7 @@ struct MiniPlayerDock: View {
             .accessibilityShowsLargeContentViewer {
                 Label(player.isPlaying ? "Pause" : "Play", systemImage: player.isPlaying ? "pause.fill" : "play.fill")
             }
-            .sensoryFeedback(.impact(weight: .medium), trigger: player.isPlaying)
+            .sensoryFeedback(Haptic.transport, trigger: player.isPlaying)
         }
         .padding(Space.s)
         .background { PaperShape(seed: 1).fill(theme.raised).shadow(color: .black.opacity(theme.shadowOpacity), radius: 10, y: 4) }
@@ -383,7 +385,7 @@ struct ReorderDropDelegate: DropDelegate {
     func dropEntered(info: DropInfo) {
         lastActivity = Date()
         guard let id = draggingID, id != target.id else { return }
-        withAnimation(.spring(response: 0.32, dampingFraction: 0.82)) {
+        withAnimation(Motion.moveUnlessReduced) {
             model.moveSubscription(id: id, onto: target.id)
         }
     }

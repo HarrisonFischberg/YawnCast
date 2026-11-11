@@ -162,7 +162,7 @@ struct NowPlayingView: View {
 
                 MoonKey(status: model.sleepStatus, action: { model.toggleSleep() }, onAdjust: { model.adjustSleep(minutes: $0) })
                     .disabled(player.episode == nil || preview != nil)
-                    .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: model.sleepStatus == .off)
+                    .sensoryFeedback(Haptic.moon, trigger: model.sleepStatus == .off)
                     .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
             }
             .animation(reduceMotion ? Motion.fade : Motion.move, value: model.sleepStatus == .off)
@@ -226,7 +226,7 @@ struct NowPlayingView: View {
             .accessibilityLabel(playing ? "Pause" : "Play")
             .accessibilityValue(preview == nil && player.isBuffering ? "Loading" : "")
             .accessibilityIdentifier("playPause")
-            .sensoryFeedback(.impact(weight: .medium), trigger: playing)
+            .sensoryFeedback(Haptic.transport, trigger: playing)
 
             Button { player.skip(by: 15); skipTaps += 1 } label: {
                 Image(systemName: "goforward.15").font(.system(size: 24, weight: .semibold))
@@ -237,7 +237,7 @@ struct NowPlayingView: View {
             .accessibilityLabel("Forward 15 seconds")
         }
         .frame(maxWidth: .infinity)
-        .sensoryFeedback(.impact(weight: .light), trigger: skipTaps)
+        .sensoryFeedback(Haptic.skip, trigger: skipTaps)
     }
 }
 

@@ -157,7 +157,7 @@ struct SearchCapsule: View {
             .paper(seed: 1, fill: theme.surface)
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressDim())
         .accessibilityLabel(placeholder)
         .accessibilityIdentifier(identifier)
     }

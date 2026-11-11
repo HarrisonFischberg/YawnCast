@@ -32,6 +32,8 @@ struct ThemesSheet: View {
             }
             .padding(Space.xxl)
         }
+        // The note field has no Return-to-close (Return is a new line); a drag puts the keyboard away.
+        .scrollDismissesKeyboard(.interactively)
         .background {
             // iOS 26: the sheet is system glass, so the live Scene shows through as you pick.
             if #available(iOS 26, *) {} else { ScreenBackground() }
@@ -104,7 +106,7 @@ struct ThemesSheet: View {
                     Button {
                         withAnimation(.easeInOut(duration: 0.35)) { model.look = look }
                     } label: { StyleSwatch(look: look, selected: look == model.look) }
-                        .buttonStyle(.plain)
+                        .buttonStyle(PressDim())
                         .accessibilityLabel("\(look.name) text")
                         .accessibilityAddTraits(look == model.look ? .isSelected : [])
                         .accessibilityIdentifier("look-\(look.rawValue)")
@@ -127,7 +129,7 @@ struct ThemesSheet: View {
                     Button {
                         withAnimation(.easeInOut(duration: 0.35)) { model.theme = option }
                     } label: { ThemeSwatch(option: option, selected: option.id == model.theme.id) }
-                        .buttonStyle(.plain)
+                        .buttonStyle(PressDim())
                         .accessibilityLabel("\(option.name), \(option.blurb)")
                         .accessibilityAddTraits(option.id == model.theme.id ? .isSelected : [])
                         .accessibilityIdentifier("theme-\(option.id)")

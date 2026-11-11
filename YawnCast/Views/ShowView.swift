@@ -163,7 +163,7 @@ struct ShowView: View {
                                 .foregroundStyle(theme.text)
                         }
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(PressDim())
                     .accessibilityHint(expanded ? "Shows less of the description." : "Shows the full description.")
                 }
             }
@@ -190,7 +190,6 @@ struct ShowView: View {
             .accessibilityLabel(subscribed ? "Subscribed" : "Subscribe")
             .accessibilityHint(subscribed ? "Removes this show from your library." : "Adds this show to your library.")
             .accessibilityIdentifier("subscribeKey")
-            .sensoryFeedback(.success, trigger: subscribed)
         }
         .padding(.top, Space.s)
     }
@@ -344,6 +343,7 @@ struct ProgressPlayGlyph: View {
     let fraction: Double
     let isPlaying: Bool
     @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         ZStack {
@@ -355,7 +355,7 @@ struct ProgressPlayGlyph: View {
             Image(systemName: isPlaying ? "speaker.wave.2.fill" : "play.fill")
                 .font(.system(size: 14, weight: .bold))
                 .foregroundStyle(theme.text)
-                .symbolEffect(.variableColor.iterative, isActive: isPlaying)
+                .symbolEffect(.variableColor.iterative, isActive: isPlaying && !reduceMotion)
         }
         .frame(width: 40, height: 40)
         .accessibilityHidden(true)

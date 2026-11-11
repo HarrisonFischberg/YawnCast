@@ -9,7 +9,11 @@ struct Scrubber: View {
     let onSeek: (TimeInterval) -> Void
 
     @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var dragFraction: Double?
+    /// True only while a finger is down; it resets even when the system cancels the drag
+    /// (onEnded never fires then), so the thumb can't stay stuck where it was dropped.
+    @GestureState private var isDragging = false
 
     private var knownDuration: TimeInterval? {
         guard let duration, duration.isFinite, duration > 0 else { return nil }
@@ -37,7 +41,8 @@ struct Scrubber: View {
                     .frame(maxHeight: .infinity)
                     .contentShape(Rectangle())
                     .gesture(drag(width: width, thumb: thumb))
-                    .animation(.spring(response: 0.2), value: dragFraction == nil)
+                    // The thumb follows the finger exactly; only the grab and the release animate.
+                    .animation(reduceMotion ? nil : Motion.press, value: dragFraction == nil)
             }
             .frame(height: 44)
 
@@ -50,6 +55,9 @@ struct Scrubber: View {
             .foregroundStyle(theme.textMuted)
         }
         .sensoryFeedback(.selection, trigger: dragFraction == nil)
+        .onChange(of: isDragging) { _, dragging in
+            if !dragging { dragFraction = nil } // a cancelled drag seeks nowhere
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Playback position")
         .accessibilityValue(accessibilityValue)
@@ -80,6 +88,7 @@ struct Scrubber: View {
 
     private func drag(width: CGFloat, thumb: CGFloat) -> some Gesture {
         DragGesture(minimumDistance: 0)
+            .updating($isDragging) { _, state, _ in state = true }
             .onChanged { value in
                 guard knownDuration != nil else { return }
                 dragFraction = min(1, max(0, (value.location.x - thumb / 2) / max(1, width - thumb)))
