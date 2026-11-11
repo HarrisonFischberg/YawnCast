@@ -1,9 +1,10 @@
 import YawnCastCore
 import SwiftUI
 
-/// The Sleep bubble: it pops up above the Moon bar while Sleep is on, as −5 · 17 min · +5.
-/// While fading it shows the volume and −5 is off. Each tap floats a small "+5 min" /
-/// "−5 min" up out of the bubble, so the step size is never a guess.
+/// The Sleep bubble: it pops up above the Moon bar when Sleep turns on, as −5 · 17 min · +5,
+/// and tucks into `SleepBubblePill` after a few quiet seconds. Kept small so it sits below
+/// the transport keys. While fading it shows the volume and −5 is off. Each tap floats a
+/// small "+5 min" / "−5 min" up out of the bubble, so the step size is never a guess.
 struct SleepBubble: View {
     let status: SleepStatus
     let onAdjust: (Int) -> Void
@@ -19,16 +20,16 @@ struct SleepBubble: View {
     }
 
     var body: some View {
-        HStack(spacing: Space.xs) {
+        HStack(spacing: 2) {
             StepKey(minutes: -5) { step(-5) }
                 .disabled(isFading)
                 .opacity(isFading ? 0.4 : 1)
             readout
-                .frame(minWidth: 68)
+                .frame(minWidth: 56)
             StepKey(minutes: 5) { step(5) }
         }
-        .padding(Space.xs)
-        .background { Capsule().fill(theme.raised).shadow(color: .black.opacity(theme.shadowOpacity * 0.6), radius: 10, y: 4) }
+        .padding(2)
+        .background { Capsule().fill(theme.raised).shadow(color: .black.opacity(theme.shadowOpacity * 0.5), radius: 6, y: 3) }
         .overlay(alignment: .top) {
             if let echo {
                 Text(echo.text)
@@ -45,7 +46,7 @@ struct SleepBubble: View {
                     .accessibilityHidden(true)
             }
         }
-        // Fixed 48 pt keys: the bubble stops growing here, and the Moon bar says the same words large.
+        // Fixed 44 pt keys: the bubble stops growing here, and the Moon bar says the same words large.
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .accessibilityElement(children: .contain)
     }
@@ -55,7 +56,7 @@ struct SleepBubble: View {
     private var readout: some View {
         HStack(alignment: .firstTextBaseline, spacing: 3) {
             Text(parts.value)
-                .font(Typo.title.monospacedDigit())
+                .font(Typo.headline.monospacedDigit())
                 .contentTransition(.numericText())
             Text(parts.unit)
                 .font(Typo.small)
@@ -85,7 +86,7 @@ struct SleepBubble: View {
     }
 }
 
-/// A round "−5" / "+5" key in the Sleep bubble, 48 pt to tap.
+/// A round "−5" / "+5" key in the Sleep bubble: a 36 pt face, 44 pt to tap.
 struct StepKey: View {
     let minutes: Int
     let action: () -> Void
@@ -94,15 +95,41 @@ struct StepKey: View {
     var body: some View {
         Button(action: action) {
             Text(minutes > 0 ? "+5" : "−5")
-                .font(.system(.body, weight: .semibold).monospacedDigit())
+                .font(.system(.subheadline, weight: .semibold).monospacedDigit())
                 .foregroundStyle(theme.text)
-                .frame(width: 48, height: 48)
+                .frame(width: 36, height: 36)
                 .background(Circle().fill(theme.surface))
+                .frame(width: 44, height: 44)
                 .contentShape(Circle())
         }
         .buttonStyle(PressDim())
         .accessibilityLabel(minutes > 0 ? "Add 5 minutes" : "Remove 5 minutes")
         .accessibilityIdentifier(minutes > 0 ? "sleepPlus5" : "sleepMinus5")
         .accessibilityShowsLargeContentViewer { Text(minutes > 0 ? "+5 min" : "−5 min") }
+    }
+}
+
+/// The tucked-away Sleep bubble: a small "±5" pill above the Moon bar. Tap it to bring
+/// the −5 / +5 keys back.
+struct SleepBubblePill: View {
+    let onExpand: () -> Void
+    @Environment(\.theme) private var theme
+
+    var body: some View {
+        Button(action: onExpand) {
+            Text("±5")
+                .font(.system(.footnote, weight: .semibold).monospacedDigit())
+                .foregroundStyle(theme.text)
+                .padding(.horizontal, Space.m)
+                .frame(height: 30)
+                .background { Capsule().fill(theme.raised) }
+                .frame(minHeight: 44)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(PressDim())
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        .accessibilityLabel("Adjust Sleep")
+        .accessibilityHint("Shows the add and remove 5 minutes keys.")
+        .accessibilityIdentifier("sleepBubblePill")
     }
 }

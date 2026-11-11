@@ -209,3 +209,87 @@ struct PressDim: ButtonStyle {
             .animation(reduceMotion ? nil : Motion.press, value: configuration.isPressed)
     }
 }
+
+// MARK: - Floating z's
+
+/// Little "z"s that drift up out of the Sleep icon while Sleep is on and float
+/// away up the screen: three loose streams, each z with its own start, pace,
+/// sway and size, so they never march in step. Still (three resting columns)
+/// with Reduce Motion.
+struct FloatingZs: View {
+    var isFading = false
+    @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    /// Each stream: where it starts across, its base rise time, its base size.
+    private static let streams: [(x: Double, period: Double, size: Double)] = [
+        (8, 6.3, 18), (40, 7.9, 22), (70, 5.6, 16),
+    ]
+    /// z's in the air per stream.
+    private static let perStream = 3
+
+    var body: some View {
+        Group {
+            if reduceMotion {
+                HStack(alignment: .bottom, spacing: 10) {
+                    ForEach(0..<3, id: \.self) { line in
+                        VStack(spacing: 2) {
+                            ForEach(0..<3, id: \.self) { i in
+                                Text("z")
+                                    .font(.system(size: 10 + CGFloat(2 - i) * 4, weight: .heavy, design: .rounded))
+                                    .rotationEffect(.degrees(-12))
+                            }
+                        }
+                        .offset(y: -CGFloat(line % 2) * 10)
+                    }
+                }
+                .foregroundStyle(theme.accent.opacity(0.85))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+            } else {
+                TimelineView(.animation(minimumInterval: 1.0 / 30)) { context in
+                    Canvas { canvas, size in
+                        let t = context.date.timeIntervalSinceReferenceDate
+                        let z = canvas.resolve(
+                            Text("z").font(.system(size: 20, weight: .heavy, design: .rounded)).foregroundStyle(theme.accent)
+                        )
+                        for (n, stream) in Self.streams.enumerated() {
+                            for i in 0..<Self.perStream {
+                                let seed = Double(n * 7 + i * 3)
+                                // Each z keeps its own pace, nudged again on every trip.
+                                let period = stream.period * (0.8 + 0.4 * Self.noise(seed)) * (isFading ? 1.3 : 1)
+                                let offset = Self.noise(seed + 0.5) + Double(i) / Double(Self.perStream)
+                                let progress = t / period + offset
+                                let trip = floor(progress)
+                                let phase = progress - trip
+                                // A fresh start, drift and sway for every trip up.
+                                let r1 = Self.noise(seed + trip * 1.37)
+                                let r2 = Self.noise(seed + trip * 2.71 + 9)
+                                let r3 = Self.noise(seed + trip * 0.91 + 4)
+                                let startX = stream.x + (r1 - 0.5) * 22
+                                let drift = (r2 - 0.35) * 70 * phase
+                                let sway = sin(t * (0.8 + r3) + seed) * (4 + 6 * r3)
+                                // Rises the full height, a little faster at first, and fades as it goes.
+                                let rise = 1 - pow(1 - phase, 1.4)
+                                var layer = canvas
+                                layer.opacity = min(1, phase * 6) * (1 - phase) * 0.95
+                                layer.translateBy(x: startX + drift + sway, y: size.height * (1 - rise))
+                                layer.rotate(by: .degrees(-18 + (r3 - 0.5) * 30 + sin(t * 0.7 + seed) * 8))
+                                let scale = (stream.size / 20) * (0.5 + phase * 0.8) * (0.85 + 0.3 * r1)
+                                layer.scaleBy(x: scale, y: scale)
+                                layer.draw(z, at: .zero)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+
+    /// A steady pseudo-random number in 0..<1 for a seed.
+    private static func noise(_ x: Double) -> Double {
+        let v = sin(x * 12.9898 + 78.233) * 43758.5453
+        return v - floor(v)
+    }
+}

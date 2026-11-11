@@ -68,7 +68,7 @@ final class V4UITests: XCTestCase {
         XCTAssertTrue(app.buttons["miniPlayer"].waitForExistence(timeout: 3), "back to the mini player")
     }
 
-    func testSleepChipStaysAndLabelsItsSteps() {
+    func testSleepBubbleTucksAwayAndLabelsItsSteps() {
         let app = launch()
         subscribeQuietHours(app)
         app.buttons["Fixture Episode 3"].tap()
@@ -83,9 +83,12 @@ final class V4UITests: XCTestCase {
         let plus = app.buttons["sleepPlus5"]
         XCTAssertTrue(plus.exists)
         XCTAssertEqual(plus.label, "Add 5 minutes")
-        // It no longer tucks itself away.
-        sleep(7)
-        XCTAssertTrue(countdown.exists && plus.isHittable, "chip stays while Sleep is on")
+        // After a few quiet seconds it tucks into a small pill; tapping the pill brings it back.
+        let pill = app.buttons["sleepBubblePill"]
+        XCTAssertTrue(pill.waitForExistence(timeout: 7), "bubble tucks away")
+        XCTAssertFalse(plus.exists)
+        pill.tap()
+        XCTAssertTrue(plus.waitForExistence(timeout: 3) && plus.isHittable, "pill reopens the bubble")
     }
 
     func testLibraryLayoutsAndReorder() {

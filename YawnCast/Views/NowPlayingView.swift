@@ -11,6 +11,10 @@ struct NowPlayingView: View {
     @State private var showingAbout = false
     /// Where the title sits on screen, so the Scene's life keeps clear of the words.
     @State private var titleFrame = CGRect.null
+    /// The Sleep bubble opens with Sleep and tucks into a small pill after a few quiet
+    /// seconds (not under VoiceOver); tapping the pill brings it back.
+    @State private var bubbleOpen = true
+    @State private var tuckTask: Task<Void, Never>?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -167,10 +171,13 @@ struct NowPlayingView: View {
                             if !typeSize.isAccessibilitySize { Spacer(minLength: 0) }
                             if let note {
                                 toastLabel(note)
-                            } else if sleepOn {
-                                // −5 · 17 min · +5, for as long as Sleep is on.
-                                SleepBubble(status: model.sleepStatus) { model.adjustSleep(minutes: $0) }
+                            } else if sleepOn && bubbleOpen {
+                                // −5 · 17 min · +5, then tucks away.
+                                SleepBubble(status: model.sleepStatus) { model.adjustSleep(minutes: $0); scheduleTuck() }
                                     .transition(reduceMotion ? .opacity : .scale(scale: 0.7, anchor: .bottomTrailing).combined(with: .opacity))
+                            } else if sleepOn {
+                                SleepBubblePill { bubbleOpen = true; scheduleTuck() }
+                                    .transition(.opacity)
                             }
                         }
                         .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 6)))
@@ -180,11 +187,25 @@ struct NowPlayingView: View {
                         .disabled(player.episode == nil || preview != nil)
                         .sensoryFeedback(Haptic.moon, trigger: model.sleepStatus == .off)
                         .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
+                        .overlay(alignment: .topLeading) {
+                            if model.sleepStatus != .off {
+                                // z's rise out of the moon and float up the screen, in every theme.
+                                FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
+                                    .frame(width: 130, height: 360)
+                                    .offset(x: 8, y: -336)
+                                    .transition(.opacity)
+                            }
+                        }
                 }
+                .onChange(of: model.sleepStatus == .off) { _, isOff in
+                    if !isOff { bubbleOpen = true; scheduleTuck() }
+                }
+                .onAppear { if model.sleepStatus != .off { scheduleTuck() } }
                 // A wider gap than inside either group, so transport and Sleep read as two groups.
                 .padding(.top, Space.s)
             }
             .animation(reduceMotion ? Motion.fade : Motion.pop, value: model.sleepStatus == .off)
+            .animation(reduceMotion ? Motion.fade : Motion.pop, value: bubbleOpen)
             .animation(Motion.fade, value: model.toast)
             .animation(Motion.fade, value: model.nightNote)
             .animation(reduceMotion ? Motion.fade : Motion.move, value: model.driftBackPosition)
@@ -198,6 +219,16 @@ struct NowPlayingView: View {
                 }
                 .ignoresSafeArea(edges: .bottom)
             }
+        }
+    }
+
+    /// Tucks the Sleep bubble away after a few quiet seconds. VoiceOver users keep it open.
+    private func scheduleTuck() {
+        tuckTask?.cancel()
+        guard !UIAccessibility.isVoiceOverRunning else { return }
+        tuckTask = Task {
+            try? await Task.sleep(for: .seconds(4))
+            if !Task.isCancelled { bubbleOpen = false }
         }
     }
 

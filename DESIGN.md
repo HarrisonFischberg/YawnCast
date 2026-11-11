@@ -62,9 +62,11 @@ To add a Scene's life, add a case in `SceneLife.draw` and draw it in code; no im
 Sleep is the point of the app, so it is the largest control. The Moon bar is one paper bar at the bottom:
 a 68 pt moon well that toggles Sleep, and the words "Ready for bed?", "Sweet dreams" or "Lights going
 down" with the countdown or volume; while Sleep is on the bar turns accent. The icon is always a moon.
-The Sleep bubble (`SleepBubble`, back from 1.0) pops up above the bar's right end while Sleep is on:
-−5 · 17 min · +5 in a `raised` capsule, 48 pt keys; −5 is disabled during the fade; each tap floats
-"+5 min" / "−5 min" up out of it. Transport sits above, smaller: play/pause 80 × 52, skips 56 × 52.
+The Sleep bubble (`SleepBubble`) pops up above the bar's right end when Sleep turns on:
+−5 · 17 min · +5 in a small `raised` capsule, 36 pt key faces (44 pt to tap), smaller than the
+transport keys; −5 is disabled during the fade; each tap floats "+5 min" / "−5 min" up out of it.
+After 4 quiet seconds it tucks into a small "±5" pill (`SleepBubblePill`) that reopens it; it stays
+open under VoiceOver. While Sleep is on, `FloatingZs` rise out of the moon well, in every theme. Transport sits above, smaller: play/pause 80 × 52, skips 56 × 52.
 
 ## Motion (`Motion` in `Theme.swift`)
 `press` (key and card press), `move` (layout, reorder, rows appearing), `slide` (the page menu's thumb,
