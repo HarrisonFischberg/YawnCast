@@ -65,6 +65,6 @@ else
   shot 12-library-small-midnight 6 -theme midnight -page library -layout small
   shot 13-library-list-city 6 -theme city -page library -layout list
   shot 14-themes-sheet 6 -theme midnight -page library -themes
-  shot 15-now-playing-almanac-day 5 -theme almanac -openPlayer -autoplay -sleepOn
+  shot 15-now-playing-almanac 5 -theme almanac -openPlayer -autoplay -sleepOn
 fi
 xcrun simctl terminate "$DEV" "$BUNDLE" 2>/dev/null || true
