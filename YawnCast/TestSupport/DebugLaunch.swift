@@ -14,9 +14,10 @@ enum DebugLaunch {
             directory = FixtureDirectory()
             feeds = FixtureFeedService()
         } else {
-            store = (launch.isDemo || launch.isLiveTest) ? MemoryLibraryStore() : JSONLibraryStore.standard()
+            let design = DesignOption.current != nil
+            store = (launch.isDemo || launch.isLiveTest || design) ? MemoryLibraryStore() : JSONLibraryStore.standard()
             directory = ITunesDirectory()
-            feeds = HTTPFeedService()
+            feeds = design ? DesignFeedService() : HTTPFeedService()
         }
         let sleepConfiguration = launch.fastSleep
             ? SleepConfiguration(maxFadeDelay: 4, stepInterval: 3, stepRamp: 1, cancelRamp: 0.5)
@@ -36,6 +37,7 @@ enum DebugLaunch {
             if launch.resetStore { UserDefaults.standard.removeObject(forKey: "lastSearch") }
         }
         if launch.isDemo { DemoSeed.run(model: model, launch: launch) }
+        if DesignOption.current != nil { DesignSeed.run(model: model, launch: launch, arguments: arguments) }
         return model
     }
 }

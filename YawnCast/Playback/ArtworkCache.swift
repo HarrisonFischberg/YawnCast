@@ -69,7 +69,11 @@ struct ArtworkView: View {
         RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
             .fill(theme.surface)
             .overlay {
-                if let image {
+                if let url, url.scheme == "design" {
+                    #if DEBUG
+                    DesignCover(slug: url.lastPathComponent)
+                    #endif
+                } else if let image {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFill()

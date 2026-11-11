@@ -695,6 +695,8 @@ final class AppModel {
     func activateSleepForDemo() {
         toggleSleep()
     }
+
+    func setSleepStatusForDesign(_ status: SleepStatus) { sleepStatus = status }
     #endif
 }
 

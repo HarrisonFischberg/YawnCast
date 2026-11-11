@@ -45,7 +45,7 @@ struct RootView: View {
     var body: some View {
         @Bindable var model = model
         NavigationStack(path: $model.path) {
-            HomeView()
+            home
                 .toolbar(.hidden, for: .navigationBar)
                 .navigationDestination(for: Route.self) { route in
                     switch route {
@@ -59,7 +59,7 @@ struct RootView: View {
         .tint(theme.text)
         // Once something is loaded, the player floats over every screen and stays there.
         .overlay(alignment: .bottom) {
-            if model.player.episode != nil {
+            if model.player.episode != nil, !restyled {
                 // It floats a little above the bottom edge (v0.17, owner request), the same gap
                 // it keeps above the keyboard (which still pushes it up: only the container
                 // inset is ignored).
@@ -89,8 +89,23 @@ struct RootView: View {
         }
         .animation(.easeOut(duration: 0.2), value: model.addedNote)
         .fullScreenCover(isPresented: $model.isPlayerPresented) {
-            NowPlayingView()
+            nowPlaying
                 .environment(\.theme, theme)
         }
     }
+
+    // Design exploration (Debug, `-design A|B|C`) swaps in restyled screens; see TestSupport/DesignSeed.swift.
+    #if DEBUG
+    private var restyled: Bool { DesignOption.restyle != nil }
+    @ViewBuilder private var home: some View {
+        if let option = DesignOption.restyle { DesignHome(option: option) } else { HomeView() }
+    }
+    @ViewBuilder private var nowPlaying: some View {
+        if let option = DesignOption.restyle { DesignNowPlaying(option: option) } else { NowPlayingView() }
+    }
+    #else
+    private let restyled = false
+    private var home: some View { HomeView() }
+    private var nowPlaying: some View { NowPlayingView() }
+    #endif
 }
