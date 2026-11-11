@@ -18,11 +18,11 @@ SANS = next(p for p in [Path.home() / "Library/Fonts/Inter-Medium.otf", Path("/L
 
 CAPTIONS = {
     "1-nowplaying-city": ("Fall asleep to\nany podcast", "Tap the Moon and close your eyes."),
-    "2-library-underwater": ("Six animated\nnight scenes", "Drifting fish, fireflies, soft rain."),
-    "3-new-beach": ("New episodes,\nby day", "The latest from your shows, calmly."),
-    "4-library-rainforest": ("Your library,\nyour way", "Big artwork or a tidy list."),
+    "2-library-underwater": ("Six animated\nnight scenes", "This one is Underwater, with fish drifting by."),
+    "3-new-beach": ("New episodes,\nby day", "The latest from your shows, newest first."),
+    "4-library-rainforest": ("Your shows in\na grid or a list", "Change the layout with one button."),
     "5-explore-mountain": ("Find shows to\ndrift off to", "Picks from your interests and the charts."),
-    "6-topics-midnight": ("Start with what\nyou love", "Pick a few topics. We'll find the shows."),
+    "6-topics-midnight": ("Pick a few shows\nto start", "Browse by topic, or skip this step."),
 }
 
 W, H = 1320, 2868          # 6.9" canvas; 6.3" is a straight resize (same aspect within 0.1%)
