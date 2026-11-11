@@ -1,15 +1,15 @@
 import YawnCastCore
 import SwiftUI
 
-/// The signature control. One tap turns Sleep on; another turns it off.
-/// Every style shows the ten fade steps as a progress bar; the icon follows
-/// the Scene (a wave underwater, a tree in the rainforest).
+/// The signature control. One tap turns Sleep on; another turns it off, and
+/// −5 / +5 move the fade while it is on.
 struct MoonKey: View {
     let status: SleepStatus
     let action: () -> Void
+    let onAdjust: (Int) -> Void
 
     var body: some View {
-        LookMoonKey(status: status, action: action)
+        LookMoonKey(status: status, action: action, onAdjust: onAdjust)
     }
 
     static func accessibilityValue(for status: SleepStatus) -> String {

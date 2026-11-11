@@ -240,6 +240,10 @@ struct Theme: Identifiable, Equatable {
         return day
     }
 
+    /// A lit fade mark (lantern, firefly, star). The accent, except Underwater, whose
+    /// deep-blue accent is too dark to read as a light against the water.
+    var fadeMark: Color { scene == .ocean ? Color(hex: 0x8FE3F0) : accent }
+
     /// The flat colours follow the phone's light/dark setting; Scenes keep their one
     /// appearance, as before.
     var followsSystem: Bool { dayVariant != nil }
@@ -268,12 +272,12 @@ extension EnvironmentValues {
     }
 }
 
-/// A look's component language. Colors live in Theme; this is everything else.
-/// The text style: fonts, keys and cards. Two to choose from (v0.17).
+/// The text style: the typeface and its capitals. Two to choose from (v0.17).
+/// Shapes and surfaces are the same cut paper in both (Lights Out).
 enum ThemeStyle: String, CaseIterable {
-    /// Painted room: Young Serif, cut-paper corners, painted mats.
+    /// Painted room: Young Serif.
     case pictureBook = "picturebook"
-    /// Late-night radio: wide heavy caps, QSL-card artwork.
+    /// Late-night radio: wide heavy caps.
     case signOff = "signoff"
 
     var name: String {
@@ -285,10 +289,25 @@ enum ThemeStyle: String, CaseIterable {
 
     /// Titles set in capitals.
     var capsTitles: Bool { self == .signOff }
-    /// Corner radius on show artwork.
-    var artworkRadius: CGFloat { self == .signOff ? 0 : 8 }
-    /// Corner radius on cards, rows and the mini player.
-    var cardRadius: CGFloat { self == .signOff ? 24 : 20 }
+}
+
+/// Shape tokens. Surfaces are cut paper (`PaperShape`, `.paper(seed:fill:)`), whose
+/// corners run 12 to 18 pt; artwork sits inside them on one smaller radius.
+enum Radius {
+    /// Show artwork, everywhere.
+    static let artwork: CGFloat = 8
+}
+
+/// Motion tokens. Reduce Motion drops `press` and `move` and keeps `fade`.
+enum Motion {
+    /// Key and card press feedback.
+    static let press = Animation.spring(response: 0.18, dampingFraction: 0.7)
+    /// Things that change place: tabs, layout, reorder.
+    static let move = Animation.spring(response: 0.35, dampingFraction: 0.85)
+    /// State changes in place: toasts, a fade mark going dark.
+    static let fade = Animation.easeOut(duration: 0.2)
+    /// One fade mark going out: slow enough to notice from the pillow.
+    static let lightsOut = Animation.easeOut(duration: 0.6)
 }
 
 /// Type ramp. Every style maps to a Dynamic Type text style so it scales.
@@ -306,8 +325,8 @@ enum Typo {
     }
     static var playerTitle: Font {
         switch style {
-        case .signOff: .custom("ArchivoExpanded-ExtraBold", size: 32, relativeTo: .title)
-        case .pictureBook: .custom("YoungSerif-Regular", size: 34, relativeTo: .title)
+        case .signOff: .custom("ArchivoExpanded-ExtraBold", size: 24, relativeTo: .title)
+        case .pictureBook: .custom("YoungSerif-Regular", size: 28, relativeTo: .title)
         }
     }
     /// Moon key title and sheet titles.
@@ -338,14 +357,14 @@ enum Typo {
         case .pictureBook: .custom("YoungSerif-Regular", size: 24, relativeTo: .title3)
         }
     }
-    /// The Sleep bubble's ±5 keys: about 12% under `headline`.
-    static var bubbleKey: Font {
+    /// The episode title in the mini player.
+    static var dockTitle: Font {
         switch style {
         case .signOff: .system(.subheadline, weight: .semibold)
         case .pictureBook: .custom("YoungSerif-Regular", size: 15, relativeTo: .subheadline)
         }
     }
-    /// Small text in the style's own face: the Sleep bubble's countdown and its pill.
+    /// Small text in the style's own face: the "+5 min" echo over the Moon bar.
     static var small: Font {
         switch style {
         case .signOff: .custom("ArchivoExpanded-ExtraBold", size: 10, relativeTo: .caption2)

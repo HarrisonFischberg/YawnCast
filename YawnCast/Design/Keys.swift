@@ -10,8 +10,8 @@ enum KeyRole {
     case accent
 }
 
-/// A printed key: a filled face with no edge; pressing dims and settles.
-/// (The raised v0.1 key with a visible edge was retired in v0.17.)
+/// A paper key: a cut-paper face with no edge; pressing dims and settles.
+/// (The raised v0.1 key with a visible edge was retired in v0.17; glass in Lights Out.)
 struct KeyStyle<S: InsettableShape>: ButtonStyle {
     var shape: S
     var role: KeyRole = .standard
@@ -27,12 +27,11 @@ struct KeyStyle<S: InsettableShape>: ButtonStyle {
         return configuration.label
             .foregroundStyle(foreground)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            // Standard keys turn to glass on iOS 26; primary and accent stay solid, the one bright key.
-            .nightGlass(in: shape, interactive: true, enabled: role == .standard) { shape.fill(face) }
+            .background { shape.fill(face) }
             .scaleEffect(pressed ? 0.96 : 1)
             .opacity(isEnabled ? (pressed ? 0.75 : 1) : 0.45)
             .contentShape(shape)
-            .animation(reduceMotion ? nil : .spring(response: 0.18, dampingFraction: 0.7), value: pressed)
+            .animation(reduceMotion ? nil : Motion.press, value: pressed)
     }
 
     private var face: Color {
@@ -52,20 +51,19 @@ struct KeyStyle<S: InsettableShape>: ButtonStyle {
     }
 }
 
-extension ButtonStyle where Self == KeyStyle<Circle> {
-    static func roundKey(_ role: KeyRole = .standard, depth: CGFloat = 4) -> KeyStyle<Circle> {
-        KeyStyle(shape: Circle(), role: role, depth: depth)
+extension ButtonStyle where Self == KeyStyle<PaperShape> {
+    /// Square-ish keys: transport, the mini player's Moon and Play.
+    static func roundKey(_ role: KeyRole = .standard, depth: CGFloat = 4) -> KeyStyle<PaperShape> {
+        KeyStyle(shape: PaperShape(seed: role == .primary ? 2 : 0), role: role, depth: depth)
+    }
+
+    /// Wide keys with a label.
+    static func capsuleKey(_ role: KeyRole = .standard, depth: CGFloat = 4) -> KeyStyle<PaperShape> {
+        KeyStyle(shape: PaperShape(seed: 2), role: role, depth: depth)
     }
 }
 
-extension ButtonStyle where Self == KeyStyle<Capsule> {
-    static func capsuleKey(_ role: KeyRole = .standard, depth: CGFloat = 4) -> KeyStyle<Capsule> {
-        KeyStyle(shape: Capsule(), role: role, depth: depth)
-    }
-}
-
-/// Almanac's printed round key: an outline in the colour's rule, no edge.
-/// Every style uses it for the small icon keys (v0.17, owner request).
+/// The small icon keys: a square of paper in the surface colour.
 struct OutlineKeyStyle: ButtonStyle {
     @Environment(\.theme) private var theme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -75,13 +73,11 @@ struct OutlineKeyStyle: ButtonStyle {
         configuration.label
             .foregroundStyle(theme.text)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .nightGlass(in: Circle(), interactive: true) {
-                Circle().fill(theme.bg.opacity(0.35)).overlay(Circle().strokeBorder(theme.text.opacity(0.55), lineWidth: 1.5))
-            }
+            .paper(seed: 1, fill: theme.surface)
             .scaleEffect(configuration.isPressed ? 0.94 : 1)
             .opacity(isEnabled ? (configuration.isPressed ? 0.75 : 1) : 0.45)
-            .contentShape(Circle())
-            .animation(reduceMotion ? nil : .spring(response: 0.18, dampingFraction: 0.7), value: configuration.isPressed)
+            .contentShape(Rectangle())
+            .animation(reduceMotion ? nil : Motion.press, value: configuration.isPressed)
     }
 }
 
@@ -97,7 +93,7 @@ struct IconKey: View {
                 .font(.system(size: 17, weight: .bold))
         }
         .buttonStyle(OutlineKeyStyle())
-        .frame(width: 48, height: 48)
+        .frame(width: 44, height: 44)
         .accessibilityLabel(label)
         // The glyph stays 17 pt; at accessibility sizes a long press shows it large.
         .accessibilityShowsLargeContentViewer {
@@ -106,35 +102,10 @@ struct IconKey: View {
     }
 }
 
-/// Liquid Glass behind a view on iOS 26, else the given solid face. Glass blurs what is
-/// behind it, so the Scenes keep moving underneath. Reduce Transparency is handled by
-/// the system glass itself.
-struct NightGlass<S: Shape, Fallback: View>: ViewModifier {
-    let shape: S
-    var tint: Color?
-    var interactive = false
-    var enabled = true
-    let fallback: Fallback
-    @Environment(\.theme) private var theme
-
-    @ViewBuilder
-    func body(content: Content) -> some View {
-        if #available(iOS 26, *) {
-            if enabled {
-                // Ember promises no blue light, so its glass is always warm-tinted.
-                content.glassEffect(.regular.tint(tint ?? (theme.warmOnly ? theme.accent.opacity(0.18) : nil)).interactive(interactive), in: shape)
-            } else {
-                content.background { fallback }
-            }
-        } else {
-            content.background { fallback }
-        }
-    }
-}
-
 extension View {
-    func nightGlass<S: Shape, F: View>(in shape: S, tint: Color? = nil, interactive: Bool = false, enabled: Bool = true,
-                                       @ViewBuilder otherwise fallback: () -> F) -> some View {
-        modifier(NightGlass(shape: shape, tint: tint, interactive: interactive, enabled: enabled, fallback: fallback()))
+    /// A cut-paper face behind a view: the one surface in Lights Out. Opaque, so text
+    /// keeps its contrast over any Scene; `seed` picks the cut.
+    func paper(seed: Int = 0, fill: Color) -> some View {
+        background { PaperShape(seed: seed).fill(fill) }
     }
 }

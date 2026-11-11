@@ -63,11 +63,11 @@ struct Scrubber: View {
         .accessibilityIdentifier("scrubber")
     }
 
-    /// The track and its marker: a thick flat line in every theme. The part still
-    /// to play is tinted with the accent so it reads against any Scene.
+    /// The track and its marker: a thick flat line with a cut-paper thumb. It sits on
+    /// the paper ground, so the part still to play is a quiet tint of the ink.
     private func track(width: CGFloat, x: CGFloat) -> some View {
         ZStack(alignment: .leading) {
-            Capsule().fill(theme.accent.opacity(0.4)).frame(height: 10)
+            Capsule().fill(theme.text.opacity(0.22)).frame(height: 10)
             Capsule().fill(theme.text).frame(width: max(10, x), height: 10)
             PaperShape(seed: 1).fill(theme.text)
                 .frame(width: 26, height: 26)
