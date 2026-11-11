@@ -342,7 +342,7 @@ struct CategoryView: View {
         } catch is CancellationError {
             return
         } catch {
-            if shows.isEmpty { phase = .failed(SearchModel.message(for: error)) }
+            if shows.isEmpty { phase = .failed(SearchModel.message(for: error, fallback: "Something went wrong. Try again.")) }
         }
     }
 }

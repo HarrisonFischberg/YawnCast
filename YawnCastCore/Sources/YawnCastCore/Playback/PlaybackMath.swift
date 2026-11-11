@@ -94,13 +94,4 @@ public enum SleepCopy {
     }
 
     public static let cancelled = "Sleep off"
-
-    /// Short status for the Moon key.
-    public static func status(_ status: SleepStatus) -> String {
-        switch status {
-        case .off: return "Sleep"
-        case .waiting(let t): return "Fade in \(TimeFormat.sleepDelay(t))"
-        case .fading(let level): return "Fading · \(Int((level * 100).rounded()))%"
-        }
-    }
 }

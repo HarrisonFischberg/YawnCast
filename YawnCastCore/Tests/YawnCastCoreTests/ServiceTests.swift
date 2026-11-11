@@ -160,6 +160,17 @@ struct NetworkServiceTests {
         #expect(feed.episodes.map(\.id) == ["e101"])
     }
 
+    @Test func plainHTTPFeedIsFetchedOverHTTPSAndKeepsItsIdentity() async throws {
+        StubURLProtocol.respond(status: 404, body: Data())
+        StubURLProtocol.route(["https://feeds.example.com/old": (200, try fixture("standard.xml"))])
+        let published = URL(string: "http://feeds.example.com:80/old")!
+        let feed = try await HTTPFeedService(session: .stubbed).fetch(published)
+        #expect(feed.episodes.count == 2)
+        #expect(feed.show.feedURL == published)
+        #expect(URL(string: "https://example.com/a.mp3")!.httpsUpgraded.absoluteString == "https://example.com/a.mp3")
+        #expect(URL(string: "HTTP://example.com:8080/a.mp3?x=1")!.httpsUpgraded.absoluteString == "https://example.com:8080/a.mp3?x=1")
+    }
+
     @Test func feedFetchParsesAndMapsHTTPErrors() async throws {
         StubURLProtocol.respond(status: 404, body: Data())
         await #expect(throws: FeedError.http(status: 404)) { try await HTTPFeedService(session: .stubbed).fetch(feedURL) }
@@ -283,7 +294,5 @@ struct PlaybackMathTests {
         #expect(TimeFormat.sleepDelayLong(60) == "1 minute")
         #expect(TimeFormat.sleepDelayLong(40) == "40 seconds")
         #expect(TimeFormat.sleepDelayLong(0.5) == "1 second")
-        #expect(SleepCopy.status(.fading(level: 0.6)) == "Fading · 60%")
-        #expect(SleepCopy.status(.waiting(untilFade: 600)) == "Fade in 10 min")
     }
 }

@@ -67,7 +67,7 @@ final class ShowModel {
             case .http: return "The show’s server isn’t responding right now."
             }
         }
-        return SearchModel.message(for: error)
+        return SearchModel.message(for: error, fallback: "Something went wrong. Try again.")
     }
 }
 
