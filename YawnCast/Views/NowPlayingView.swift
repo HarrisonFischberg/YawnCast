@@ -1,7 +1,7 @@
 import YawnCastCore
 import SwiftUI
 
-/// Only: the cover and title, the fade marks, scrubber, −15 / play-pause / +15, Moon, and a way out.
+/// Only: the cover and title, scrubber, −15 / play-pause / +15, the Sleep bubble and Moon bar, and a way out.
 struct NowPlayingView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
@@ -9,6 +9,8 @@ struct NowPlayingView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var skipTaps = 0
     @State private var showingAbout = false
+    /// Where the title sits on screen, so the Scene's life keeps clear of the words.
+    @State private var titleFrame = CGRect.null
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -24,7 +26,7 @@ struct NowPlayingView: View {
             ScrollView { page(cover: nil) }.scrollIndicators(.hidden)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background { ScreenBackground() }
+        .background { ScreenBackground(life: life, quiet: titleFrame) }
         // Swipe down anywhere (not just the chevron) to drop back into the mini player.
         .modifier(PullDownToDismiss { dismiss() })
         // VoiceOver can't use the swipe; the two-finger scrub (escape) closes it too.
@@ -42,6 +44,16 @@ struct NowPlayingView: View {
             }
         }
         #endif
+    }
+
+    /// How much of the Scene's life is out: all of it while an episode plays or Sleep
+    /// waits, less with every fade step, none once the lights are out.
+    private var life: Double {
+        switch model.sleepStatus {
+        case .fading(let level): level
+        case .waiting: 1
+        case .off: model.preview == nil && model.player.isPlaying ? 1 : 0
+        }
     }
 
     /// The whole screen, with the cover at `cover` points or without one.
@@ -80,6 +92,7 @@ struct NowPlayingView: View {
                         .foregroundStyle(theme.textMuted)
                         .lineLimit(1)
                 }
+                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { titleFrame = $0 }
                 .frame(maxWidth: .infinity)
                 .padding(.top, Space.l)
                 // Tap the title to read what the episode is about.
@@ -126,13 +139,6 @@ struct NowPlayingView: View {
             }
             .padding(.horizontal, Space.xxl)
             .padding(.top, Space.s)
-
-            // The ten fade steps, drawn from the Scene, across the full width. At accessibility
-            // text sizes they make room for the words; the Moon bar still says the volume.
-            if !typeSize.isAccessibilitySize {
-                FadeMarks(status: model.sleepStatus)
-                    .padding(.bottom, Space.xxl)
-            }
 
             // On the cut-paper ground: everything you touch.
             VStack(spacing: Space.l) {

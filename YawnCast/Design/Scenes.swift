@@ -8,17 +8,45 @@ enum SceneKind: String, CaseIterable {
 
 struct SceneBackground: View {
     let scene: SceneKind
+    /// The share of the Scene's ambient life that is out (`SceneLife`); 0 off Now Playing.
+    var life: Double = 0
+    /// Where the title is, in screen points: the life dims to nothing behind it.
+    var quiet: CGRect = .null
+    @Environment(\.theme) private var theme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 15, paused: reduceMotion)) { context in
-            Canvas(opaque: true) { canvas, size in
-                let t = reduceMotion ? 1_000 : context.date.timeIntervalSinceReferenceDate
-                SceneRenderer.draw(scene, in: &canvas, size: size, t: t)
-            }
+        // Nothing is drawn while the app is not in front (locked, or behind another app).
+        TimelineView(.animation(minimumInterval: 1.0 / 15, paused: reduceMotion || scenePhase != .active)) { context in
+            SceneCanvas(scene: scene, t: reduceMotion ? 1_000 : context.date.timeIntervalSinceReferenceDate, life: life, quiet: quiet, glow: theme.fadeMark)
         }
+        // One of them fades at a time, slowly enough to notice from the pillow.
+        .animation(Motion.lightsOut, value: life)
         .ignoresSafeArea()
         .accessibilityHidden(true)
+    }
+}
+
+/// The Scene and its life in one Canvas. `life` animates, so they fade rather than snap,
+/// also under Reduce Motion, where the timeline itself is stopped.
+private struct SceneCanvas: View, Animatable {
+    let scene: SceneKind
+    let t: Double
+    var life: Double
+    let quiet: CGRect
+    let glow: Color
+
+    var animatableData: Double {
+        get { life }
+        set { life = newValue }
+    }
+
+    var body: some View {
+        Canvas(opaque: true) { canvas, size in
+            SceneRenderer.draw(scene, in: &canvas, size: size, t: t)
+            if life > 0 { SceneLife.draw(scene, in: &canvas, size: size, t: t, life: life, quiet: quiet, glow: glow) }
+        }
     }
 }
 
@@ -36,11 +64,14 @@ struct ScenePreview: View {
 
 /// Full-screen background for a screen: the theme's scene, or its flat color.
 struct ScreenBackground: View {
+    /// Now Playing passes how much of the Scene's life is out; other screens leave it at 0.
+    var life: Double = 0
+    var quiet: CGRect = .null
     @Environment(\.theme) private var theme
 
     var body: some View {
         if let scene = theme.scene {
-            SceneBackground(scene: scene)
+            SceneBackground(scene: scene, life: life, quiet: quiet)
         } else {
             theme.bg.ignoresSafeArea()
         }
