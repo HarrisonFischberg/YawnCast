@@ -16,7 +16,8 @@ words keep their contrast over any Scene. Sleep is shown as ten lights that go o
   card or float (cover mats, the mini player, pinned year bands, the moon well); `text` for the one
   primary key on a screen and the current tab; `accent` only for the Moon bar and Moon key while Sleep
   is on.
-- Artwork is always `Radius.artwork` (8). The mini player is the only surface with a shadow.
+- Artwork is always `Radius.artwork` (8). Only the two floating surfaces have a shadow: the mini player
+  and the Undo toast that sits above it for a few seconds after an unsubscribe.
 - Now Playing stands its controls on a two-layer cut-paper ground (`GroundShape`, `raised` behind `bg`).
 
 ## Colour (`Theme.swift`)
@@ -62,7 +63,9 @@ the bar turns accent and carries −5 and +5 (−5 is disabled during the fade).
 `press` (key and card press), `move` (tabs, layout, reorder, rows appearing), `fade` (toasts, state
 changes in place), `lightsOut` (0.6 s, one fade mark going dark). The marks drift a few points at 15 fps.
 Reduce Motion: marks hold still and only cross-fade when one goes out; press and move animations are
-dropped; Scenes pause, as before. Haptics are unchanged.
+dropped; Scenes pause, as before. `Motion.moveUnlessReduced` is `move` for code with no view environment.
+Haptics are three named impacts (`Haptic.moon`, `.transport`, `.skip` in `Theme.swift`) plus the system
+`.selection` and `.success`. Every component's behaviour is listed in `docs/interaction-matrix.md`.
 
 ## Accessibility
 Identifiers are unchanged (`moonKey`, `sleepCountdown`, `sleepPlus5`, `pageDot-…`, and so on) and one is
