@@ -96,5 +96,13 @@ final class HomePagesUITests: XCTestCase {
         unsubscribe.tap()
         XCTAssertTrue(app.buttons["findPodcastKey"].waitForExistence(timeout: 5), "back to the empty Library")
         XCTAssertFalse(app.buttons["pageDot-Library"].exists, "pages hide when the Library is empty")
+
+        // The toast offers a way back, and Undo restores the show and its pages.
+        let undo = app.buttons["undoKey"]
+        XCTAssertTrue(undo.waitForExistence(timeout: 3), "Undo toast after unsubscribing")
+        undo.tap()
+        XCTAssertTrue(tile.waitForExistence(timeout: 5), "show is back after Undo")
+        XCTAssertTrue(app.buttons["pageDot-Library"].exists)
+        XCTAssertTrue(waitUntil(3) { !undo.exists }, "toast leaves once used")
     }
 }

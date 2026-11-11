@@ -41,6 +41,7 @@ struct ThemedRoot: View {
 struct RootView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         @Bindable var model = model
@@ -59,20 +60,30 @@ struct RootView: View {
         .tint(theme.text)
         // Once something is loaded, the player floats over every screen and stays there.
         .overlay(alignment: .bottom) {
-            if model.player.episode != nil {
-                // It floats a little above the bottom edge (v0.17, owner request), the same gap
-                // it keeps above the keyboard (which still pushes it up: only the container
-                // inset is ignored).
-                MiniPlayerDock()
-                    .padding(.horizontal, Space.xl)
-                    // Clears the home indicator with room to spare.
-                    .padding(.bottom, 28)
-                    .frame(maxWidth: .infinity)
-                    .ignoresSafeArea(.container, edges: .bottom)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            VStack(spacing: Space.s) {
+                // Above the mini player, in reach of a thumb, and clear of the back button.
+                if let undo = model.unsubscribed {
+                    UndoToast(message: "Unsubscribed from \(undo.show.title)") { model.undoUnsubscribe() }
+                        .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 8)))
+                }
+                if model.player.episode != nil {
+                    // It floats a little above the bottom edge (v0.17, owner request), the same gap
+                    // it keeps above the keyboard (which still pushes it up: only the container
+                    // inset is ignored).
+                    MiniPlayerDock()
+                        .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
+                }
             }
+            .padding(.horizontal, Space.xl)
+            // Clears the home indicator with room to spare.
+            .padding(.bottom, 28)
+            .frame(maxWidth: .infinity)
+            .ignoresSafeArea(.container, edges: .bottom)
         }
         .animation(.smooth(duration: 0.38), value: model.player.episode == nil)
+        .animation(Motion.fade, value: model.unsubscribed?.show.id)
+        // One success tap whenever a show lands in the Library (any + or Subscribe, or an Undo).
+        .sensoryFeedback(trigger: model.library.subscriptions.count) { old, new in new > old ? .success : nil }
         .overlay(alignment: .top) {
             if let note = model.addedNote {
                 Text(note)
@@ -82,7 +93,7 @@ struct RootView: View {
                     .padding(.vertical, Space.s)
                     .paper(seed: 1, fill: theme.surface)
                     .padding(.top, Space.s)
-                    .transition(.opacity.combined(with: .offset(y: -8)))
+                    .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: -8)))
                     .allowsHitTesting(false)
                     .accessibilityIdentifier("addedToast")
             }
@@ -92,5 +103,31 @@ struct RootView: View {
             NowPlayingView()
                 .environment(\.theme, theme)
         }
+    }
+}
+
+/// What just happened, with a way back: shown for a few seconds after a removal.
+struct UndoToast: View {
+    let message: String
+    let undo: () -> Void
+    @Environment(\.theme) private var theme
+
+    var body: some View {
+        HStack(spacing: Space.m) {
+            Text(message)
+                .font(Typo.caption)
+                .foregroundStyle(theme.text)
+                .lineLimit(2)
+            Spacer(minLength: 0)
+            Button("Undo", action: undo)
+                .font(Typo.headline)
+                .foregroundStyle(theme.text)
+                .frame(minWidth: 44, minHeight: 44)
+                .contentShape(Rectangle())
+                .accessibilityIdentifier("undoKey")
+        }
+        .padding(.leading, Space.l)
+        .padding(.trailing, Space.m)
+        .background { PaperShape(seed: 2).fill(theme.raised).shadow(color: .black.opacity(theme.shadowOpacity), radius: 10, y: 4) }
     }
 }

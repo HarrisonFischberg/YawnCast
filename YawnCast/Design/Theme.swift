@@ -308,6 +308,21 @@ enum Motion {
     static let fade = Animation.easeOut(duration: 0.2)
     /// One fade mark going out: slow enough to notice from the pillow.
     static let lightsOut = Animation.easeOut(duration: 0.6)
+    /// `move` for code with no view environment (the model, drop delegates); nothing under Reduce Motion.
+    static var moveUnlessReduced: Animation? { UIAccessibility.isReduceMotionEnabled ? nil : move }
+    /// How long an Undo toast stays; longer with VoiceOver, which needs time to reach it.
+    static var undoLife: Duration { .seconds(UIAccessibility.isVoiceOverRunning ? 8 : 6) }
+}
+
+/// Haptic tokens: the app's few impacts, named for what they mean. Picker changes use the
+/// system `.selection` and confirmed saves `.success`; nothing else buzzes.
+enum Haptic {
+    /// Sleep turned on or off: the one firm tap, findable with eyes closed.
+    static let moon = SensoryFeedback.impact(weight: .heavy, intensity: 0.8)
+    /// Play or pause took effect.
+    static let transport = SensoryFeedback.impact(weight: .medium)
+    /// A 15 s skip.
+    static let skip = SensoryFeedback.impact(weight: .light)
 }
 
 /// Type ramp. Every style maps to a Dynamic Type text style so it scales.

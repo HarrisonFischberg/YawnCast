@@ -291,7 +291,6 @@ struct SearchResultsView: View {
                             .accessibilityIdentifier("addShow")
                         }
                     }
-                    .sensoryFeedback(trigger: subscribed) { _, added in added ? .success : nil }
                 }
             }
             .accessibilityElement(children: .contain)
