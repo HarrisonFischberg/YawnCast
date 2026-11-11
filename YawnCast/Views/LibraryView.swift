@@ -312,6 +312,8 @@ struct MiniPlayerDock: View {
                     }
                     Spacer(minLength: 0)
                 }
+                // A compact bar beside two fixed keys: the words stop growing here.
+                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)

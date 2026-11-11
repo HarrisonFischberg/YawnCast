@@ -10,6 +10,7 @@ import SwiftUI
 struct LookTabs: View {
     @Binding var selection: HomePage
     @Environment(\.theme) private var theme
+    @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -24,16 +25,20 @@ struct LookTabs: View {
                         .foregroundStyle(on ? theme.bg : theme.text)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
-                        .padding(.horizontal, Space.xl)
+                        .padding(.horizontal, typeSize.isAccessibilitySize ? Space.m : Space.xl)
                         .frame(minHeight: 44)
                         .paper(seed: index, fill: on ? theme.text : theme.surface)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(PressDim())
+                .accessibilityShowsLargeContentViewer { Text(page.title) }
                 .modifier(TabAccessibility(page: page, selected: on))
             }
             Spacer(minLength: 0)
         }
+        // Three tabs share one row; past this size they would truncate, so they stop
+        // growing and a long press shows the name large.
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Pages")
     }
@@ -153,16 +158,21 @@ struct LookMoonKey: View {
                 if case .waiting = status { AccentHeart() }
             }
             .accessibilityHidden(true)
-            Text(subtitle)
-                .font(.system(.subheadline, weight: .semibold))
-                .opacity(0.85)
-                .contentTransition(.numericText())
-                .accessibilityLabel(spoken)
-                .accessibilityHidden(!isOn)
-                .accessibilityIdentifier(isOn ? "sleepCountdown" : "sleepInvitation")
+            // The invitation is dropped at accessibility sizes, where the bar must stay on screen.
+            if isOn || !typeSize.isAccessibilitySize {
+                Text(subtitle)
+                    .font(.system(.subheadline, weight: .semibold))
+                    .opacity(0.85)
+                    .contentTransition(.numericText())
+                    .accessibilityLabel(spoken)
+                    .accessibilityHidden(!isOn)
+                    .accessibilityIdentifier(isOn ? "sleepCountdown" : "sleepInvitation")
+            }
         }
         .lineLimit(typeSize.isAccessibilitySize ? 3 : 1)
-        .minimumScaleFactor(0.75)
+        // "Lights going down" beside two step keys on a 375 pt phone needs to shrink this far.
+        .minimumScaleFactor(0.65)
+        .layoutPriority(1)
         .contentShape(Rectangle())
         .onTapGesture(perform: action)
     }

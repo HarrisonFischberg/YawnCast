@@ -127,8 +127,9 @@ struct ShowView: View {
                     : AnyLayout(HStackLayout(alignment: .top, spacing: Space.l))
                 layout {
                     ArtworkView(url: show.artworkURL, cornerRadius: Radius.artwork, title: show.title)
-                        .frame(width: 112, height: 112)
-                        .padding(Space.s)
+                        // Smaller when it stacks above the title, so the first episodes stay on screen.
+                        .frame(width: typeSize.isAccessibilitySize ? 72 : 112, height: typeSize.isAccessibilitySize ? 72 : 112)
+                        .padding(typeSize.isAccessibilitySize ? 0 : Space.s)
                         .paper(seed: 1, fill: theme.raised)
                     VStack(alignment: .leading, spacing: Space.xs) {
                         Text(show.title)
@@ -166,7 +167,8 @@ struct ShowView: View {
                     .accessibilityHint(expanded ? "Shows less of the description." : "Shows the full description.")
                 }
             }
-            .padding(Space.l)
+            // Tighter at the largest text sizes: every point of width saves a wrapped line.
+            .padding(typeSize.isAccessibilitySize ? Space.s : Space.l)
             .frame(maxWidth: .infinity, alignment: .leading)
             .paper(seed: 2, fill: theme.surface)
 

@@ -131,7 +131,7 @@ private struct FadeMarksCanvas: View, Animatable {
         switch motif {
         case .lanterns:
             let u = (x - w / 2) / (w / 2)
-            return 4 + 20 * (1 - u * u)
+            return 4 + (20 + drift(0, 0.6, 1.5)) * (1 - u * u) // the wire breathes a point or two
         case .fireflies: return 28 + CGFloat(sin(Double(i) * 1.3)) * 12 + drift(i, 0.9, 3)
         case .jellyfish: return 22 + CGFloat(sin(Double(i) * 0.9)) * 8 + drift(i, 0.7, 3)
         case .boats: return 40 + drift(i, 0.8, 1.5)

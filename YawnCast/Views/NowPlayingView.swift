@@ -12,10 +12,44 @@ struct NowPlayingView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
+        // The cover gives way first when the screen is short (a small phone, or the
+        // "Back to" key showing); past that, at the largest text sizes, the page scrolls.
+        ViewThatFits(in: .vertical) {
+            if !typeSize.isAccessibilitySize {
+                page(cover: 148)
+                page(cover: 88)
+                page(cover: 64)
+            }
+            page(cover: nil)
+            ScrollView { page(cover: nil) }.scrollIndicators(.hidden)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background { ScreenBackground() }
+        // Swipe down anywhere (not just the chevron) to drop back into the mini player.
+        .modifier(PullDownToDismiss { dismiss() })
+        // VoiceOver can't use the swipe; the two-finger scrub (escape) closes it too.
+        .accessibilityElement(children: .contain)
+        .accessibilityAction(.escape) { dismiss() }
+        .presentationBackground(.clear)
+        #if DEBUG
+        .overlay(alignment: .topTrailing) {
+            if ProcessInfo.processInfo.arguments.contains("-uitest") {
+                // Test-only readout of the live AVPlayer.volume.
+                Text(String(format: "%.2f", model.player.appliedGain))
+                    .font(.caption2)
+                    .foregroundStyle(.clear)
+                    .accessibilityIdentifier("debugGain")
+            }
+        }
+        #endif
+    }
+
+    /// The whole screen, with the cover at `cover` points or without one.
+    private func page(cover: CGFloat?) -> some View {
         let player = model.player
         let preview = model.preview
         let episode = preview ?? player.episode
-        VStack(spacing: 0) {
+        return VStack(spacing: 0) {
             // Over the Scene: the way out, the show's cover in a paper mat, the title.
             VStack(spacing: 0) {
                 HStack {
@@ -24,13 +58,12 @@ struct NowPlayingView: View {
                     Spacer()
                 }
                 Spacer(minLength: Space.s)
-                if !typeSize.isAccessibilitySize {
+                if let cover {
                     ArtworkView(url: episode?.artworkURL, cornerRadius: Radius.artwork, title: episode?.showTitle ?? "")
-                        .frame(minWidth: 64, maxWidth: 148, minHeight: 64, maxHeight: 148)
+                        .frame(width: cover, height: cover)
                         .padding(Space.s)
                         .paper(seed: 1, fill: theme.raised)
                         .rotationEffect(.degrees(-2))
-                        .layoutPriority(-1)
                 }
                 VStack(spacing: Space.xs) {
                     Text(episode?.title ?? "Nothing playing")
@@ -45,7 +78,7 @@ struct NowPlayingView: View {
                     Text(episode?.showTitle ?? "")
                         .font(Typo.caption)
                         .foregroundStyle(theme.textMuted)
-                        .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
+                        .lineLimit(1)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.top, Space.l)
@@ -94,9 +127,12 @@ struct NowPlayingView: View {
             .padding(.horizontal, Space.xxl)
             .padding(.top, Space.s)
 
-            // The ten fade steps, drawn from the Scene, across the full width.
-            FadeMarks(status: model.sleepStatus)
-                .padding(.bottom, Space.xxl)
+            // The ten fade steps, drawn from the Scene, across the full width. At accessibility
+            // text sizes they make room for the words; the Moon bar still says the volume.
+            if !typeSize.isAccessibilitySize {
+                FadeMarks(status: model.sleepStatus)
+                    .padding(.bottom, Space.xxl)
+            }
 
             // On the cut-paper ground: everything you touch.
             VStack(spacing: Space.l) {
@@ -134,7 +170,7 @@ struct NowPlayingView: View {
             .animation(Motion.fade, value: model.nightNote)
             .animation(reduceMotion ? Motion.fade : Motion.move, value: model.driftBackPosition)
             .padding(.horizontal, Space.xxl)
-            .padding(.top, Space.xxl)
+            .padding(.top, typeSize.isAccessibilitySize ? Space.l : Space.xxl)
             .padding(.bottom, Space.m)
             .background {
                 ZStack {
@@ -144,24 +180,6 @@ struct NowPlayingView: View {
                 .ignoresSafeArea(edges: .bottom)
             }
         }
-        .background { ScreenBackground() }
-        // Swipe down anywhere (not just the chevron) to drop back into the mini player.
-        .modifier(PullDownToDismiss { dismiss() })
-        // VoiceOver can't use the swipe; the two-finger scrub (escape) closes it too.
-        .accessibilityElement(children: .contain)
-        .accessibilityAction(.escape) { dismiss() }
-        .presentationBackground(.clear)
-        #if DEBUG
-        .overlay(alignment: .topTrailing) {
-            if ProcessInfo.processInfo.arguments.contains("-uitest") {
-                // Test-only readout of the live AVPlayer.volume.
-                Text(String(format: "%.2f", model.player.appliedGain))
-                    .font(.caption2)
-                    .foregroundStyle(.clear)
-                    .accessibilityIdentifier("debugGain")
-            }
-        }
-        #endif
     }
 
     private func toastLabel(_ message: String) -> some View {

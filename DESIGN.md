@@ -66,8 +66,10 @@ dropped; Scenes pause, as before. Haptics are unchanged.
 
 ## Accessibility
 Identifiers are unchanged (`moonKey`, `sleepCountdown`, `sleepPlus5`, `pageDot-…`, and so on) and one is
-new (`fadeMarks`). Targets are 44 pt or more. At accessibility text sizes Now Playing hides the cover,
-the Moon bar stacks its keys under its words, and grids drop a column, as before.
+new (`fadeMarks`). Targets are 44 pt or more. At accessibility text sizes Now Playing hides the cover
+and the fade marks (the Moon bar still says the volume), the Moon bar stacks its keys under its words,
+the page tabs and the mini player's words stop growing at AX1, and grids drop a column. Now Playing drops
+to a smaller cover, then no cover, when the screen is short, and scrolls if it still does not fit.
 
 ## Screenshots
 `scripts/design_capture.sh [folder]` builds Debug and captures the main screens with `-synthetic`
