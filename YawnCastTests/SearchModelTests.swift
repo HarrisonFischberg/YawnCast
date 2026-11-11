@@ -292,6 +292,12 @@ struct SearchMessageTests {
     @MainActor func copy(error: Error, expected: String) {
         #expect(SearchModel.message(for: error) == expected)
     }
+
+    /// Show and Explore pages reuse the copy but must not blame "Search" for an unknown error.
+    @Test @MainActor func otherPagesNameTheirOwnFallback() {
+        #expect(ShowModel.message(for: URLError(.cannotFindHost)) == "Something went wrong. Try again.")
+        #expect(ShowModel.message(for: URLError(.notConnectedToInternet)) == Self.offline)
+    }
 }
 
 @MainActor

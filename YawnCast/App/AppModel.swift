@@ -445,7 +445,7 @@ final class AppModel {
         } catch is CancellationError {
             return
         } catch {
-            if explore.isEmpty { explorePhase = .failed(SearchModel.message(for: error)) }
+            if explore.isEmpty { explorePhase = .failed(SearchModel.message(for: error, fallback: "Something went wrong. Try again.")) }
         }
     }
 

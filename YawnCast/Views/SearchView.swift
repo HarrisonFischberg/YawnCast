@@ -74,7 +74,7 @@ final class SearchModel {
         }
     }
 
-    static func message(for error: Error) -> String {
+    static func message(for error: Error, fallback: String = "Search didn’t work. Try again.") -> String {
         if let error = error as? URLError {
             switch error.code {
             case .notConnectedToInternet, .networkConnectionLost, .dataNotAllowed:
@@ -91,7 +91,7 @@ final class SearchModel {
             case .http, .badResponse: return "The podcast directory isn’t responding right now."
             }
         }
-        return "Search didn’t work. Try again."
+        return fallback
     }
 }
 
