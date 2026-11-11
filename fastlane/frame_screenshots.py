@@ -18,7 +18,7 @@ SANS = next(p for p in [Path.home() / "Library/Fonts/Inter-Medium.otf", Path("/L
 
 CAPTIONS = {
     "1-nowplaying-city": ("Fall asleep to\nany podcast", "Tap the Moon and close your eyes."),
-    "2-library-underwater": ("Six animated\nnight scenes", "This one is Underwater, with fish drifting by."),
+    "2-library-underwater": ("Six animated\nnight scenes", "Pick a scene, like Underwater or Rainforest."),
     "3-new-beach": ("New episodes,\nby day", "The latest from your shows, newest first."),
     "4-library-rainforest": ("Your shows in\na grid or a list", "Change the layout with one button."),
     "5-explore-mountain": ("Find shows to\ndrift off to", "Picks from your interests and the charts."),
