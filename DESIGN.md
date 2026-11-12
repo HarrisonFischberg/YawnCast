@@ -63,8 +63,8 @@ The Moon bar is one paper bar at the bottom: a 68 pt moon well that toggles Slee
 "Ready for bed?", "Sweet dreams" or "Lights going down" with the countdown or volume; while Sleep is on
 the bar turns accent. The Sleep bubble (`SleepBubble`, at its 1.0 size: 40 pt key faces, 44 pt to tap)
 pops up above the bar's right end when Sleep turns on, as −5 · 17 min · +5; −5 is disabled during the
-fade; each tap floats "+5 min" / "−5 min" up. After 4 quiet seconds it tucks into a small "±5" pill
-(`SleepBubblePill`) that reopens it; it stays open under VoiceOver. While Sleep is on, `FloatingZs`
+fade; each tap floats "+5 min" / "−5 min" up. After 4 quiet seconds it tucks into a small pill showing
+the time left, e.g. "17 min" (`SleepBubblePill`), and a tap pops it back up; it stays open under VoiceOver. While Sleep is on, `FloatingZs`
 rise out of the moon well, in every theme, drifting up past the skip-back key.
 Transport is round, as in 1.0: play/pause an 88 pt circle, skips 64 pt circles.
 

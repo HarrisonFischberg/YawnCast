@@ -55,27 +55,16 @@ struct SleepBubble: View {
     /// for the Moon bar's own line, which is what VoiceOver reads.
     private var readout: some View {
         HStack(alignment: .firstTextBaseline, spacing: 3) {
-            Text(parts.value)
+            Text(status.readout.value)
                 .font(Typo.title.monospacedDigit())
                 .contentTransition(.numericText())
-            Text(parts.unit)
+            Text(status.readout.unit)
                 .font(Typo.small)
                 .opacity(0.8)
         }
         .foregroundStyle(theme.text)
         .lineLimit(1)
         .accessibilityHidden(true)
-    }
-
-    private var parts: (value: String, unit: String) {
-        switch status {
-        case .off: return ("", "")
-        case .waiting(let t):
-            let text = TimeFormat.sleepDelay(t)
-            guard let space = text.firstIndex(of: " ") else { return (text, "") }
-            return (String(text[..<space]), String(text[text.index(after: space)...]))
-        case .fading(let level): return ("\(Int((level * 100).rounded()))", "%")
-        }
     }
 
     private func step(_ minutes: Int) {
@@ -109,16 +98,18 @@ struct StepKey: View {
     }
 }
 
-/// The tucked-away Sleep bubble: a small "±5" pill above the Moon bar. Tap it to bring
-/// the −5 / +5 keys back.
+/// The tucked-away Sleep bubble: a small pill above the Moon bar showing the time left
+/// ("17 min", or the volume while fading). Tap it to pop the −5 / +5 keys back up.
 struct SleepBubblePill: View {
+    let status: SleepStatus
     let onExpand: () -> Void
     @Environment(\.theme) private var theme
 
     var body: some View {
         Button(action: onExpand) {
-            Text("±5")
+            Text("\(status.readout.value) \(status.readout.unit)")
                 .font(.system(.footnote, weight: .semibold).monospacedDigit())
+                .contentTransition(.numericText())
                 .foregroundStyle(theme.text)
                 .padding(.horizontal, Space.m)
                 .frame(height: 30)
@@ -131,5 +122,19 @@ struct SleepBubblePill: View {
         .accessibilityLabel("Adjust Sleep")
         .accessibilityHint("Shows the add and remove 5 minutes keys.")
         .accessibilityIdentifier("sleepBubblePill")
+    }
+}
+
+private extension SleepStatus {
+    /// "17 min", "45 sec" or "40 %" as a number and its unit, for the bubble and its pill.
+    var readout: (value: String, unit: String) {
+        switch self {
+        case .off: return ("", "")
+        case .waiting(let t):
+            let text = TimeFormat.sleepDelay(t)
+            guard let space = text.firstIndex(of: " ") else { return (text, "") }
+            return (String(text[..<space]), String(text[text.index(after: space)...]))
+        case .fading(let level): return ("\(Int((level * 100).rounded()))", "%")
+        }
     }
 }
