@@ -151,22 +151,30 @@ struct NowPlayingView: View {
 
                 transport
 
-                // "Back to …" on the left (only while Sleep is off), a toast on the right.
-                // Stacked at accessibility sizes; the row is gone when both are.
-                let note = model.sleepStatus != .off ? model.nightNote : model.toast
+                // Above the Moon bar: "Back to …" on the left (only while Sleep is off); on the
+                // right the Sleep bubble while Sleep is on, or a toast. Stacked at accessibility
+                // sizes; the row is gone when it is empty.
+                let sleepOn = model.sleepStatus != .off
+                let note = sleepOn ? model.nightNote : model.toast
                 let marker = preview == nil ? model.driftBackPosition : nil
-                if marker != nil || note != nil {
+                if marker != nil || note != nil || sleepOn {
                     sleepRowLayout {
                         if let marker {
                             DriftBackKey(position: marker) { model.jumpToDriftBack() }
                         }
                         if !typeSize.isAccessibilitySize { Spacer(minLength: 0) }
-                        if let note { toastLabel(note) }
+                        if let note {
+                            toastLabel(note)
+                        } else if sleepOn {
+                            // −5 · 17 min · +5, for as long as Sleep is on.
+                            SleepBubble(status: model.sleepStatus) { model.adjustSleep(minutes: $0) }
+                                .transition(reduceMotion ? .opacity : .scale(scale: 0.7, anchor: .bottomTrailing).combined(with: .opacity))
+                        }
                     }
                     .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 6)))
                 }
 
-                MoonKey(status: model.sleepStatus, action: { model.toggleSleep() }, onAdjust: { model.adjustSleep(minutes: $0) })
+                MoonKey(status: model.sleepStatus) { model.toggleSleep() }
                     .disabled(player.episode == nil || preview != nil)
                     .sensoryFeedback(Haptic.moon, trigger: model.sleepStatus == .off)
                     .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)

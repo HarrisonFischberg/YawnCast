@@ -1,15 +1,13 @@
 import YawnCastCore
 import SwiftUI
 
-/// The signature control. One tap turns Sleep on; another turns it off, and
-/// −5 / +5 move the fade while it is on.
+/// The signature control. One tap turns Sleep on; another turns it off.
 struct MoonKey: View {
     let status: SleepStatus
     let action: () -> Void
-    let onAdjust: (Int) -> Void
 
     var body: some View {
-        LookMoonKey(status: status, action: action, onAdjust: onAdjust)
+        LookMoonKey(status: status, action: action)
     }
 
     static func accessibilityValue(for status: SleepStatus) -> String {
