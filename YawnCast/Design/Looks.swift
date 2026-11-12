@@ -90,10 +90,12 @@ nonisolated struct PaperShape: InsettableShape {
 struct LookMoonKey: View {
     let status: SleepStatus
     let action: () -> Void
+    var onAdjust: (Int) -> Void = { _ in }
 
     @Environment(\.theme) private var theme
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.isEnabled) private var isEnabled
+    private var variant: String? { SleepVariant.current }
 
     private var isOn: Bool { status != .off }
     private var ink: Color { isOn ? theme.onAccent : theme.text }
@@ -103,6 +105,50 @@ struct LookMoonKey: View {
     }
 
     var body: some View {
+        if variant == "c" { roundRow } else { bar }
+    }
+
+    /// Variant C: the Sleep row mirrors the transport row: −5 · moon · +5, all round.
+    private var roundRow: some View {
+        VStack(spacing: Space.s) {
+            HStack(spacing: Space.xl) {
+                if isOn {
+                    StepKey(minutes: -5, size: 56) { onAdjust(-5) }
+                        .disabled(isFading).opacity(isFading ? 0.4 : 1)
+                        .transition(.scale.combined(with: .opacity))
+                }
+                Button(action: action) {
+                    Image(systemName: isFading ? "moon.zzz.fill" : "moon.fill")
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundStyle(ink)
+                        .frame(width: 76, height: 76)
+                        .background(Circle().fill(isOn ? theme.accent : theme.surface))
+                        .contentShape(Circle())
+                }
+                .buttonStyle(PressDim())
+                .accessibilityLabel("Sleep")
+                .accessibilityValue(MoonKey.accessibilityValue(for: status))
+                .accessibilityIdentifier("moonKey")
+                if isOn {
+                    StepKey(minutes: 5, size: 56) { onAdjust(5) }
+                        .transition(.scale.combined(with: .opacity))
+                }
+            }
+            HStack(spacing: Space.s) {
+                Text(isOn ? "\(title) · \(subtitle)" : subtitle)
+                    .font(.system(.subheadline, weight: .semibold))
+                    .contentTransition(.numericText())
+                    .accessibilityIdentifier(isOn ? "sleepCountdown" : "sleepInvitation")
+            }
+            .foregroundStyle(theme.text)
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
+        }
+        .frame(maxWidth: .infinity)
+        .opacity(isEnabled ? 1 : 0.45)
+    }
+
+    private var bar: some View {
         HStack(spacing: Space.l) {
             Button(action: action) { well }
                 .buttonStyle(PressDim())
@@ -113,11 +159,22 @@ struct LookMoonKey: View {
                 .accessibilityIdentifier("moonKey")
             words
             Spacer(minLength: 0)
+            if variant == "b" && isOn {
+                // Variant B: the −5 / +5 keys live in the bar itself.
+                HStack(spacing: 2) {
+                    StepKey(minutes: -5) { onAdjust(-5) }
+                        .disabled(isFading).opacity(isFading ? 0.4 : 1)
+                    StepKey(minutes: 5) { onAdjust(5) }
+                }
+            }
         }
         .foregroundStyle(ink)
         .padding(Space.m)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .paper(seed: 2, fill: isOn ? theme.accent : theme.surface)
+        .background {
+            if variant == nil { PaperShape(seed: 2).fill(isOn ? theme.accent : theme.surface) }
+            else { Capsule().fill(isOn ? theme.accent : theme.surface) }
+        }
         .opacity(isEnabled ? 1 : 0.45)
         .accessibilityElement(children: .contain)
     }
@@ -159,7 +216,10 @@ struct LookMoonKey: View {
             .foregroundStyle(ink)
             .contentTransition(.symbolEffect(.replace))
             .frame(width: typeSize.isAccessibilitySize ? 52 : 68, height: typeSize.isAccessibilitySize ? 52 : 68)
-            .paper(seed: 0, fill: isOn ? Color.black.opacity(0.16) : theme.raised)
+            .background {
+                if variant == nil { PaperShape(seed: 0).fill(isOn ? Color.black.opacity(0.16) : theme.raised) }
+                else { Circle().fill(isOn ? Color.black.opacity(0.16) : theme.raised) }
+            }
             .contentShape(Rectangle())
     }
 

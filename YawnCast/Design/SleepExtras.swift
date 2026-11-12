@@ -89,17 +89,18 @@ struct SleepBubble: View {
 /// A round "−5" / "+5" key in the Sleep bubble: a 40 pt face, 44 pt to tap.
 struct StepKey: View {
     let minutes: Int
+    var size: CGFloat = 40
     let action: () -> Void
     @Environment(\.theme) private var theme
 
     var body: some View {
         Button(action: action) {
             Text(minutes > 0 ? "+5" : "−5")
-                .font(.system(.body, weight: .semibold).monospacedDigit())
+                .font(.system(size > 40 ? .title3 : .body, weight: .semibold).monospacedDigit())
                 .foregroundStyle(theme.text)
-                .frame(width: 40, height: 40)
+                .frame(width: size, height: size)
                 .background(Circle().fill(theme.surface))
-                .frame(width: 44, height: 44)
+                .frame(width: max(44, size), height: max(44, size))
                 .contentShape(Circle())
         }
         .buttonStyle(PressDim())

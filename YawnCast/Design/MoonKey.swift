@@ -5,9 +5,10 @@ import SwiftUI
 struct MoonKey: View {
     let status: SleepStatus
     let action: () -> Void
+    var onAdjust: (Int) -> Void = { _ in }
 
     var body: some View {
-        LookMoonKey(status: status, action: action)
+        LookMoonKey(status: status, action: action, onAdjust: onAdjust)
     }
 
     static func accessibilityValue(for status: SleepStatus) -> String {
@@ -34,4 +35,13 @@ struct AccentHeart: View {
         }
         .font(.system(size: size, weight: .semibold))
     }
+}
+
+/// Prototype only: `-sleepVariant a|b|c` picks one of the round Sleep designs for review.
+enum SleepVariant {
+    static let current: String? = {
+        let args = ProcessInfo.processInfo.arguments
+        guard let i = args.firstIndex(of: "-sleepVariant"), i + 1 < args.count else { return nil }
+        return args[i + 1]
+    }()
 }
