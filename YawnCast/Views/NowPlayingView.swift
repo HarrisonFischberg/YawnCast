@@ -197,7 +197,12 @@ struct NowPlayingView: View {
                     .onChange(of: model.sleepStatus == .off) { _, isOff in
                         if !isOff { bubbleOpen = true; scheduleTuck() }
                     }
-                    .onAppear { if model.sleepStatus != .off { scheduleTuck() } }
+                    // After 10 PM Sleep turns itself on and "It's late, so Sleep is on." takes this
+                    // slot for a few seconds; open the full pill once it goes, then tuck as usual.
+                    .onChange(of: model.nightNote == nil) { _, cleared in
+                        if cleared && model.sleepStatus != .off { bubbleOpen = true; scheduleTuck() }
+                    }
+                    .onAppear { if model.sleepStatus != .off { bubbleOpen = true; scheduleTuck() } }
             }
             .animation(reduceMotion ? Motion.fade : Motion.pop, value: model.sleepStatus == .off)
             .animation(reduceMotion ? Motion.fade : Motion.pop, value: bubbleOpen)
