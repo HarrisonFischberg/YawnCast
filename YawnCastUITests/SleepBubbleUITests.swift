@@ -38,9 +38,6 @@ final class SleepBubbleUITests: XCTestCase {
         XCTAssertTrue(waitUntil(3) { countdown.label.hasSuffix("sec") }, "minus five: \(countdown.label)")
         app.buttons["sleepMinus5"].tap()
         XCTAssertTrue(waitUntil(5) { countdown.label.hasPrefix("Fading") }, "fade starts now: \(countdown.label)")
-        // The bubble may have tucked away while the fade started.
-        if app.buttons["sleepBubblePill"].exists { app.buttons["sleepBubblePill"].tap() }
-        XCTAssertTrue(app.buttons["sleepMinus5"].waitForExistence(timeout: 3))
         XCTAssertFalse(app.buttons["sleepMinus5"].isEnabled, "minus is off while fading")
 
         app.buttons["moonKey"].tap()

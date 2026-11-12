@@ -383,7 +383,7 @@ enum Typo {
         case .pictureBook: .custom("YoungSerif-Regular", size: 15, relativeTo: .subheadline)
         }
     }
-    /// Small text in the style's own face: the Sleep bubble's unit and its "+5 min" echo.
+    /// Small text in the style's own face: the "+5 min" echo over the Moon bar.
     static var small: Font {
         switch style {
         case .signOff: .custom("ArchivoExpanded-ExtraBold", size: 10, relativeTo: .caption2)

@@ -11,10 +11,6 @@ struct NowPlayingView: View {
     @State private var showingAbout = false
     /// Where the title sits on screen, so the Scene's life keeps clear of the words.
     @State private var titleFrame = CGRect.null
-    /// The Sleep bubble opens with Sleep and tucks into a small pill after a few quiet
-    /// seconds (not under VoiceOver); tapping the pill brings it back.
-    @State private var bubbleOpen = true
-    @State private var tuckTask: Task<Void, Never>?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -155,57 +151,36 @@ struct NowPlayingView: View {
 
                 transport
 
-                // Sleep, the point of the app, is the biggest thing here. Above the Moon bar:
-                // "Back to …" on the left (only while Sleep is off); on the right the Sleep
-                // bubble while Sleep is on, or a toast. Stacked at accessibility sizes; the
-                // row is gone when it is empty.
-                VStack(spacing: Space.s) {
-                    let sleepOn = model.sleepStatus != .off
-                    let note = sleepOn ? model.nightNote : model.toast
-                    let marker = preview == nil ? model.driftBackPosition : nil
-                    if marker != nil || note != nil || sleepOn {
-                        sleepRowLayout {
-                            if let marker {
-                                DriftBackKey(position: marker) { model.jumpToDriftBack() }
-                            }
-                            if !typeSize.isAccessibilitySize { Spacer(minLength: 0) }
-                            if let note {
-                                toastLabel(note)
-                            } else if sleepOn && bubbleOpen {
-                                // −5 · 17 min · +5, then tucks away.
-                                SleepBubble(status: model.sleepStatus) { model.adjustSleep(minutes: $0); scheduleTuck() }
-                                    .transition(reduceMotion ? .opacity : .scale(scale: 0.7, anchor: .bottomTrailing).combined(with: .opacity))
-                            } else if sleepOn {
-                                SleepBubblePill { bubbleOpen = true; scheduleTuck() }
-                                    .transition(.opacity)
-                            }
+                // "Back to …" on the left (only while Sleep is off), a toast on the right.
+                // Stacked at accessibility sizes; the row is gone when both are.
+                let note = model.sleepStatus != .off ? model.nightNote : model.toast
+                let marker = preview == nil ? model.driftBackPosition : nil
+                if marker != nil || note != nil {
+                    sleepRowLayout {
+                        if let marker {
+                            DriftBackKey(position: marker) { model.jumpToDriftBack() }
                         }
-                        .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 6)))
+                        if !typeSize.isAccessibilitySize { Spacer(minLength: 0) }
+                        if let note { toastLabel(note) }
                     }
+                    .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 6)))
+                }
 
-                    MoonKey(status: model.sleepStatus) { model.toggleSleep() }
-                        .disabled(player.episode == nil || preview != nil)
-                        .sensoryFeedback(Haptic.moon, trigger: model.sleepStatus == .off)
-                        .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
-                        .overlay(alignment: .topLeading) {
-                            if model.sleepStatus != .off {
-                                // z's rise out of the moon and float up the screen, in every theme.
-                                FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
-                                    .frame(width: 130, height: 360)
-                                    .offset(x: 8, y: -336)
-                                    .transition(.opacity)
-                            }
+                MoonKey(status: model.sleepStatus, action: { model.toggleSleep() }, onAdjust: { model.adjustSleep(minutes: $0) })
+                    .disabled(player.episode == nil || preview != nil)
+                    .sensoryFeedback(Haptic.moon, trigger: model.sleepStatus == .off)
+                    .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
+                    .overlay(alignment: .topLeading) {
+                        if model.sleepStatus != .off {
+                            // z's rise out of the moon and float up, in every theme. Kept below the transport keys.
+                            FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
+                                .frame(width: 90, height: 150)
+                                .offset(x: 8, y: -140)
+                                .transition(.opacity)
                         }
-                }
-                .onChange(of: model.sleepStatus == .off) { _, isOff in
-                    if !isOff { bubbleOpen = true; scheduleTuck() }
-                }
-                .onAppear { if model.sleepStatus != .off { scheduleTuck() } }
-                // A wider gap than inside either group, so transport and Sleep read as two groups.
-                .padding(.top, Space.s)
+                    }
             }
-            .animation(reduceMotion ? Motion.fade : Motion.pop, value: model.sleepStatus == .off)
-            .animation(reduceMotion ? Motion.fade : Motion.pop, value: bubbleOpen)
+            .animation(reduceMotion ? Motion.fade : Motion.move, value: model.sleepStatus == .off)
             .animation(Motion.fade, value: model.toast)
             .animation(Motion.fade, value: model.nightNote)
             .animation(reduceMotion ? Motion.fade : Motion.move, value: model.driftBackPosition)
@@ -222,16 +197,6 @@ struct NowPlayingView: View {
         }
     }
 
-    /// Tucks the Sleep bubble away after a few quiet seconds. VoiceOver users keep it open.
-    private func scheduleTuck() {
-        tuckTask?.cancel()
-        guard !UIAccessibility.isVoiceOverRunning else { return }
-        tuckTask = Task {
-            try? await Task.sleep(for: .seconds(4))
-            if !Task.isCancelled { bubbleOpen = false }
-        }
-    }
-
     private func toastLabel(_ message: String) -> some View {
         Text(message)
             .font(Typo.caption)
@@ -243,17 +208,18 @@ struct NowPlayingView: View {
             .accessibilityHidden(true) // announced via UIAccessibility
     }
 
+    /// Round keys, as in 1.0: the one place on Now Playing that is not cut paper.
     private var transport: some View {
         let player = model.player
         let preview = model.preview
         // Previewing: Play starts the previewed episode; the rest waits for it.
         let playing = preview == nil && player.isPlaying
-        return HStack(spacing: Space.l) {
+        return HStack(spacing: Space.xl) {
             Button { player.skip(by: -15); skipTaps += 1 } label: {
-                Image(systemName: "gobackward.15").font(.system(size: 21, weight: .semibold))
+                Image(systemName: "gobackward.15").font(.system(size: 24, weight: .semibold))
             }
-            .buttonStyle(.roundKey())
-            .frame(width: 56, height: 52)
+            .buttonStyle(KeyStyle(shape: Circle()))
+            .frame(width: 64, height: 64)
             .disabled(preview != nil)
             .accessibilityLabel("Back 15 seconds")
 
@@ -262,16 +228,16 @@ struct NowPlayingView: View {
             } label: {
                 ZStack {
                     if preview == nil && player.isBuffering {
-                        ProgressView().tint(theme.bg)
+                        ProgressView().tint(theme.bg).controlSize(.large)
                     } else {
                         Image(systemName: playing ? "pause.fill" : "play.fill")
-                            .font(.system(size: 22, weight: .bold))
+                            .font(.system(size: 30, weight: .bold))
                             .contentTransition(.symbolEffect(.replace))
                     }
                 }
             }
-            .buttonStyle(.roundKey(.primary, depth: 6))
-            .frame(width: 80, height: 52)
+            .buttonStyle(KeyStyle(shape: Circle(), role: .primary))
+            .frame(width: 88, height: 88)
             .disabled(player.episode == nil)
             .accessibilityLabel(playing ? "Pause" : "Play")
             .accessibilityValue(preview == nil && player.isBuffering ? "Loading" : "")
@@ -279,10 +245,10 @@ struct NowPlayingView: View {
             .sensoryFeedback(Haptic.transport, trigger: playing)
 
             Button { player.skip(by: 15); skipTaps += 1 } label: {
-                Image(systemName: "goforward.15").font(.system(size: 21, weight: .semibold))
+                Image(systemName: "goforward.15").font(.system(size: 24, weight: .semibold))
             }
-            .buttonStyle(.roundKey())
-            .frame(width: 56, height: 52)
+            .buttonStyle(KeyStyle(shape: Circle()))
+            .frame(width: 64, height: 64)
             .disabled(preview != nil)
             .accessibilityLabel("Forward 15 seconds")
         }
