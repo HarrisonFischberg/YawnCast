@@ -49,7 +49,7 @@ struct ExploreView: View {
 
                 recommendations(topPicksOnly: false)
 
-                Text("Suggestions use the Apple Podcasts genres and titles of the shows you save, Apple’s public charts, and directory search. Nothing about you is stored or sent anywhere else.")
+                Text("Suggestions use the Apple Podcasts genres and titles of the shows you save, Apple’s public charts, and directory search. Searches and the shows you follow are looked up with Apple’s podcast directory, and episodes come straight from each podcast’s own servers. YawnCast has no server and keeps your library on this iPhone.")
                     .font(Typo.caption)
                     .foregroundStyle(theme.textMuted)
             }

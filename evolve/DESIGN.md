@@ -212,7 +212,7 @@ Talk about bedtime, not features. Examples from the code:
 - Sleep: "Sleep" / "Fade out, then pause"; "Sleep on" / "Fade begins in 11 min"; "Drifting off" / "Volume 60%"
 - Errors that say what to do: "Couldn’t reach your shows. Check your connection and pull to try again."
 - Progress: "Checking your shows…", "Finding shows you might like…"
-- Honest privacy: "Nothing about you is stored or sent anywhere else."
+- Honest privacy: "YawnCast has no server and keeps your library on this iPhone."
 - Search placeholder: "Search your shows or find new ones"
 
 ## 11. Do / Don't for new features
