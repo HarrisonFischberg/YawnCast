@@ -84,21 +84,16 @@ nonisolated struct PaperShape: InsettableShape {
 
 // MARK: - Moon key
 
-/// The Moon key: one paper bar. The moon turns Sleep on and off; while it is on the
-/// bar takes the accent and carries the status and the −5 / +5 keys. The ten fade
-/// steps live in `FadeMarks`, drawn from the Scene.
+/// The Moon bar: the largest control on Now Playing. The moon turns Sleep on and off;
+/// while it is on the bar takes the accent and says what will happen. The −5 / +5 keys
+/// live in the `SleepBubble` that pops up above it.
 struct LookMoonKey: View {
     let status: SleepStatus
     let action: () -> Void
-    let onAdjust: (Int) -> Void
 
     @Environment(\.theme) private var theme
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.isEnabled) private var isEnabled
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    /// The step just taken, floating up and fading out, so the step size is never a guess.
-    @State private var echo: (text: String, id: Int)?
-    @State private var echoRising = false
 
     private var isOn: Bool { status != .off }
     private var ink: Color { isOn ? theme.onAccent : theme.text }
@@ -108,43 +103,16 @@ struct LookMoonKey: View {
     }
 
     var body: some View {
-        // Stacked at accessibility sizes, so the status never truncates beside the keys.
-        let layout = typeSize.isAccessibilitySize
-            ? AnyLayout(VStackLayout(alignment: .leading, spacing: Space.s))
-            : AnyLayout(HStackLayout(spacing: Space.s))
-        layout {
-            HStack(spacing: Space.m) {
-                Button(action: action) { well }
-                    .buttonStyle(PressDim())
-                    .accessibilityLabel("Sleep")
-                    .accessibilityValue(MoonKey.accessibilityValue(for: status))
-                    .accessibilityHint(isOn ? "Turns Sleep off and restores volume." : "Fades the episode out, then pauses.")
-                    .accessibilityAddTraits(isOn ? .isSelected : [])
-                    .accessibilityIdentifier("moonKey")
-                words
-                Spacer(minLength: 0)
-            }
-            if isOn {
-                HStack(spacing: Space.s) {
-                    StepKey(minutes: -5, ink: ink) { step(-5) }
-                        .disabled(isFading)
-                        .opacity(isFading ? 0.4 : 1)
-                    StepKey(minutes: 5, ink: ink) { step(5) }
-                }
-                .overlay(alignment: .top) {
-                    if let echo {
-                        Text(echo.text)
-                            .font(Typo.small)
-                            .offset(y: echoRising && !reduceMotion ? -34 : -16)
-                            .opacity(echoRising ? 0 : 1)
-                            .id(echo.id)
-                            .fixedSize()
-                            .allowsHitTesting(false)
-                            .accessibilityHidden(true)
-                    }
-                }
-                .transition(.opacity)
-            }
+        HStack(spacing: Space.l) {
+            Button(action: action) { well }
+                .buttonStyle(PressDim())
+                .accessibilityLabel("Sleep")
+                .accessibilityValue(MoonKey.accessibilityValue(for: status))
+                .accessibilityHint(isOn ? "Turns Sleep off and restores volume." : "Fades the episode out, then pauses.")
+                .accessibilityAddTraits(isOn ? .isSelected : [])
+                .accessibilityIdentifier("moonKey")
+            words
+            Spacer(minLength: 0)
         }
         .foregroundStyle(ink)
         .padding(Space.m)
@@ -157,12 +125,16 @@ struct LookMoonKey: View {
     /// The status beside the moon. Tapping it works the moon too; VoiceOver reads the
     /// countdown as its own element, after the Sleep key.
     private var words: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            HStack(spacing: Space.s) {
-                Text(title).font(Typo.title).textCase(Typo.titleCase)
-                if case .waiting = status { AccentHeart() }
+        VStack(alignment: .leading, spacing: Space.xs) {
+            // At accessibility sizes the bar has to stay on screen: while Sleep is on it keeps
+            // only the line that matters (the countdown), and the title is smaller while off.
+            if !(isOn && typeSize.isAccessibilitySize) {
+                HStack(spacing: Space.s) {
+                    Text(title).font(typeSize.isAccessibilitySize ? Typo.title : Typo.sectionTitle).textCase(Typo.titleCase)
+                    if case .waiting = status { AccentHeart() }
+                }
+                .accessibilityHidden(true)
             }
-            .accessibilityHidden(true)
             // The invitation is dropped at accessibility sizes, where the bar must stay on screen.
             if isOn || !typeSize.isAccessibilitySize {
                 Text(subtitle)
@@ -175,7 +147,6 @@ struct LookMoonKey: View {
             }
         }
         .lineLimit(typeSize.isAccessibilitySize ? 3 : 1)
-        // "Lights going down" beside two step keys on a 375 pt phone needs to shrink this far.
         .minimumScaleFactor(0.65)
         .layoutPriority(1)
         .contentShape(Rectangle())
@@ -184,19 +155,12 @@ struct LookMoonKey: View {
 
     private var well: some View {
         Image(systemName: isFading ? "moon.zzz.fill" : "moon.fill")
-            .font(.system(size: 22, weight: .bold))
+            .font(.system(size: 30, weight: .bold))
             .foregroundStyle(ink)
             .contentTransition(.symbolEffect(.replace))
-            .frame(width: 48, height: 48)
+            .frame(width: typeSize.isAccessibilitySize ? 52 : 68, height: typeSize.isAccessibilitySize ? 52 : 68)
             .paper(seed: 0, fill: isOn ? Color.black.opacity(0.16) : theme.raised)
             .contentShape(Rectangle())
-    }
-
-    private func step(_ minutes: Int) {
-        onAdjust(minutes)
-        echo = (minutes > 0 ? "+5 min" : "−5 min", (echo?.id ?? 0) + 1)
-        echoRising = false
-        withAnimation(.easeOut(duration: 0.9)) { echoRising = true }
     }
 
     private var title: String {
