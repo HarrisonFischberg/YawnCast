@@ -172,7 +172,7 @@ struct NowPlayingView: View {
                     .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
                     .overlay(alignment: .topLeading) {
                         if model.sleepStatus != .off {
-                            // z's rise out of the moon and float up, in every theme. Kept below the transport keys.
+                            // z's rise out of the moon and float up past the skip key, in every theme.
                             FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
                                 .frame(width: 90, height: 150)
                                 .offset(x: 8, y: -140)

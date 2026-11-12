@@ -63,7 +63,7 @@ The Moon bar is one paper bar at the bottom: a 48 pt moon well that toggles Slee
 "Ready for bed?", "Sweet dreams" or "Lights going down" with the countdown or volume; while Sleep is on
 the bar turns accent and carries the −5 and +5 keys at its right end (`StepKey`, 44 pt; −5 is disabled
 during the fade; each tap floats "+5 min" / "−5 min" up). There is no separate Sleep bubble. While
-Sleep is on, `FloatingZs` rise out of the moon well, in every theme, stopping below the transport keys.
+Sleep is on, `FloatingZs` rise out of the moon well, in every theme, drifting up past the skip-back key.
 Transport is round, as in 1.0: play/pause an 88 pt circle, skips 64 pt circles.
 
 ## Motion (`Motion` in `Theme.swift`)
