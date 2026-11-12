@@ -197,6 +197,11 @@ struct NowPlayingView: View {
                     .onChange(of: model.sleepStatus == .off) { _, isOff in
                         if !isOff { bubbleOpen = true; scheduleTuck() }
                     }
+                    // Late at night the "It's late" note takes the bubble's place first; when it
+                    // clears, the bubble still opens with −5 / +5 before it tucks.
+                    .onChange(of: model.nightNote) { _, note in
+                        if note == nil && model.sleepStatus != .off { bubbleOpen = true; scheduleTuck() }
+                    }
                     .onAppear { if model.sleepStatus != .off { scheduleTuck() } }
             }
             .animation(reduceMotion ? Motion.fade : Motion.pop, value: model.sleepStatus == .off)
