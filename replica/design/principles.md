@@ -1,5 +1,7 @@
 # Design principles and themes
 
+> Superseded: the design that ships is described in `DESIGN.md` at the repo root (Lights Out). This file is kept as a record.
+
 All visual decisions here are **original [P]**. No screenshots of reference apps were
 available, so nothing below claims to reproduce a measured reference layout.
 

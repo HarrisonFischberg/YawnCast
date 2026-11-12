@@ -2,8 +2,8 @@ import YawnCastCore
 import SwiftUI
 import UIKit
 
-/// Middle home page: subscribed shows. Large, small or list layout; press,
-/// hold and drag a show to reorder.
+/// Middle home page: subscribed shows on paper cards. Large, small or list
+/// layout; press, hold and drag a show to reorder.
 struct LibraryView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
@@ -12,6 +12,7 @@ struct LibraryView: View {
     @State private var draggingID: String?
     /// Last time a drag moved over the grid; a drag dropped outside never reports its end.
     @State private var lastDragActivity = Date()
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var columns: [GridItem] {
         let count: Int
@@ -20,7 +21,7 @@ struct LibraryView: View {
         case .small: count = typeSize.isAccessibilitySize ? 2 : 3
         case .list: count = 1
         }
-        let spacing = model.libraryLayout == .small ? Space.m : Space.xl
+        let spacing = model.libraryLayout == .small ? Space.s : Space.m
         return Array(repeating: GridItem(.flexible(), spacing: spacing, alignment: .top), count: count)
     }
 
@@ -28,31 +29,25 @@ struct LibraryView: View {
         @Bindable var model = model
         SearchablePage(page: .library) {
         ScrollView {
-            VStack(alignment: .leading, spacing: Space.xxl) {
+            VStack(alignment: .leading, spacing: Space.l) {
                 header
-                if !model.library.subscriptions.isEmpty {
-                    // Filters saved shows only; new shows are found from Explore.
-                    SearchCapsule(placeholder: "Search your shows", identifier: "librarySearch") {
-                        model.openSearch()
-                    }
-                    .padding(.top, -Space.s)
-                }
                 if model.library.subscriptions.isEmpty {
                     emptyState
                 } else {
                     LazyVGrid(
                         columns: columns,
                         alignment: .leading,
-                        spacing: model.libraryLayout == .list ? Space.s : (model.libraryLayout == .small ? Space.l : Space.xxl)
+                        spacing: model.libraryLayout == .list ? Space.s : Space.m
                     ) {
                         ForEach(model.library.subscriptions) { show in
                             item(show)
                         }
                     }
                     .onDrop(of: [.text], isTargeted: nil) { _ in draggingID = nil; return true }
-                    .animation(.spring(response: 0.35, dampingFraction: 0.8), value: model.library.subscriptions.map(\.id))
-                    .sensoryFeedback(.selection, trigger: model.library.subscriptions.map(\.id))
-                    .animation(.spring(response: 0.35, dampingFraction: 0.85), value: model.libraryLayout)
+                    .animation(reduceMotion ? nil : Motion.move, value: model.library.subscriptions.map(\.id))
+                    // A tick per slot while reordering; adding or removing a show has its own feedback.
+                    .sensoryFeedback(trigger: model.library.subscriptions.map(\.id)) { old, new in old.count == new.count ? .selection : nil }
+                    .animation(reduceMotion ? nil : Motion.move, value: model.libraryLayout)
                 }
             }
             .padding(.horizontal, Space.xl)
@@ -82,7 +77,7 @@ struct LibraryView: View {
             switch model.libraryLayout {
             case .large: ShowTile(show: show, hasNew: model.hasNewEpisode(show))
             case .small: ShowTile(show: show, hasNew: model.hasNewEpisode(show), compact: true)
-            case .list: ShowListRow(show: show, hasNew: model.hasNewEpisode(show))
+            case .list: ShowListRow(show: show, hasNew: model.hasNewEpisode(show), seed: show.id.count)
             }
         }
         .buttonStyle(TileStyle())
@@ -94,7 +89,7 @@ struct LibraryView: View {
             lastDragActivity = Date()
             return NSItemProvider(object: show.id as NSString)
         } preview: {
-            ArtworkView(url: show.artworkURL, cornerRadius: 12, title: show.title)
+            ArtworkView(url: show.artworkURL, cornerRadius: Radius.artwork, title: show.title)
                 .frame(width: 96, height: 96)
         }
         .onDrop(of: [.text], delegate: ReorderDropDelegate(target: show, draggingID: $draggingID, lastActivity: $lastDragActivity, model: model))
@@ -109,27 +104,24 @@ struct LibraryView: View {
         .accessibilityAction(named: "Move to End") { model.moveToEnd(show) }
     }
 
+    /// One row of tools: search, layout, themes. The page's name is its tab.
     private var header: some View {
-        HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: Space.xs) {
-                Text("Library")
-                    .font(Typo.display)
-                    .textCase(Typo.titleCase)
-                    .foregroundStyle(theme.text)
-                    .accessibilityAddTraits(.isHeader)
-            }
-            Spacer()
-            HStack(spacing: Space.m) {
-                if !model.library.subscriptions.isEmpty {
-                    IconKey(systemName: model.libraryLayout.symbol, label: "Layout: \(model.libraryLayout.title). Switch to \(model.libraryLayout.next.title)") {
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { model.libraryLayout = model.libraryLayout.next }
-                    }
-                    .accessibilityIdentifier("layoutKey")
-                    .sensoryFeedback(.selection, trigger: model.libraryLayout)
+        HStack(spacing: Space.s) {
+            if model.library.subscriptions.isEmpty {
+                Spacer()
+            } else {
+                // Filters saved shows only; new shows are found from Explore.
+                SearchCapsule(placeholder: "Search your shows", identifier: "librarySearch") {
+                    model.openSearch()
                 }
-                IconKey(systemName: "circle.lefthalf.filled", label: "Themes") { model.isThemesPresented = true }
-                    .accessibilityIdentifier("themesKey")
+                IconKey(systemName: model.libraryLayout.symbol, label: "Layout: \(model.libraryLayout.title). Switch to \(model.libraryLayout.next.title)") {
+                    withAnimation(reduceMotion ? nil : Motion.move) { model.libraryLayout = model.libraryLayout.next }
+                }
+                .accessibilityIdentifier("layoutKey")
+                .sensoryFeedback(.selection, trigger: model.libraryLayout)
             }
+            IconKey(systemName: "circle.lefthalf.filled", label: "Themes") { model.isThemesPresented = true }
+                .accessibilityIdentifier("themesKey")
         }
         .padding(.top, Space.s)
     }
@@ -178,11 +170,13 @@ extension LibraryLayout {
 struct ShowListRow: View {
     let show: Show
     var hasNew = false
+    /// Which paper cut the row gets.
+    var seed = 0
     @Environment(\.theme) private var theme
 
     var body: some View {
         HStack(spacing: Space.m) {
-            ArtworkView(url: show.artworkURL, cornerRadius: 10, title: show.title)
+            ArtworkView(url: show.artworkURL, cornerRadius: Radius.artwork, title: show.title)
                 .frame(width: 60, height: 60)
                 .overlay(alignment: .topTrailing) { if hasNew { NewPip(size: 14) } }
             VStack(alignment: .leading, spacing: 2) {
@@ -202,7 +196,7 @@ struct ShowListRow: View {
                 .accessibilityHidden(true)
         }
         .padding(Space.s)
-        .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(theme.surface.opacity(0.7)))
+        .paper(seed: seed, fill: theme.surface)
         .contentShape(Rectangle())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(show.author.map { "\(show.title), \($0)" } ?? show.title)
@@ -226,6 +220,8 @@ struct NewPip: View {
     }
 }
 
+/// A show on its own paper card: cover, title, author. Opaque, so the words read
+/// over any Scene.
 struct ShowTile: View {
     let show: Show
     var hasNew = false
@@ -235,57 +231,42 @@ struct ShowTile: View {
     @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
-        VStack(alignment: .leading, spacing: compact ? Space.xs : Space.s) {
-            ArtworkView(url: show.artworkURL, cornerRadius: theme.style.artworkRadius, title: show.title)
-                .modifier(ArtworkMat(seed: show.id.unicodeScalars.reduce(0) { $0 &+ Int($1.value) }, compact: compact))
-                .overlay(alignment: .topTrailing) { if hasNew { NewPip(size: compact ? 14 : 18) } }
-            Text(show.title)
-                .font(compact ? Typo.caption : Typo.headline)
-                .foregroundStyle(theme.text)
-                .lineLimit(typeSize.isAccessibilitySize ? 4 : 2)
-                .multilineTextAlignment(.leading)
-            if !compact, let author = show.author {
-                Text(author)
-                    .font(Typo.caption)
-                    .foregroundStyle(theme.textMuted)
-                    .lineLimit(1)
+        let pad = compact ? 6.0 : Space.s
+        VStack(alignment: .leading, spacing: pad) {
+            ArtworkView(url: show.artworkURL, cornerRadius: Radius.artwork, title: show.title)
+            // Room for a two-line title in every card, so a row of cards lines up.
+            ZStack(alignment: .topLeading) {
+                words(placeholder: true).hidden()
+                words(placeholder: false)
             }
+            .padding(.horizontal, compact ? 2 : Space.xs)
+            .padding(.bottom, compact ? 2 : Space.xs)
         }
+        .padding(pad)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .paper(seed: show.id.unicodeScalars.reduce(0) { $0 &+ Int($1.value) }, fill: theme.surface)
+        .overlay(alignment: .topTrailing) { if hasNew { NewPip(size: compact ? 14 : 18).offset(x: -4, y: 4) } }
         .accessibilityElement(children: .ignore)
         // Same label in every layout (compact cards hide the author visually).
         .accessibilityLabel(show.author.map { "\(show.title), \($0)" } ?? show.title)
         .accessibilityValue(hasNew ? "New episode" : "")
     }
-}
 
-/// What sits behind show artwork: Sign-Off frames it as a QSL card, Picture Book
-/// mounts it on a painted mat.
-struct ArtworkMat: ViewModifier {
-    let seed: Int
-    var compact = false
-    @Environment(\.theme) private var theme
-
-    func body(content: Content) -> some View {
-        let pad: CGFloat = compact ? 4 : 7
-        switch theme.style {
-        case .signOff:
-            content
-                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                .shadow(color: .black.opacity(theme.shadowOpacity * 0.6), radius: 8, y: 5)
-        case .pictureBook:
-            content
-                .padding(pad)
-                .background(PaperShape(seed: seed).fill(Self.paint(theme, seed)))
+    private func words(placeholder: Bool) -> some View {
+        let lines = typeSize.isAccessibilitySize ? 4 : 2
+        return VStack(alignment: .leading, spacing: 2) {
+            Text(placeholder ? " " : show.title)
+                .font(compact ? Typo.caption : Typo.headline)
+                .foregroundStyle(theme.text)
+                .lineLimit(lines, reservesSpace: placeholder && !typeSize.isAccessibilitySize)
+                .multilineTextAlignment(.leading)
+            if !compact, let author = show.author {
+                Text(placeholder ? " " : author)
+                    .font(Typo.caption)
+                    .foregroundStyle(theme.textMuted)
+                    .lineLimit(1)
+            }
         }
-    }
-
-    /// Painted mats: curtain red, mustard, night blue, leaf.
-    private static func paint(_ theme: Theme, _ seed: Int) -> Color {
-        let night = theme.colorScheme == .dark
-        let colors: [Color] = night
-            ? [Color(hex: 0xB5483A), Color(hex: 0xB8892E), Color(hex: 0x27406B), theme.raised]
-            : [Color(hex: 0xD2533F), Color(hex: 0xE0A93A), Color(hex: 0x2F5596), theme.raised]
-        return colors[abs(seed) % colors.count]
     }
 }
 
@@ -295,12 +276,12 @@ struct TileStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
-            .animation(reduceMotion ? nil : .spring(response: 0.2, dampingFraction: 0.7), value: configuration.isPressed)
+            .animation(reduceMotion ? nil : Motion.press, value: configuration.isPressed)
     }
 }
 
 /// The floating player: always on screen once something is loaded (it never
-/// hides or shrinks away). Compact by design — about 15% smaller than v0.9.
+/// hides or shrinks away): a strip of paper with the fade steps as ten dots.
 struct MiniPlayerDock: View {
     @Environment(AppModel.self) private var model
     @Environment(\.theme) private var theme
@@ -311,27 +292,33 @@ struct MiniPlayerDock: View {
     var body: some View {
         let player = model.player
         let sleepOn = model.sleepStatus != .off
-        HStack(spacing: 10) {
+        HStack(spacing: Space.s) {
             Button { model.isPlayerPresented = true } label: {
-                HStack(spacing: 10) {
-                    ArtworkView(url: player.episode?.artworkURL, cornerRadius: 7, title: player.episode?.showTitle ?? "")
-                        .frame(width: 40, height: 40)
-                    VStack(alignment: .leading, spacing: 1) {
+                HStack(spacing: Space.m) {
+                    ArtworkView(url: player.episode?.artworkURL, cornerRadius: Radius.artwork, title: player.episode?.showTitle ?? "")
+                        .frame(width: 44, height: 44)
+                    VStack(alignment: .leading, spacing: 3) {
                         Text(player.episode?.title ?? "")
-                            .font(.system(.subheadline, weight: .semibold))
+                            .font(Typo.dockTitle)
                             .foregroundStyle(theme.text)
                             .lineLimit(1)
-                        HStack(spacing: Space.xs) {
-                            Text(player.episode?.showTitle ?? "").lineLimit(1)
+                        // Sleep on: the ten fade steps take the show name's place.
+                        if sleepOn {
+                            FadeDots(status: model.sleepStatus).frame(height: 14)
+                        } else {
+                            Text(player.episode?.showTitle ?? "")
+                                .font(.system(.caption, weight: .medium))
+                                .foregroundStyle(theme.textMuted)
+                                .lineLimit(1)
                         }
-                        .font(.system(.caption, weight: .medium))
-                        .foregroundStyle(theme.textMuted)
                     }
                     Spacer(minLength: 0)
                 }
+                // A compact bar beside two fixed keys: the words stop growing here.
+                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
                 .contentShape(Rectangle())
             }
-            .buttonStyle(.plain)
+            .buttonStyle(PressDim())
             .accessibilityLabel("Now playing: \(player.episode?.title ?? "")")
             .accessibilityValue(model.sleepStatus == .off ? (player.episode?.showTitle ?? "") : "\(player.episode?.showTitle ?? ""), Sleep on")
             .accessibilityHint("Opens the player.")
@@ -355,18 +342,7 @@ struct MiniPlayerDock: View {
             .accessibilityShowsLargeContentViewer {
                 Label("Sleep", systemImage: "moon.fill")
             }
-            .sensoryFeedback(.impact(weight: .heavy, intensity: 0.8), trigger: moonTaps)
-            .overlay(alignment: .topLeading) {
-                if sleepOn {
-                    // The same z's as the big Moon key, smaller, drifting up off the mini player.
-                    FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
-                        .frame(width: 130, height: 300)
-                        .scaleEffect(0.7, anchor: .bottomLeading)
-                        .offset(x: 2, y: -286)
-                        .transition(.opacity)
-                }
-            }
-            .animation(.easeOut(duration: 0.3), value: sleepOn)
+            .sensoryFeedback(Haptic.moon, trigger: moonTaps)
 
             Button { player.togglePlayPause() } label: {
                 Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
@@ -380,14 +356,10 @@ struct MiniPlayerDock: View {
             .accessibilityShowsLargeContentViewer {
                 Label(player.isPlaying ? "Pause" : "Play", systemImage: player.isPlaying ? "pause.fill" : "play.fill")
             }
-            .sensoryFeedback(.impact(weight: .medium), trigger: player.isPlaying)
+            .sensoryFeedback(Haptic.transport, trigger: player.isPlaying)
         }
-        .padding(10)
-        .nightGlass(in: RoundedRectangle(cornerRadius: theme.style.cardRadius, style: .continuous)) {
-            RoundedRectangle(cornerRadius: theme.style.cardRadius, style: .continuous)
-                .fill(theme.raised)
-                .shadow(color: .black.opacity(theme.shadowOpacity), radius: 12, y: 6)
-        }
+        .padding(Space.s)
+        .background { PaperShape(seed: 1).fill(theme.raised).shadow(color: .black.opacity(theme.shadowOpacity), radius: 10, y: 4) }
     }
 }
 
@@ -413,7 +385,7 @@ struct ReorderDropDelegate: DropDelegate {
     func dropEntered(info: DropInfo) {
         lastActivity = Date()
         guard let id = draggingID, id != target.id else { return }
-        withAnimation(.spring(response: 0.32, dampingFraction: 0.82)) {
+        withAnimation(Motion.moveUnlessReduced) {
             model.moveSubscription(id: id, onto: target.id)
         }
     }

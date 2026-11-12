@@ -59,6 +59,9 @@ struct OnboardingFlow: View {
                     .font(Typo.body)
                     .foregroundStyle(theme.textMuted)
             }
+            .padding(Space.xl)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .paper(seed: 2, fill: theme.surface)
             .id(index)
             .transition(reduceMotion ? .opacity : .asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)).combined(with: .opacity))
 
@@ -126,7 +129,10 @@ struct SuccessView: View {
             .padding(.top, Space.s)
             .accessibilityIdentifier("successAction")
         }
-        .padding(Space.xxl)
+        .padding(Space.xl)
+        .frame(maxWidth: .infinity)
+        .paper(seed: 2, fill: theme.surface)
+        .padding(Space.xl)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background { ScreenBackground() }
         .sensoryFeedback(.success, trigger: appeared)

@@ -83,6 +83,11 @@ final class CoreFlowUITests: XCTestCase {
         let after = scrubber.value as? String ?? ""
         XCTAssertNotEqual(before, after, "position advances while playing")
 
+        // Dragging the thumb seeks on release (the 90 s tone: 80% along is past a minute).
+        scrubber.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.25))
+            .press(forDuration: 0.2, thenDragTo: scrubber.coordinate(withNormalizedOffset: CGVector(dx: 0.8, dy: 0.25)))
+        XCTAssertTrue(waitUntil(3) { (scrubber.value as? String ?? "").hasPrefix("1 minute") }, "drag seeks: \(scrubber.value ?? "")")
+
         let moon = app.buttons["moonKey"]
         XCTAssertEqual(moon.value as? String, "Off")
         moon.tap()

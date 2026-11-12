@@ -1,5 +1,7 @@
 # YawnCast Design System
 
+> Superseded: the design that ships is described in `DESIGN.md` at the repo root (Lights Out). This file is kept as a record.
+
 Recorded from the shipped code on branch `evolve/001/base` (2026-10-20). The code wins over
 older docs: where `DECISIONS.md` or `replica/design/principles.md` disagree with the build, this
 file describes the build and says where they differ. Paths are relative to the repo root.

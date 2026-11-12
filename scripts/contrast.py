@@ -36,6 +36,9 @@ PAIRS = [
     ("text", "raised", 4.5, "Moon key subtitle, Sleep off (MoonKey 0.85 opacity)", 0.85),
     ("onAccent", "accent", 4.5, "Moon key subtitle, Sleep on (MoonKey 0.85 opacity)", 0.85),
     ("textMuted", "bg", 3.0, "unselected page dot (PageDots 0.75 opacity, non-text)", 0.75),
+    ("fadeMark", "bg", 3.0, "lit fade mark: lantern, firefly, star (non-text)"),
+    ("fadeMark", "raised", 3.0, "lit fade dot in the mini player (non-text)"),
+    ("text", "bg", 3.0, "dark fade mark outline (FadeMarks 0.6 opacity, non-text)", 0.6),
 ]
 
 FIELDS = ("bg", "surface", "raised", "border", "text", "textMuted", "accent", "onAccent", "danger")
@@ -48,6 +51,9 @@ def themes():
         body = m.group(2)
         tid = re.search(r'id: "(\w+)"', body).group(1)
         colors = {f: int(h, 16) for f, h in re.findall(r"\b(\w+): Color\(hex: 0x([0-9A-Fa-f]{6})\)", body)}
+        # Theme.fadeMark: the accent, except where Theme.swift names another colour for a scene.
+        override = re.search(r"var fadeMark: Color \{ scene == \.(\w+) \? Color\(hex: 0x([0-9A-Fa-f]{6})\)", src)
+        colors["fadeMark"] = int(override.group(2), 16) if override and f"scene: .{override.group(1)}" in body else colors["accent"]
         yield tid, "scene:" in body, colors
 
 

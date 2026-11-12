@@ -32,6 +32,8 @@ struct ThemesSheet: View {
             }
             .padding(Space.xxl)
         }
+        // The note field has no Return-to-close (Return is a new line); a drag puts the keyboard away.
+        .scrollDismissesKeyboard(.interactively)
         .background {
             // iOS 26: the sheet is system glass, so the live Scene shows through as you pick.
             if #available(iOS 26, *) {} else { ScreenBackground() }
@@ -56,8 +58,7 @@ struct ThemesSheet: View {
                 .font(Typo.body)
                 .foregroundStyle(theme.text)
                 .padding(Space.l)
-                .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(theme.surface))
-                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(theme.border, lineWidth: 1))
+                .paper(seed: 1, fill: theme.surface)
                 .accessibilityLabel("What went wrong?")
                 .accessibilityIdentifier("support-problem")
             Button {
@@ -105,7 +106,7 @@ struct ThemesSheet: View {
                     Button {
                         withAnimation(.easeInOut(duration: 0.35)) { model.look = look }
                     } label: { StyleSwatch(look: look, selected: look == model.look) }
-                        .buttonStyle(.plain)
+                        .buttonStyle(PressDim())
                         .accessibilityLabel("\(look.name) text")
                         .accessibilityAddTraits(look == model.look ? .isSelected : [])
                         .accessibilityIdentifier("look-\(look.rawValue)")
@@ -128,7 +129,7 @@ struct ThemesSheet: View {
                     Button {
                         withAnimation(.easeInOut(duration: 0.35)) { model.theme = option }
                     } label: { ThemeSwatch(option: option, selected: option.id == model.theme.id) }
-                        .buttonStyle(.plain)
+                        .buttonStyle(PressDim())
                         .accessibilityLabel("\(option.name), \(option.blurb)")
                         .accessibilityAddTraits(option.id == model.theme.id ? .isSelected : [])
                         .accessibilityIdentifier("theme-\(option.id)")
@@ -146,7 +147,7 @@ private struct StyleSwatch: View {
 
     var body: some View {
         VStack(spacing: Space.s) {
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
+            PaperShape(seed: 1)
                 .fill(current.surface)
                 .overlay {
                     Text("Aa")
@@ -155,7 +156,7 @@ private struct StyleSwatch: View {
                         .accessibilityHidden(true)
                 }
                 .overlay {
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    PaperShape(seed: 1)
                         .strokeBorder(selected ? current.text : current.border, lineWidth: selected ? 3 : 1)
                 }
                 .frame(height: 96)
@@ -177,13 +178,13 @@ private struct ThemeSwatch: View {
 
     var body: some View {
         VStack(spacing: Space.s) {
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
+            PaperShape(seed: 1)
                 .fill(option.bg)
                 .overlay {
                     if let scene = option.scene {
                         // A still frame of the actual scene.
                         ScenePreview(scene: scene)
-                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .clipShape(PaperShape(seed: 1))
                     }
                 }
                 .overlay(alignment: .trailing) {
@@ -191,11 +192,10 @@ private struct ThemeSwatch: View {
                     if option.followsSystem {
                         Rectangle().fill(option.resolved(for: .light).bg)
                             .frame(width: 44)
-                            .clipShape(UnevenRoundedRectangle(cornerRadii: .init(bottomTrailing: 18, topTrailing: 18), style: .continuous))
                     }
                 }
                 .overlay(alignment: .bottom) {
-                    Capsule()
+                    PaperShape(seed: 2)
                         .fill(option.accent)
                         .frame(height: 22)
                         .overlay(Image(systemName: "moon.fill").font(.system(size: 11, weight: .bold)).foregroundStyle(option.onAccent))
@@ -208,8 +208,9 @@ private struct ThemeSwatch: View {
                     }
                     .padding(12)
                 }
+                .clipShape(PaperShape(seed: 1))
                 .overlay {
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    PaperShape(seed: 1)
                         .strokeBorder(selected ? current.text : current.border, lineWidth: selected ? 3 : 1)
                 }
                 .frame(height: 120)

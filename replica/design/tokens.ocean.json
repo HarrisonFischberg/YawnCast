@@ -11,6 +11,7 @@
     "text-muted": "#A6D0DC",
     "accent": "#2D6AA3",
     "on-accent": "#FFFFFF",
+    "fade-mark": "#8FE3F0",
     "danger": "#FF9A8A"
   },
   "pairs": [

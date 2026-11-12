@@ -26,11 +26,10 @@ struct HomeView: View {
             if model.library.subscriptions.isEmpty || (model.searchingOn == .library && model.searchFindsNew) {
                 LibraryView()
             } else {
-                VStack(spacing: Space.m) {
-                    LookTabs(selection: $model.homePage)
-                }
-                .padding(.horizontal, Space.xl)
-                .padding(.top, Space.s)
+                LookTabs(selection: $model.homePage)
+                    .padding(.horizontal, Space.xl)
+                    .padding(.top, Space.s)
+                    .padding(.bottom, Space.xs)
                 TabView(selection: $model.homePage) {
                     NewEpisodesView().tag(HomePage.new)
                     LibraryView().tag(HomePage.library)
@@ -59,28 +58,6 @@ struct HomeView: View {
     }
 }
 
-/// Large page title shared by the home pages.
-struct PageTitle: View {
-    let title: String
-    var subtitle: String?
-    @Environment(\.theme) private var theme
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: Space.xs) {
-            Text(title)
-                .font(Typo.display)
-                .textCase(Typo.titleCase)
-                .foregroundStyle(theme.text)
-                .accessibilityAddTraits(.isHeader)
-            if let subtitle {
-                Text(subtitle)
-                    .font(Typo.caption)
-                    .foregroundStyle(theme.textMuted)
-            }
-        }
-    }
-}
-
 // MARK: - New
 
 /// Left page: the newest episodes from Library shows, newest first, by day.
@@ -91,9 +68,6 @@ struct NewEpisodesView: View {
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 0) {
-                PageTitle(title: "New", subtitle: "Latest episodes from your shows")
-                    .padding(.top, Space.s)
-                    .padding(.bottom, Space.l)
                 content
             }
             .padding(.horizontal, Space.xl)
@@ -130,7 +104,7 @@ struct NewEpisodesView: View {
                     .textCase(.uppercase)
                     .foregroundStyle(theme.textMuted)
                     .padding(.top, Space.l)
-                    .padding(.bottom, Space.xs)
+                    .padding(.bottom, Space.s)
                     .accessibilityAddTraits(.isHeader)
                 ForEach(group.episodes) { episode in
                     Button { model.open(episode) } label: {
@@ -140,7 +114,8 @@ struct NewEpisodesView: View {
                             isPlaying: model.player.episode?.id == episode.id && model.player.isPlaying
                         )
                     }
-                    .buttonStyle(RowStyle())
+                    .buttonStyle(TileStyle())
+                    .padding(.bottom, Space.s)
                     .contextMenu { EpisodeMenu(episode: episode) }
                     .episodeAccessibilityActions(episode)
                     .accessibilityIdentifier("latestRow")
@@ -170,7 +145,7 @@ private struct LatestRow: View {
     var body: some View {
         HStack(alignment: .center, spacing: Space.m) {
             if !typeSize.isAccessibilitySize {
-                ArtworkView(url: episode.artworkURL, cornerRadius: 10, title: episode.showTitle)
+                ArtworkView(url: episode.artworkURL, cornerRadius: Radius.artwork, title: episode.showTitle)
                     .frame(width: 56, height: 56)
             }
             VStack(alignment: .leading, spacing: 2) {
@@ -187,8 +162,8 @@ private struct LatestRow: View {
             Spacer(minLength: Space.s)
             ProgressPlayGlyph(fraction: position?.fraction ?? 0, isPlaying: isPlaying)
         }
-        .padding(.vertical, Space.s)
-        .padding(.horizontal, Space.xs)
+        .padding(Space.s)
+        .paper(seed: episode.title.count, fill: theme.surface)
         .contentShape(Rectangle())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(episode.title), \(episode.showTitle)")

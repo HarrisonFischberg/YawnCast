@@ -120,30 +120,57 @@ struct ShowView: View {
         let show = model.show
         let subscribed = app.isSubscribed(show)
         return VStack(alignment: .leading, spacing: Space.l) {
-            let layout = typeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: Space.l))
-                : AnyLayout(HStackLayout(alignment: .top, spacing: Space.l))
-            layout {
-                ArtworkView(url: show.artworkURL, cornerRadius: 16, title: show.title)
-                    .frame(width: 128, height: 128)
-                VStack(alignment: .leading, spacing: Space.xs) {
-                    Text(show.title)
-                        .font(Typo.showTitle)
-                        .textCase(Typo.titleCase)
-                        .foregroundStyle(theme.text)
-                        .lineLimit(typeSize.isAccessibilitySize ? nil : 4)
-                        .minimumScaleFactor(0.8)
-                        .fixedSize(horizontal: false, vertical: typeSize.isAccessibilitySize)
-                        .accessibilityAddTraits(.isHeader)
-                    if let author = show.author {
-                        Text(author)
-                            .font(Typo.caption)
-                            .foregroundStyle(theme.textMuted)
-                            .lineLimit(2)
+            // The show itself sits on one paper card; Subscribe stands under it.
+            VStack(alignment: .leading, spacing: Space.l) {
+                let layout = typeSize.isAccessibilitySize
+                    ? AnyLayout(VStackLayout(alignment: .leading, spacing: Space.l))
+                    : AnyLayout(HStackLayout(alignment: .top, spacing: Space.l))
+                layout {
+                    ArtworkView(url: show.artworkURL, cornerRadius: Radius.artwork, title: show.title)
+                        // Smaller when it stacks above the title, so the first episodes stay on screen.
+                        .frame(width: typeSize.isAccessibilitySize ? 72 : 112, height: typeSize.isAccessibilitySize ? 72 : 112)
+                        .padding(typeSize.isAccessibilitySize ? 0 : Space.s)
+                        .paper(seed: 1, fill: theme.raised)
+                    VStack(alignment: .leading, spacing: Space.xs) {
+                        Text(show.title)
+                            .font(Typo.showTitle)
+                            .textCase(Typo.titleCase)
+                            .foregroundStyle(theme.text)
+                            .lineLimit(typeSize.isAccessibilitySize ? nil : 4)
+                            .minimumScaleFactor(0.8)
+                            .fixedSize(horizontal: false, vertical: typeSize.isAccessibilitySize)
+                            .accessibilityAddTraits(.isHeader)
+                        if let author = show.author {
+                            Text(author)
+                                .font(Typo.caption)
+                                .foregroundStyle(theme.textMuted)
+                                .lineLimit(2)
+                        }
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                if let summary = show.summary, !summary.isEmpty {
+                    Button { withAnimation(.easeOut(duration: 0.2)) { expanded.toggle() } } label: {
+                        VStack(alignment: .leading, spacing: Space.xs) {
+                            Text(summary)
+                                .font(Typo.body)
+                                .foregroundStyle(theme.textMuted)
+                                .lineLimit(expanded ? nil : 3)
+                                .multilineTextAlignment(.leading)
+                            Text(expanded ? "Less" : "More")
+                                .font(Typo.caption)
+                                .foregroundStyle(theme.text)
+                        }
+                    }
+                    .buttonStyle(PressDim())
+                    .accessibilityHint(expanded ? "Shows less of the description." : "Shows the full description.")
+                }
             }
+            // Tighter at the largest text sizes: every point of width saves a wrapped line.
+            .padding(typeSize.isAccessibilitySize ? Space.s : Space.l)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .paper(seed: 2, fill: theme.surface)
 
             Button {
                 let first = !subscribed && !celebratedFirstShow && app.library.subscriptions.isEmpty
@@ -163,24 +190,6 @@ struct ShowView: View {
             .accessibilityLabel(subscribed ? "Subscribed" : "Subscribe")
             .accessibilityHint(subscribed ? "Removes this show from your library." : "Adds this show to your library.")
             .accessibilityIdentifier("subscribeKey")
-            .sensoryFeedback(.success, trigger: subscribed)
-
-            if let summary = show.summary, !summary.isEmpty {
-                Button { withAnimation(.easeOut(duration: 0.2)) { expanded.toggle() } } label: {
-                    VStack(alignment: .leading, spacing: Space.xs) {
-                        Text(summary)
-                            .font(Typo.body)
-                            .foregroundStyle(theme.textMuted)
-                            .lineLimit(expanded ? nil : 3)
-                            .multilineTextAlignment(.leading)
-                        Text(expanded ? "Less" : "More")
-                            .font(Typo.caption)
-                            .foregroundStyle(theme.text)
-                    }
-                }
-                .buttonStyle(.plain)
-                .accessibilityHint(expanded ? "Shows less of the description." : "Shows the full description.")
-            }
         }
         .padding(.top, Space.s)
     }
@@ -240,11 +249,11 @@ struct ShowView: View {
                                 isPlaying: app.player.episode?.id == episode.id && app.player.isPlaying
                             )
                         }
-                        .buttonStyle(RowStyle())
+                        .buttonStyle(TileStyle())
                         .accessibilityIdentifier("episodeRow")
                         .contextMenu { EpisodeMenu(episode: episode) }
                         .episodeAccessibilityActions(episode)
-                        Rectangle().fill(theme.border).frame(height: 1)
+                        .padding(.bottom, Space.s)
                     }
                 } header: {
                     YearHeader(group: group)
@@ -269,21 +278,12 @@ private struct YearHeader: View {
                 .foregroundStyle(theme.textMuted)
             Spacer()
         }
-        .padding(.top, Space.l)
+        .padding(.horizontal, Space.m)
+        .padding(.vertical, Space.s)
+        // Pinned over scrolling rows: a paper band, a shade up from the rows beneath it.
+        .paper(seed: 1, fill: theme.raised)
+        .padding(.top, Space.s)
         .padding(.bottom, Space.s)
-        .background {
-            // Pinned over scrolling rows: a glass band on iOS 26, else a soft frosted band over a Scene.
-            if #available(iOS 26, *) {
-                Color.clear
-                    .nightGlass(in: Capsule()) {}
-                    .padding(.top, Space.s)
-                    .padding(.horizontal, -Space.m)
-            } else if theme.scene != nil {
-                Rectangle().fill(.ultraThinMaterial).padding(.horizontal, -Space.xl)
-            } else {
-                theme.bg.padding(.horizontal, -Space.xl)
-            }
-        }
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isHeader)
         .accessibilityIdentifier("yearHeader")
@@ -313,8 +313,8 @@ struct EpisodeRow: View {
             Spacer(minLength: Space.s)
             ProgressPlayGlyph(fraction: position?.fraction ?? 0, isPlaying: isPlaying)
         }
-        .padding(.vertical, Space.m)
-        .padding(.horizontal, Space.xs)
+        .padding(Space.m)
+        .paper(seed: episode.title.count, fill: theme.surface)
         .contentShape(Rectangle())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(episode.title)
@@ -343,6 +343,7 @@ struct ProgressPlayGlyph: View {
     let fraction: Double
     let isPlaying: Bool
     @Environment(\.theme) private var theme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         ZStack {
@@ -354,7 +355,7 @@ struct ProgressPlayGlyph: View {
             Image(systemName: isPlaying ? "speaker.wave.2.fill" : "play.fill")
                 .font(.system(size: 14, weight: .bold))
                 .foregroundStyle(theme.text)
-                .symbolEffect(.variableColor.iterative, isActive: isPlaying)
+                .symbolEffect(.variableColor.iterative, isActive: isPlaying && !reduceMotion)
         }
         .frame(width: 40, height: 40)
         .accessibilityHidden(true)

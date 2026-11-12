@@ -91,6 +91,8 @@ final class AppModel {
     private(set) var toast: String?
     /// "Added to your library" pill at the top of the screen after a + tap.
     private(set) var addedNote: String?
+    /// The show just unsubscribed and the slot it sat in, while its Undo toast is up.
+    private(set) var unsubscribed: (show: Show, index: Int)?
     /// Search opened on an empty Library finds new shows; otherwise Library search only filters saved ones.
     private(set) var searchFindsNew = false
     /// Note shown in the toast slot when Sleep turned itself on late at night.
@@ -114,6 +116,7 @@ final class AppModel {
     @ObservationIgnored private var fadeBegan: DriftBackMarker?
     @ObservationIgnored private var toastTask: Task<Void, Never>?
     @ObservationIgnored private var addedNoteTask: Task<Void, Never>?
+    @ObservationIgnored private var undoTask: Task<Void, Never>?
     @ObservationIgnored private var nightNoteTask: Task<Void, Never>?
     /// The episode load the late-night check already ran for, so turning Sleep off sticks.
     @ObservationIgnored private var nightCheckedEpisodeID: String?
@@ -214,7 +217,15 @@ final class AppModel {
     func isSubscribed(_ show: Show) -> Bool { library.isSubscribed(show) }
 
     func toggleSubscription(_ show: Show) {
-        if library.isSubscribed(show) { unsubscribe(show) } else { library.subscribe(show); persist() }
+        if library.isSubscribed(show) {
+            unsubscribe(show)
+        } else if unsubscribed?.show.id == show.id {
+            // Subscribing again while its toast is up is an undo: back in its old slot.
+            undoUnsubscribe()
+        } else {
+            library.subscribe(show)
+            persist()
+        }
         recomputeLatestFromCache()
     }
 
@@ -248,20 +259,43 @@ final class AppModel {
 
     func moveToTop(_ show: Show) {
         guard let first = library.subscriptions.first, first.id != show.id else { return }
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) { moveSubscription(id: show.id, onto: first.id) }
+        withAnimation(Motion.moveUnlessReduced) { moveSubscription(id: show.id, onto: first.id) }
     }
 
     func moveToEnd(_ show: Show) {
         guard let last = library.subscriptions.last, last.id != show.id else { return }
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) { moveSubscription(id: show.id, onto: last.id) }
+        withAnimation(Motion.moveUnlessReduced) { moveSubscription(id: show.id, onto: last.id) }
     }
 
     func unsubscribe(_ show: Show) {
+        let index = library.subscriptions.firstIndex { $0.id == show.id }
         library.unsubscribe(show)
         persist()
         recomputeLatestFromCache()
         if library.subscriptions.isEmpty { homePage = .library }
         if searchingOn != nil && searchingOn != .library && library.subscriptions.isEmpty { endSearch() }
+        guard let index else { return }
+        // Saved spots are kept, so Undo loses nothing.
+        unsubscribed = (show, index)
+        UIAccessibility.post(notification: .announcement, argument: "Unsubscribed from \(show.title). Undo is at the bottom of the screen.")
+        undoTask?.cancel()
+        undoTask = Task { [weak self] in
+            try? await Task.sleep(for: Motion.undoLife)
+            guard !Task.isCancelled else { return }
+            self?.unsubscribed = nil
+        }
+    }
+
+    /// The Undo on the toast: the show goes back into the slot it left.
+    func undoUnsubscribe() {
+        guard let undo = unsubscribed else { return }
+        undoTask?.cancel()
+        unsubscribed = nil
+        guard !library.isSubscribed(undo.show) else { return }
+        library.subscriptions.insert(undo.show, at: min(undo.index, library.subscriptions.count))
+        persist()
+        recomputeLatestFromCache()
+        UIAccessibility.post(notification: .announcement, argument: "Subscribed again")
     }
 
     /// Search in place on the current home page: its content glides away and results appear.

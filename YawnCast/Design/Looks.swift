@@ -1,44 +1,49 @@
 import YawnCastCore
 import SwiftUI
 
-// Shared pieces: the labelled page tabs, the Moon key with its progress bar,
-// icon and floating z's.
+// Shared pieces: the page tabs, the cut-paper shape and the Moon bar.
 
 // MARK: - Page tabs
 
-/// New · Library · Explore as named tabs, in place of the v0.2 dots. Every style
-/// uses plain labels, the current page on an accent capsule.
+/// New · Library · Explore in one pill. The bright thumb slides to the current page, which
+/// is also the page's title, so no page repeats its name underneath.
 struct LookTabs: View {
     @Binding var selection: HomePage
     @Environment(\.theme) private var theme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Namespace private var thumb
 
     var body: some View {
-        HStack(spacing: Space.xs) {
+        HStack(spacing: 0) {
             ForEach(HomePage.allCases, id: \.self) { page in
                 let on = page == selection
                 Button {
-                    withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) { selection = page }
+                    withAnimation(reduceMotion ? nil : Motion.slide) { selection = page }
                 } label: {
                     Text(page.title)
-                        // The current page is a filled accent pill in bold, so it reads at a glance in every theme.
-                        .font(.system(.subheadline, weight: on ? .bold : .medium))
-                        .foregroundStyle(on ? theme.onAccent : theme.textMuted)
+                        .font(Typo.headline)
+                        .foregroundStyle(on ? theme.bg : theme.text)
                         .lineLimit(1)
-                        .padding(.horizontal, Space.l)
-                        .padding(.vertical, 7)
-                        .background(on ? Capsule().fill(theme.accent) : nil)
-                        .frame(minHeight: 44)
+                        .minimumScaleFactor(0.7)
+                        .padding(.horizontal, Space.s)
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .background {
+                            if on { Capsule().fill(theme.text).matchedGeometryEffect(id: "thumb", in: thumb) }
+                        }
                         .contentShape(Rectangle())
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(PressDim())
+                .accessibilityShowsLargeContentViewer { Text(page.title) }
                 .modifier(TabAccessibility(page: page, selected: on))
             }
         }
-        // iOS 26: the three tabs float as one glass pill over the Scene.
-        .padding(.horizontal, Space.xs)
-        .nightGlass(in: Capsule()) {}
-        .frame(maxWidth: .infinity)
+        .padding(Space.xs)
+        .background { Capsule().fill(theme.surface) }
+        // Also when the page was changed by a swipe: the thumb follows as the page lands.
+        .animation(reduceMotion ? nil : Motion.slide, value: selection)
+        // Three segments share one row; past this size they would truncate, so they stop
+        // growing and a long press shows the name large.
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Pages")
     }
@@ -50,7 +55,7 @@ private struct TabAccessibility: ViewModifier {
     func body(content: Content) -> some View {
         content
             .accessibilityLabel(page.title)
-            .accessibilityAddTraits(selected ? .isSelected : [])
+            .accessibilityAddTraits(selected ? [.isSelected, .isHeader] : [])
             .accessibilityIdentifier("pageDot-\(page.title)")
     }
 }
@@ -79,114 +84,84 @@ nonisolated struct PaperShape: InsettableShape {
 
 // MARK: - Moon key
 
-/// The Moon key, the same in both styles but for its face: cut paper (Picture
-/// Book) or an on-air lamp (Sign-Off).
+/// The Moon bar: the largest control on Now Playing, a round-ended capsule with a round moon. The moon turns Sleep on and off;
+/// while it is on the bar takes the accent and says what will happen. The −5 / +5 keys
+/// live in the `SleepBubble` that pops up above it.
 struct LookMoonKey: View {
     let status: SleepStatus
     let action: () -> Void
 
     @Environment(\.theme) private var theme
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(\.isEnabled) private var isEnabled
 
     private var isOn: Bool { status != .off }
     private var ink: Color { isOn ? theme.onAccent : theme.text }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: Space.m) {
-            toggle
-            if !typeSize.isAccessibilitySize {
-                FadeSteps(status: status, ink: ink)
-                    .accessibilityHidden(true)
-            }
-        }
-        .foregroundStyle(ink)
-        .padding(.horizontal, Space.xl)
-        .padding(.vertical, Space.l)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        // iOS 26: a lens of accent glass while Sleep is on, clear glass while off.
-        .nightGlass(in: faceShape, tint: isOn ? theme.accent.opacity(0.85) : nil) { face }
-    }
-
-    private var faceShape: AnyShape {
-        switch theme.style {
-        case .pictureBook: AnyShape(PaperShape(seed: 2))
-        case .signOff: AnyShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-        }
-    }
-
-    private var toggle: some View {
-        Button(action: action) {
-            VStack(alignment: .leading, spacing: Space.m) {
-                HStack(spacing: Space.l) {
-                    well
-                    VStack(alignment: .leading, spacing: 3) {
-                        HStack(spacing: Space.s) {
-                            Text(title).font(Typo.title).textCase(Typo.titleCase)
-                            if case .waiting = status { AccentHeart().accessibilityHidden(true) }
-                        }
-                        if let subtitle {
-                            Text(subtitle)
-                                .font(.system(.subheadline, weight: .semibold))
-                                .opacity(0.85)
-                                .contentTransition(.numericText())
-                        }
-                    }
-                    .lineLimit(typeSize.isAccessibilitySize ? 3 : 1)
-                    .minimumScaleFactor(0.75)
-                    Spacer(minLength: 0)
-                }
-            }
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(PressDim())
-        .accessibilityLabel("Sleep")
-        .accessibilityValue(MoonKey.accessibilityValue(for: status))
-        .accessibilityHint(isOn ? "Turns Sleep off and restores volume." : "Fades the episode out, then pauses.")
-        .accessibilityAddTraits(isOn ? .isSelected : [])
-        .accessibilityIdentifier("moonKey")
-    }
-
-    /// The bar is slightly see-through, so a Scene shows behind it.
-    private static let faceOpacity = 0.88
-
-    @ViewBuilder
-    private var face: some View {
-        let fill = (isOn ? theme.accent : theme.surface).opacity(Self.faceOpacity)
-        switch theme.style {
-        case .pictureBook:
-            PaperShape(seed: 2).fill(fill)
-        case .signOff:
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(fill)
-                .shadow(color: isOn ? theme.accent.opacity(0.35) : .clear, radius: 18)
-        }
-    }
-
-    private var well: some View {
-        ZStack {
-            wellShape.fill(isOn ? Color.black.opacity(0.16) : theme.raised)
-            Image(systemName: SleepGlyph.symbol(theme: theme, fading: isFading))
-                .font(.system(size: 26, weight: .semibold))
-                // In ink while off; the accent face carries the icon once Sleep is on.
-                .foregroundStyle(isOn ? theme.onAccent : theme.text)
-                // The icon dims with the volume, step by step.
-                .opacity(max(0.35, status.moonLit))
-                .contentTransition(.symbolEffect(.replace))
-        }
-        .frame(width: 56, height: 56)
-        .accessibilityHidden(true)
-    }
-
-    private var wellShape: AnyShape {
-        switch theme.style {
-        case .pictureBook: AnyShape(PaperShape(seed: 0))
-        case .signOff: AnyShape(Circle())
-        }
-    }
-
     private var isFading: Bool {
         if case .fading = status { return true }
         return false
+    }
+
+    var body: some View {
+        HStack(spacing: Space.l) {
+            Button(action: action) { well }
+                .buttonStyle(PressDim())
+                .accessibilityLabel("Sleep")
+                .accessibilityValue(MoonKey.accessibilityValue(for: status))
+                .accessibilityHint(isOn ? "Turns Sleep off and restores volume." : "Fades the episode out, then pauses.")
+                .accessibilityAddTraits(isOn ? .isSelected : [])
+                .accessibilityIdentifier("moonKey")
+            words
+            Spacer(minLength: 0)
+        }
+        .foregroundStyle(ink)
+        .padding(Space.m)
+        .padding(.trailing, Space.s)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Capsule().fill(isOn ? theme.accent : theme.surface))
+        .opacity(isEnabled ? 1 : 0.45)
+        .accessibilityElement(children: .contain)
+    }
+
+    /// The status beside the moon. Tapping it works the moon too; VoiceOver reads the
+    /// countdown as its own element, after the Sleep key.
+    private var words: some View {
+        VStack(alignment: .leading, spacing: Space.xs) {
+            // At accessibility sizes the bar has to stay on screen: while Sleep is on it keeps
+            // only the line that matters (the countdown), and the title is smaller while off.
+            if !(isOn && typeSize.isAccessibilitySize) {
+                HStack(spacing: Space.s) {
+                    Text(title).font(typeSize.isAccessibilitySize ? Typo.title : Typo.sectionTitle).textCase(Typo.titleCase)
+                    if case .waiting = status { AccentHeart() }
+                }
+                .accessibilityHidden(true)
+            }
+            // The invitation is dropped at accessibility sizes, where the bar must stay on screen.
+            if isOn || !typeSize.isAccessibilitySize {
+                Text(subtitle)
+                    .font(.system(.subheadline, weight: .semibold))
+                    .opacity(0.85)
+                    .contentTransition(.numericText())
+                    .accessibilityLabel(spoken)
+                    .accessibilityHidden(!isOn)
+                    .accessibilityIdentifier(isOn ? "sleepCountdown" : "sleepInvitation")
+            }
+        }
+        .lineLimit(typeSize.isAccessibilitySize ? 3 : 1)
+        .minimumScaleFactor(0.65)
+        .layoutPriority(1)
+        .contentShape(Rectangle())
+        .onTapGesture(perform: action)
+    }
+
+    private var well: some View {
+        Image(systemName: isFading ? "moon.zzz.fill" : "moon.fill")
+            .font(.system(size: 30, weight: .bold))
+            .foregroundStyle(ink)
+            .contentTransition(.symbolEffect(.replace))
+            .frame(width: typeSize.isAccessibilitySize ? 52 : 68, height: typeSize.isAccessibilitySize ? 52 : 68)
+            .background(Circle().fill(isOn ? Color.black.opacity(0.16) : theme.raised))
+            .contentShape(Circle())
     }
 
     private var title: String {
@@ -197,55 +172,21 @@ struct LookMoonKey: View {
         }
     }
 
-    private var subtitle: String? {
+    private var subtitle: String {
         switch status {
-        case .off: nil
+        case .off: "Tap the moon to fade out"
         case .waiting(let t): "Fades in \(TimeFormat.sleepDelayLong(t))"
         case .fading(let level): "Volume \(Int((level * 100).rounded()))%"
         }
     }
-}
 
-/// The ten fade steps as a progress bar (Picture Book's, on every style):
-/// each mark goes dark as its step passes.
-struct FadeSteps: View {
-    let status: SleepStatus
-    let ink: Color
-
-    /// How many of the ten steps are still to come (lit).
-    private var remaining: Int {
+    /// The countdown for VoiceOver, in the short form the chip used to speak.
+    private var spoken: String {
         switch status {
-        case .off, .waiting: 10
-        case .fading(let level): Int((level * 10).rounded())
+        case .off: ""
+        case .waiting(let t): "Fades in \(TimeFormat.sleepDelay(t))"
+        case .fading(let level): "Fading, volume \(Int((level * 100).rounded())) percent"
         }
-    }
-
-    var body: some View {
-        HStack(spacing: 6) {
-            ForEach(0..<10, id: \.self) { i in
-                Capsule()
-                    .fill(ink.opacity(status == .off ? 0.25 : (i < 10 - remaining ? 0.2 : 0.9)))
-                    .frame(height: 6)
-            }
-        }
-    }
-}
-
-/// The Sleep icon: the Scene's own (a wave underwater, a tree in the rainforest),
-/// else the style's (a lamp in Picture Book, the moon elsewhere).
-enum SleepGlyph {
-    static func symbol(theme: Theme, fading: Bool) -> String {
-        switch theme.scene {
-        case .ocean: return "water.waves"
-        case .rainforest: return "tree.fill"
-        case .mountain: return "mountain.2.fill"
-        case .beach: return "beach.umbrella.fill"
-        case .city: return "building.2.fill"
-        case .midnight: return "moon.stars.fill"
-        case nil: break
-        }
-        if theme.style == .pictureBook { return "lamp.table.fill" }
-        return fading ? "moon.zzz.fill" : "moon.fill"
     }
 }
 
@@ -266,9 +207,11 @@ struct PressDim: ButtonStyle {
         configuration.label
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
             .opacity(configuration.isPressed ? 0.85 : 1)
-            .animation(reduceMotion ? nil : .spring(response: 0.18, dampingFraction: 0.7), value: configuration.isPressed)
+            .animation(reduceMotion ? nil : Motion.press, value: configuration.isPressed)
     }
 }
+
+// MARK: - Floating z's
 
 /// Little "z"s that drift up out of the Sleep icon while Sleep is on and float
 /// away up the screen: three loose streams, each z with its own start, pace,

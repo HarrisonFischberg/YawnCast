@@ -271,7 +271,7 @@ struct SearchResultsView: View {
             }
             .padding(.horizontal, -Space.xxl)
         case .results(let results):
-            LazyVStack(spacing: Space.xs) {
+            LazyVStack(spacing: Space.s) {
                 ForEach(results) { result in
                     let subscribed = app.isSubscribed(result.show)
                     HStack(spacing: 0) {
@@ -291,10 +291,8 @@ struct SearchResultsView: View {
                             .accessibilityIdentifier("addShow")
                         }
                     }
-                    .sensoryFeedback(trigger: subscribed) { _, added in added ? .success : nil }
                 }
             }
-            .padding(.horizontal, -Space.s)
             .accessibilityElement(children: .contain)
             .accessibilityIdentifier("searchResults")
         }
@@ -311,7 +309,7 @@ struct SearchField: View {
     var body: some View {
         HStack(spacing: Space.s) {
             Image(systemName: "magnifyingglass")
-                .font(.system(size: 17, weight: .bold))
+                .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(theme.textMuted)
                 .accessibilityHidden(true)
             TextField("", text: $text, prompt: Text(placeholder).foregroundStyle(theme.textMuted))
@@ -333,11 +331,10 @@ struct SearchField: View {
             }
         }
         .padding(.leading, Space.l)
-        .frame(minHeight: 52)
+        .frame(minHeight: 44)
         // The field sits beside a close key; cap its growth so the clear button never overlaps the text.
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-        .background(Capsule().fill(theme.surface))
-        .overlay(Capsule().strokeBorder(theme.border, lineWidth: 1))
+        .paper(seed: 1, fill: theme.surface)
     }
 }
 
@@ -352,7 +349,7 @@ private struct SearchRow: View {
             ? AnyLayout(VStackLayout(alignment: .leading, spacing: Space.s))
             : AnyLayout(HStackLayout(spacing: Space.m))
         layout {
-            ArtworkView(url: result.artworkURL, cornerRadius: 10, title: result.title)
+            ArtworkView(url: result.artworkURL, cornerRadius: Radius.artwork, title: result.title)
                 .frame(width: 64, height: 64)
             VStack(alignment: .leading, spacing: 2) {
                 Text(result.title)
@@ -386,15 +383,13 @@ private struct SearchRow: View {
     }
 }
 
-/// Rows highlight with the surface color while pressed.
+/// A row on its own strip of paper; it dims while pressed.
 struct RowStyle: ButtonStyle {
     @Environment(\.theme) private var theme
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .background(
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(configuration.isPressed ? theme.surface : .clear)
-            )
+            .paper(seed: 1, fill: theme.surface)
+            .opacity(configuration.isPressed ? 0.75 : 1)
     }
 }
 
@@ -430,8 +425,10 @@ struct StateMessage: View {
                 .accessibilityIdentifier("retryKey")
             }
         }
+        .padding(Space.xl)
         .frame(maxWidth: .infinity, alignment: .leading)
+        .paper(seed: 2, fill: theme.surface)
         .padding(.horizontal, Space.xxl)
-        .padding(.top, Space.xxxl)
+        .padding(.top, Space.xxl)
     }
 }
