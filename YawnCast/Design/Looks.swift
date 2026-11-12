@@ -84,18 +84,12 @@ nonisolated struct PaperShape: InsettableShape {
 
 // MARK: - Moon key
 
-/// The Moon bar: the largest control on Now Playing. The moon turns Sleep on and off;
+/// The Moon bar: the largest control on Now Playing, a round-ended capsule with a round moon. The moon turns Sleep on and off;
 /// while it is on the bar takes the accent and says what will happen. The −5 / +5 keys
 /// live in the `SleepBubble` that pops up above it.
 struct LookMoonKey: View {
     let status: SleepStatus
     let action: () -> Void
-    var onAdjust: (Int) -> Void = { _ in }
-
-    /// Which round Sleep design to show, for comparing them (launch with `-sleepLook B`):
-    /// A, a round bar with the floating −5 · 17 min · +5 pill above it; B, a round bar with
-    /// round −5 / +5 keys inside it; C, one big round moon between round −5 / +5 keys.
-    static var look: String { UserDefaults.standard.string(forKey: "sleepLook") ?? "A" }
 
     @Environment(\.theme) private var theme
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -109,73 +103,6 @@ struct LookMoonKey: View {
     }
 
     var body: some View {
-        if Self.look == "C" { dial } else { bar }
-    }
-
-    private var moonButton: some View {
-        Button(action: action) { well }
-            .buttonStyle(PressDim())
-            .accessibilityLabel("Sleep")
-            .accessibilityValue(MoonKey.accessibilityValue(for: status))
-            .accessibilityHint(isOn ? "Turns Sleep off and restores volume." : "Fades the episode out, then pauses.")
-            .accessibilityAddTraits(isOn ? .isSelected : [])
-            .accessibilityIdentifier("moonKey")
-    }
-
-    /// Round −5 / +5 keys, shown while Sleep is on (held in place, invisible, while off).
-    private func step(_ minutes: Int) -> some View {
-        StepKey(minutes: minutes) { onAdjust(minutes) }
-            .disabled(!isOn || (minutes < 0 && isFading))
-            .opacity(isOn ? (minutes < 0 && isFading ? 0.4 : 1) : 0)
-            .accessibilityHidden(!isOn)
-    }
-
-    /// Look C: a big round moon between the −5 and +5 keys, the words centred under it.
-    private var dial: some View {
-        VStack(spacing: Space.s) {
-            HStack(spacing: Space.xl) {
-                step(-5)
-                Button(action: action) {
-                    Image(systemName: isFading ? "moon.zzz.fill" : "moon.fill")
-                        .font(.system(size: 34, weight: .bold))
-                        .foregroundStyle(ink)
-                        .contentTransition(.symbolEffect(.replace))
-                        .frame(width: 92, height: 92)
-                        .background(Circle().fill(isOn ? theme.accent : theme.surface))
-                        .contentShape(Circle())
-                }
-                .buttonStyle(PressDim())
-                .accessibilityLabel("Sleep")
-                .accessibilityValue(MoonKey.accessibilityValue(for: status))
-                .accessibilityAddTraits(isOn ? .isSelected : [])
-                .accessibilityIdentifier("moonKey")
-                step(5)
-            }
-            VStack(spacing: 2) {
-                HStack(spacing: Space.s) {
-                    Text(title).font(Typo.headline).textCase(Typo.titleCase)
-                    if case .waiting = status { AccentHeart() }
-                }
-                .accessibilityHidden(true)
-                Text(subtitle)
-                    .font(.system(.subheadline, weight: .semibold))
-                    .opacity(0.85)
-                    .contentTransition(.numericText())
-                    .accessibilityLabel(spoken)
-                    .accessibilityHidden(!isOn)
-                    .accessibilityIdentifier(isOn ? "sleepCountdown" : "sleepInvitation")
-            }
-            .foregroundStyle(theme.text)
-            .lineLimit(1)
-            .minimumScaleFactor(0.7)
-        }
-        .frame(maxWidth: .infinity)
-        .opacity(isEnabled ? 1 : 0.45)
-        .accessibilityElement(children: .contain)
-    }
-
-    /// Looks A and B: one round-ended bar; B carries round −5 / +5 keys at its right end.
-    private var bar: some View {
         HStack(spacing: Space.l) {
             Button(action: action) { well }
                 .buttonStyle(PressDim())
@@ -186,9 +113,6 @@ struct LookMoonKey: View {
                 .accessibilityIdentifier("moonKey")
             words
             Spacer(minLength: 0)
-            if Self.look == "B" && isOn {
-                HStack(spacing: Space.xs) { step(-5); step(5) }
-            }
         }
         .foregroundStyle(ink)
         .padding(Space.m)

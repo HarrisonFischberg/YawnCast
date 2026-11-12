@@ -109,16 +109,18 @@ struct StepKey: View {
     }
 }
 
-/// The tucked-away Sleep bubble: a small "±5" pill above the Moon bar. Tap it to bring
-/// the −5 / +5 keys back.
+/// The tucked-away Sleep bubble: a small pill with the time left ("17 min", "40 %").
+/// Tap it to open the larger −5 · 17 min · +5 pill.
 struct SleepBubblePill: View {
+    let status: SleepStatus
     let onExpand: () -> Void
     @Environment(\.theme) private var theme
 
     var body: some View {
         Button(action: onExpand) {
-            Text("±5")
+            Text(text)
                 .font(.system(.footnote, weight: .semibold).monospacedDigit())
+                .contentTransition(.numericText())
                 .foregroundStyle(theme.text)
                 .padding(.horizontal, Space.m)
                 .frame(height: 30)
@@ -129,7 +131,16 @@ struct SleepBubblePill: View {
         .buttonStyle(PressDim())
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .accessibilityLabel("Adjust Sleep")
+        .accessibilityValue(text)
         .accessibilityHint("Shows the add and remove 5 minutes keys.")
         .accessibilityIdentifier("sleepBubblePill")
+    }
+
+    private var text: String {
+        switch status {
+        case .off: ""
+        case .waiting(let t): TimeFormat.sleepDelay(t)
+        case .fading(let level): "\(Int((level * 100).rounded())) %"
+        }
     }
 }
