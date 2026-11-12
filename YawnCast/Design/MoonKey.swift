@@ -5,9 +5,10 @@ import SwiftUI
 struct MoonKey: View {
     let status: SleepStatus
     let action: () -> Void
+    var onAdjust: (Int) -> Void = { _ in }
 
     var body: some View {
-        LookMoonKey(status: status, action: action)
+        LookMoonKey(status: status, action: action, onAdjust: onAdjust)
     }
 
     static func accessibilityValue(for status: SleepStatus) -> String {

@@ -161,7 +161,9 @@ struct NowPlayingView: View {
                 let sleepOn = model.sleepStatus != .off
                 let note = sleepOn ? model.nightNote : model.toast
                 let marker = preview == nil ? model.driftBackPosition : nil
-                if marker != nil || note != nil || sleepOn {
+                // Only look A floats the −5 · 17 min · +5 pill; B and C keep −5 / +5 on the Moon key.
+                let pillLook = LookMoonKey.look == "A"
+                if marker != nil || note != nil || (sleepOn && pillLook) {
                     sleepRowLayout {
                         if let marker {
                             DriftBackKey(position: marker) { model.jumpToDriftBack() }
@@ -169,11 +171,11 @@ struct NowPlayingView: View {
                         if !typeSize.isAccessibilitySize { Spacer(minLength: 0) }
                         if let note {
                             toastLabel(note)
-                        } else if sleepOn && bubbleOpen {
+                        } else if sleepOn && pillLook && bubbleOpen {
                             // −5 · 17 min · +5, then tucks away.
                             SleepBubble(status: model.sleepStatus) { model.adjustSleep(minutes: $0); scheduleTuck() }
                                 .transition(reduceMotion ? .opacity : .scale(scale: 0.7, anchor: .bottomTrailing).combined(with: .opacity))
-                        } else if sleepOn {
+                        } else if sleepOn && pillLook {
                             SleepBubblePill { bubbleOpen = true; scheduleTuck() }
                                 .transition(.opacity)
                         }
@@ -181,11 +183,11 @@ struct NowPlayingView: View {
                     .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 6)))
                 }
 
-                MoonKey(status: model.sleepStatus) { model.toggleSleep() }
+                MoonKey(status: model.sleepStatus, action: { model.toggleSleep() }, onAdjust: { model.adjustSleep(minutes: $0) })
                     .disabled(player.episode == nil || preview != nil)
                     .sensoryFeedback(Haptic.moon, trigger: model.sleepStatus == .off)
                     .sensoryFeedback(.selection, trigger: model.sleepAdjustCount)
-                    .overlay(alignment: .topLeading) {
+                    .overlay(alignment: LookMoonKey.look == "C" ? .top : .topLeading) {
                         if sleepOn {
                             // z's rise out of the moon and float up past the skip key, in every theme.
                             FloatingZs(isFading: { if case .fading = model.sleepStatus { return true }; return false }())
