@@ -34,13 +34,17 @@ final class PlaybackEngine: SleepControllable {
     /// Called once per item when the stream reports its real duration.
     @ObservationIgnored var onDurationMeasured: ((Episode, TimeInterval) -> Void)?
 
-    @ObservationIgnored private let player = AVPlayer()
+    /// Internal so tests can pause it the way the system does during an interruption.
+    @ObservationIgnored let player = AVPlayer()
     @ObservationIgnored private var timeObserver: Any?
     @ObservationIgnored private var statusObservation: NSKeyValueObservation?
     @ObservationIgnored private var itemObservations: [NSKeyValueObservation] = []
     @ObservationIgnored private var notificationTasks: [Task<Void, Never>] = []
     @ObservationIgnored private var lastSavedAt: TimeInterval = 0
     @ObservationIgnored private var wasPlayingBeforeInterruption = false
+    /// Whether the listener wants audio: set by play(), cleared by pause()/end. Unlike `isPlaying` it
+    /// survives the system pausing the player, so an interruption can tell what to resume.
+    @ObservationIgnored private var wantsToPlay = false
 
     init() {
         player.automaticallyWaitsToMinimizeStalling = true
@@ -78,6 +82,7 @@ final class PlaybackEngine: SleepControllable {
         isDurationMeasured = false
         loadState = .loading
         isBuffering = autoplay
+        wantsToPlay = false
 
         let item = AVPlayerItem(url: episode.audioURL.httpsUpgraded)
         item.preferredForwardBufferDuration = 60
@@ -94,6 +99,9 @@ final class PlaybackEngine: SleepControllable {
 
     func play() {
         guard episode != nil else { return }
+        // A failed item never recovers by itself: Play reloads it, from every Play path.
+        if case .failed = loadState { retry(); return }
+        wantsToPlay = true
         activateSession()
         // Play at the very end starts the episode over.
         if let duration, duration > 0, position >= duration - 1 { seek(to: 0) }
@@ -101,6 +109,7 @@ final class PlaybackEngine: SleepControllable {
     }
 
     func pause() {
+        wantsToPlay = false
         player.pause()
         saveProgress(force: true)
     }
@@ -116,8 +125,15 @@ final class PlaybackEngine: SleepControllable {
     func seek(to time: TimeInterval) {
         let target = SeekMath.clamp(time, duration: duration)
         position = target
-        player.seek(to: CMTime(seconds: target, preferredTimescale: 600), toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
-            Task { @MainActor in self?.saveProgress(force: true) }
+        let cmTime = CMTime(seconds: target, preferredTimescale: 600)
+        // AVPlayer raises an exception for a seek with a completion handler while the item isn't ready.
+        if player.currentItem?.status == .readyToPlay {
+            player.seek(to: cmTime, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
+                Task { @MainActor in self?.saveProgress(force: true) }
+            }
+        } else {
+            player.seek(to: cmTime, toleranceBefore: .zero, toleranceAfter: .zero)
+            saveProgress(force: true)
         }
         onStateChange?()
     }
@@ -221,6 +237,7 @@ final class PlaybackEngine: SleepControllable {
 
     /// Episode finished: stop, mark complete. Never starts another episode.
     private func handleEnd() {
+        wantsToPlay = false
         player.pause()
         if let d = duration { position = d }
         saveProgress(force: true, finished: true)
@@ -233,7 +250,8 @@ final class PlaybackEngine: SleepControllable {
               let type = AVAudioSession.InterruptionType(rawValue: raw) else { return }
         switch type {
         case .began:
-            wasPlayingBeforeInterruption = isPlaying
+            // Not isPlaying: the system's pause may already have cleared it.
+            wasPlayingBeforeInterruption = wantsToPlay
             saveProgress(force: true)
         case .ended:
             let optionsRaw = info[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0
