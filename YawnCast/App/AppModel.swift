@@ -623,7 +623,7 @@ final class AppModel {
             // The countdown bubble shows this; VoiceOver hears it.
             if announcing { announce(backOn ? SleepCopy.backOn(fadeDelay: delay) : SleepCopy.activated(fadeDelay: delay)) }
         } else {
-            show(toast: SleepCopy.cancelled)
+            announce(SleepCopy.cancelled) // spoken only; no chip
         }
         sleepStatus = sleep.status
         runSleepTicker()
