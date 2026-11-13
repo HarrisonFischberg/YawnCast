@@ -72,6 +72,23 @@ struct RSSParserTests {
         #expect(HTMLText.plain("<p>A &amp; B</p><p>C</p>") == "A & B\n\nC")
         #expect(HTMLText.plain("Hi<br/>there") == "Hi\nthere")
     }
+
+    @Test func entitiesDecodeInAFixedOrder() {
+        #expect(HTMLText.plain("&amp;lt;b&amp;gt;") == "&lt;b&gt;")
+        #expect(HTMLText.plain("Wait&#8230; &#x2026; &#38;lt; &#39;ok&#39;") == "Wait\u{2026} \u{2026} &lt; 'ok'")
+        #expect(HTMLText.plain("&#99999999999; &#xD800;") == "&#99999999999; &#xD800;")
+    }
+
+    @Test func nextPageOnlyFollowsWebLinks() throws {
+        func next(_ href: String) throws -> URL? {
+            let xml = #"<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>T</title><atom:link rel="next" href="\#(href)"/></channel></rss>"#
+            return try RSSParser.parse(Data(xml.utf8), feedURL: URL(string: "https://example.com/feed.xml")!).nextPageURL
+        }
+        #expect(try next("file:///etc/hosts") == nil)
+        #expect(try next("ftp://example.com/p2") == nil)
+        #expect(try next("/feed.xml?page=2")?.absoluteString == "https://example.com/feed.xml?page=2")
+        #expect(try next("http://example.com/p2")?.scheme == "http")
+    }
 }
 
 @Suite("Network services (iTunes Search, feeds)", .serialized)
@@ -224,8 +241,12 @@ struct PersistenceTests {
         try FileManager.default.createDirectory(at: store.fileURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         try Data("{ not json".utf8).write(to: store.fileURL)
         #expect(store.load() == .empty)
-        let aside = store.fileURL.deletingPathExtension().appendingPathExtension("corrupt.json")
-        #expect(FileManager.default.fileExists(atPath: aside.path))
+        // A second corrupt file must not erase the first one's copy.
+        Thread.sleep(forTimeInterval: 0.01)
+        try Data("{ also not json".utf8).write(to: store.fileURL)
+        #expect(store.load() == .empty)
+        let asides = try FileManager.default.contentsOfDirectory(atPath: store.fileURL.deletingLastPathComponent().path).filter { $0.hasPrefix("library.corrupt") }
+        #expect(asides.count == 2)
     }
 
     @Test func unreadableFileIsNeverOverwritten() throws {

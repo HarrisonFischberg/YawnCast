@@ -59,6 +59,7 @@ public enum RSSParser {
         let unique = episodes.filter { seen.insert($0.id).inserted }
         let sorted = Feed.sortedNewestFirst(unique)
         let next = delegate.channel.nextPage.flatMap { URL(string: $0, relativeTo: feedURL)?.absoluteURL }
+            .flatMap { ["http", "https"].contains($0.scheme?.lowercased()) ? $0 : nil }
         return Feed(show: show, episodes: sorted, nextPageURL: next)
     }
 
@@ -220,12 +221,30 @@ public enum HTMLText {
         var s = html.replacingOccurrences(of: "</p>", with: "\n\n", options: .caseInsensitive)
         s = s.replacingOccurrences(of: "<br\\s*/?>", with: "\n", options: [.regularExpression, .caseInsensitive])
         s = s.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression)
-        let entities = ["&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": "\"", "&#39;": "'", "&apos;": "'", "&nbsp;": " ", "&#8217;": "\u{2019}", "&#8220;": "\u{201C}", "&#8221;": "\u{201D}", "&#8211;": "\u{2013}", "&#8212;": "\u{2014}"]
-        for (entity, value) in entities { s = s.replacingOccurrences(of: entity, with: value) }
+        // Named entities, then numeric (&#8230; &#x2026;), then &amp; last so "&amp;lt;" stays "&lt;".
+        let named = [("&lt;", "<"), ("&gt;", ">"), ("&quot;", "\""), ("&apos;", "'"), ("&nbsp;", " ")]
+        for (entity, value) in named { s = s.replacingOccurrences(of: entity, with: value) }
+        s = decodeNumericEntities(s)
+        s = s.replacingOccurrences(of: "&amp;", with: "&")
         s = s.replacingOccurrences(of: "[ \\t]+", with: " ", options: .regularExpression)
         s = s.replacingOccurrences(of: "\\n\\s*\\n+", with: "\n\n", options: .regularExpression)
         return s.trimmed
     }
+}
+
+private func decodeNumericEntities(_ s: String) -> String {
+    guard let regex = try? NSRegularExpression(pattern: "&#([xX][0-9a-fA-F]+|[0-9]+);") else { return s }
+    let ns = s as NSString
+    var out = ""
+    var last = 0
+    for match in regex.matches(in: s, range: NSRange(location: 0, length: ns.length)) {
+        out += ns.substring(with: NSRange(location: last, length: match.range.location - last))
+        let digits = ns.substring(with: match.range(at: 1))
+        let code = digits.hasPrefix("x") || digits.hasPrefix("X") ? UInt32(digits.dropFirst(), radix: 16) : UInt32(digits)
+        out += code.flatMap(Unicode.Scalar.init).map { String(Character($0)) } ?? ns.substring(with: match.range)
+        last = match.range.location + match.range.length
+    }
+    return out + ns.substring(from: last)
 }
 
 extension String {

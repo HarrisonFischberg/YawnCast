@@ -97,7 +97,7 @@ public final class JSONLibraryStore: LibraryStore, @unchecked Sendable {
     }
 
     /// Missing file → empty library. File that can't be read → empty library and no
-    /// saves this run. Undecodable file → moved aside to `library.corrupt.json` so it
+    /// saves this run. Undecodable file → moved aside to `library.corrupt-<time>.json` so it
     /// is not overwritten, then empty library.
     public func load() -> LibrarySnapshot {
         let data: Data
@@ -110,8 +110,11 @@ public final class JSONLibraryStore: LibraryStore, @unchecked Sendable {
         do {
             return try JSONDecoder.library.decode(LibrarySnapshot.self, from: data)
         } catch {
-            let aside = fileURL.deletingPathExtension().appendingPathExtension("corrupt.json")
-            try? FileManager.default.removeItem(at: aside)
+            // Timestamped so an earlier aside copy is never overwritten.
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            let stamp = formatter.string(from: Date()).replacingOccurrences(of: ":", with: "-")
+            let aside = fileURL.deletingPathExtension().appendingPathExtension("corrupt-\(stamp).json")
             try? FileManager.default.moveItem(at: fileURL, to: aside)
             return .empty
         }
