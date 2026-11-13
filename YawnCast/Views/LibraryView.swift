@@ -326,7 +326,10 @@ struct MiniPlayerDock: View {
             }
             .buttonStyle(PressDim())
             .accessibilityLabel("Now playing: \(player.episode?.title ?? "")")
-            .accessibilityValue(model.sleepStatus == .off ? (player.episode?.showTitle ?? "") : "\(player.episode?.showTitle ?? ""), Sleep on")
+            .accessibilityValue({
+                let show = player.episode?.showTitle ?? ""
+                return [show, sleepOn ? "Sleep on" : nil, failed ? "Can’t play" : nil].compactMap { $0 }.joined(separator: ", ")
+            }())
             .accessibilityHint("Opens the player.")
             .accessibilityIdentifier("miniPlayer")
 

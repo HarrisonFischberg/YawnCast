@@ -76,6 +76,7 @@ struct RSSParserTests {
     @Test func entitiesDecodeInAFixedOrder() {
         #expect(HTMLText.plain("&amp;lt;b&amp;gt;") == "&lt;b&gt;")
         #expect(HTMLText.plain("Wait&#8230; &#x2026; &#38;lt; &#39;ok&#39;") == "Wait\u{2026} \u{2026} &lt; 'ok'")
+        #expect(HTMLText.plain("&#38;amp; a&#0;b") == "&amp; ab")
         #expect(HTMLText.plain("&#99999999999; &#xD800;") == "&#99999999999; &#xD800;")
     }
 

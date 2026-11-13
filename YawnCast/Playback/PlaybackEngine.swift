@@ -41,12 +41,13 @@ final class PlaybackEngine: SleepControllable {
     @ObservationIgnored private var itemObservations: [NSKeyValueObservation] = []
     @ObservationIgnored private var notificationTasks: [Task<Void, Never>] = []
     @ObservationIgnored private var lastSavedAt: TimeInterval = 0
-    @ObservationIgnored private var wasPlayingBeforeInterruption = false
-    /// Whether the listener wants audio: set by play(), cleared by pause()/end. Unlike `isPlaying` it
+    /// Whether the listener wants audio: set by play(), cleared by pause(), end and failure. Unlike `isPlaying` it
     /// survives the system pausing the player, so an interruption can tell what to resume.
     @ObservationIgnored private var wantsToPlay = false
+    @ObservationIgnored private let center: NotificationCenter
 
-    init() {
+    init(center: NotificationCenter = .default) {
+        self.center = center
         player.automaticallyWaitsToMinimizeStalling = true
         player.actionAtItemEnd = .pause
         observePlayer()
@@ -115,7 +116,9 @@ final class PlaybackEngine: SleepControllable {
     }
 
     func togglePlayPause() {
-        player.timeControlStatus == .paused ? play() : pause()
+        // A failed item sits in .waitingToPlayAtSpecifiedRate: Play there means Retry, never Pause.
+        if case .failed = loadState { retry(); return }
+        wantsToPlay && player.timeControlStatus != .paused ? pause() : play()
     }
 
     func skip(by delta: TimeInterval) {
@@ -198,6 +201,7 @@ final class PlaybackEngine: SleepControllable {
             loadState = .ready
         case .failed:
             loadState = .failed(message ?? "This episode can’t be played right now.")
+            wantsToPlay = false
             isPlaying = false
             isBuffering = false
             onStateChange?()
@@ -207,7 +211,7 @@ final class PlaybackEngine: SleepControllable {
     }
 
     private func observeSession() {
-        let center = NotificationCenter.default
+        let center = center
         notificationTasks = [
             Task { [weak self] in
                 for await note in center.notifications(named: AVPlayerItem.didPlayToEndTimeNotification) {
@@ -229,6 +233,7 @@ final class PlaybackEngine: SleepControllable {
                 for await note in center.notifications(named: AVPlayerItem.failedToPlayToEndTimeNotification) {
                     let error = note.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
                     self?.loadState = .failed(error?.localizedDescription ?? "Playback stopped unexpectedly.")
+                    self?.wantsToPlay = false
                     self?.onStateChange?()
                 }
             },
@@ -250,15 +255,13 @@ final class PlaybackEngine: SleepControllable {
               let type = AVAudioSession.InterruptionType(rawValue: raw) else { return }
         switch type {
         case .began:
-            // Not isPlaying: the system's pause may already have cleared it.
-            wasPlayingBeforeInterruption = wantsToPlay
             saveProgress(force: true)
         case .ended:
             let optionsRaw = info[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0
-            if wasPlayingBeforeInterruption, AVAudioSession.InterruptionOptions(rawValue: optionsRaw).contains(.shouldResume) {
+            // Still wanted: a pause during the interruption (listener, unplug, Sleep) cleared it.
+            if wantsToPlay, AVAudioSession.InterruptionOptions(rawValue: optionsRaw).contains(.shouldResume) {
                 play()
             }
-            wasPlayingBeforeInterruption = false
         @unknown default:
             break
         }
