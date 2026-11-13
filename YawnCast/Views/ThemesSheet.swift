@@ -9,6 +9,8 @@ struct ThemesSheet: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     /// Send Debug Logs: the note typed so far, kept if the sheet closes.
     @AppStorage("supportDraft") private var problem = ""
+    /// What Clear just removed, so Undo can put it back.
+    @State private var clearedNote: String?
     @State private var sending = false
     @State private var sendFailed = false
 
@@ -65,7 +67,6 @@ struct ThemesSheet: View {
                 Task {
                     sending = true
                     sendFailed = !(await SupportMail.send(problem: problem))
-                    if !sendFailed { problem = "" }
                     sending = false
                 }
             } label: {
@@ -74,6 +75,21 @@ struct ThemesSheet: View {
             .buttonStyle(.capsuleKey())
             .disabled(sending || problem.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             .accessibilityIdentifier("support-send")
+            if !problem.isEmpty {
+                // The draft stays until Mail has really sent it (we can't tell), so clearing is the user's call.
+                Button("Clear") { clearedNote = problem; problem = "" }
+                    .font(Typo.caption)
+                    .foregroundStyle(theme.textMuted)
+                    .frame(minHeight: 44)
+                    .accessibilityIdentifier("support-clear")
+            }
+            if problem.isEmpty, let note = clearedNote {
+                Button("Note cleared. Undo") { problem = note; clearedNote = nil }
+                    .font(Typo.caption)
+                    .foregroundStyle(theme.textMuted)
+                    .frame(minHeight: 44)
+                    .accessibilityIdentifier("support-undo-clear")
+            }
             if sendFailed {
                 Text("No email app opened. The report is copied: paste it into an email to \(SupportMail.address).")
                     .font(Typo.caption).foregroundStyle(theme.textMuted)

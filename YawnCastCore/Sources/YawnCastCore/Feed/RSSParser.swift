@@ -59,6 +59,7 @@ public enum RSSParser {
         let unique = episodes.filter { seen.insert($0.id).inserted }
         let sorted = Feed.sortedNewestFirst(unique)
         let next = delegate.channel.nextPage.flatMap { URL(string: $0, relativeTo: feedURL)?.absoluteURL }
+            .flatMap { ["http", "https"].contains($0.scheme?.lowercased()) ? $0 : nil }
         return Feed(show: show, episodes: sorted, nextPageURL: next)
     }
 
@@ -220,12 +221,34 @@ public enum HTMLText {
         var s = html.replacingOccurrences(of: "</p>", with: "\n\n", options: .caseInsensitive)
         s = s.replacingOccurrences(of: "<br\\s*/?>", with: "\n", options: [.regularExpression, .caseInsensitive])
         s = s.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression)
-        let entities = ["&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": "\"", "&#39;": "'", "&apos;": "'", "&nbsp;": " ", "&#8217;": "\u{2019}", "&#8220;": "\u{201C}", "&#8221;": "\u{201D}", "&#8211;": "\u{2013}", "&#8212;": "\u{2014}"]
-        for (entity, value) in entities { s = s.replacingOccurrences(of: entity, with: value) }
+        // Named entities, then numeric (&#8230; &#x2026;) and &amp; together in one pass, so nothing is decoded twice.
+        let named = [("&lt;", "<"), ("&gt;", ">"), ("&quot;", "\""), ("&apos;", "'"), ("&nbsp;", " ")]
+        for (entity, value) in named { s = s.replacingOccurrences(of: entity, with: value) }
+        s = decodeNumericAndAmpEntities(s)
         s = s.replacingOccurrences(of: "[ \\t]+", with: " ", options: .regularExpression)
         s = s.replacingOccurrences(of: "\\n\\s*\\n+", with: "\n\n", options: .regularExpression)
         return s.trimmed
     }
+}
+
+private func decodeNumericAndAmpEntities(_ s: String) -> String {
+    guard let regex = try? NSRegularExpression(pattern: "&(#[xX][0-9a-fA-F]+|#[0-9]+|amp);") else { return s }
+    let ns = s as NSString
+    var out = ""
+    var last = 0
+    for match in regex.matches(in: s, range: NSRange(location: 0, length: ns.length)) {
+        out += ns.substring(with: NSRange(location: last, length: match.range.location - last))
+        let digits = ns.substring(with: match.range(at: 1))
+        let code: UInt32? = switch digits.lowercased().first {
+        case "a": 38
+        case "#" where digits.dropFirst().lowercased().hasPrefix("x"): UInt32(digits.dropFirst(2), radix: 16)
+        default: UInt32(digits.dropFirst())
+        }
+        // NUL is dropped; code points that don't exist stay as written.
+        out += code.flatMap(Unicode.Scalar.init).map { $0.value == 0 ? "" : String(Character($0)) } ?? ns.substring(with: match.range)
+        last = match.range.location + match.range.length
+    }
+    return out + ns.substring(from: last)
 }
 
 extension String {
