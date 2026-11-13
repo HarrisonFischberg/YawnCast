@@ -292,6 +292,7 @@ struct MiniPlayerDock: View {
     var body: some View {
         let player = model.player
         let sleepOn = model.sleepStatus != .off
+        let failed = if case .failed = player.loadState { true } else { false }
         HStack(spacing: Space.s) {
             Button { model.isPlayerPresented = true } label: {
                 HStack(spacing: Space.m) {
@@ -303,7 +304,12 @@ struct MiniPlayerDock: View {
                             .foregroundStyle(theme.text)
                             .lineLimit(1)
                         // Sleep on: the ten fade steps take the show name's place.
-                        if sleepOn {
+                        if failed {
+                            Label("Can’t play", systemImage: "exclamationmark.triangle.fill")
+                                .font(.system(.caption, weight: .medium))
+                                .foregroundStyle(theme.danger)
+                                .lineLimit(1)
+                        } else if sleepOn {
                             FadeDots(status: model.sleepStatus).frame(height: 14)
                         } else {
                             Text(player.episode?.showTitle ?? "")
@@ -344,17 +350,19 @@ struct MiniPlayerDock: View {
             }
             .sensoryFeedback(Haptic.moon, trigger: moonTaps)
 
+            // Play reloads a failed episode, so the same key reads as Retry.
             Button { player.togglePlayPause() } label: {
-                Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
+                Image(systemName: failed ? "arrow.clockwise" : player.isPlaying ? "pause.fill" : "play.fill")
                     .font(.system(size: 17, weight: .bold))
                     .contentTransition(.symbolEffect(.replace))
             }
             .buttonStyle(.roundKey(.primary, depth: 3))
             .frame(width: 44, height: 44)
-            .accessibilityLabel(player.isPlaying ? "Pause" : "Play")
+            .accessibilityLabel(failed ? "Retry" : player.isPlaying ? "Pause" : "Play")
+            .accessibilityValue(failed ? "This episode can’t be played" : "")
             .accessibilityIdentifier("miniPlayPause")
             .accessibilityShowsLargeContentViewer {
-                Label(player.isPlaying ? "Pause" : "Play", systemImage: player.isPlaying ? "pause.fill" : "play.fill")
+                Label(failed ? "Retry" : player.isPlaying ? "Pause" : "Play", systemImage: failed ? "arrow.clockwise" : player.isPlaying ? "pause.fill" : "play.fill")
             }
             .sensoryFeedback(Haptic.transport, trigger: player.isPlaying)
         }

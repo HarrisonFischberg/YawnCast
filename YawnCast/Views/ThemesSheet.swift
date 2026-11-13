@@ -65,7 +65,6 @@ struct ThemesSheet: View {
                 Task {
                     sending = true
                     sendFailed = !(await SupportMail.send(problem: problem))
-                    if !sendFailed { problem = "" }
                     sending = false
                 }
             } label: {
@@ -74,6 +73,14 @@ struct ThemesSheet: View {
             .buttonStyle(.capsuleKey())
             .disabled(sending || problem.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             .accessibilityIdentifier("support-send")
+            if !problem.isEmpty {
+                // The draft stays until Mail has really sent it (we can't tell), so clearing is the user's call.
+                Button("Clear") { problem = "" }
+                    .font(Typo.caption)
+                    .foregroundStyle(theme.textMuted)
+                    .frame(minHeight: 44)
+                    .accessibilityIdentifier("support-clear")
+            }
             if sendFailed {
                 Text("No email app opened. The report is copied: paste it into an email to \(SupportMail.address).")
                     .font(Typo.caption).foregroundStyle(theme.textMuted)
