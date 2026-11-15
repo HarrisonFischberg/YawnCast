@@ -117,7 +117,9 @@ struct NowPlayingView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(Space.xxl)
                     }
-                    .background(theme.bg)
+                    .background {
+                        if #available(iOS 26, *) {} else { ScreenBackground() }
+                    }
                     .environment(\.theme, theme)
                     .presentationDetents([.medium, .fraction(0.92)])
                     .presentationDragIndicator(.visible)
