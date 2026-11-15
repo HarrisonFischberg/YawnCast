@@ -80,6 +80,12 @@ struct NowPlayingView: View {
                         .padding(Space.s)
                         .paper(seed: 1, fill: theme.raised)
                         .rotationEffect(.degrees(-2.2))
+                        // Tap the cover to see the rest of the show's episodes.
+                        .contentShape(Rectangle())
+                        .onTapGesture { if let episode { model.openShow(of: episode) } }
+                        .accessibilityAddTraits(.isButton)
+                        .accessibilityLabel("Open \(episode?.showTitle ?? "show")")
+                        .accessibilityIdentifier("playerCover")
                 }
                 VStack(spacing: Space.xs) {
                     Text(episode?.title ?? "Nothing playing")
