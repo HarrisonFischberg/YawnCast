@@ -79,7 +79,7 @@ struct NowPlayingView: View {
                         .frame(width: cover, height: cover)
                         .padding(Space.s)
                         .paper(seed: 1, fill: theme.raised)
-                        .rotationEffect(.degrees(-2))
+                        .rotationEffect(.degrees(-2.2))
                 }
                 VStack(spacing: Space.xs) {
                     Text(episode?.title ?? "Nothing playing")
