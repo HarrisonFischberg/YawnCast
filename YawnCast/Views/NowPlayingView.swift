@@ -79,7 +79,7 @@ struct NowPlayingView: View {
                         .frame(width: cover, height: cover)
                         .padding(Space.s)
                         .paper(seed: 1, fill: theme.raised)
-                        .rotationEffect(.degrees(-2))
+                        .rotationEffect(.degrees(-2.2))
                 }
                 VStack(spacing: Space.xs) {
                     Text(episode?.title ?? "Nothing playing")
@@ -117,7 +117,9 @@ struct NowPlayingView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(Space.xxl)
                     }
-                    .background(theme.bg)
+                    .background {
+                        if #available(iOS 26, *) { theme.bg.opacity(0.4) } else { ScreenBackground() }  // the theme's colour, as glass
+                    }
                     .environment(\.theme, theme)
                     .presentationDetents([.medium, .fraction(0.92)])
                     .presentationDragIndicator(.visible)
