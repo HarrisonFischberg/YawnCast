@@ -118,7 +118,7 @@ struct NowPlayingView: View {
                         .padding(Space.xxl)
                     }
                     .background {
-                        if #available(iOS 26, *) {} else { ScreenBackground() }
+                        if #available(iOS 26, *) { theme.bg.opacity(0.4) } else { ScreenBackground() }  // the theme's colour, as glass
                     }
                     .environment(\.theme, theme)
                     .presentationDetents([.medium, .fraction(0.92)])
