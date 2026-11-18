@@ -565,6 +565,15 @@ final class AppModel {
         return results
     }
 
+    /// Closes the player and opens the episode list of the show it is playing, so a listener
+    /// who arrived from New can reach the show's other episodes.
+    func openShow(of episode: Episode) {
+        let show = library.subscriptions.first { $0.id == FeedURL.key(episode.showFeedURL) }
+            ?? Show(feedURL: episode.showFeedURL, title: episode.showTitle, artworkURL: episode.artworkURL)
+        isPlayerPresented = false
+        if path.last != .show(show) { path.append(.show(show)) }
+    }
+
     private func presentPlayer() {
         isPlayerPresented = true
     }
