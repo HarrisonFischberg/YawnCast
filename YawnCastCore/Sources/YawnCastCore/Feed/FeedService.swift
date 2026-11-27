@@ -4,11 +4,13 @@ public protocol FeedService: Sendable {
     /// Follows up to `maxPages` pages of a paged feed. When that limit cuts the history
     /// short, `nextPageURL` is the first page left out; otherwise it is nil.
     func fetch(_ feedURL: URL, maxPages: Int) async throws -> Feed
+    /// Like `fetch(_:maxPages:)`, but may return `cached` itself when the publisher says
+    /// the feed has not changed since that copy.
+    func fetch(_ feedURL: URL, maxPages: Int, cached: Feed?) async throws -> Feed
 }
 
 extension FeedService {
-    /// Like `fetch(_:maxPages:)`, but may return `cached` itself when the publisher says
-    /// the feed has not changed since that copy. Services that can't ask just fetch.
+    /// Services that can't ask "has it changed?" just fetch.
     public func fetch(_ feedURL: URL, maxPages: Int, cached: Feed?) async throws -> Feed {
         try await fetch(feedURL, maxPages: maxPages)
     }

@@ -169,6 +169,7 @@ final class AppModel {
         }
         player.onStateChange = { [weak self] in
             guard let self else { return }
+            if progressUnsaved { persist() }
             sleep.sync()
             sleepStatus = sleep.status
             nowPlaying?.update()
@@ -713,7 +714,8 @@ final class AppModel {
                 guard let self, self.sleep.needsTicks, self.player.isActivelyPlaying else { break }
                 self.sleep.sync()
                 // With over a minute to go the countdown reads in minutes, so once a second is enough.
-                if case .waiting(let left) = self.sleep.status, left > 61 {
+                // Not during the 1 s glide back up after "+5" in a fade, which needs every tick.
+                if case .waiting(let left) = self.sleep.status, left > 61, self.sleep.timer.gain == self.sleep.timer.baseline {
                     try? await Task.sleep(for: .seconds(1))
                 } else {
                     try? await Task.sleep(for: .milliseconds(250))
@@ -738,10 +740,23 @@ final class AppModel {
 
     private func recordProgress(episode: Episode, position: TimeInterval, duration: TimeInterval?, finished: Bool) {
         library.setPosition(PlaybackPosition(seconds: position, duration: duration, completed: finished), for: episode)
-        persist()
+        // The spot on screen stays current; while playing the file is written every 15 s at most,
+        // and at once on pause, seek or any other transport change (see `onStateChange`).
+        let now = ProcessInfo.processInfo.systemUptime
+        if finished || !player.isPlaying || now - lastProgressWrite >= 15 {
+            lastProgressWrite = now
+            persist()
+        } else {
+            progressUnsaved = true
+        }
     }
 
+    @ObservationIgnored private var lastProgressWrite: TimeInterval = 0
+    /// A spot recorded in `library` that the file doesn't have yet.
+    @ObservationIgnored private var progressUnsaved = false
+
     private func persist() {
+        progressUnsaved = false
         saveQueue.async { [store, library] in
             do { try store.save(library) } catch { print("YawnCast: save failed: \(error)") }
         }
