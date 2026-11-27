@@ -1,4 +1,5 @@
 import CryptoKit
+import ImageIO
 import YawnCastCore
 import SwiftUI
 import UIKit
@@ -18,6 +19,7 @@ actor ArtworkCache {
         directory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appending(path: "Artwork")
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         memory.countLimit = 200
+        memory.totalCostLimit = 64 << 20 // bytes of decoded pixels
     }
 
     func image(for url: URL) async -> UIImage? {
@@ -25,7 +27,8 @@ actor ArtworkCache {
         if let task = inFlight[url] { return await task.value }
         let file = directory.appending(path: Self.fileName(for: url))
         let session = self.session
-        let task = Task<UIImage?, Never> {
+        // Detached, so covers are read and decoded side by side rather than one at a time on this actor.
+        let task = Task<UIImage?, Never>.detached {
             if let data = try? Data(contentsOf: file), let image = Self.decode(data) { return image }
             guard let (data, response) = try? await session.data(from: url.httpsUpgraded),
                   (response as? HTTPURLResponse).map({ (200..<300).contains($0.statusCode) }) ?? true,
@@ -36,7 +39,7 @@ actor ArtworkCache {
         inFlight[url] = task
         let image = await task.value
         inFlight[url] = nil
-        if let image { memory.setObject(image, forKey: url as NSURL) }
+        if let image { memory.setObject(image, forKey: url as NSURL, cost: (image.cgImage?.bytesPerRow ?? 0) * (image.cgImage?.height ?? 0)) }
         return image
     }
 
@@ -44,15 +47,17 @@ actor ArtworkCache {
         SHA256.hash(data: Data(url.absoluteString.utf8)).map { String(format: "%02x", $0) }.joined()
     }
 
-    /// Decodes and downsamples to at most 600 px for memory efficiency.
+    /// Decodes straight to at most 600 px, so a 3000 px original is never held at full size.
     private static func decode(_ data: Data) -> UIImage? {
-        guard let image = UIImage(data: data) else { return nil }
-        let maxSide: CGFloat = 600
-        let longest = max(image.size.width, image.size.height) * image.scale
-        guard longest > maxSide else { return image.preparingForDisplay() ?? image }
-        let target = CGSize(width: image.size.width * image.scale * maxSide / longest,
-                            height: image.size.height * image.scale * maxSide / longest)
-        return image.preparingThumbnail(of: target) ?? image
+        let options: [CFString: Any] = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceShouldCacheImmediately: true,
+            kCGImageSourceThumbnailMaxPixelSize: 600,
+        ]
+        guard let source = CGImageSourceCreateWithData(data as CFData, nil),
+              let image = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary) else { return nil }
+        return UIImage(cgImage: image)
     }
 }
 

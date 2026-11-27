@@ -289,7 +289,7 @@ final class PlaybackEngine: SleepControllable {
     private func saveProgress(force: Bool, finished: Bool = false) {
         guard let episode else { return }
         let now = ProcessInfo.processInfo.systemUptime
-        guard force || now - lastSavedAt >= 5 else { return }
+        guard force || now - lastSavedAt >= 15 else { return }
         lastSavedAt = now
         let done = finished || SeekMath.isFinished(position: position, duration: duration)
         onProgress?(episode, position, duration, done)

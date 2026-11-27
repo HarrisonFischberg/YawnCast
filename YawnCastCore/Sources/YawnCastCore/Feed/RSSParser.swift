@@ -231,8 +231,11 @@ public enum HTMLText {
     }
 }
 
+/// Built once: compiling it per episode made big feeds slow to parse. Matching is thread-safe.
+nonisolated(unsafe) private let entityRegex = try? NSRegularExpression(pattern: "&(#[xX][0-9a-fA-F]+|#[0-9]+|amp);")
+
 private func decodeNumericAndAmpEntities(_ s: String) -> String {
-    guard let regex = try? NSRegularExpression(pattern: "&(#[xX][0-9a-fA-F]+|#[0-9]+|amp);") else { return s }
+    guard s.contains("&"), let regex = entityRegex else { return s }
     let ns = s as NSString
     var out = ""
     var last = 0
