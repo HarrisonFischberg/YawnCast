@@ -105,6 +105,8 @@ final class AppModel {
     private(set) var driftBack: DriftBackMarker?
 
     @ObservationIgnored private let store: LibraryStore
+    /// Library saves are encoded and written here, in order, off the main thread.
+    @ObservationIgnored private let saveQueue = DispatchQueue(label: "com.rarecreatures.yawncast.library-save", qos: .utility)
     @ObservationIgnored private let sleep: SleepController
     @ObservationIgnored private var nowPlaying: NowPlayingBridge?
     @ObservationIgnored private var sleepTicker: Task<Void, Never>?
@@ -167,6 +169,7 @@ final class AppModel {
         }
         player.onStateChange = { [weak self] in
             guard let self else { return }
+            if progressUnsaved { persist() }
             sleep.sync()
             sleepStatus = sleep.status
             nowPlaying?.update()
@@ -352,7 +355,14 @@ final class AppModel {
         let disk = feedDisk
         let urls = shows.map(\.feedURL)
         diskLoad = Task { [weak self] in
-            let loaded = await Task.detached { urls.compactMap { disk.load($0) } }.value
+            let loaded = await Task.detached {
+                await withTaskGroup(of: Feed?.self) { group in
+                    for url in urls { group.addTask { disk.load(url) } }
+                    var feeds: [Feed] = []
+                    for await feed in group { if let feed { feeds.append(feed) } }
+                    return feeds
+                }
+            }.value
             guard let self else { return }
             // A network fetch that finished first is newer; keep it.
             for feed in loaded where feedCache[feed.show.id] == nil { feedCache[feed.show.id] = feed }
@@ -370,11 +380,14 @@ final class AppModel {
         let firstPageKey = show.id + "|first"
         if let running = feedTasks[show.id] ?? (firstPageOnly ? feedTasks[firstPageKey] : nil) { return try await running.value }
         let feeds = self.feeds
-        let task = Task { try await feeds.fetch(show.feedURL, maxPages: firstPageOnly ? 1 : HTTPFeedService.maxPages) }
+        // A pull to refresh (`force`) always downloads; otherwise an unchanged feed comes back as `known`.
+        let known = force ? nil : feedCache[show.id]
+        let task = Task { try await feeds.fetch(show.feedURL, maxPages: firstPageOnly ? 1 : HTTPFeedService.maxPages, cached: known) }
         let taskKey = firstPageOnly ? firstPageKey : show.id
         feedTasks[taskKey] = task
         defer { feedTasks[taskKey] = nil }
         var feed = try await task.value
+        let unchanged = feed == known
         if firstPageOnly, feed.nextPageURL != nil {
             if let old = feedCache[show.id] {
                 let ids = Set(feed.episodes.map(\.id))
@@ -384,8 +397,10 @@ final class AppModel {
             freshFeeds.insert(show.id)
         }
         feedCache[show.id] = feed
-        let disk = feedDisk
-        Task.detached { [feed] in disk.save(feed) }
+        if !unchanged {
+            let disk = feedDisk
+            Task.detached { [feed] in disk.save(feed) }
+        }
         return feed
     }
 
@@ -456,20 +471,26 @@ final class AppModel {
                 taste: taste,
                 keywords: Recommender.keywords(fromTitles: library.subscriptions.map(\.title))
             )
+            // Words shared by several Library titles (e.g. "sleep") find shows
+            // that genre charts miss; search results rank below chart hits.
+            let keywords = Recommender.keywords(fromTitles: library.subscriptions.map(\.title))
+            // The charts and searches don't depend on each other, so their network waits overlap.
+            let searches = keywords.sorted(by: { $0.value > $1.value }).prefix(2).map { keyword in
+                Task { (try? await self.directory.search(keyword.key)) ?? [] }
+            }
+            let charts = taste.prefix(3).map { weight in
+                Task { (try? await self.directory.topShowIDs(genreID: weight.genre.id, limit: 25)) ?? [] }
+            }
             var rankByID: [Int: Int] = [:]
-            for weight in taste.prefix(3) {
-                let chart = (try? await directory.topShowIDs(genreID: weight.genre.id, limit: 25)) ?? []
-                for (rank, id) in chart.enumerated() where rankByID[id].map({ rank < $0 }) ?? true {
+            for task in charts {
+                for (rank, id) in await task.value.enumerated() where rankByID[id].map({ rank < $0 }) ?? true {
                     rankByID[id] = rank
                 }
             }
             var candidates = try await directory.lookup(ids: Array(rankByID.keys).sorted())
                 .map { (result: $0, chartRank: rankByID[$0.directoryID] ?? 99) }
-            // Words shared by several Library titles (e.g. "sleep") find shows
-            // that genre charts miss; search results rank below chart hits.
-            let keywords = Recommender.keywords(fromTitles: library.subscriptions.map(\.title))
-            for keyword in keywords.sorted(by: { $0.value > $1.value }).prefix(2).map(\.key) {
-                let found = (try? await directory.search(keyword)) ?? []
+            for task in searches {
+                let found = await task.value
                 candidates += found.enumerated().map { (result: $0.element, chartRank: 30 + $0.offset) }
             }
             let ranked = Recommender.rank(candidates: candidates, taste: taste, keywords: keywords, excluding: library.subscriptions)
@@ -669,7 +690,7 @@ final class AppModel {
         LockScreenSleepText.subtitle(show: "", status: sleepStatus)
     }
 
-    /// Called on every Sleep change (4 Hz while counting down). Pushes only when the
+    /// Called on every Sleep change (up to 4 Hz while counting down). Pushes only when the
     /// whole-minute text or the Sleep phase changed.
     private func refreshLockStatus() {
         let line = lockStatusLine()
@@ -682,7 +703,7 @@ final class AppModel {
         UIAccessibility.post(notification: .announcement, argument: message)
     }
 
-    /// Ticks the Sleep controller 4×/s while Sleep needs it and audio is
+    /// Ticks the Sleep controller (4×/s; 1×/s while the fade is over a minute away) while Sleep needs it and audio is
     /// actually playing. Correctness does not depend on tick rate: the
     /// controller measures active time from the clock, and every play/pause/
     /// buffer change also syncs it (see `onStateChange`), which restarts this.
@@ -692,7 +713,13 @@ final class AppModel {
             while !Task.isCancelled {
                 guard let self, self.sleep.needsTicks, self.player.isActivelyPlaying else { break }
                 self.sleep.sync()
-                try? await Task.sleep(for: .milliseconds(250))
+                // With over a minute to go the countdown reads in minutes, so once a second is enough.
+                // Not during the 1 s glide back up after "+5" in a fade, which needs every tick.
+                if case .waiting(let left) = self.sleep.status, left > 61, self.sleep.timer.gain == self.sleep.timer.baseline {
+                    try? await Task.sleep(for: .seconds(1))
+                } else {
+                    try? await Task.sleep(for: .milliseconds(250))
+                }
             }
             self?.sleepTicker = nil
         }
@@ -713,11 +740,26 @@ final class AppModel {
 
     private func recordProgress(episode: Episode, position: TimeInterval, duration: TimeInterval?, finished: Bool) {
         library.setPosition(PlaybackPosition(seconds: position, duration: duration, completed: finished), for: episode)
-        persist()
+        // The spot on screen stays current; while playing the file is written every 15 s at most,
+        // and at once on pause, seek or any other transport change (see `onStateChange`).
+        let now = ProcessInfo.processInfo.systemUptime
+        if finished || !player.isPlaying || now - lastProgressWrite >= 15 {
+            lastProgressWrite = now
+            persist()
+        } else {
+            progressUnsaved = true
+        }
     }
 
+    @ObservationIgnored private var lastProgressWrite: TimeInterval = 0
+    /// A spot recorded in `library` that the file doesn't have yet.
+    @ObservationIgnored private var progressUnsaved = false
+
     private func persist() {
-        do { try store.save(library) } catch { print("YawnCast: save failed: \(error)") }
+        progressUnsaved = false
+        saveQueue.async { [store, library] in
+            do { try store.save(library) } catch { print("YawnCast: save failed: \(error)") }
+        }
     }
 
     #if DEBUG

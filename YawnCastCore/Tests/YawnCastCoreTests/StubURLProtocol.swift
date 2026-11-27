@@ -8,6 +8,8 @@ final class StubURLProtocol: URLProtocol, @unchecked Sendable {
     nonisolated(unsafe) static var requests: [URLRequest] = []
     /// Per-URL bodies (absolute string → (status, body)); falls back to `status`/`body`.
     nonisolated(unsafe) static var routes: [String: (Int, Data)] = [:]
+    /// Response headers for every reply; cleared by `respond`.
+    nonisolated(unsafe) static var headers: [String: String] = [:]
     static let lock = NSLock()
 
     static func respond(status: Int, body: Data) {
@@ -15,6 +17,7 @@ final class StubURLProtocol: URLProtocol, @unchecked Sendable {
             self.status = status
             self.body = body
             self.routes = [:]
+            self.headers = [:]
         }
     }
 
@@ -26,11 +29,11 @@ final class StubURLProtocol: URLProtocol, @unchecked Sendable {
     override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
 
     override func startLoading() {
-        let (status, body) = Self.lock.withLock {
+        let ((status, body), headers) = Self.lock.withLock {
             Self.requests.append(request)
-            return Self.routes[request.url!.absoluteString] ?? (Self.status, Self.body)
+            return (Self.routes[request.url!.absoluteString] ?? (Self.status, Self.body), Self.headers)
         }
-        let response = HTTPURLResponse(url: request.url!, statusCode: status, httpVersion: "HTTP/1.1", headerFields: nil)!
+        let response = HTTPURLResponse(url: request.url!, statusCode: status, httpVersion: "HTTP/1.1", headerFields: headers)!
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
         client?.urlProtocol(self, didLoad: body)
         client?.urlProtocolDidFinishLoading(self)

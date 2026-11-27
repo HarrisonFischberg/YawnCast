@@ -189,6 +189,29 @@ struct NetworkServiceTests {
         #expect(URL(string: "HTTP://example.com:8080/a.mp3?x=1")!.httpsUpgraded.absoluteString == "https://example.com:8080/a.mp3?x=1")
     }
 
+    @Test func unchangedFeedIsNotDownloadedAgain() async throws {
+        StubURLProtocol.respond(status: 200, body: try fixture("standard.xml"))
+        StubURLProtocol.lock.withLock { StubURLProtocol.headers = ["ETag": "\"v1\"", "Last-Modified": "Wed, 25 Nov 2026 10:00:00 GMT"] }
+        let service = HTTPFeedService(session: .stubbed)
+        let first = try await service.fetch(feedURL)
+        #expect(first.etag == "\"v1\"")
+
+        StubURLProtocol.respond(status: 304, body: Data())
+        let again = try await service.fetch(feedURL, maxPages: 1, cached: first)
+        #expect(again == first)
+        let sent = StubURLProtocol.lock.withLock { StubURLProtocol.requests.last }
+        #expect(sent?.value(forHTTPHeaderField: "If-None-Match") == "\"v1\"")
+        #expect(sent?.value(forHTTPHeaderField: "If-Modified-Since") == "Wed, 25 Nov 2026 10:00:00 GMT")
+
+        // A copy that is missing older pages can't stand in for the whole history: no validators sent.
+        var partial = first
+        partial.nextPageURL = URL(string: "https://feeds.example.com/quiet?page=2")
+        StubURLProtocol.respond(status: 200, body: try fixture("standard.xml"))
+        _ = try await service.fetch(feedURL, maxPages: HTTPFeedService.maxPages, cached: partial)
+        let full = StubURLProtocol.lock.withLock { StubURLProtocol.requests.last }
+        #expect(full?.value(forHTTPHeaderField: "If-None-Match") == nil)
+    }
+
     @Test func feedFetchParsesAndMapsHTTPErrors() async throws {
         StubURLProtocol.respond(status: 404, body: Data())
         await #expect(throws: FeedError.http(status: 404)) { try await HTTPFeedService(session: .stubbed).fetch(feedURL) }

@@ -92,6 +92,9 @@ public struct Feed: Codable, Sendable, Equatable {
     public var episodes: [Episode]
     /// Next page of a paged feed (`<atom:link rel="next">`), if the publisher splits its history.
     public var nextPageURL: URL?
+    /// The first page's `ETag` and `Last-Modified`, sent back so an unchanged feed isn't downloaded again.
+    public var etag: String?
+    public var lastModified: String?
 
     public init(show: Show, episodes: [Episode], nextPageURL: URL? = nil) {
         self.show = show
